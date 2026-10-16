@@ -5,6 +5,10 @@ All notable changes to Askwerk are documented here. The format follows [Keep a C
 ## [Unreleased]
 
 ### Added
+- One layout language: every page starts at the same place beside the sidebar, left-aligned; lists up to 1,200 px, forms up to 720 px, only canvases full width (AWK-41).
+- Survey pages show a breadcrumb, the survey's name and then the page; the sidebar shows only the survey's places (AWK-41).
+- The slider shows where to touch before it is answered, ticks per step and numbers at its ends, and can be cleared (AWK-41).
+- The PDF prints the pictures of picture choices (AWK-41).
 - Deleted organisations are kept 30 days: installation administrators restore them or remove their data at once by typing the short name; after 30 days the data is removed by itself, the audit log keeps the record (AWK-39).
 - Administration → Installation is editable: name, language for new organisations, time zone and email with a test email; values from the configuration (ASKWERK_NAME, ASKWERK_LANGUAGE, ASKWERK_TIME_ZONE, ASKWERK_SMTP_*) show as locked (AWK-39).
 - The app in a sidebar: the organisation box, Surveys, Templates and one Administration; inside a survey the sidebar steps into it with "All surveys" to go back (AWK-38).
@@ -40,6 +44,8 @@ All notable changes to Askwerk are documented here. The format follows [Keep a C
 - The designer and Results inside your own product: /embed/designer and /embed/results with a hand-over token, sessions kept in memory, events to the host; a survey can be limited to some of the organisation's websites; a host can name the respondent (AWK-13).
 
 ### Fixed
+- The question inspector no longer scrolls sideways; picture options get a 40 px slot before their text (AWK-41).
+- Picture choices have room between the picture and the border (AWK-41).
 - One question at a time: choosing an answer no longer moves on by itself; the respondent moves on with OK or Enter (AWK-37).
 - Question texts and page titles scale with the screen on phones instead of jumping at one width (AWK-35).
 - "Other, please specify" in the survey sits inside its option with room around it instead of touching the edges (AWK-20).

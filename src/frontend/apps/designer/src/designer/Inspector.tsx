@@ -619,7 +619,8 @@ function ItemSettings({ t, state, dispatch, question, list }: RegionProps & { qu
         const n = index + 1;
 
         return (
-          <div key={index} className="designer-items__row">
+          <div key={index} className={pictures ? "designer-items__row designer-items__row--picture" : "designer-items__row"}>
+            {pictures && <OptionPicture t={t} dispatch={dispatch} question={question} index={index} n={n} asset={item.image?.asset} />}
             <input
               className="designer-input designer-input--text"
               aria-label={isRows ? t("rowLabel", { n }) : t("optionLabel", { n })}
@@ -635,7 +636,6 @@ function ItemSettings({ t, state, dispatch, question, list }: RegionProps & { qu
               value={item.code}
               onChange={(event) => dispatch({ type: "setItemCode", questionId: question.id, list, index, code: event.target.value })}
             />
-            {pictures && <OptionPicture t={t} dispatch={dispatch} question={question} index={index} n={n} asset={item.image?.asset} />}
             <button
               type="button"
               className="designer-items__remove"
@@ -805,14 +805,21 @@ function QuestionImageSettings({ t, state, dispatch, question }: RegionProps & {
 function OptionPicture({ t, dispatch, question, index, n, asset }: Pick<RegionProps, "t" | "dispatch"> & { question: Question; index: number; n: number; asset: string | undefined }) {
   const { url } = useImages();
 
+  // A 40 px slot before the option (W31): a dashed "+" to add a picture, or the picture with its own × to remove it.
   return asset === undefined ? (
     <span className="designer-items__picture">
-      <ImageButton label={t("addPicture")} fileLabel={t("pictureFor", { n })} onImage={(chosen) => dispatch({ type: "setOptionImage", questionId: question.id, index, asset: chosen })} />
+      <ImageButton
+        className="designer-items__add-picture"
+        label="+"
+        title={t("addPictureFor", { n })}
+        fileLabel={t("pictureFor", { n })}
+        onImage={(chosen) => dispatch({ type: "setOptionImage", questionId: question.id, index, asset: chosen })}
+      />
     </span>
   ) : (
     <span className="designer-items__picture">
-      <img src={url(asset, 480)} alt="" />
-      <button type="button" className="designer-items__remove" aria-label={t("removePicture", { n })} onClick={() => dispatch({ type: "setOptionImage", questionId: question.id, index, asset: null })}>
+      <img src={url(asset, 160)} alt="" />
+      <button type="button" className="designer-items__picture-remove" aria-label={t("removePicture", { n })} onClick={() => dispatch({ type: "setOptionImage", questionId: question.id, index, asset: null })}>
         ×
       </button>
     </span>

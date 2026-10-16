@@ -522,12 +522,35 @@ body {
   box-shadow: 0 0 0 1px var(--aw-signal);
 }
 
+/* Before the first touch (W31): a dashed handle in the middle shows where to touch; it is no answer. */
 .run-slider--untouched input[type="range"]::-webkit-slider-thumb {
-  opacity: 0;
+  border: 2px dashed var(--aw-signal);
+  background: var(--aw-surface);
+  box-shadow: none;
 }
 
 .run-slider--untouched input[type="range"]::-moz-range-thumb {
-  opacity: 0;
+  border: 2px dashed var(--aw-signal);
+  background: var(--aw-surface);
+  box-shadow: none;
+}
+
+.run-slider__ticks {
+  display: flex;
+  justify-content: space-between;
+  margin: -10px 12px 0;
+}
+
+.run-slider__ticks i {
+  width: 1px;
+  height: 7px;
+  background: var(--aw-line-strong);
+}
+
+.run-slider__clear {
+  justify-self: end;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .run-date {
@@ -959,11 +982,18 @@ body {
 }
 
 .run-choice__picture {
+  order: -1;
   width: 72px;
   height: 72px;
   object-fit: cover;
   flex: none;
-  border-radius: var(--run-radius, 2px);
+  /* The look's corners, but never round: a pill look would make the picture a circle. */
+  border-radius: min(var(--run-radius, 2px), 10px);
+}
+
+/* Room around the picture (W31): 8 px inside the border on every side; the marker follows the picture. */
+.run-choice:has(.run-choice__picture) {
+  padding: 8px 16px 8px 8px;
 }
 
 /* The look's finer settings (W26): each data attribute is set only when the look sets it. */

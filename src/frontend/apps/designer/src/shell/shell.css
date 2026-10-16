@@ -367,10 +367,41 @@
   color: var(--aw-muted);
 }
 
+/* The breadcrumb (W31): the survey's name in the page title's font and size, not bold, then the place. */
+.survey-bar__crumbs {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.survey-bar__crumb {
+  min-width: 0;
+  max-width: 42vw;
+  overflow: hidden;
+  font: 400 20px/1.2 var(--aw-font-display);
+  color: var(--aw-graphite);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.survey-bar__crumb:hover {
+  color: var(--aw-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.survey-bar__crumb-sep {
+  font: 400 20px/1.2 var(--aw-font-display);
+  color: var(--aw-muted);
+}
+
 .survey-bar__place {
   margin: 0;
-  font: 700 20px/1 var(--aw-font-display);
+  font: 700 20px/1.2 var(--aw-font-display);
   color: var(--aw-ink);
+  white-space: nowrap;
 }
 
 /* The account menu sits at the sidebar's foot, so it opens upward. */

@@ -198,11 +198,13 @@ function Answer({ t, definition, language, question, value, onChange }: FieldPro
       const fill = answered ? Math.round((((value?.number ?? scale.min) - scale.min) / (scale.max - scale.min || 1)) * 100) : 0;
       const minLabel = labelOf(scale.minLabel ?? {});
       const maxLabel = labelOf(scale.maxLabel ?? {});
+      const stepCount = Math.round((scale.max - scale.min) / (scale.step ?? 1)) + 1;
+      const ticks = stepCount <= 21 ? stepCount : 11;
 
       return (
         <div className={answered ? "run-slider" : "run-slider run-slider--untouched"}>
           <output className="run-slider__value" aria-hidden="true">
-            {answered && question.scale?.showValue !== false ? value?.number : answered ? "" : t("notAnswered")}
+            {answered && question.scale?.showValue !== false ? value?.number : answered ? "" : t("sliderHint")}
           </output>
           <input
             type="range"
@@ -216,10 +218,21 @@ function Answer({ t, definition, language, question, value, onChange }: FieldPro
             onChange={(event) => onChange({ number: Number(event.target.value) })}
             onPointerDown={(event) => !answered && onChange({ number: Number((event.target as HTMLInputElement).value) })}
           />
-          <div className="run-scale__ends" aria-hidden="true">
-            <span>{minLabel || scale.min}</span>
-            <span>{maxLabel || scale.max}</span>
+          {/* A tick per step (W31), at most 21; more steps get 11 evenly spread. */}
+          <div className="run-slider__ticks" aria-hidden="true">
+            {Array.from({ length: ticks }, (_, index) => (
+              <i key={index} />
+            ))}
           </div>
+          <div className="run-scale__ends" aria-hidden="true">
+            <span>{minLabel ? `${scale.min} · ${minLabel}` : scale.min}</span>
+            <span>{maxLabel ? `${scale.max} · ${maxLabel}` : scale.max}</span>
+          </div>
+          {answered && (
+            <button type="button" className="run-link run-slider__clear" onClick={() => onChange(undefined)}>
+              {t("clearAnswer")}
+            </button>
+          )}
         </div>
       );
     }

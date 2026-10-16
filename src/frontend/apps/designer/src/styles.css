@@ -66,3 +66,27 @@ body {
   color: var(--aw-ink);
   font: 400 14px/1.4 var(--aw-font);
 }
+
+/* One layout language (W31): every page starts 32 px after the sidebar and 28 px below the bar, left-aligned.
+   Lists and cards up to 1,200 px, forms up to 720 px; only canvases (Questions, Look, Results) use the full width. */
+:root {
+  --aw-page-list: 1200px;
+  --aw-page-form: 720px;
+  --aw-page-pad: 28px 32px 64px;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --aw-page-pad: 20px 16px 48px;
+  }
+}
+
+/* Inside the sidebar layout the bar names the page; the page does not repeat it. */
+.shell .survey-page__title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

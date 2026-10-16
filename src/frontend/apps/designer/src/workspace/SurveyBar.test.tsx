@@ -47,6 +47,22 @@ function renderBar({ summary = published, canEdit = true, locale = "en" as "en" 
   return { calls, ...handlers, ...view };
 }
 
+describe("Breadcrumb in the sidebar layout (W31)", () => {
+  it("names the survey, which opens its Questions, then the place as the page's heading", async () => {
+    const { surveys } = fakeSurveys();
+    const onHome = vi.fn();
+    const { container } = render(
+      <SurveyBar t={workspaceText("en")} surveys={surveys} surveyId="s1" summary={published} canEdit onPreview={vi.fn()} onPrimary={vi.fn()} onBack={vi.fn()} onChanged={vi.fn()} place="Share" onHome={onHome} />,
+    );
+    const crumbs = within(screen.getByRole("navigation", { name: "You are here" }));
+
+    expect(crumbs.getByRole("heading", { level: 1, name: "Share" }).getAttribute("aria-current")).toBe("page");
+    fireEvent.click(crumbs.getByRole("link", { name: published.title }));
+    expect(onHome).toHaveBeenCalled();
+    await expectNoAxeViolations(container);
+  });
+});
+
 describe("primaryAction (W17)", () => {
   it("publishes a draft, publishes changes, and shares a published or closed survey; readers get none", () => {
     expect(primaryAction({ ...published, status: "draft", publishedVersion: null }, true)).toBe("publish");

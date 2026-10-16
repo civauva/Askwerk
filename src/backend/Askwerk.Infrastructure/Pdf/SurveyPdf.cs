@@ -224,7 +224,7 @@ public static class SurveyPdf
                     image.LockAspectRatio = true;
                 }
 
-                Answers(section, question, Text, german, width, line, size);
+                Answers(section, question, Text, german, width, line, size, content.Images);
             }
 
             if (page.After is { } after && (after.End == true || after.GoTo is not null))
@@ -248,14 +248,14 @@ public static class SurveyPdf
     }
 
     /// <summary>The place to answer, drawn for paper: boxes to tick, a scale, lines or a table.</summary>
-    private static void Answers(Section section, Question question, Func<TranslatedText?, string> text, bool german, Unit width, Color line, double size)
+    private static void Answers(Section section, Question question, Func<TranslatedText?, string> text, bool german, Unit width, Color line, double size, IReadOnlyDictionary<string, byte[]> images)
     {
         switch (question.Type)
         {
             case QuestionType.SingleChoice or QuestionType.MultipleChoice or QuestionType.Dropdown:
                 foreach (var option in question.Options ?? [])
                 {
-                    Tick(section, text(option.Label), line, size);
+                    Tick(section, text(option.Label), line, size, option.Image?.Asset is { } asset && images.TryGetValue(asset, out var picture) ? picture : null);
                 }
 
                 if (question.Other is { } other)
@@ -306,22 +306,39 @@ public static class SurveyPdf
         }
     }
 
-    private static void Tick(Section section, string label, Color line, double size)
+    private static void Tick(Section section, string label, Color line, double size, byte[]? picture = null)
     {
-        // A square box to tick, then the label: a two-column table keeps them on one line.
+        // A square box to tick, then the label: a table keeps them on one line. A picture choice (W31) puts its
+        // picture between them, with room around it.
         var box = Unit.FromPoint(size * 1.25);
         var table = section.AddTable();
         table.Borders.Visible = false;
         table.AddColumn(Unit.FromPoint(box.Point + (size * 0.8)));
-        table.AddColumn(Unit.FromCentimeter(15));
+
+        if (picture is not null)
+        {
+            table.AddColumn(Unit.FromCentimeter(2.4));
+        }
+
+        table.AddColumn(Unit.FromCentimeter(picture is null ? 15 : 12.6));
         var row = table.AddRow();
-        row.TopPadding = Unit.FromPoint(size * 0.15);
+        row.TopPadding = Unit.FromPoint(picture is null ? size * 0.15 : 6);
+        row.BottomPadding = Unit.FromPoint(picture is null ? 0 : 6);
+        row.VerticalAlignment = VerticalAlignment.Center;
         var square = row.Cells[0].AddTextFrame();
         square.Width = box;
         square.Height = box;
         square.LineFormat.Color = line;
         square.LineFormat.Width = 0.75;
-        row.Cells[1].AddParagraph(label);
+
+        if (picture is not null)
+        {
+            var image = row.Cells[1].AddImage(Base64(picture));
+            image.Width = Unit.FromCentimeter(2);
+            image.LockAspectRatio = true;
+        }
+
+        row.Cells[picture is null ? 1 : 2].AddParagraph(label);
     }
 
     private static void Scale(Section section, List<int> values, Color line, Unit width, double size)

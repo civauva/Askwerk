@@ -1097,9 +1097,14 @@
 
 .designer-items__row {
   display: grid;
-  grid-template-columns: 1fr 64px 24px;
+  grid-template-columns: minmax(0, 1fr) 56px 24px;
   gap: 6px;
   align-items: center;
+}
+
+/* Picture choices (W31): the picture slot first, so the row never grows wider than the inspector. */
+.designer-items__row--picture {
+  grid-template-columns: 40px minmax(0, 1fr) 52px 24px;
 }
 
 .designer-items__code {
@@ -1428,20 +1433,44 @@
 }
 
 .designer-items__picture {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
 }
 
 .designer-items__picture img {
-  width: 32px;
-  height: 32px;
+  display: block;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: var(--aw-radius-control);
 }
 
-.designer-items__picture .designer-button {
-  padding: 4px 8px;
+.designer-items__add-picture {
+  width: 40px;
+  height: 40px;
+  border: 1.5px dashed var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  color: var(--aw-graphite);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.designer-items__picture-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 50%;
+  background: var(--aw-surface);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 /* Save as template (AWK-17 step 5). */
@@ -1838,4 +1867,27 @@ button.designer-page__progress:hover {
 
 .designer-link-button--danger {
   color: var(--aw-signal-ink);
+}
+
+/* The inspector never scrolls sideways (W31): fields take its width, rows and segments wrap. */
+.designer-inspector {
+  overflow-x: hidden;
+}
+
+.designer-inspector > *,
+.designer-inspector .designer-field,
+.designer-inspector input,
+.designer-inspector select,
+.designer-inspector textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.designer-inspector .designer-row,
+.designer-inspector .designer-segment {
+  flex-wrap: wrap;
+}
+
+.designer-inspector img {
+  max-width: 100%;
 }

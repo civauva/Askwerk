@@ -467,3 +467,6 @@ Reason: owner decision. A deleted organisation is closed at once and kept 30 day
 
 ## 2026-10-16 — One squashed commit per finished feature, pushed to main
 Reason: owner decision, while Askwerk is a one-person project; fewer commits and no GitHub-side merge traces (PR pages, merge co-author lines). Atomic commits stay local on the feature branch; after a green full run the branch is squashed locally into one commit on main and pushed. Alternatives rejected: squash-merging pull requests on GitHub (adds a Co-authored-by line from the account email and leaves PR pages, with no reviewer or CI to justify them). Outside contributions still come as pull requests. Work item: AWK-40.
+
+## 2026-10-16 — One layout language: three page kinds, left-aligned (W31)
+Reason: owner feedback; pages used nine widths, some centred, some not. Every page now starts 32 px after the sidebar and 28 px below the bar, left-aligned: lists and cards up to 1,200 px, forms up to 720 px (CSS variables --aw-page-list, --aw-page-form, --aw-page-pad); only canvases (Questions, Look editor, Results) use the full width. A browser test measures each page. Survey pages show a breadcrumb (survey name in the title's font, not bold, then the page). Alternatives rejected: centred pages (content drifts away from the sidebar on wide screens). Work item: AWK-41.

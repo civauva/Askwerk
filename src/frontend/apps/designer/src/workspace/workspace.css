@@ -230,15 +230,16 @@
 }
 
 .survey-page {
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 24px 24px 48px;
+  box-sizing: content-box;
+  max-width: var(--aw-page-form);
+  margin: 0;
+  padding: var(--aw-page-pad);
   font-family: var(--aw-font);
   color: var(--aw-ink);
 }
 
 .survey-page--wide {
-  max-width: 1200px;
+  max-width: var(--aw-page-list);
 }
 
 .survey-page > .designer-segment {
@@ -386,14 +387,17 @@
 }
 
 /* ⚙ Survey settings (W23). */
-.survey-settings {
-  max-width: 760px;
-}
-
 .survey-settings__section {
   margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid var(--aw-line);
+}
+
+/* The first section starts at the page's top: no rule above it (W31). */
+.shell .survey-page__title + .survey-settings__section {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .survey-settings__section h3 {

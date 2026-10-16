@@ -579,6 +579,7 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
         var baseAddress = (await settings.FindAsync(cancellationToken))?.BaseAddress.TrimEnd('/') ?? $"{Request.Scheme}://{Request.Host}";
         var wanted = new[] { definition.HeaderImage?.Asset, theme.HeaderImage?.Asset, theme.Logo?.Asset }
             .Concat(definition.Pages.SelectMany(page => page.Questions).Select(question => question.Image?.Asset))
+            .Concat(definition.Pages.SelectMany(page => page.Questions).SelectMany(question => question.Options ?? []).Select(option => option.Image?.Asset))
             .OfType<string>()
             .Select(asset => Guid.TryParse(asset, out var assetId) ? assetId : Guid.Empty)
             .Where(assetId => assetId != Guid.Empty)

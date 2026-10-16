@@ -2,9 +2,10 @@
 /* Organisation → Domains (AWK-7, W12 A). Tokens only. */
 
 .domains {
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 32px 20px 64px;
+  box-sizing: content-box;
+  max-width: var(--aw-page-list);
+  margin: 0;
+  padding: var(--aw-page-pad);
   color: var(--aw-ink);
   font-family: var(--aw-font);
 }

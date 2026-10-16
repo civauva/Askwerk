@@ -2,9 +2,10 @@
 /* Organisation → Members (AWK-30, W18). Tokens only. */
 
 .members {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 32px 20px 64px;
+  box-sizing: content-box;
+  max-width: var(--aw-page-list);
+  margin: 0;
+  padding: var(--aw-page-pad);
   color: var(--aw-ink);
   font-family: var(--aw-font);
 }

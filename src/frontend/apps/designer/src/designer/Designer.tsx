@@ -287,7 +287,7 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
         onPrimary={(action) => (action === "share" ? onTab?.("share") : setPublishing(true))}
         onBack={() => onBack?.()}
         onChanged={loadSummary}
-        {...(slot === null ? { profile } : { place: state.settings ? w("settings") : w("build") })}
+        {...(slot === null ? { profile } : { place: state.settings ? w("settings") : w("build"), onHome: () => dispatch({ type: "select", questionId: state.selectedQuestionId }) })}
         approval={approvals !== null && <ApprovalPill t={w} approvals={approvals} />}
       />
       {slot === null ? (

@@ -10,9 +10,9 @@
 
 
 .results-main {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: var(--aw-space-4) 20px 48px;
+  max-width: none;
+  margin: 0;
+  padding: var(--aw-page-pad);
 }
 
 .results-hidden {

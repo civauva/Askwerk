@@ -46,7 +46,7 @@
 
 .dev-main {
   min-width: 0;
-  padding: 28px 40px 48px;
+  padding: var(--aw-page-pad);
 }
 
 .dev-title {

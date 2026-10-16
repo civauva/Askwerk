@@ -1,14 +1,16 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 /* Administration pages (AWK-38, W29): Organisation and This Askwerk. */
 .admin {
-  max-width: 980px;
-  padding: 28px 32px 64px;
+  box-sizing: content-box;
+  max-width: var(--aw-page-list);
+  margin: 0;
+  padding: var(--aw-page-pad);
   color: var(--aw-ink);
   font-family: var(--aw-font);
 }
 
 .admin--wide {
-  max-width: none;
+  max-width: var(--aw-page-list);
 }
 
 .admin h1 {

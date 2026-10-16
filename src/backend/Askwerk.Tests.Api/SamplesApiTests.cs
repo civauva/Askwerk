@@ -80,6 +80,24 @@ public sealed class SamplesApiTests(PostgresServer server)
     }
 
     [Fact]
+    public void Pdf_PrintsThePicturesOfPictureChoices()
+    {
+        var sample = SampleSurveys.Find("cafe")!;
+        var assets = SampleSurveys.PictureNames(sample).ToDictionary(name => name, _ => Guid.NewGuid());
+        var definition = SampleSurveys.DefinitionWith(sample, assets);
+        var cakes = new[] { "strudel", "sacher", "cheesecake", "croissant" };
+        var pictures = cakes.ToDictionary(name => assets[name].ToString(), name => SampleSurveys.Picture(name).Png);
+
+
+        var with = SurveyPdf.Render(definition, SampleSurveys.Looks["papier"], PdfContentFor(pictures));
+        var without = SurveyPdf.Render(definition, SampleSurveys.Looks["papier"], PdfContentFor(new Dictionary<string, byte[]>()));
+
+        Assert.True(with.Length > without.Length + 20_000);
+
+        static SurveyPdfContent PdfContentFor(Dictionary<string, byte[]> images) => new("Café visit", "Café Falke", "https://surveys.acme.at/s/abc", "en", images);
+    }
+
+    [Fact]
     public void Email_FollowsTheLooksHeader_LogoBandOrPlain()
     {
         EmailContent Content() => new("Your opinion", "Please answer.\n\nhttps://surveys.acme.at/s/abc", "https://surveys.acme.at/s/abc", "Start", "Acme GmbH", "https://acme.at/logo.png", null, "", null);

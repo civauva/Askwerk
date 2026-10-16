@@ -103,8 +103,10 @@ type SurveyBarProps = {
   onChanged: () => void;
   /** The profile menu at the far right, as on every other page (W23). */
   profile?: ReactNode;
-  /** Inside the app's sidebar (AWK-38, W29): the bar names the place, the survey's name and way back are in the sidebar. */
+  /** Inside the app's sidebar (AWK-38, W29, W31): a breadcrumb, the survey's name then the place; the way back is in the sidebar. */
   place?: string;
+  /** The breadcrumb's survey name opens the survey's home, Questions (W31). */
+  onHome?: () => void;
 };
 
 /**
@@ -132,6 +134,7 @@ export function SurveyBar({
   onChanged,
   profile,
   place,
+  onHome,
 }: SurveyBarProps) {
   const primary = primaryAction(summary, canEdit);
   const action = primary === "share" && !showShare ? null : primary;
@@ -139,7 +142,25 @@ export function SurveyBar({
   return (
     <header className={place === undefined ? "survey-bar" : "survey-bar survey-bar--place"} aria-label={t("survey")}>
       {place !== undefined ? (
-        <h1 className="survey-bar__place">{place}</h1>
+        <nav className="survey-bar__crumbs" aria-label={t("whereYouAre")}>
+          <a
+            href="#build"
+            className="survey-bar__crumb"
+            title={summary?.title ?? ""}
+            onClick={(event) => {
+              event.preventDefault();
+              onHome?.();
+            }}
+          >
+            {summary?.title ?? ""}
+          </a>
+          <span className="survey-bar__crumb-sep" aria-hidden="true">
+            ›
+          </span>
+          <h1 className="survey-bar__place" aria-current="page">
+            {place}
+          </h1>
+        </nav>
       ) : (
       <>
       <a
@@ -403,7 +424,7 @@ export function SurveyTabs({ t, active, canEdit, summary, onSelect }: { t: Works
 }
 
 /**
- * The survey's places in the app's sidebar (AWK-38, W29 drill-in): its name and three facts, then Create · Collect ·
+ * The survey's places in the app's sidebar (AWK-38, W29 drill-in; W31: the name is in the breadcrumb): Create · Collect ·
  * Analyse and Survey settings. The same links, names and counts as SurveyTabs, so both read the same.
  */
 export function SurveyPlaces({ t, active, canEdit, summary, onSelect }: { t: WorkspaceText; active: SurveyTab; canEdit: boolean; summary: SurveySummary | null; onSelect: (tab: SurveyTab) => void }) {
@@ -430,16 +451,6 @@ export function SurveyPlaces({ t, active, canEdit, summary, onSelect }: { t: Wor
 
   return (
     <>
-      <div className="survey-places__head">
-        <div className="survey-places__name">{summary?.title ?? ""}</div>
-        {summary !== null && (
-          <div className="survey-places__facts">
-            <span className={summary.status === "draft" || summary.hasChanges ? "survey-places__fact survey-places__fact--draft" : "survey-places__fact"}>{statusText(t, summary)}</span>
-            {summary.responses > 0 && <span className="survey-places__fact">{t("results")} {summary.responses}</span>}
-            {summary.languages.length > 0 && <span className="survey-places__fact">{summary.languages.map((language) => language.toUpperCase()).join(" ")}</span>}
-          </div>
-        )}
-      </div>
       <nav className="survey-places" aria-label={t("survey")}>
         {shown.map((group) => (
           <div key={group.label} role="group" aria-label={t(group.label)}>

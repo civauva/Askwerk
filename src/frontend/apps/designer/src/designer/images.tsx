@@ -14,7 +14,7 @@ export const Images = createContext<ImageTools>({ upload: () => Promise.reject(n
 export const useImages = () => useContext(Images);
 
 /** A visible button that opens the file chooser; the hidden input carries the accessible file label. */
-export function ImageButton({ label, fileLabel, onImage }: { label: string; fileLabel: string; onImage: (assetId: string) => void }) {
+export function ImageButton({ label, fileLabel, onImage, className = "designer-button designer-button--quiet", title }: { label: string; fileLabel: string; onImage: (assetId: string) => void; className?: string; title?: string }) {
   const input = useRef<HTMLInputElement>(null);
   const { upload } = useImages();
 
@@ -22,7 +22,9 @@ export function ImageButton({ label, fileLabel, onImage }: { label: string; file
     <>
       <button
         type="button"
-        className="designer-button designer-button--quiet"
+        className={className}
+        title={title}
+        aria-label={title}
         onClick={(event) => {
           event.stopPropagation();
           input.current?.click();

@@ -97,7 +97,7 @@ export function SurveyFrame({
         approval={canEdit && approvals !== null && <ApprovalPill t={t} approvals={approvals} />}
         onBack={onBack}
         onChanged={reload}
-        {...(slot === null ? { profile } : { place: t(active) })}
+        {...(slot === null ? { profile } : { place: t(active), onHome: () => select("build") })}
       />
       {slot === null ? <SurveyTabs t={t} active={active} canEdit={canEdit} summary={summary} onSelect={select} /> : createPortal(<SurveyPlaces t={t} active={active} canEdit={canEdit} summary={summary} onSelect={select} />, slot)}
       {children({ t, summary, reload })}
@@ -153,7 +153,7 @@ export function SharePage({ participants, preview, writeClipboard = (text) => na
         const shown = language !== null && summary.languages.includes(language) ? language : summary.languages.includes(locale) ? locale : (summary.languages[0] ?? locale);
 
         return (
-          <main className="survey-page">
+          <main className="survey-page survey-page--wide">
             <h2 className="survey-page__title">{t("share")}</h2>
             {summary.publishedVersion === null ? (
               <p className="survey-page__empty">{t("shareFirst")}</p>

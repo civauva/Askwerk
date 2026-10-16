@@ -1,9 +1,10 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 /* Organisation → Look of surveys (AWK-17, W10 A) in the Werkstatt look; the preview uses the theme's own tokens. */
 .look {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 32px 20px 64px;
+  box-sizing: content-box;
+  max-width: var(--aw-page-list);
+  margin: 0;
+  padding: var(--aw-page-pad);
   display: grid;
   gap: 16px;
   color: var(--aw-ink);
