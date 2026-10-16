@@ -140,16 +140,7 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
       {question.type === "image" && <ImageBlockSettings t={t} state={state} dispatch={dispatch} question={question} />}
       {question.type !== "text-block" && question.type !== "image" && <QuestionImageSettings t={t} state={state} dispatch={dispatch} question={question} />}
       {question.type !== "text-block" && question.type !== "image" && (
-      <button
-        type="button"
-        role="switch"
-        aria-checked={question.required}
-        className="designer-switch"
-        onClick={() => dispatch({ type: "setRequired", questionId: question.id, required: !question.required })}
-      >
-        <b aria-hidden="true" />
-        {t("required")}
-      </button>
+        <Switch label={t("required")} checked={question.required} onChange={(required) => dispatch({ type: "setRequired", questionId: question.id, required })} />
       )}
       {question.options !== undefined && (
         <Switch

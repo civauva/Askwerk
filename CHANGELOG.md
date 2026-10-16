@@ -44,6 +44,7 @@ All notable changes to Askwerk are documented here. The format follows [Keep a C
 - The designer and Results inside your own product: /embed/designer and /embed/results with a hand-over token, sessions kept in memory, events to the host; a survey can be limited to some of the organisation's websites; a host can name the respondent (AWK-13).
 
 ### Fixed
+- The question inspector's Required switch looks like every other switch again instead of a grey bar (AWK-42).
 - The question inspector no longer scrolls sideways; picture options get a 40 px slot before their text (AWK-41).
 - Picture choices have room between the picture and the border (AWK-41).
 - One question at a time: choosing an answer no longer moves on by itself; the respondent moves on with OK or Enter (AWK-37).

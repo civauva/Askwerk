@@ -123,6 +123,16 @@ describe("Designer main screen (M1)", () => {
     await waitFor(() => expect(api.saved.at(-1)?.pages[2]?.questions[0]?.required).toBe(true));
   });
 
+  it("draws Required like every other switch in the inspector", async () => {
+    await loaded();
+    fireEvent.click(outline().getByRole("button", { name: "Which branch? BRANCH" }));
+
+    const required = inspector().getByRole("switch", { name: "Required" });
+    const randomise = inspector().getByRole("switch", { name: "Randomise options" });
+
+    expect(required.className).toBe(randomise.className);
+  });
+
   it("explains an invalid variable name right at the field", async () => {
     await loaded();
     fireEvent.click(outline().getByRole("button", { name: "Which branch? BRANCH" }));
