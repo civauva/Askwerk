@@ -6,7 +6,7 @@ type Schemas = components["schemas"];
 
 export type SurveyStatus = "draft" | "published" | "closed" | "archived";
 /** The front page a card draws (W32): the welcome page's title and text, in the look's tokens. */
-export type SurveyFront<TTokens = unknown> = { title: Record<string, string> | null; text: Record<string, string> | null; defaultLanguage: string; look: TTokens };
+export type SurveyFront<TTokens = unknown> = { title: Record<string, string> | null; text: Record<string, string> | null; defaultLanguage: string; look: TTokens; headerImage?: string | null };
 export type SurveyListItem = Omit<Schemas["SurveyListItem"], "status" | "front"> & { status: SurveyStatus; front?: SurveyFront | null };
 /** One page of the survey list (W13 A); total counts every survey that matches the status and search. */
 export type SurveyList = { items: SurveyListItem[]; counts: Record<"all" | "draft" | "published" | "closed", number>; total: number };

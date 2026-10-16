@@ -54,7 +54,7 @@ internal sealed class SurveyFronts
     {
         var tokens = look is not null && ThemeTokensJson.Read(look) is { } own ? own : themeId is { } id && themes.TryGetValue(id, out var theme) ? theme : fallback;
 
-        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens));
+        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens), definition?.HeaderImage?.Asset);
     }
 }
 
@@ -63,4 +63,5 @@ internal sealed class SurveyFronts
 /// <param name="Text">The welcome page's text per language, if any.</param>
 /// <param name="DefaultLanguage">The language to fall back to.</param>
 /// <param name="Look">The look's tokens (packages/schema/src/theme.ts).</param>
-public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look);
+/// <param name="HeaderImage">The survey's own header picture, if any; it wins over the look's.</param>
+public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look, string? HeaderImage = null);

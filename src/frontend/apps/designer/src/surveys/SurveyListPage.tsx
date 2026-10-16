@@ -2,7 +2,7 @@
 import "./surveys.css";
 import { ApiError, type Me, type SampleSurvey, type SurveyList, type SurveyListItem, type SurveysClient, type SurveyStatus, type SurveyTemplate } from "@askwerk/app-client";
 import { createTranslator, themePresets, type Locale, type ThemeTokens, type Translate } from "@askwerk/schema";
-import { FrontCard } from "../designer/look/FrontCard";
+import { FrontCard, frontAssetUrl } from "../designer/look/FrontCard";
 import { LookThumb } from "../designer/look/LookThumb";
 import { ComboBox, DataGrid, dataGridTexts, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridSort, Dialog } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
@@ -333,6 +333,8 @@ function SurveyCards({
                   text={frontText(survey.front.text, locale, survey.front.defaultLanguage)}
                   organisation={organisation}
                   start={t("start")}
+                  headerAsset={survey.front.headerImage ?? null}
+                  assetUrl={frontAssetUrl}
                 />
               )}
             </button>

@@ -16891,6 +16891,13 @@
           "look": {
             "description": "The look\u0027s tokens (packages/schema/src/theme.ts).",
             "$ref": "#/components/schemas/JsonElement"
+          },
+          "headerImage": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The survey\u0027s own header picture, if any; it wins over the look\u0027s."
           }
         },
         "description": "The front page a card draws (W32)."

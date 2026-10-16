@@ -21,7 +21,7 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   const cards = page.getByRole("list", { name: "Surveys" });
   await expect(cards.getByRole("listitem").first()).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
-  await page.screenshot({ path: info.outputPath("surveys-cards.png") });
+  await page.screenshot({ path: info.outputPath("surveys-cards.png"), fullPage: true });
   await page.getByRole("button", { name: "☰ List" }).click();
 
   // Templates: Askwerk's copied to ours opens in the designer as a template.
@@ -29,7 +29,7 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   await expect(page.getByRole("heading", { level: 1, name: "Templates" })).toBeVisible();
   await page.getByRole("button", { name: "▦ Cards" }).click();
   await expect(page.getByRole("list", { name: "Templates" }).getByRole("listitem").first()).toBeVisible();
-  await page.screenshot({ path: info.outputPath("templates-cards.png") });
+  await page.screenshot({ path: info.outputPath("templates-cards.png"), fullPage: true });
   await page.getByRole("button", { name: "Copy NPS, short to our templates" }).click();
 
   const bar = page.getByRole("banner", { name: "Survey" });

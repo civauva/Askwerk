@@ -817,36 +817,107 @@
   margin-bottom: 4px;
 }
 
-/* A survey's front page on a card (W32): the welcome page in its look. */
+/* A survey's front page in miniature (W32), as the runner draws it: page, organisation bar, welcome card. */
 .lt.fc {
   width: 100%;
-  height: 168px;
+  height: 176px;
   border-radius: 0;
   box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 12px;
+  box-sizing: border-box;
 }
 
 .fc-band {
   position: absolute;
   inset: 0 0 auto;
+  height: 34px;
 }
 
-.fc-org {
+.fc-picture {
   position: absolute;
-  left: 18px;
-  top: 14px;
-  font: 600 8.5px/1 var(--lt-body);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  inset: 0 0 auto;
+  height: 62px;
+  background: var(--lt-line) center / cover;
+}
+
+.fc-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 6px 14px 0;
+  font: 600 9px/1 var(--lt-body);
   color: var(--lt-text);
+}
+
+.fc-head i {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--lt-text);
+  color: var(--lt-bg);
+  font: 700 8px/1 var(--lt-body);
+  font-style: normal;
+}
+
+.fc-head img {
+  max-width: 64px;
+  max-height: 18px;
+  object-fit: contain;
+}
+
+.lt.fc[data-picture] .fc-head,
+.lt.fc[data-scene="mountains"] .fc-head {
+  color: #fff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
+}
+
+.fc-card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 6px;
+  margin: 0 14px;
+  padding: 12px 14px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--lt-surface);
+  border: 1px solid var(--lt-line);
+  border-radius: var(--lt-card);
+  color: var(--lt-text);
+}
+
+.lt.fc[data-picture] .fc-card {
+  margin-top: 6px;
+}
+
+.lt.fc[data-welcome="centre"] .fc-card {
+  justify-items: center;
+  text-align: center;
+}
+
+.lt.fc[data-welcome="band"] .fc-card {
+  background: var(--lt-accent);
+  border-color: var(--lt-accent);
+  color: var(--lt-on);
+}
+
+.lt.fc[data-panel="frosted"] .fc-card,
+.lt.fc[data-scene="mountains"] .fc-card {
+  background: color-mix(in srgb, var(--lt-surface) 88%, transparent);
+  border-color: rgb(255 255 255 / 70%);
 }
 
 .fc-title {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 40px;
-  font: 600 17px/1.15 var(--lt-head);
-  color: var(--lt-text);
+  font: 700 15px/1.15 var(--lt-head);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -854,11 +925,7 @@
 }
 
 .fc-lead {
-  position: absolute;
-  left: 18px;
-  right: 30px;
-  top: 92px;
-  font-size: 10.5px;
+  font-size: 10px;
   line-height: 1.4;
   color: var(--lt-muted);
   display: -webkit-box;
@@ -867,22 +934,36 @@
   overflow: hidden;
 }
 
+.lt.fc[data-welcome="band"] .fc-lead {
+  color: inherit;
+  opacity: 0.85;
+}
+
 .fc-go {
-  position: absolute;
-  left: 18px;
-  bottom: 16px;
-  padding: 5px 12px;
+  margin-top: auto;
+  padding: 5px 14px;
+  border: 1px solid var(--lt-accent);
   border-radius: var(--lt-radius);
   background: var(--lt-accent);
   color: var(--lt-on);
-  font: 600 10px/1 var(--lt-body);
+  font: 600 9.5px/1 var(--lt-body);
 }
 
-.lt.fc[data-scene="mountains"] .fc-org,
-.lt.fc[data-scene="mountains"] .fc-title,
-.lt.fc[data-scene="mountains"] .fc-lead {
-  color: #fff;
-  text-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+.lt.fc[data-buttons="outline"] .fc-go {
+  background: transparent;
+  color: var(--lt-accent);
+}
+
+.lt.fc[data-buttons="soft"] .fc-go {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--lt-accent) 16%, var(--lt-surface));
+  color: var(--lt-accent);
+}
+
+.lt.fc[data-welcome="band"] .fc-go {
+  border-color: var(--lt-on);
+  background: var(--lt-on);
+  color: var(--lt-accent);
 }
 
 /* The cards of a list (W32), with what the table shows below the picture. */

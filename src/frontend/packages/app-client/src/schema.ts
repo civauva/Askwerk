@@ -11004,6 +11004,8 @@ export interface components {
             defaultLanguage: string;
             /** @description The look's tokens (packages/schema/src/theme.ts). */
             look: components["schemas"]["JsonElement"];
+            /** @description The survey's own header picture, if any; it wins over the look's. */
+            headerImage?: null | string;
         };
         /** @description A link to the survey (AWK-7). */
         SurveyLinkResponse: {

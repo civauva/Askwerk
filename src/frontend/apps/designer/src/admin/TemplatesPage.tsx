@@ -5,7 +5,7 @@ import { createTranslator, type Locale, type ThemeTokens } from "@askwerk/schema
 import { ConfirmDialog, DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
-import { FrontCard } from "../designer/look/FrontCard";
+import { FrontCard, frontAssetUrl } from "../designer/look/FrontCard";
 import { frontText, viewKey, type ListView } from "../surveys/SurveyListPage";
 import { adminMessages } from "./messages";
 
@@ -159,6 +159,8 @@ export function TemplatesPage({
                     text={frontText(row.front.text, locale, row.front.defaultLanguage)}
                     organisation={organisation}
                     start={t("start")}
+                    headerAsset={row.front.headerImage ?? null}
+                    assetUrl={frontAssetUrl}
                   />
                 )}
               </div>
