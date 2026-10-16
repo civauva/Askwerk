@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/TestResults
+**/*.user
+src/e2e
+.git
+design
+docs/*
+# The Developers hub (AWK-34) bundles the API guides, the public contract and the example project.
+!docs/api
+!docs/integrations
+agents

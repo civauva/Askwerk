@@ -1,0 +1,1446 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The runner in the Werkstatt look (AWK-6, M4). One column, max 640 px; 18 px body on desktop, 17 px on phones. */
+body {
+  margin: 0;
+  background: var(--aw-paper);
+}
+
+.run {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--aw-paper);
+  color: var(--aw-ink);
+  font: 400 18px/1.5 var(--aw-font);
+}
+
+.run :focus-visible {
+  outline: 3px solid var(--aw-focus);
+  outline-offset: 3px;
+}
+
+:where(.run) button,
+:where(.run) input,
+:where(.run) textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.run-top {
+  flex: none;
+}
+
+/* The editor's preview (AWK-22, M5 C): on every screen, so nobody mistakes it for the real survey. */
+.run-preview {
+  margin: 0;
+  padding: 10px 16px;
+  background: var(--aw-signal-ink);
+  color: var(--aw-paper);
+  font: 600 12px/1.3 var(--aw-font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.run-head {
+  height: 64px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  background: var(--aw-surface);
+  border-bottom: 1px solid var(--aw-line);
+}
+
+.run-org {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 15px/1 var(--aw-font);
+}
+
+.run-org i {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--run-radius-card, 4px);
+  background: var(--aw-ink);
+  color: var(--aw-paper);
+  display: grid;
+  place-items: center;
+  font: 700 13px/1 var(--aw-font-display);
+  font-style: normal;
+}
+
+.run-seg {
+  display: inline-flex;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+}
+
+.run-seg button {
+  border: 0;
+  background: transparent;
+  padding: 8px 12px;
+  min-width: 44px;
+  font: 600 12px/1 var(--aw-font-mono);
+  cursor: pointer;
+}
+
+.run-seg button[aria-pressed="true"] {
+  background: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.run-main {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 0 48px;
+  box-sizing: border-box;
+}
+
+.run-page {
+  display: grid;
+  gap: 40px;
+}
+
+.run-muted {
+  color: var(--aw-muted);
+  font-size: 15px;
+}
+
+.run-mono {
+  font-family: var(--aw-font-mono);
+}
+
+/* Progress: the Werkstatt ruler */
+.run-progress {
+  display: grid;
+  gap: 8px;
+}
+
+.run-progress__label {
+  font: 500 11.5px/1 var(--aw-font-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.run-ruler {
+  position: relative;
+  height: 12px;
+  border-bottom: 2px solid var(--aw-ink);
+  background-image: repeating-linear-gradient(90deg, var(--aw-line-strong) 0 1px, transparent 1px 20px);
+  background-size: 100% 6px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.run-ruler i {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 6px;
+  background: var(--aw-signal);
+  transition: width 200ms ease-out;
+}
+
+/* Welcome, end and other screens */
+.run-welcome,
+.run-message {
+  display: grid;
+  gap: 18px;
+  padding-top: 24px;
+}
+
+.run-welcome h1,
+.run-message h1 {
+  margin: 0;
+  font: 700 clamp(28px, 4.2vw + 12px, 44px) / 1.08 var(--aw-font-display);
+  letter-spacing: -0.015em;
+  overflow-wrap: break-word;
+}
+
+.run-lead {
+  margin: 0;
+  color: var(--aw-graphite);
+  font-size: 19px;
+}
+
+.run-meta {
+  margin: 0;
+  font: 500 13px/1.3 var(--aw-font-mono);
+  letter-spacing: 0.04em;
+  color: var(--aw-graphite);
+}
+
+/* Questions */
+.run-q {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+  position: relative;
+}
+
+.run-q:focus {
+  outline: none;
+}
+
+/* Question text scales with the screen (W28): 18 px on small phones up to 21 px. */
+.run-q__title {
+  padding: 0;
+  margin-bottom: 14px;
+  font: 600 clamp(18px, 1.1vw + 14px, 21px) / 1.3 var(--aw-font);
+}
+
+.run-q__req {
+  color: var(--aw-signal);
+}
+
+.run-q__help {
+  margin: -8px 0 0;
+  color: var(--aw-graphite);
+  font-size: 16px;
+}
+
+.run-q--bad::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--aw-error);
+}
+
+.run-q__error {
+  margin: -6px 0 0;
+  color: var(--aw-error);
+  font: 600 15px/1.35 var(--aw-font);
+}
+
+.run-q__block {
+  margin: 0;
+  font-size: 18px;
+  color: var(--aw-graphite);
+}
+
+.run-q--big .run-q__title {
+  font: 700 44px/1.08 var(--aw-font-display);
+  letter-spacing: -0.015em;
+}
+
+.run-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Rating: numbers, stars, dots, faces */
+.run-scale {
+  display: grid;
+  gap: 8px;
+}
+
+.run-scale__step {
+  height: 56px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-surface);
+  display: grid;
+  place-items: center;
+  font: 600 18px/1 var(--aw-font-mono);
+  cursor: pointer;
+  position: relative;
+}
+
+.run-scale__step:has(input:focus-visible) {
+  outline: 3px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.run-scale__step--on {
+  background: var(--aw-signal);
+  border-color: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.run-q--bad .run-scale__step {
+  border-color: var(--aw-error);
+}
+
+.run-scale--stars .run-scale__step,
+.run-scale--dots .run-scale__step,
+.run-scale--faces .run-scale__step {
+  border-color: transparent;
+  background: transparent;
+  font: 400 30px/1 var(--aw-font);
+  color: var(--aw-graphite);
+}
+
+.run-scale--stars .run-scale__step--on,
+.run-scale--dots .run-scale__step--on,
+.run-scale--faces .run-scale__step--on {
+  color: var(--aw-signal);
+  border-color: transparent;
+}
+
+/* The ring sits on the face itself, so it stays round however wide the step is. */
+.run-scale--faces .run-scale__step--on .run-face {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.run-dot {
+  display: block;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.run-scale__step--on .run-dot {
+  background: currentColor;
+}
+
+.run-scale__ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: var(--aw-muted);
+  margin-top: -6px;
+}
+
+/* Choices */
+.run-choices {
+  display: grid;
+  gap: 8px;
+}
+
+.run-choice {
+  min-height: 54px;
+  box-sizing: border-box;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-surface);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.run-choice__label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  cursor: pointer;
+}
+
+.run-choice input[type="radio"],
+.run-choice input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--aw-ink);
+  flex: none;
+}
+
+.run-choice--on {
+  border-color: var(--aw-ink);
+  box-shadow: inset 0 0 0 1px var(--aw-ink);
+}
+
+.run-choice--quiet {
+  border-style: dashed;
+}
+
+.run-choice__key {
+  margin-left: auto;
+  font: 500 11.5px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  padding: 3px 6px;
+}
+
+/* The "Other" field sits inside its option with room around it, smaller than a free-standing field (AWK-20).
+   Two classes, so it wins over .run-input, which comes later. */
+.run-input.run-choice__other {
+  flex: 1;
+  min-width: 8rem;
+  height: 36px;
+  margin: 9px 0;
+  padding: 0 12px;
+  font-size: 16px;
+}
+
+/* Yes / no */
+.run-yesno {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 220px));
+  gap: 12px;
+}
+
+.run-yesno__answer {
+  height: 60px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font: 600 19px/1 var(--aw-font);
+  cursor: pointer;
+}
+
+.run-yesno__answer:has(input:focus-visible) {
+  outline: 3px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.run-yesno__answer kbd {
+  font: 500 11.5px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  padding: 3px 6px;
+}
+
+.run-yesno__answer--on {
+  background: var(--aw-signal);
+  border-color: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.run-yesno__answer--on kbd {
+  color: var(--aw-on-signal);
+  border-color: currentColor;
+}
+
+.run-q--bad .run-yesno__answer {
+  border-color: var(--aw-error);
+}
+
+/* Text, slider, date, matrix, ranking */
+.run-input {
+  height: 52px;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-surface);
+  padding: 0 16px;
+  font-size: 17px;
+}
+
+.run-input:focus {
+  border-color: var(--aw-signal);
+  box-shadow: 0 0 0 3px var(--aw-signal-soft);
+  outline: none;
+}
+
+.run-input--long {
+  height: auto;
+  min-height: 140px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.run-count {
+  justify-self: end;
+  margin-top: -6px;
+  font: 400 12px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+}
+
+.run-slider {
+  display: grid;
+  gap: 10px;
+}
+
+.run-slider__value {
+  justify-self: center;
+  font: 700 18px/1 var(--aw-font-mono);
+}
+
+.run-slider--untouched .run-slider__value {
+  font: 500 12px/1 var(--aw-font-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+/* Drawn by hand, so the track fills up to the answer only (--fill, set by the field) and looks the same everywhere. */
+.run-slider input[type="range"] {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.run-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--aw-signal) var(--fill, 0%), var(--aw-line-strong) var(--fill, 0%));
+}
+
+.run-slider input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--aw-signal) var(--fill, 0%), var(--aw-line-strong) var(--fill, 0%));
+}
+
+.run-slider input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+  border: 3px solid var(--aw-surface);
+  border-radius: 50%;
+  background: var(--aw-signal);
+  box-shadow: 0 0 0 1px var(--aw-signal);
+}
+
+.run-slider input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--aw-surface);
+  border-radius: 50%;
+  background: var(--aw-signal);
+  box-shadow: 0 0 0 1px var(--aw-signal);
+}
+
+.run-slider--untouched input[type="range"]::-webkit-slider-thumb {
+  opacity: 0;
+}
+
+.run-slider--untouched input[type="range"]::-moz-range-thumb {
+  opacity: 0;
+}
+
+.run-date {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.run-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.run-matrix th,
+.run-matrix td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--aw-line);
+  text-align: center;
+}
+
+.run-matrix tbody th {
+  text-align: left;
+  font-weight: 500;
+}
+
+.run-matrix input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--aw-ink);
+}
+
+.run-ranking {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.run-ranking__place {
+  font: 600 14px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+  width: 1.5em;
+}
+
+.run-ranking__label {
+  flex: 1;
+}
+
+.run-icon-button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-surface);
+  cursor: pointer;
+}
+
+.run-icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Error summary (W8 B) */
+.run-summary {
+  border: 2px solid var(--aw-error);
+  border-left-width: 6px;
+  border-radius: var(--run-radius, 2px);
+  background: color-mix(in srgb, var(--aw-error) 10%, var(--aw-surface));
+  padding: 14px 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.run-summary b {
+  font: 700 17px/1.2 var(--aw-font);
+  color: var(--aw-error);
+}
+
+.run-summary a {
+  color: var(--aw-ink);
+  font-size: 15.5px;
+  text-underline-offset: 3px;
+}
+
+/* Buttons and navigation */
+.run-button {
+  height: 52px;
+  border-radius: var(--run-radius, 2px);
+  border: 1px solid var(--aw-ink);
+  background: var(--aw-surface);
+  font: 600 16px/1 var(--aw-font);
+  padding: 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.run .run-button--primary {
+  background: var(--aw-signal);
+  border-color: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.run-button kbd {
+  font: 500 12px/1 var(--aw-font-mono);
+  border: 1px solid currentColor;
+  border-radius: var(--run-radius, 2px);
+  padding: 3px 6px;
+  opacity: 0.7;
+}
+
+.run-button--wide {
+  min-width: 220px;
+}
+
+.run-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.run-nav--one {
+  justify-content: flex-start;
+}
+
+.run-saved {
+  font-size: 13.5px;
+  color: var(--aw-muted);
+}
+
+.run-keys {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--aw-muted);
+}
+
+.run-keys kbd {
+  font: 500 11.5px/1 var(--aw-font-mono);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--run-radius, 2px);
+  padding: 2px 5px;
+}
+
+.run-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+  color: var(--aw-graphite);
+  cursor: pointer;
+}
+
+.run-link:disabled {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .run-ruler i {
+    transition: none;
+  }
+}
+
+/* Phones (W8 B, E; M4 B): 17 px, Back/Next fixed at the bottom */
+@media (max-width: 640px) {
+  .run {
+    font-size: 17px;
+  }
+
+  .run-head {
+    height: 56px;
+    padding: 0 16px;
+  }
+
+  .run-main {
+    padding: 22px 18px 120px;
+  }
+
+  .run-page {
+    gap: 30px;
+  }
+
+  .run-q--big .run-q__title {
+    font-size: 30px;
+  }
+
+  .run-q--bad::before {
+    left: -12px;
+  }
+
+  .run-yesno {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .run-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding: 12px 18px 22px;
+    background: var(--aw-surface);
+    border-top: 1px solid var(--aw-line);
+  }
+
+  .run-saved,
+  .run-keys span {
+    display: none;
+  }
+
+  .run-scale--numbers {
+    gap: 6px;
+  }
+
+  .run-matrix thead {
+    display: none;
+  }
+
+  .run-matrix tr {
+    display: grid;
+    gap: 6px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--aw-line);
+  }
+
+  .run-matrix th,
+  .run-matrix td {
+    border: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .run-matrix td {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .run-matrix td::after {
+    content: attr(data-label);
+  }
+}
+
+/* Colour emoji faces; the ring of the chosen one sits on the face, so it stays round. */
+.run-face {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* The survey's theme (AWK-17 step 3): logo, header image, layouts, answer controls, buttons, size and spacing. */
+.run-logo {
+  display: block;
+  max-height: 36px;
+  max-width: 180px;
+  object-fit: contain;
+}
+
+.run-hero {
+  height: clamp(140px, 28vw, 280px);
+  overflow: hidden;
+  background: var(--aw-line);
+}
+
+.run-hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.run[data-layout="card"] .run-main {
+  margin-top: 32px;
+  margin-bottom: 48px;
+  padding: 32px 40px 40px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--run-radius-card, 4px);
+}
+
+.run[data-layout="header-image"] .run-main {
+  position: relative;
+  margin-top: -48px;
+  padding: 32px 40px 40px;
+  background: var(--aw-surface);
+  border-radius: var(--run-radius-card, 4px);
+}
+
+.run[data-layout="minimal"] .run-head {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+@media (min-width: 960px) {
+  .run[data-layout="split-image"] {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .run[data-layout="split-image"] .run-top {
+    grid-column: 1 / -1;
+  }
+
+  .run[data-layout="split-image"] .run-hero {
+    grid-row: 2 / 4;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .run[data-layout="split-image"] .run-main {
+    grid-column: 2;
+    padding: 40px 48px;
+  }
+}
+
+@media (max-width: 700px) {
+  .run[data-layout="card"] .run-main,
+  .run[data-layout="header-image"] .run-main {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 24px 18px 32px;
+  }
+}
+
+.run[data-buttons="outline"] .run-button--primary {
+  background: transparent;
+  color: var(--aw-signal);
+  border-color: var(--aw-signal);
+}
+
+.run[data-controls="pills"] {
+  --run-radius: 999px;
+}
+
+.run[data-controls="underline"] .run-scale__step,
+.run[data-controls="underline"] input:not([type="radio"]):not([type="checkbox"]):not([type="range"]),
+.run[data-controls="underline"] textarea {
+  border-width: 0 0 2px;
+  border-radius: 0;
+}
+
+.run[data-scale="s"] {
+  font-size: 16px;
+}
+
+.run[data-scale="l"] {
+  font-size: 21px;
+}
+
+.run[data-spacing="compact"] .run-page {
+  gap: 24px;
+}
+
+.run[data-spacing="airy"] .run-page {
+  gap: 56px;
+}
+
+.run[data-progress="bar"] .run-ruler,
+.run[data-progress="steps"] .run-ruler {
+  height: 6px;
+  border-bottom: 0;
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-line);
+  overflow: hidden;
+}
+
+.run[data-progress="bar"] .run-ruler i,
+.run[data-progress="steps"] .run-ruler i {
+  bottom: 0;
+  height: 100%;
+}
+
+/* Images in the survey (AWK-17 step 4b): image blocks, an image with a question, picture choices. */
+.run-figure {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.run-figure img,
+.run-q__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--run-radius-card, 4px);
+}
+
+.run-figure--wide {
+  width: 80%;
+}
+
+.run-figure--half {
+  width: 50%;
+}
+
+.run-figure--small {
+  width: 30%;
+}
+
+.run-figure--centre {
+  justify-self: center;
+}
+
+.run-figure--right {
+  justify-self: end;
+}
+
+.run-figure figcaption {
+  color: var(--aw-muted);
+  font-size: 15px;
+}
+
+.run-q__image {
+  max-height: 360px;
+  object-fit: contain;
+  object-position: left;
+  margin-bottom: 8px;
+}
+
+.run-choice__picture {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  flex: none;
+  border-radius: var(--run-radius, 2px);
+}
+
+/* The look's finer settings (W26): each data attribute is set only when the look sets it. */
+
+/* Progress: real steps, the label hidden, below the questions */
+.run-steps {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+}
+
+.run-steps i {
+  height: 6px;
+  border-radius: var(--run-radius, 2px);
+  background: var(--aw-line);
+}
+
+.run-steps i.run-steps__on {
+  background: var(--aw-signal);
+}
+
+.run[data-progress-label="off"] .run-progress__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.run[data-progress-position="bottom"] .run-progress {
+  order: 98;
+}
+
+.run[data-progress-position="bottom"] .run-nav {
+  order: 99;
+}
+
+/* Patterns drawn from the colours */
+.run-pattern {
+  height: 64px;
+  flex: none;
+  background-color: color-mix(in srgb, var(--aw-signal) 10%, var(--aw-paper));
+}
+
+.run-pattern--confetti {
+  height: 80px;
+  background-color: var(--aw-paper);
+  background-image:
+    radial-gradient(circle at 8% 55%, #ffc93c 0 14px, transparent 15px),
+    radial-gradient(circle at 21% 30%, #2fb3a5 0 9px, transparent 10px),
+    radial-gradient(circle at 36% 70%, var(--aw-signal) 0 11px, transparent 12px),
+    radial-gradient(circle at 52% 35%, #7b5cff 0 8px, transparent 9px),
+    radial-gradient(circle at 66% 65%, #ff8fb1 0 13px, transparent 14px),
+    radial-gradient(circle at 80% 30%, #ffc93c 0 10px, transparent 11px),
+    radial-gradient(circle at 93% 60%, var(--aw-signal) 0 16px, transparent 17px);
+}
+
+.run-pattern--dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--aw-signal) 45%, transparent) 2px, transparent 2.5px);
+  background-size: 18px 18px;
+}
+
+.run-pattern--grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--aw-signal) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--aw-signal) 30%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.run-pattern--stripes {
+  background-image: repeating-linear-gradient(135deg, var(--aw-signal) 0 14px, color-mix(in srgb, var(--aw-signal) 55%, var(--aw-paper)) 14px 28px);
+}
+
+.run-pattern--waves {
+  height: 72px;
+  background-image:
+    radial-gradient(ellipse 60px 26px at 50% 100%, color-mix(in srgb, var(--aw-signal) 35%, var(--aw-paper)) 98%, transparent 100%),
+    radial-gradient(ellipse 60px 26px at 50% 0%, color-mix(in srgb, var(--aw-signal) 18%, var(--aw-paper)) 98%, transparent 100%);
+  background-size: 120px 72px;
+}
+
+.run-pattern--hills {
+  height: clamp(140px, 22vw, 220px);
+  background-color: color-mix(in srgb, var(--aw-signal) 18%, #dfeef3);
+  background-image:
+    radial-gradient(circle at 84% 26%, #ffe2a8 0 26px, transparent 27px),
+    radial-gradient(ellipse 60% 70% at 22% 120%, color-mix(in srgb, var(--aw-signal) 55%, #a7c4a0) 0 70%, transparent 71%),
+    radial-gradient(ellipse 55% 80% at 78% 125%, var(--aw-signal) 0 70%, transparent 71%),
+    linear-gradient(180deg, #cfe5ee, #eef2e2);
+}
+
+/* Header bar: hidden (the language stays), without the name, logo size */
+.run[data-header="off"] .run-head {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.run[data-header="off"] .run-org {
+  visibility: hidden;
+}
+
+.run[data-org="off"] .run-org {
+  font-size: 0;
+}
+
+.run[data-org="off"] .run-org i {
+  display: none;
+}
+
+.run[data-logo-size="s"] .run-logo {
+  max-height: 26px;
+}
+
+.run[data-logo-size="l"] .run-logo {
+  max-height: 52px;
+  max-width: 240px;
+}
+
+/* Welcome and end pages: centred, or on an accent band */
+.run[data-welcome="centre"] .run-welcome,
+.run[data-end="centre"] .run-message {
+  justify-items: center;
+  text-align: center;
+}
+
+.run[data-welcome="band"] .run-welcome,
+.run[data-end="band"] .run-message {
+  padding: 32px;
+  border-radius: var(--run-radius-card, 4px);
+  background: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.run[data-welcome="band"] .run-welcome .run-lead,
+.run[data-welcome="band"] .run-welcome .run-meta,
+.run[data-end="band"] .run-message .run-lead,
+.run[data-end="band"] .run-message .run-muted {
+  color: inherit;
+}
+
+.run[data-welcome="band"] .run-welcome .run-button--primary,
+.run[data-end="band"] .run-message .run-button {
+  background: var(--aw-on-signal);
+  border-color: var(--aw-on-signal);
+  color: var(--aw-signal);
+}
+
+/* Question pages: column width, each question on a card */
+.run[data-width="narrow"] .run-main {
+  max-width: 520px;
+}
+
+.run[data-width="wide"] .run-main {
+  max-width: 820px;
+}
+
+.run[data-cards="on"] .run-q {
+  padding: 20px 24px 24px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--run-radius-card, 4px);
+}
+
+/* Question texts: size, font, numbers */
+.run[data-q-size="s"] .run-q__title {
+  font-size: 18px;
+}
+
+.run[data-q-size="l"] .run-q__title {
+  font-size: clamp(20px, 1.6vw + 15px, 26px);
+  line-height: 1.2;
+}
+
+.run[data-q-font="heading"] .run-q__title {
+  font-family: var(--aw-font-display);
+}
+
+.run[data-numbered="on"] .run-page {
+  counter-reset: question;
+}
+
+.run[data-numbered="on"] fieldset.run-q .run-q__title::before {
+  counter-increment: question;
+  content: counter(question) ". ";
+  color: var(--aw-muted);
+}
+
+/* Choices: columns, how a chosen one shows, the marker, the "Other" field */
+@media (min-width: 641px) {
+  .run[data-columns="two"] .run-choices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .run[data-columns="auto"] .run-choices {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+.run[data-controls="tiles"] .run-choices .run-choice {
+  min-height: 88px;
+  justify-content: center;
+  text-align: center;
+  font-weight: 600;
+  border-radius: var(--run-radius-card, 4px);
+}
+
+.run[data-selected="accent"] .run-choice--on {
+  border-color: var(--aw-signal);
+  box-shadow: inset 0 0 0 1px var(--aw-signal);
+  background: var(--aw-signal-soft);
+}
+
+.run[data-selected="accent"] .run-choice input,
+.run[data-selected="fill"] .run-choice input {
+  accent-color: var(--aw-signal);
+}
+
+.run[data-selected="fill"] .run-choice--on {
+  border-color: var(--aw-signal);
+  background: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.run[data-selected="fill"] .run-choice--on input {
+  accent-color: var(--aw-on-signal);
+}
+
+.run[data-marker="check"] .run-choice input[type="radio"],
+.run[data-marker="check"] .run-choice input[type="checkbox"] {
+  appearance: none;
+  border: 2px solid var(--aw-line-strong);
+  border-radius: 4px;
+  background: var(--aw-surface);
+}
+
+.run[data-marker="check"] .run-choice input:checked {
+  border-color: var(--aw-signal);
+  background: var(--aw-signal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 6.5' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat;
+}
+
+.run[data-marker="none"] .run-choice input[type="radio"],
+.run[data-marker="none"] .run-choice input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.run[data-marker="none"] .run-choice:has(input:focus-visible) {
+  outline: 3px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.run[data-other="below"] .run-choice:has(.run-choice__other) {
+  flex-wrap: wrap;
+}
+
+.run[data-other="below"] .run-input.run-choice__other {
+  flex-basis: 100%;
+  margin: 0 0 12px;
+}
+
+/* Buttons: soft, wide or full, where they sit */
+.run[data-buttons="soft"] .run-button--primary {
+  background: var(--aw-signal-soft);
+  border-color: transparent;
+  color: var(--aw-signal-ink);
+}
+
+.run[data-button-width="wide"] .run-nav .run-button {
+  min-width: 200px;
+}
+
+.run[data-button-width="full"] .run-nav {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.run[data-button-width="full"] .run-nav .run-saved {
+  display: none;
+}
+
+.run[data-button-width="full"] .run-welcome .run-button {
+  width: 100%;
+}
+
+.run[data-button-align="end"] .run-nav {
+  justify-content: flex-end;
+}
+
+.run[data-button-align="centre"] .run-nav {
+  justify-content: center;
+}
+
+/* Text fields: underline or filled */
+.run[data-fields="underline"] .run-input {
+  border-width: 0 0 2px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.run[data-fields="filled"] .run-input {
+  border-color: transparent;
+  border-bottom: 2px solid var(--aw-line-strong);
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+}
+
+/* Rating and scale: size and how the chosen step shows */
+.run[data-rating-size="s"] .run-scale__step {
+  height: 44px;
+  font-size: 15px;
+}
+
+.run[data-rating-size="l"] .run-scale__step {
+  height: 72px;
+  font-size: 24px;
+}
+
+.run[data-rating-selected="accent"] .run-scale--numbers .run-scale__step--on {
+  background: var(--aw-signal-soft);
+  color: var(--aw-signal-ink);
+}
+
+.run[data-rating-selected="text"] .run-scale--numbers .run-scale__step--on {
+  background: var(--aw-surface);
+  border-color: var(--aw-ink);
+  box-shadow: inset 0 0 0 1px var(--aw-ink);
+  color: var(--aw-ink);
+}
+
+.run[data-rating-selected="text"] .run-scale--stars .run-scale__step--on,
+.run[data-rating-selected="text"] .run-scale--dots .run-scale__step--on {
+  color: var(--aw-ink);
+}
+
+/* Slider: thick track, square handle */
+.run[data-slider-track="thick"] .run-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.run[data-slider-track="thick"] .run-slider input[type="range"]::-webkit-slider-thumb {
+  width: 30px;
+  height: 30px;
+  margin-top: -9px;
+}
+
+.run[data-slider-track="thick"] .run-slider input[type="range"]::-moz-range-track {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.run[data-slider-thumb="square"] .run-slider input[type="range"]::-webkit-slider-thumb {
+  border-radius: 4px;
+}
+
+.run[data-slider-thumb="square"] .run-slider input[type="range"]::-moz-range-thumb {
+  border-radius: 4px;
+}
+
+/* Matrix: stripes and tinted heads */
+.run[data-matrix-stripes="on"] .run-matrix tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--aw-ink) 4%, var(--aw-surface));
+}
+
+.run[data-matrix-header="tinted"] .run-matrix thead th {
+  background: color-mix(in srgb, var(--aw-ink) 8%, var(--aw-surface));
+}
+
+/* Messages: a bar at the side */
+.run[data-messages="bar"] .run-summary {
+  border-width: 0 0 0 6px;
+  background: transparent;
+}
+
+/* Dark mode: native controls follow */
+.run[data-mode="dark"] {
+  color-scheme: dark;
+}
+
+/* W28: a picture behind the whole page, the content on a frosted panel, the title over the picture, tinted text blocks. */
+.run[data-pattern="mountains"] {
+  background-color: #2d4a6b;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 1000' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%232d4a6b'/%3E%3Cstop offset='.45' stop-color='%23d98b73'/%3E%3Cstop offset='.72' stop-color='%23f6c99a'/%3E%3C/linearGradient%3E%3ClinearGradient id='l' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237fa3b5'/%3E%3Cstop offset='1' stop-color='%233f6478'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='1000' fill='url(%23s)'/%3E%3Ccircle cx='1180' cy='430' r='70' fill='%23ffe3b0' opacity='.9'/%3E%3Cpath d='M0 560L180 380L300 470L470 290L640 470L760 360L900 500L1080 330L1260 500L1420 380L1600 520V1000H0Z' fill='%237a6f93'/%3E%3Cpath d='M470 290L520 340L495 345L470 320L445 350L420 340ZM1080 330L1130 380L1100 382L1080 362L1055 388L1030 380Z' fill='%23f4eef6'/%3E%3Cpath d='M0 640L220 500L380 600L560 470L760 620L960 500L1160 640L1360 520L1600 640V1000H0Z' fill='%234f5f7c'/%3E%3Cpath d='M0 720C200 660 380 700 560 690C760 680 980 640 1200 680C1380 710 1500 690 1600 700V1000H0Z' fill='%232f4a4c'/%3E%3Crect y='770' width='1600' height='230' fill='url(%23l)'/%3E%3Cg fill='%231d3433'%3E%3Cpath d='M60 790L95 660L130 790Z'/%3E%3Cpath d='M120 795L160 630L200 795Z'/%3E%3Cpath d='M1380 790L1420 640L1460 790Z'/%3E%3Cpath d='M1450 795L1490 600L1530 795Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center 30%;
+  background-attachment: fixed;
+}
+
+.run[data-pattern="mountains"] .run-head {
+  background: transparent;
+  border-bottom-color: transparent;
+  color: #fff;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 35%);
+}
+
+.run[data-pattern="mountains"] .run-seg {
+  border-color: rgb(255 255 255 / 70%);
+}
+
+.run[data-panel="frosted"] .run-main {
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 32px 40px 36px;
+  background: color-mix(in srgb, var(--aw-surface) 90%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--aw-surface) 70%, transparent);
+  border-radius: var(--run-radius-card, 4px);
+  box-shadow: 0 18px 40px rgb(20 35 50 / 18%);
+}
+
+.run-overtitle {
+  max-width: 720px;
+  margin: 28px auto 0;
+  padding: 0 18px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 14px rgb(0 0 0 / 45%);
+}
+
+.run-overtitle__title {
+  margin: 0;
+  font: 600 clamp(26px, 3.4vw + 12px, 40px) / 1.1 var(--aw-font-display);
+}
+
+.run-overtitle__sub {
+  margin: 6px 0 0;
+  font-size: 16px;
+}
+
+.run[data-title="over-picture"] .run-progress__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.run[data-text-block="tinted"] .run-q__block {
+  padding: 14px 16px;
+  border-left: 4px solid var(--aw-signal);
+  border-radius: var(--run-radius-card, 4px);
+  background: color-mix(in srgb, var(--aw-signal) 6%, var(--aw-surface));
+  color: var(--aw-graphite);
+}
+
+@media (max-width: 640px) {
+  /* The welcome panel sits at the bottom, so the picture stays visible above it. */
+  .run[data-panel="frosted"]:has(.run-welcome) .run-main {
+    margin-top: auto;
+    flex: none;
+  }
+
+  .run[data-panel="frosted"] .run-main {
+    margin-left: 12px;
+    margin-right: 12px;
+    width: auto;
+    padding: 22px 18px 26px;
+  }
+
+  .run[data-panel="frosted"] .run-welcome {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .run[data-panel="frosted"] .run-welcome .run-button {
+    width: 100%;
+  }
+
+  .run-overtitle {
+    margin-top: 12px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .run[data-panel="frosted"] .run-main {
+    background: var(--aw-surface);
+    backdrop-filter: none;
+  }
+}

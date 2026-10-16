@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1060" width="1400" height="1060" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W1 · AWK-11 runnable skeleton · health, audit and telemetry flows · grayscale wireframe -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <style>
+      .box { fill: #fff; stroke: #333; stroke-width: 1.5; }
+      .soft { fill: #f2f2f2; stroke: #888; stroke-width: 1; stroke-dasharray: 4 3; }
+      .db { fill: #e6e6e6; stroke: #333; stroke-width: 1.5; }
+      .t { font-size: 15px; fill: #111; }
+      .s { font-size: 12.5px; fill: #444; }
+      .h { font-size: 20px; font-weight: 600; fill: #111; }
+      .n { font-size: 13px; font-weight: 600; fill: #fff; }
+      .line { stroke: #333; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #777; stroke-width: 1.3; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1400" height="1060" fill="#fafafa"/>
+  <text x="40" y="44" class="h">W1 · AWK-11 Runnable skeleton — health, audit and telemetry flows</text>
+  <text x="40" y="68" class="s">Grayscale wireframe · 2026-10-13 · source design/AWK-11-runnable-skeleton/w1-flows.svg</text>
+
+  <!-- ===== Flow A: health ===== -->
+  <text x="40" y="118" class="h">A · Health</text>
+  <rect x="40" y="140" width="230" height="64" class="box"/>
+  <text x="56" y="167" class="t">docker / Caddy / k8s</text>
+  <text x="56" y="188" class="s">every 10 s</text>
+  <rect x="340" y="140" width="250" height="64" class="box"/>
+  <text x="356" y="167" class="t">Askwerk.HealthProbe</text>
+  <text x="356" y="188" class="s">tiny native binary in the image</text>
+  <rect x="660" y="140" width="300" height="64" class="box"/>
+  <text x="676" y="167" class="t">Askwerk.Api  GET /health/live</text>
+  <text x="676" y="188" class="s">process is up → 200</text>
+  <rect x="660" y="224" width="300" height="64" class="box"/>
+  <text x="676" y="251" class="t">Askwerk.Api  GET /health/ready</text>
+  <text x="676" y="272" class="s">DB reachable + migrations current → 200, else 503</text>
+  <rect x="1040" y="224" width="200" height="64" class="db" rx="10"/>
+  <text x="1056" y="251" class="t">PostgreSQL</text>
+  <text x="1056" y="272" class="s">SELECT 1, migration id</text>
+  <path d="M270,172 H336" class="line"/>
+  <path d="M590,172 H656" class="line"/>
+  <path d="M960,256 H1036" class="line"/>
+  <text x="604" y="232" class="s">compose healthcheck</text>
+  <text x="604" y="248" class="s">uses /ready</text>
+  <path d="M590,190 Q630,250 656,256" class="dash"/>
+
+  <!-- ===== Flow B: audit ===== -->
+  <text x="40" y="350" class="h">B · Audit (first auditable action: instance bootstrap on first start)</text>
+  <rect x="40" y="372" width="230" height="78" class="box"/>
+  <text x="56" y="399" class="t">Askwerk.Api start</text>
+  <text x="56" y="420" class="s">empty database detected</text>
+  <text x="56" y="438" class="s">(owner role: run migrations)</text>
+  <rect x="340" y="372" width="300" height="78" class="box"/>
+  <text x="356" y="399" class="t">InitializeInstance handler</text>
+  <text x="356" y="420" class="s">Askwerk.Application · actor = system</text>
+  <text x="356" y="438" class="s">writes Instance row</text>
+  <rect x="340" y="480" width="300" height="78" class="box"/>
+  <text x="356" y="507" class="t">IAuditWriter</text>
+  <text x="356" y="528" class="s">action instance.initialized · trace id</text>
+  <text x="356" y="546" class="s">hash = H(entry + previous hash)</text>
+  <rect x="720" y="420" width="520" height="150" class="db" rx="12"/>
+  <text x="740" y="448" class="t">PostgreSQL — one transaction</text>
+  <rect x="740" y="462" width="230" height="44" class="box"/>
+  <text x="754" y="489" class="t">Instance</text>
+  <rect x="990" y="462" width="230" height="44" class="box"/>
+  <text x="1004" y="489" class="t">AuditLog (+hash chain)</text>
+  <text x="740" y="530" class="s">app role askwerk_app: INSERT + SELECT on AuditLog only</text>
+  <text x="740" y="550" class="s">no UPDATE / DELETE → append-only enforced by the database</text>
+  <path d="M270,411 H336" class="line"/>
+  <path d="M490,450 V476" class="line"/>
+  <path d="M640,411 Q700,411 736,484" class="line"/>
+  <path d="M640,519 Q900,600 1100,510" class="line"/>
+  <rect x="40" y="480" width="230" height="78" class="soft"/>
+  <text x="56" y="507" class="t">GET /api/app/audit/verify</text>
+  <text x="56" y="528" class="s">recomputes the chain → ok / broken at #n</text>
+  <text x="56" y="546" class="s">(button in the GUI later)</text>
+
+  <!-- ===== Flow C: telemetry ===== -->
+  <text x="40" y="640" class="h">C · Telemetry</text>
+  <rect x="40" y="664" width="270" height="110" class="box"/>
+  <text x="56" y="691" class="t">Browser: placeholder page</text>
+  <text x="56" y="712" class="s">packages/telemetry (&lt; 3 kB)</text>
+  <text x="56" y="730" class="s">errors · Web Vitals · API timings</text>
+  <text x="56" y="748" class="s">traceparent on every API call</text>
+  <text x="56" y="766" class="s">no ids, no cookies, no content</text>
+  <rect x="400" y="664" width="300" height="110" class="box"/>
+  <text x="416" y="691" class="t">POST /api/app/telemetry</text>
+  <text x="416" y="712" class="s">validate schema · rate limit</text>
+  <text x="416" y="730" class="s">service.name = askwerk-designer</text>
+  <text x="416" y="748" class="s">→ ILogger / Meter records</text>
+  <rect x="400" y="800" width="300" height="110" class="box"/>
+  <text x="416" y="827" class="t">Backend code</text>
+  <text x="416" y="848" class="s">ILogger · Meter · ActivitySource</text>
+  <text x="416" y="866" class="s">ASP.NET Core, Npgsql, EF Core</text>
+  <text x="416" y="884" class="s">instrumentation (Askwerk.*)</text>
+  <rect x="790" y="730" width="250" height="110" class="box"/>
+  <text x="806" y="757" class="t">OpenTelemetry .NET</text>
+  <text x="806" y="778" class="s">logs · metrics · traces</text>
+  <text x="806" y="796" class="s">one pipeline</text>
+  <rect x="1110" y="664" width="250" height="80" class="box"/>
+  <text x="1126" y="691" class="t">Console (always)</text>
+  <text x="1126" y="712" class="s">JSON lines, trace + span id</text>
+  <text x="1126" y="730" class="s">docker compose logs</text>
+  <rect x="1110" y="770" width="250" height="80" class="soft"/>
+  <text x="1126" y="797" class="t">OTLP endpoint (optional)</text>
+  <text x="1126" y="818" class="s">OTEL_EXPORTER_OTLP_ENDPOINT</text>
+  <text x="1126" y="836" class="s">any OpenTelemetry backend</text>
+  <rect x="1110" y="876" width="250" height="80" class="soft"/>
+  <text x="1126" y="903" class="t">In-memory exporter</text>
+  <text x="1126" y="924" class="s">tests only: assert spans,</text>
+  <text x="1126" y="942" class="s">trace ids, no personal data</text>
+  <path d="M310,719 H396" class="line"/>
+  <path d="M700,719 Q760,719 786,770" class="line"/>
+  <path d="M700,855 Q760,855 786,810" class="line"/>
+  <path d="M1040,770 Q1080,704 1106,704" class="line"/>
+  <path d="M1040,790 H1106" class="dash"/>
+  <path d="M1040,810 Q1080,916 1106,916" class="dash"/>
+
+  <text x="40" y="1000" class="s">Solid line = always on in the default install · dashed = optional or test-only · no extra containers: Askwerk + PostgreSQL only.</text>
+  <text x="40" y="1022" class="s">Every arrow is driven by a failing test first (see the test list in the AWK-11 comment).</text>
+</svg>

@@ -1,0 +1,32 @@
+dn: dc=acme,dc=test
+objectClass: dcObject
+objectClass: organization
+dc: acme
+o: Acme
+
+dn: ou=people,dc=acme,dc=test
+objectClass: organizationalUnit
+ou: people
+
+dn: cn=reader,dc=acme,dc=test
+objectClass: person
+cn: reader
+sn: reader
+userPassword: reader-secret
+
+dn: uid=clara,ou=people,dc=acme,dc=test
+objectClass: inetOrgPerson
+uid: clara
+cn: Clara Weiss
+sn: Weiss
+displayName: Clara Weiss
+mail: clara@acme.test
+ou: HR-Admins
+userPassword: clara-secret
+
+dn: uid=max,ou=people,dc=acme,dc=test
+objectClass: inetOrgPerson
+uid: max
+cn: Max Muster
+sn: Muster
+userPassword: max-secret

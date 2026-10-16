@@ -1,0 +1,56 @@
+{
+  "id": "nacht",
+  "name": {
+    "de": "Nacht",
+    "en": "Nacht"
+  },
+  "description": {
+    "de": "Dunkel, leuchtender Akzent.",
+    "en": "Dark, glowing accent."
+  },
+  "tags": [
+    "dark"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#0f7a66",
+      "onAccent": "#ffffff",
+      "background": "#f3f5f9",
+      "surface": "#ffffff",
+      "text": "#0f1420",
+      "muted": "#55607a",
+      "line": "#d4d9e4"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "bar",
+    "layout": "card",
+    "mode": "dark",
+    "darkColours": {
+      "accent": "#5ee2c4",
+      "onAccent": "#0f1420",
+      "background": "#0f1420",
+      "surface": "#171e2e",
+      "text": "#e8ecf4",
+      "muted": "#a3aec4",
+      "line": "#2c3650"
+    },
+    "components": {
+      "slider": {
+        "track": "thick"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Welcome texts are optional, but once they exist they need every survey language",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "one-at-a-time",
+    "welcome": {
+      "title": {
+        "de": "Willkommen",
+        "en": "Welcome"
+      },
+      "text": {
+        "de": "Danke, dass Sie mitmachen."
+      }
+    },
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "long-text",
+            "text": {
+              "de": "Frage",
+              "en": "Question"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "welcome/text",
+      "language": "en"
+    }
+  ]
+}

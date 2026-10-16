@@ -1,0 +1,216 @@
+{
+  "names": {
+    "de": "Mitarbeiter-Puls",
+    "en": "Employee pulse"
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wie geht es Ihnen bei uns?",
+        "en": "How are you doing with us?"
+      },
+      "text": {
+        "de": "Fünf Minuten, anonym. Ihre Antworten helfen uns, die Arbeit besser zu machen.",
+        "en": "Five minutes, anonymous. Your answers help us make work better."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Ihre Antworten sind gespeichert.",
+        "en": "Thank you! Your answers are saved."
+      }
+    },
+    "pages": [
+      {
+        "id": "work",
+        "title": {
+          "de": "Ihre Arbeit",
+          "en": "Your work"
+        },
+        "questions": [
+          {
+            "id": "enps",
+            "variable": "ENPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich ist es, dass Sie uns als Arbeitgeber empfehlen?",
+              "en": "How likely are you to recommend us as an employer?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Sehr unwahrscheinlich",
+                "en": "Very unlikely"
+              },
+              "maxLabel": {
+                "de": "Sehr wahrscheinlich",
+                "en": "Very likely"
+              }
+            }
+          },
+          {
+            "id": "mood",
+            "variable": "MOOD",
+            "type": "rating",
+            "text": {
+              "de": "Wie geht es Ihnen diese Woche bei der Arbeit?",
+              "en": "How do you feel at work this week?"
+            },
+            "required": true,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "statements",
+            "variable": "STATEMENTS",
+            "type": "matrix",
+            "text": {
+              "de": "Wie sehr stimmen Sie zu?",
+              "en": "How much do you agree?"
+            },
+            "required": true,
+            "rows": [
+              {
+                "code": "clear",
+                "label": {
+                  "de": "Ich weiß, was von mir erwartet wird.",
+                  "en": "I know what is expected of me."
+                }
+              },
+              {
+                "code": "tools",
+                "label": {
+                  "de": "Ich habe, was ich für meine Arbeit brauche.",
+                  "en": "I have what I need to do my work."
+                }
+              },
+              {
+                "code": "growth",
+                "label": {
+                  "de": "Ich kann mich hier weiterentwickeln.",
+                  "en": "I can grow here."
+                }
+              },
+              {
+                "code": "valued",
+                "label": {
+                  "de": "Meine Arbeit wird geschätzt.",
+                  "en": "My work is valued."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Stimme gar nicht zu",
+                  "en": "Strongly disagree"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Stimme eher nicht zu",
+                  "en": "Disagree"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Teils, teils",
+                  "en": "Neutral"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Stimme eher zu",
+                  "en": "Agree"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Stimme voll zu",
+                  "en": "Strongly agree"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ideas",
+        "title": {
+          "de": "Ihre Ideen",
+          "en": "Your ideas"
+        },
+        "questions": [
+          {
+            "id": "better",
+            "variable": "BETTER",
+            "type": "long-text",
+            "text": {
+              "de": "Was sollten wir als Erstes verbessern?",
+              "en": "What should we improve first?"
+            },
+            "required": false
+          },
+          {
+            "id": "team",
+            "variable": "TEAM",
+            "type": "dropdown",
+            "text": {
+              "de": "In welchem Bereich arbeiten Sie?",
+              "en": "Which area do you work in?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Vertrieb",
+                  "en": "Sales"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Service",
+                  "en": "Service"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Produktion",
+                  "en": "Production"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Verwaltung",
+                  "en": "Administration"
+                }
+              }
+            ],
+            "dontKnow": true
+          }
+        ]
+      }
+    ]
+  }
+}

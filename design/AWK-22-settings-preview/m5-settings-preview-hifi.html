@@ -1,0 +1,361 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- M5 · AWK-22 hi-fi of survey settings and preview, from the approved wireframe W9. -->
+<title>Askwerk Settings and Preview Hi-Fi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: each screen is a fixed 1440 x 900 frame, stacked; the page scrolls sideways on small screens. */
+:root { --page: #e9e7e2; --page-ink: #1a1917; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; }
+body { background: var(--page); color: var(--page-ink); font: 14px/1.5 "IBM Plex Sans", system-ui, sans-serif; padding-inline: 16px; padding-block: 24px 64px; }
+main { display: grid; gap: 40px; justify-items: start; }
+.label { font: 600 13px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 10px; }
+.wrap { overflow-x: auto; max-width: 100%; }
+
+.t-light { --paper:#f6f5f2; --surface:#ffffff; --ink:#1a1917; --graphite:#4a4640; --muted:#6e6962; --line:#e3dfd8; --line-strong:#c8c2b8;
+  --signal:#d2440f; --signal-soft:#fbe6da; --signal-ink:#8f2c06; --on-signal:#ffffff; --steel:#3e4a56; --ok:#2e7d4f; --warn:#a86a12; --warn-soft:#fbf1de; --error:#b42318; --grid:rgba(26,25,23,.05); --shadow:0 8px 24px rgba(26,25,23,.12); color-scheme: light; }
+.t-dark { --paper:#141311; --surface:#1c1a18; --ink:#f2efea; --graphite:#c9c3ba; --muted:#9c958b; --line:#2f2b27; --line-strong:#48423b;
+  --signal:#ff7a3d; --signal-soft:#3a2014; --signal-ink:#ffb48f; --on-signal:#1a0a03; --steel:#9fb0c0; --ok:#6cc28f; --warn:#e3a948; --warn-soft:#2f2516; --error:#f2877b; --grid:rgba(242,239,234,.05); --shadow:0 8px 24px rgba(0,0,0,.5); color-scheme: dark; }
+
+.screen { width: 1440px; height: 900px; position: relative; overflow: hidden; background: var(--paper); color: var(--ink); font: 14px/1.5 "IBM Plex Sans", sans-serif; border: 1px solid var(--line-strong); }
+.screen * { box-sizing: border-box; }
+.mono { font-family: "IBM Plex Mono", monospace; }
+.disp { font-family: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif; }
+
+/* Top bar */
+.bar { height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brandline { display: flex; align-items: baseline; gap: 12px; }
+.logo { display: inline-flex; align-items: baseline; gap: 8px; }
+.logo svg { align-self: center; }
+.logo .word { font: 700 19px/1 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.01em; }
+.logo .word b { color: var(--signal); font-weight: 700; }
+.sep { width: 1px; height: 20px; background: var(--line-strong); align-self: center; }
+.crumb { font: 600 15px/1 "IBM Plex Sans", sans-serif; }
+.stat { font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.stat.bad { color: var(--error); }
+.grow { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 2px; font: 600 12px/1 "IBM Plex Mono", monospace; }
+.seg span { padding: 7px 14px; }
+.seg .on { background: var(--ink); color: var(--paper); }
+.kbd { font: 500 11.5px/1 "IBM Plex Mono", monospace; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 2px; padding: 5px 7px; }
+.btn { font: 600 13.5px/1 "IBM Plex Sans", sans-serif; padding: 10px 14px; border-radius: 2px; border: 1px solid var(--ink); background: var(--surface); color: var(--ink); display: inline-flex; gap: 8px; align-items: center; white-space: nowrap; }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn.quiet { border-color: var(--line-strong); }
+
+/* Regions */
+.work { display: grid; grid-template-columns: 280px 1fr 340px; height: calc(900px - 56px); }
+.outline { background: var(--surface); border-right: 1px solid var(--line); padding: 14px; display: flex; flex-direction: column; gap: 2px; }
+.search { border: 1px solid var(--line-strong); border-radius: 2px; padding: 8px 10px; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
+.pg { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--muted); margin: 12px 6px 6px; display: flex; justify-content: space-between; }
+.q { display: grid; grid-template-columns: 14px 1fr auto; gap: 6px; align-items: center; padding: 7px 8px; border-radius: 2px; font-size: 13.5px; }
+.q .grip { color: var(--line-strong); font-size: 11px; letter-spacing: -2px; }
+.q code { font: 400 11px/1 "IBM Plex Mono", monospace; color: var(--muted); }
+.q.sel { background: var(--signal-soft); color: var(--signal-ink); box-shadow: inset 2px 0 0 var(--signal); }
+.q.sel code { color: var(--signal-ink); }
+.q .miss { width: 6px; height: 6px; background: var(--warn); display: inline-block; margin-left: 6px; }
+.addpage { font-weight: 600; font-size: 13px; padding: 10px 8px; color: var(--graphite); }
+.outfoot { margin-top: auto; border-top: 1px solid var(--line); padding: 10px 8px 0; font: 400 12px/1.8 "IBM Plex Mono", monospace; color: var(--muted); }
+.canvas { background-color: var(--paper); overflow: hidden; padding: 30px 0; position: relative; }
+/* The 24 px grid is optional: off by default, switched on per user with the Grid toggle (remembered in the user's preferences). */
+.canvas.grid { background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 24px 24px; }
+.gridtoggle { position: absolute; right: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 8px; font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--surface); border: 1px solid var(--line-strong); border-radius: 2px; padding: 6px 8px; }
+.gridtoggle i { width: 12px; height: 12px; border: 1px solid var(--line-strong); background-image: linear-gradient(var(--line-strong) 1px, transparent 1px), linear-gradient(90deg, var(--line-strong) 1px, transparent 1px); background-size: 4px 4px; }
+.gridtoggle.on { color: var(--ink); border-color: var(--ink); }
+.page { width: 640px; margin: 0 auto; display: grid; gap: 18px; }
+.ruler { position: relative; height: 14px; border-bottom: 2px solid var(--ink); background-image: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 32px); background-size: 100% 7px; background-repeat: no-repeat; background-position: bottom; }
+.ruler i { position: absolute; left: 0; bottom: -2px; height: 6px; background: var(--signal); }
+.prog { display: flex; justify-content: space-between; font: 500 12px/1 "IBM Plex Mono", monospace; color: var(--muted); margin-bottom: 6px; }
+.card { background: var(--surface); border: 1px solid var(--line-strong); border-radius: 4px; padding: 20px 22px; position: relative; }
+.card.sel { border: 2px solid var(--signal); box-shadow: var(--shadow); }
+.card .qno { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--signal-ink); margin-bottom: 10px; display: flex; justify-content: space-between; }
+.card h3 { font: 600 22px/1.2 "IBM Plex Sans Condensed", sans-serif; margin: 0 0 6px; letter-spacing: -.005em; }
+.card h3 .req { color: var(--signal); }
+.card p { margin: 0 0 16px; color: var(--muted); }
+.caret { display: inline-block; width: 2px; height: 22px; background: var(--signal); vertical-align: -4px; margin-left: 1px; }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line-strong); border-radius: 2px; overflow: hidden; }
+.scale span { text-align: center; padding: 13px 0; font: 500 16px/1 "IBM Plex Mono", monospace; border-left: 1px solid var(--line); background: var(--surface); }
+.scale span:first-child { border-left: none; }
+.ends { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.cardfoot { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--line-strong); font: 400 11.5px/1 "IBM Plex Mono", monospace; color: var(--muted); }
+.cardfoot span:last-child { color: var(--graphite); }
+.insert { display: flex; align-items: center; gap: 10px; color: var(--muted); font: 500 11.5px/1 "IBM Plex Mono", monospace; }
+.insert::before, .insert::after { content: ""; flex: 1; border-top: 1px dashed var(--signal); }
+.insert b { width: 26px; height: 26px; border: 1px solid var(--signal); color: var(--signal); display: grid; place-items: center; font: 600 16px/1 "IBM Plex Sans", sans-serif; border-radius: 2px; background: var(--surface); }
+.area { border: 1px solid var(--line-strong); border-radius: 2px; height: 72px; padding: 10px 12px; color: var(--muted); }
+.typemenu { position: absolute; left: calc(50% - 320px); top: 560px; width: 360px; background: var(--surface); border: 1px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); padding: 10px; }
+.typemenu .filter { border: 1px solid var(--signal); border-radius: 2px; padding: 7px 10px; margin-bottom: 8px; font-size: 13.5px; }
+.typemenu .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.typemenu .grid span { padding: 7px 8px; border-radius: 2px; font-size: 13.5px; display: flex; justify-content: space-between; }
+.typemenu .grid span code { font: 400 11px/1 "IBM Plex Mono", monospace; color: var(--muted); }
+.typemenu .grid span.hl { background: var(--signal-soft); color: var(--signal-ink); }
+.typemenu .hint { font: 400 11.5px/1 "IBM Plex Mono", monospace; color: var(--muted); padding: 8px 8px 2px; }
+.inspector { background: var(--surface); border-left: 1px solid var(--line); padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+.tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--line); }
+.tabs span { padding-bottom: 10px; color: var(--muted); font-weight: 500; }
+.tabs .on { color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--signal); }
+.lab { font: 500 11px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: block; }
+.field { border: 1px solid var(--line-strong); border-radius: 2px; padding: 9px 11px; background: var(--surface); display: flex; justify-content: space-between; }
+.note { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.toggle { display: flex; align-items: center; gap: 10px; }
+.toggle b { width: 34px; height: 18px; border-radius: 9px; background: var(--line-strong); position: relative; flex: none; }
+.toggle b::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); }
+.toggle b.on { background: var(--signal); }
+.toggle b.on::after { left: 18px; }
+.cond { border: 1px dashed var(--line-strong); border-radius: 2px; padding: 10px 12px; color: var(--graphite); }
+.cond b { color: var(--signal-ink); }
+.menu { position: absolute; background: var(--surface); border: 1px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); padding: 6px; z-index: 2; }
+.menu div { padding: 8px 10px; border-radius: 2px; display: flex; justify-content: space-between; gap: 24px; font-size: 13.5px; }
+.menu div.on { background: var(--signal-soft); color: var(--signal-ink); }
+
+/* States */
+.empty { position: absolute; inset: 0; display: grid; place-items: center; }
+.empty .box { width: 520px; text-align: left; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 4px; padding: 32px; display: grid; gap: 14px; }
+.empty h2 { font: 700 30px/1.05 "IBM Plex Sans Condensed", sans-serif; margin: 0; }
+.empty .formats { font: 400 12px/1.6 "IBM Plex Mono", monospace; color: var(--muted); }
+.sk { background: var(--line); border-radius: 2px; display: block; }
+.toast { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); width: 620px; background: var(--surface); border: 1px solid var(--error); border-left: 4px solid var(--error); border-radius: 4px; box-shadow: var(--shadow); padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; align-items: start; }
+.toast h4 { margin: 0; font: 600 15px/1.3 "IBM Plex Sans", sans-serif; }
+.toast p { margin: 0; color: var(--graphite); font-size: 13.5px; grid-column: 1; }
+.toast code { font: 400 12px/1 "IBM Plex Mono", monospace; color: var(--muted); grid-column: 1; }
+.missing { border: 2px dashed var(--warn); }
+.badge { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 2px; background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn); }
+.src { font-size: 13.5px; color: var(--muted); }
+.input { border: 1px solid var(--signal); border-radius: 2px; padding: 10px 12px; box-shadow: 0 0 0 3px var(--signal-soft); }
+
+/* Dialogs */
+.scrim { position: absolute; inset: 0; background: rgba(20,19,17,.45); }
+.dialog { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 620px; background: var(--surface); border: 1px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); display: grid; }
+.dialog header { padding: 22px 26px 14px; border-bottom: 1px solid var(--line); }
+.dialog header h2 { margin: 0; font: 700 26px/1.1 "IBM Plex Sans Condensed", sans-serif; }
+.dialog header span { font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.dialog .body { padding: 18px 26px; display: grid; gap: 14px; }
+.dialog footer { padding: 14px 26px; border-top: 1px solid var(--line); display: flex; justify-content: flex-end; gap: 10px; }
+.check { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+.check i { width: 20px; height: 20px; border: 1.5px solid var(--ok); color: var(--ok); display: grid; place-items: center; font: 700 12px/1 "IBM Plex Sans", sans-serif; font-style: normal; border-radius: 2px; }
+.bigwarn { border: 3px solid var(--warn); background: var(--warn-soft); border-radius: 4px; padding: 16px 18px; display: grid; grid-template-columns: 36px 1fr; gap: 6px 14px; }
+.bigwarn .ico { grid-row: span 3; width: 36px; height: 36px; background: var(--warn); color: var(--surface); display: grid; place-items: center; font: 700 22px/1 "IBM Plex Sans Condensed", sans-serif; border-radius: 2px; }
+.bigwarn h3 { margin: 0; font: 700 20px/1.15 "IBM Plex Sans Condensed", sans-serif; }
+.bigwarn ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.linkrow { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; border: 1px solid var(--line-strong); border-radius: 2px; padding: 8px 10px; }
+.linkrow code { font: 400 13px/1 "IBM Plex Mono", monospace; }
+.chip { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; padding: 5px 7px; border-radius: 2px; border: 1px solid var(--line-strong); color: var(--graphite); }
+.chip.sig { border-color: var(--signal); background: var(--signal-soft); color: var(--signal-ink); }
+.snippet { background: var(--paper); border: 1px solid var(--line-strong); border-radius: 2px; padding: 12px; font: 400 12px/1.6 "IBM Plex Mono", monospace; }
+.qr { width: 140px; height: 140px; background: #fff; border: 1px solid var(--line-strong); border-radius: 2px; padding: 8px; }
+</style>
+<style>
+.set-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 2px; font-weight: 600; font-size: 13.5px; background: var(--signal-soft); color: var(--signal-ink); box-shadow: inset 2px 0 0 var(--signal); margin-bottom: 6px; }
+.set-item i { font-style: normal; }
+.radio { display: flex; align-items: center; gap: 10px; font-size: 13.5px; padding: 3px 0; }
+.radio b { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line-strong); display: grid; place-items: center; flex: none; }
+.radio b.on { border-color: var(--signal); }
+.radio b.on::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
+.area2 { border: 1px solid var(--line-strong); border-radius: 2px; padding: 9px 11px; min-height: 64px; background: var(--surface); }
+.welcome { background: var(--surface); border: 2px solid var(--signal); border-radius: 4px; padding: 34px 36px; box-shadow: var(--shadow); display: grid; gap: 14px; }
+.welcome .kick { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--signal-ink); display: flex; justify-content: space-between; }
+.welcome h2 { margin: 0; font: 700 40px/1.05 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.015em; }
+.welcome p { margin: 0; color: var(--graphite); font-size: 17px; }
+.welcome .meta { font: 500 13px/1 "IBM Plex Mono", monospace; color: var(--graphite); }
+.thanks { background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 4px; padding: 22px 26px; display: grid; gap: 8px; }
+.thanks .kick { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--muted); }
+.thanks h3 { margin: 0; font: 700 26px/1.1 "IBM Plex Sans Condensed", sans-serif; }
+.panel { position: absolute; top: 56px; right: 0; bottom: 0; width: 620px; background: var(--surface); border-left: 1px solid var(--ink); box-shadow: -12px 0 24px rgba(26,25,23,.12); display: flex; flex-direction: column; }
+.panel header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.panel header .tag { font: 600 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--signal-ink); background: var(--signal-soft); padding: 6px 8px; border-radius: 2px; }
+.panel .stage { flex: 1; background: var(--paper); display: grid; justify-items: center; padding: 26px 0; overflow: hidden; }
+.runner { width: 540px; display: grid; gap: 22px; align-content: start; }
+.runner .rprog { font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.runner h4 { margin: 0; font: 600 20px/1.3 "IBM Plex Sans", sans-serif; }
+.runner h4 .req { color: var(--signal); }
+.rscale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.rscale span { height: 52px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); display: grid; place-items: center; font: 600 17px/1 "IBM Plex Mono", monospace; }
+.rscale span.on { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.rnav { display: flex; justify-content: space-between; align-items: center; }
+.phone { width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); font: 17px/1.5 "IBM Plex Sans", sans-serif; display: flex; flex-direction: column; }
+.phone * { box-sizing: border-box; }
+.pbanner { background: var(--signal-ink); color: #fff; font: 600 11.5px/1.3 "IBM Plex Mono", monospace; letter-spacing: .05em; text-transform: uppercase; padding: 10px 16px; text-align: center; }
+.phead { height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.porg { display: flex; align-items: center; gap: 10px; font: 600 15px/1 "IBM Plex Sans", sans-serif; }
+.porg i { width: 28px; height: 28px; border-radius: 4px; background: var(--ink); color: var(--paper); display: grid; place-items: center; font: 700 13px/1 "IBM Plex Sans Condensed", sans-serif; font-style: normal; }
+.pbody { padding: 30px 18px; display: grid; gap: 18px; }
+.pbody h1 { margin: 0; font: 700 32px/1.05 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.015em; }
+.pbody p { margin: 0; color: var(--graphite); font-size: 18px; }
+.pbody .meta { font: 500 13px/1 "IBM Plex Mono", monospace; color: var(--graphite); }
+.pbody .go { height: 54px; background: var(--signal); color: var(--on-signal); border-radius: 2px; display: grid; place-items: center; font: 600 17px/1 "IBM Plex Sans", sans-serif; }
+</style>
+<main>
+  <section><p class="label">A · Survey settings · EN · light</p><div class="wrap"><div class="screen t-light">
+    <div class="bar">
+      <span class="brandline"><span class="logo"><svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="3" style="fill:var(--signal)"/><path d="M10 11V8h12v8h-6v4" fill="none" style="stroke:var(--on-signal)" stroke-width="3.6" stroke-linecap="square"/><rect x="14.2" y="22.6" width="3.6" height="3.6" style="fill:var(--on-signal)"/></svg><span class="word">ask<b>werk</b></span></span><span class="sep"></span><span class="crumb">Customer satisfaction 2026</span><span class="stat">Draft · Saved</span></span>
+      <span class="grow"></span>
+      <span class="seg"><span>DE</span><span class="on">EN</span></span>
+      <span class="grow"></span>
+      <span class="kbd">Ctrl K</span>
+      <span class="btn quiet">Preview ▾</span>
+      <span class="btn primary">Publish</span>
+    </div>
+    <div class="work">
+    <div class="outline">
+      <div class="search"><span>Search questions</span><span class="mono">/</span></div>
+      <div class="set-item"><i>⚙</i>Survey settings</div>
+      <div class="pg"><span>01 · WELCOME</span><span>1</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Welcome text</span><code>INTRO</code></div>
+      <div class="pg"><span>02 · YOUR VISIT</span><span>3</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>How satisfied are you…</span><code>SAT_1</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>What could we improve?</span><code>IMPROVE</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Would you recommend us?</span><code>NPS</code></div>
+      <div class="pg"><span>03 · ABOUT YOU</span><span>2</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Which branch?</span><code>BRANCH</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Age group</span><code>AGE</code></div>
+      <div class="addpage">+ Add page</div>
+      <div class="outfoot">Logic: 2 rules<br>Ending: thank-you page</div>
+    </div>
+    <div class="canvas">
+      <div class="page">
+        <div class="welcome">
+          <div class="kick"><span>WELCOME PAGE · AS RESPONDENTS SEE IT</span><span>EN</span></div>
+          <h2>Customer satisfaction 2026<span class="caret"></span></h2>
+          <p>Thank you for taking part. Your opinion helps us get better.</p>
+          <span class="meta">About 3 minutes · 9 questions</span>
+          <div><span class="btn primary" style="padding:14px 22px; font-size:15px">Start the survey</span></div>
+        </div>
+        <div class="thanks">
+          <span class="kick">THANK-YOU PAGE · AFTER SEND</span>
+          <h3>Thank you! Your answers are saved.</h3>
+          <span class="src">Empty means the standard text in the respondent's language.</span>
+        </div>
+      </div>
+      <span class="gridtoggle"><i></i>Grid</span>
+    </div>
+    <div class="inspector">
+      <div class="tabs"><span class="on">Survey settings</span><span>Translations</span></div>
+      <div><span class="lab">Layout</span>
+        <div class="radio"><b class="on"></b>Classic · a page of questions at a time</div>
+        <div class="radio"><b></b>One question at a time</div>
+        <div class="note">Takes effect for respondents when you publish.</div></div>
+      <div class="toggle"><b class="on"></b><span>Welcome page</span></div>
+      <div><span class="lab">Welcome title · EN</span><div class="field"><span>Customer satisfaction 2026</span></div></div>
+      <div><span class="lab">Welcome text · EN</span><div class="area2">Thank you for taking part. Your opinion helps us get better.</div></div>
+      <div><span class="lab">Thank-you text · EN</span><div class="field"><span>Thank you! Your answers are saved.</span></div></div>
+      <div><span class="lab">Languages</span><div class="field"><span>German (default) · English</span><span class="mono" style="color:var(--muted)">Manage…</span></div>
+        <div class="note">Missing translations show in Translations and in the publish checks.</div></div>
+    </div>
+    </div>
+  </div></div></section>
+  <section><p class="label">B · Preview in a side panel · EN · light</p><div class="wrap"><div class="screen t-light">
+    <div class="bar">
+      <span class="brandline"><span class="logo"><svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="3" style="fill:var(--signal)"/><path d="M10 11V8h12v8h-6v4" fill="none" style="stroke:var(--on-signal)" stroke-width="3.6" stroke-linecap="square"/><rect x="14.2" y="22.6" width="3.6" height="3.6" style="fill:var(--on-signal)"/></svg><span class="word">ask<b>werk</b></span></span><span class="sep"></span><span class="crumb">Customer satisfaction 2026</span><span class="stat">Draft · Saved</span></span>
+      <span class="grow"></span>
+      <span class="seg"><span>DE</span><span class="on">EN</span></span>
+      <span class="grow"></span>
+      <span class="kbd">Ctrl K</span>
+      <span class="btn quiet" style="border-color:var(--ink)">Preview ▾</span>
+      <span class="btn primary">Publish</span>
+    </div><div class="menu" style="right:96px; top:50px; width:230px"><div class="on"><span>In a side panel</span><span>✓</span></div><div><span>In a new tab</span><span class="mono">↗</span></div><div><span class="mono" style="color:var(--muted)">Ctrl Shift P</span></div></div>
+    <div class="work" style="grid-template-columns: 280px 1fr 340px">
+    <div class="outline">
+      <div class="search"><span>Search questions</span><span class="mono">/</span></div>
+      <div class="set-item" style="background:none;box-shadow:none;color:var(--graphite)"><i>⚙</i>Survey settings</div>
+      <div class="pg"><span>01 · WELCOME</span><span>1</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Welcome text</span><code>INTRO</code></div>
+      <div class="pg"><span>02 · YOUR VISIT</span><span>3</span></div>
+      <div class="q sel"><span class="grip">⋮⋮</span><span>How satisfied are you…</span><code>SAT_1</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>What could we improve?</span><code>IMPROVE</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Would you recommend us?</span><code>NPS</code></div>
+      <div class="pg"><span>03 · ABOUT YOU</span><span>2</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Which branch?</span><code>BRANCH</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Age group</span><code>AGE</code></div>
+      <div class="addpage">+ Add page</div>
+      <div class="outfoot">Logic: 2 rules<br>Ending: thank-you page</div>
+    </div>
+    <div class="canvas"><div class="page" style="width:420px; margin-left:60px; opacity:.55">
+      <div class="card sel"><div class="qno"><span>Q2 · SAT_1</span><span>★ Required</span></div><h3>How satisfied are you with our service?<span class="req"> *</span></h3><p>Please think about your last visit.</p>
+      <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div></div></div>
+    <div></div>
+    </div>
+    <div class="panel">
+      <header style="flex-wrap:wrap"><span class="tag">Preview · answers are not saved</span><span class="grow"></span><span class="mono" style="font-size:18px">×</span>
+        <span style="flex-basis:100%; display:flex; gap:12px; align-items:center"><span class="seg"><span>Phone</span><span class="on">Desktop</span></span>
+        <span class="btn quiet">Restart</span><span class="src">Shows the last saved draft</span></span></header>
+      <div class="stage"><div class="runner">
+        <span class="rprog">Page 2 of 3 · Your visit</span>
+        <div class="ruler"><i style="width:55%"></i></div>
+        <h4>How satisfied are you with our service?<span class="req"> *</span></h4>
+        <div class="rscale"><span>1</span><span>2</span><span>3</span><span class="on">4</span><span>5</span></div>
+        <div class="ends"><span>Very unsatisfied</span><span>Very satisfied</span></div>
+        <h4>What could we improve?</h4>
+        <div class="area">Your answer</div>
+        <div class="rnav"><span class="btn">Back</span><span class="src">Checked like the real survey · nothing stored</span><span class="btn primary">Next</span></div>
+      </div></div>
+    </div>
+  </div></div></section>
+  <section><p class="label">C · Preview in a new tab · phone · DE</p><div class="phone t-light">
+    <div class="pbanner">Vorschau · Antworten werden nicht gespeichert</div>
+    <div class="phead"><span class="porg"><i>A</i>Acme GmbH</span><span class="seg"><span class="on">DE</span><span>EN</span></span></div>
+    <div class="pbody">
+      <h1>Kundenzufriedenheit 2026</h1>
+      <p>Danke, dass Sie mitmachen. Ihre Meinung hilft uns, besser zu werden.</p>
+      <span class="meta">Etwa 3 Minuten · 9 Fragen</span>
+      <div class="go">Umfrage starten</div>
+    </div>
+  </div></section>
+  <section><p class="label">A · Survey settings · EN · dark</p><div class="wrap"><div class="screen t-dark">
+    <div class="bar">
+      <span class="brandline"><span class="logo"><svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="3" style="fill:var(--signal)"/><path d="M10 11V8h12v8h-6v4" fill="none" style="stroke:var(--on-signal)" stroke-width="3.6" stroke-linecap="square"/><rect x="14.2" y="22.6" width="3.6" height="3.6" style="fill:var(--on-signal)"/></svg><span class="word">ask<b>werk</b></span></span><span class="sep"></span><span class="crumb">Customer satisfaction 2026</span><span class="stat">Draft · Saved</span></span>
+      <span class="grow"></span>
+      <span class="seg"><span>DE</span><span class="on">EN</span></span>
+      <span class="grow"></span>
+      <span class="kbd">Ctrl K</span>
+      <span class="btn quiet">Preview ▾</span>
+      <span class="btn primary">Publish</span>
+    </div>
+    <div class="work">
+    <div class="outline">
+      <div class="search"><span>Search questions</span><span class="mono">/</span></div>
+      <div class="set-item"><i>⚙</i>Survey settings</div>
+      <div class="pg"><span>01 · WELCOME</span><span>1</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Welcome text</span><code>INTRO</code></div>
+      <div class="pg"><span>02 · YOUR VISIT</span><span>3</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>How satisfied are you…</span><code>SAT_1</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>What could we improve?</span><code>IMPROVE</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Would you recommend us?</span><code>NPS</code></div>
+      <div class="pg"><span>03 · ABOUT YOU</span><span>2</span></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Which branch?</span><code>BRANCH</code></div>
+      <div class="q"><span class="grip">⋮⋮</span><span>Age group</span><code>AGE</code></div>
+      <div class="addpage">+ Add page</div>
+      <div class="outfoot">Logic: 2 rules<br>Ending: thank-you page</div>
+    </div>
+    <div class="canvas">
+      <div class="page">
+        <div class="welcome">
+          <div class="kick"><span>WELCOME PAGE · AS RESPONDENTS SEE IT</span><span>EN</span></div>
+          <h2>Customer satisfaction 2026<span class="caret"></span></h2>
+          <p>Thank you for taking part. Your opinion helps us get better.</p>
+          <span class="meta">About 3 minutes · 9 questions</span>
+          <div><span class="btn primary" style="padding:14px 22px; font-size:15px">Start the survey</span></div>
+        </div>
+        <div class="thanks">
+          <span class="kick">THANK-YOU PAGE · AFTER SEND</span>
+          <h3>Thank you! Your answers are saved.</h3>
+          <span class="src">Empty means the standard text in the respondent's language.</span>
+        </div>
+      </div>
+      <span class="gridtoggle"><i></i>Grid</span>
+    </div>
+    <div class="inspector">
+      <div class="tabs"><span class="on">Survey settings</span><span>Translations</span></div>
+      <div><span class="lab">Layout</span>
+        <div class="radio"><b class="on"></b>Classic · a page of questions at a time</div>
+        <div class="radio"><b></b>One question at a time</div>
+        <div class="note">Takes effect for respondents when you publish.</div></div>
+      <div class="toggle"><b class="on"></b><span>Welcome page</span></div>
+      <div><span class="lab">Welcome title · EN</span><div class="field"><span>Customer satisfaction 2026</span></div></div>
+      <div><span class="lab">Welcome text · EN</span><div class="area2">Thank you for taking part. Your opinion helps us get better.</div></div>
+      <div><span class="lab">Thank-you text · EN</span><div class="field"><span>Thank you! Your answers are saved.</span></div></div>
+      <div><span class="lab">Languages</span><div class="field"><span>German (default) · English</span><span class="mono" style="color:var(--muted)">Manage…</span></div>
+        <div class="note">Missing translations show in Translations and in the publish checks.</div></div>
+    </div>
+    </div>
+  </div></div></section>
+</main>

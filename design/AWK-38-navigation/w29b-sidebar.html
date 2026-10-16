@@ -1,0 +1,163 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W29 round 2, option A. #list: sidebar with Developers in Administration; #full: a survey open with the full sidebar (cluttered);
+     #rail: sidebar folds to icons inside a survey; #hidden: sidebar away, back via the survey bar; #context: the sidebar becomes the survey's own navigation, one header row. -->
+<html lang="en"><head><meta charset="utf-8"><title>W29 sidebar</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .v { display: none; height: 900px; } body.list #list, body.full #full, body.rail #rail, body.hidden #hidden, body.context #context { display: flex; }
+  .grow { flex: 1; }
+  .logo b { font: 700 19px/1 var(--aw-font-display); } .logo b span { color: var(--aw-signal); }
+  .side { width: 232px; flex: none; background: var(--aw-surface); border-right: 1px solid var(--aw-line); display: flex; flex-direction: column; padding: 12px 10px; gap: 2px; }
+  .side.narrow { width: 60px; align-items: center; padding: 12px 6px; }
+  .side .h { margin: 14px 10px 4px; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); }
+  .item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 6px; color: var(--aw-graphite); white-space: nowrap; }
+  .item.on { background: color-mix(in srgb, var(--aw-ink) 7%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .ic { width: 18px; text-align: center; font: 500 13px/1 var(--aw-font-mono); color: var(--aw-muted); flex: none; }
+  .count { margin-left: auto; font: 500 11px/1 var(--aw-font-mono); color: var(--aw-muted); }
+  .org { display: flex; align-items: center; gap: 8px; margin: 0 4px 8px; padding: 6px 10px; border: 1px solid var(--aw-line-strong); border-radius: 8px; font-weight: 600; }
+  .org i, .oi { width: 22px; height: 22px; border-radius: 5px; background: #1f5f8b; color: #fff; display: grid; place-items: center; font: 600 11px/1 var(--aw-font-mono); font-style: normal; flex: none; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: #3d4a55; color: #fff; display: grid; place-items: center; font: 600 11px/1 var(--aw-font-mono); flex: none; }
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+  .content { flex: 1; padding: 26px 32px; position: relative; }
+  h1 { margin: 0 0 4px; font: 700 26px/1.2 var(--aw-font-display); }
+  .muted { color: var(--aw-graphite); font-size: 13px; }
+  .rows { margin-top: 18px; border: 1px solid var(--aw-line); border-radius: 10px; background: var(--aw-surface); }
+  .row { display: grid; grid-template-columns: 1fr 120px 100px 120px; padding: 12px 16px; border-bottom: 1px solid var(--aw-line); font-size: 13.5px; }
+  .row:last-child { border: 0; } .row.h { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--aw-muted); }
+  .pill { font: 500 11px/1.2 var(--aw-font-mono); padding: 2px 8px; border: 1px solid var(--aw-line-strong); border-radius: 999px; width: fit-content; }
+  .btn { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--aw-line-strong); background: var(--aw-surface); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; }
+  .badge { position: absolute; bottom: 16px; right: 20px; padding: 6px 12px; background: var(--aw-ink); color: var(--aw-paper); border-radius: 999px; font: 600 13px/1.2 var(--aw-font-mono); z-index: 5; }
+  .note { position: absolute; padding: 10px 14px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 8px; font-size: 13px; line-height: 1.45; color: #4a3d00; max-width: 360px; box-shadow: 0 4px 12px rgba(0,0,0,.08); z-index: 4; }
+  .note b { display: block; margin-bottom: 2px; }
+  /* the survey workspace as built (W23/W25) */
+  .sbar { height: 56px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: var(--aw-surface); border-bottom: 1px solid var(--aw-line); }
+  .sname { font-weight: 600; font-size: 15px; } .status { padding: 3px 10px; border: 1px solid var(--aw-line-strong); border-radius: 999px; font: 500 11.5px/1.2 var(--aw-font-mono); color: var(--aw-graphite); }
+  .search { padding: 6px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; color: var(--aw-muted); font-size: 13px; }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 6px 10px; font: 600 12px/1 var(--aw-font-mono); } .seg span.on { background: var(--aw-ink); color: var(--aw-paper); }
+  .tabs { height: 48px; flex: none; display: flex; align-items: center; gap: 18px; padding: 0 20px; background: var(--aw-paper); border-bottom: 1px solid var(--aw-line); }
+  .tile { display: flex; align-items: stretch; gap: 18px; height: 34px; padding: 0 12px 0 4px; border-radius: 8px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-paper)); }
+  .ticon { align-self: center; width: 26px; height: 26px; margin-right: -6px; border-radius: 6px; background: var(--aw-ink); color: var(--aw-paper); display: grid; place-items: center; font: 600 11px/1 var(--aw-font-mono); }
+  .tab { display: inline-flex; align-items: center; color: var(--aw-graphite); border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab.on { color: var(--aw-ink); font-weight: 600; border-bottom-color: var(--aw-ink); }
+  .work { flex: 1; display: grid; grid-template-columns: 260px 1fr 300px; min-height: 0; }
+  .work.tight { grid-template-columns: 220px 1fr 260px; }
+  .outline { background: var(--aw-surface); border-right: 1px solid var(--aw-line); padding: 14px 12px; }
+  .outline .p { padding: 7px 10px; border-radius: 6px; font-size: 13px; color: var(--aw-graphite); } .outline .p.on { background: color-mix(in srgb, var(--aw-signal) 12%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .canvas { padding: 22px 28px; overflow: hidden; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .card.on { outline: 2px solid var(--aw-signal); }
+  .opt { padding: 8px 10px; border: 1px solid var(--aw-line-strong); border-radius: 4px; margin-top: 6px; font-size: 13px; }
+  .insp { background: var(--aw-surface); border-left: 1px solid var(--aw-line); padding: 16px; }
+  .field { margin-bottom: 14px; } .field span { display: block; font-size: 12px; color: var(--aw-graphite); margin-bottom: 4px; } .field div { padding: 7px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; font-size: 13px; }
+  .hit { position: absolute; z-index: 3; border: 3px dashed #d2440f; border-radius: 8px; }
+</style></head>
+<body>
+<script>document.body.className = (location.hash || "#list").slice(1);</script>
+
+<template id="nav">
+  <div style="padding:6px 10px 10px"><span class="logo"><b>Ask<span>werk</span></b></span></div>
+  <div class="org"><i>AC</i>Acme GmbH<span class="grow"></span>▾</div>
+  <div class="item NAV-surveys"><span class="ic">▤</span>Surveys<span class="count">24</span></div>
+  <div class="item"><span class="ic">❐</span>Templates<span class="count">7</span></div>
+  <div class="h">Administration</div>
+  <div class="item"><span class="ic">◉</span>Members</div><div class="item"><span class="ic">◐</span>Look of surveys</div><div class="item"><span class="ic">✉</span>Messages</div><div class="item"><span class="ic">◎</span>Domains</div><div class="item"><span class="ic">⚿</span>Sign-in</div>
+  <div class="item"><span class="ic">&lt;/&gt;</span>Developers &amp; API</div>
+  <span class="grow"></span>
+  <div class="item"><span class="avatar">AB</span>Anna Berger</div>
+</template>
+<template id="railnav">
+  <div class="oi" style="width:32px;height:32px;margin:4px 0 14px">AC</div>
+  <div class="item on" title="Surveys"><span class="ic">▤</span></div><div class="item"><span class="ic">❐</span></div>
+  <div style="width:28px;border-top:1px solid var(--aw-line);margin:8px 0"></div>
+  <div class="item"><span class="ic">◉</span></div><div class="item"><span class="ic">◐</span></div><div class="item"><span class="ic">✉</span></div><div class="item"><span class="ic">◎</span></div><div class="item"><span class="ic">⚿</span></div><div class="item"><span class="ic">&lt;/&gt;</span></div>
+  <span class="grow"></span><span class="avatar">AB</span>
+</template>
+<template id="sbar">
+  <div class="sbar"><span class="muted">← Surveys</span><span class="muted">/</span><span class="sname">Customer satisfaction 2026</span><span class="status">Draft · changes</span><span class="grow"></span>
+    <span class="search">Search <span style="font:500 11px var(--aw-font-mono)">Ctrl K</span></span><span class="seg"><span class="on">DE</span><span>EN</span></span><span class="btn">Preview ▾</span><span class="btn primary">Publish</span><span class="avatar AV"></span></div>
+</template>
+<template id="tabs">
+  <div class="tabs"><div class="tile"><span class="ticon">✎</span><span class="tab on">Questions</span><span class="tab">Look</span></div><div class="tile"><span class="ticon">⇥</span><span class="tab">Share</span><span class="tab">Participants 640</span></div><div class="tile"><span class="ticon">▥</span><span class="tab">Results 248</span></div><span class="grow"></span><span class="tab">⚙ Settings</span></div>
+</template>
+<template id="work">
+  <div class="outline"><div class="muted" style="margin:0 10px 6px;font:500 10.5px var(--aw-font-mono);letter-spacing:.08em">PAGES</div><div class="p">Welcome page</div><div class="p on">1 · Your visit</div><div class="p">2 · Your opinion</div><div class="p">3 · About you</div><div class="p">Thank-you page</div><div class="p">All rules</div></div>
+  <div class="canvas"><div class="card on"><b>How satisfied are you with your visit?</b><div style="display:flex;gap:6px;margin-top:8px"><span class="opt">1</span><span class="opt">2</span><span class="opt">3</span><span class="opt">4</span><span class="opt">5</span></div></div><div class="card"><b>Which branch did you visit?</b><div class="opt">Vienna</div><div class="opt">Graz</div><div class="opt">Linz</div></div><div class="card"><b>What could we improve?</b><div class="opt" style="height:60px"></div></div></div>
+  <div class="insp"><b>Question</b><div class="field" style="margin-top:12px"><span>Type</span><div>Rating scale</div></div><div class="field"><span>Variable</span><div>SAT</div></div><div class="field"><span>Scale</span><div>1 – 5</div></div><div class="field"><span>Display</span><div>Numbers</div></div></div>
+</template>
+<template id="list">
+  <div style="display:flex;align-items:flex-end;gap:12px"><div><h1>Surveys</h1><div class="muted">Acme GmbH · 24 surveys</div></div><span class="grow"></span><span class="btn primary">New survey</span></div>
+  <div class="rows"><div class="row h"><span>Title</span><span>Status</span><span>Responses</span><span>Changed</span></div>
+    <div class="row"><b>Customer satisfaction 2026</b><span class="pill">Published</span><span>248</span><span>Today</span></div><div class="row"><b>Employee pulse Q4</b><span class="pill">Draft</span><span>0</span><span>Yesterday</span></div><div class="row"><b>Café visit</b><span class="pill">Closed</span><span>86</span><span>14 Oct</span></div><div class="row"><b>Festival feedback</b><span class="pill">Published</span><span>140</span><span>12 Oct</span></div></div>
+</template>
+
+<!-- list: A with Developers in Administration -->
+<section class="v" id="list"><aside class="side" data-nav="on"></aside>
+  <div class="main"><div class="content"><div data-t="list"></div>
+    <div class="note" style="left:32px;top:330px"><b>Developers &amp; API joins Administration.</b>One item: the hub (guides, Try it, Postman) and, for owners and admins, the keys, webhooks and OAuth clients as its tabs. Editors and readers still see it, without the keys: they only read the docs, so the Administration group shows them this one item.</div>
+    <div class="badge">A2 · List</div></div></div>
+</section>
+
+<!-- full: survey open with the full sidebar -->
+<section class="v" id="full"><aside class="side" data-nav="on"></aside>
+  <div class="main"><div data-t="sbar"></div><div data-t="tabs"></div><div class="work tight" data-t="work"></div>
+    <div class="hit" style="left:-236px;top:0;width:236px;height:900px"></div>
+    <div class="note" style="left:300px;top:640px;max-width:420px"><b>Yes, cluttered.</b>Three columns of navigation before the first question: app sidebar, page outline, then the canvas squeezed between them and the inspector. Two "back" ways (sidebar Surveys and ← Surveys) and two profile buttons. The canvas loses about 230 px.</div>
+    <div class="badge">A2 · Survey open, full sidebar</div></div>
+</section>
+
+<!-- rail: folds to icons in a survey -->
+<section class="v" id="rail"><aside class="side narrow" data-nav="rail"></aside>
+  <div class="main"><div data-t="sbar" data-noavatar="1"></div><div data-t="tabs"></div><div class="work" data-t="work"></div>
+    <div class="note" style="left:300px;top:640px;max-width:430px"><b>Suggestion 1: fold to icons inside a survey.</b>The sidebar shrinks to a 60 px rail with tooltips; the organisation becomes its square, the profile its avatar at the foot (so the survey bar drops its own). Everything stays one click away; the designer gets its width back.</div>
+    <div class="badge">S1 · Icon rail</div></div>
+</section>
+
+<!-- hidden: sidebar away -->
+<section class="v" id="hidden">
+  <div class="main"><div data-t="sbar"></div><div data-t="tabs"></div><div class="work" style="grid-template-columns:280px 1fr 320px" data-t="work"></div>
+    <div class="note" style="left:320px;top:640px;max-width:430px"><b>Suggestion 2: no sidebar inside a survey.</b>Exactly today's survey workspace: "← Surveys" brings the sidebar back. Calmest for editing, but Members or Developers are two clicks away while a survey is open.</div>
+    <div class="badge">S2 · Hidden</div></div>
+</section>
+
+<!-- context: sidebar becomes the survey's navigation -->
+<section class="v" id="context">
+  <aside class="side">
+    <div style="padding:6px 10px 6px"><span class="logo"><b>Ask<span>werk</span></b></span></div>
+    <div class="item"><span class="ic">←</span>All surveys</div>
+    <div style="margin:8px 10px 2px;font-weight:600;line-height:1.3">Customer satisfaction 2026</div><div style="margin:0 10px 8px"><span class="status">Draft · changes</span></div>
+    <div class="h">Create</div><div class="item on"><span class="ic">✎</span>Questions</div><div class="item"><span class="ic">◐</span>Look</div>
+    <div class="h">Collect</div><div class="item"><span class="ic">⇥</span>Share</div><div class="item"><span class="ic">◉</span>Participants<span class="count">640</span></div>
+    <div class="h">Analyse</div><div class="item"><span class="ic">▥</span>Results<span class="count">248</span></div>
+    <div style="border-top:1px solid var(--aw-line);margin:10px 6px"></div><div class="item"><span class="ic">⚙</span>Survey settings</div>
+    <span class="grow"></span><div class="item"><span class="oi" style="width:20px;height:20px;font-size:9px">AC</span>Acme GmbH</div><div class="item"><span class="avatar">AB</span>Anna Berger</div>
+  </aside>
+  <div class="main">
+    <div class="sbar"><div class="muted" style="font-size:13px">Questions</div><span class="grow"></span><span class="search">Search <span style="font:500 11px var(--aw-font-mono)">Ctrl K</span></span><span class="seg"><span class="on">DE</span><span>EN</span></span><span class="btn">Preview ▾</span><span class="btn primary">Publish</span></div>
+    <div class="work" data-t="work"></div>
+    <div class="note" style="left:300px;top:640px;max-width:440px"><b>Suggestion 3 (my pick): the sidebar follows you into the survey.</b>Opening a survey swaps the sidebar's content for the survey's own places: ← All surveys, the name and status, Create · Collect · Analyse, Settings. The second header row disappears (one row instead of two), and the canvas gets more height. Same component, same place on every screen.</div>
+    <div class="badge">S3 · Sidebar becomes the survey's</div></div>
+</section>
+
+<script>
+const fill = (tpl) => document.getElementById(tpl).content.cloneNode(true);
+document.querySelectorAll("[data-nav]").forEach((el) => {
+  el.append(fill(el.dataset.nav === "rail" ? "railnav" : "nav"));
+  el.querySelectorAll(".NAV-surveys").forEach((item) => item.classList.add("on"));
+});
+document.querySelectorAll("[data-t]").forEach((el) => {
+  const content = fill(el.dataset.t);
+  if (el.dataset.t === "work") { el.append(content); return; }
+  if (el.dataset.noavatar) content.querySelectorAll(".AV").forEach((a) => a.remove());
+  content.querySelectorAll(".AV").forEach((a) => (a.textContent = "AB"));
+  el.replaceWith(content);
+});
+</script>
+</body></html>

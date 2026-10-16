@@ -1,0 +1,118 @@
+{
+  "survey": {
+    "id": "01a13b8f-0000-7000-8000-000000000001",
+    "title": "Customer satisfaction 2026"
+  },
+  "exportedAt": "2026-10-14T18:00:00Z",
+  "language": "en",
+  "variables": [
+    {
+      "name": "SOURCE",
+      "label": "Where from?",
+      "type": "number",
+      "question": "q1",
+      "values": [
+        {
+          "code": "1",
+          "label": "Search"
+        },
+        {
+          "code": "2",
+          "label": "Ads"
+        },
+        {
+          "code": "9",
+          "label": "Other:"
+        }
+      ]
+    },
+    {
+      "name": "SOURCE_OTHER",
+      "label": "Where from? – Other:",
+      "type": "text",
+      "question": "q1",
+      "values": []
+    },
+    {
+      "name": "CH_a",
+      "label": "Which, \"if any\"? – A",
+      "type": "number",
+      "question": "q2",
+      "values": [
+        {
+          "code": "1",
+          "label": "A"
+        },
+        {
+          "code": "0",
+          "label": "Not chosen"
+        }
+      ]
+    },
+    {
+      "name": "CH_b",
+      "label": "Which, \"if any\"? – B",
+      "type": "number",
+      "question": "q2",
+      "values": [
+        {
+          "code": "1",
+          "label": "B"
+        },
+        {
+          "code": "0",
+          "label": "Not chosen"
+        }
+      ]
+    },
+    {
+      "name": "SAT",
+      "label": "Satisfied?",
+      "type": "number",
+      "question": "q3",
+      "values": [
+        {
+          "code": "-99",
+          "label": "Don't know"
+        }
+      ]
+    },
+    {
+      "name": "TXT",
+      "label": "Anything else?",
+      "type": "text",
+      "question": "q4",
+      "values": []
+    }
+  ],
+  "responses": [
+    {
+      "id": "01a13b8f-0000-7000-8000-00000000000a",
+      "status": "complete",
+      "version": 1,
+      "language": "en",
+      "startedAt": "2026-10-14T08:00:00Z",
+      "completedAt": "2026-10-14T08:03:10Z",
+      "values": {
+        "SOURCE": 9,
+        "SOURCE_OTHER": "Trade fair, \"Vienna\"",
+        "CH_a": 1,
+        "CH_b": 1,
+        "SAT": 4,
+        "TXT": "=SUM(A1)\nsecond line; Grüße"
+      }
+    },
+    {
+      "id": "01a13b8f-0000-7000-8000-00000000000b",
+      "status": "partial",
+      "version": 1,
+      "language": "de",
+      "startedAt": "2026-10-14T09:00:00Z",
+      "completedAt": null,
+      "values": {
+        "SOURCE": 2,
+        "SAT": -99
+      }
+    }
+  ]
+}

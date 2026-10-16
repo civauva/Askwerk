@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1428" width="1500" height="1428" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W15 AWK-27 read-only designer -->
+  <rect x="0" y="0" width="1500" height="1428" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W15 · Read-only designer for analysts and viewers · AWK-27 · 2026-10-15</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Same three regions as the editor (W4), nothing that changes the survey. Builds on W4 and W9; Results (W11) unchanged.</text>
+  <text x="40" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Viewer or analyst opens a survey · EN · desktop</text>
+  <rect x="40" y="94" width="1420" height="720" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="94" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="108" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="123" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  ›  Customer satisfaction 2026</text>
+  <rect x="370" y="110" width="97.19999999999999" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="418.6" y="124" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Published v3</text>
+  <rect x="480" y="107" width="300" height="24" rx="12" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="494" y="124" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Read only · editors and admins change it</text>
+  <circle cx="800" cy="118" r="10" fill="#444"/>
+  <text x="800" y="122" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <rect x="940" y="104" width="170" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="1025" y="104" width="85" height="30" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="982" y="124" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">View</text>
+  <text x="1067" y="124" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Results</text>
+  <rect x="940" y="104" width="85" height="30" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="982" y="124" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">View</text>
+  <rect x="1025" y="104" width="85" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1067" y="124" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Results</text>
+  <text x="1130" y="124" font-size="12" font-weight="600" fill="#444" text-anchor="start">DE | EN</text>
+  <rect x="1200" y="103" width="100" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1250.0" y="123.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="1310" y="103" width="130" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1375.0" y="123.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Download PDF</text>
+  <circle cx="1492" cy="118" r="10" fill="#444"/>
+  <text x="1492" y="122" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="54" y="156" width="250" height="640" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="64" y="168" width="230" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="74" y="187" font-size="12" font-weight="400" fill="#888" text-anchor="start">Search questions</text>
+  <text x="70" y="216" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Survey settings</text>
+  <text x="70" y="250" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">1 · Welcome</text>
+  <text x="70" y="284" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">2 · Your visit</text>
+  <text x="84" y="318" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">How satisfied are you…  SAT_1</text>
+  <rect x="60" y="334" width="238" height="28" rx="3" fill="#e4e4e4" stroke="none" stroke-width="1.2"/>
+  <text x="70" y="352" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">What could we improve?  IMPROVE</text>
+  <text x="84" y="386" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Would you recommend us?  NPS</text>
+  <text x="70" y="420" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">3 · About you</text>
+  <text x="84" y="454" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Which branch did you visit?  BRANCH</text>
+  <text x="70" y="516" font-size="11" font-weight="400" fill="#666" text-anchor="start">No drag handles, no “+ Add page”.</text>
+  <text x="70" y="534" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Logic: 2 rules · Ending: thank-you page</text>
+  <circle cx="304" cy="216" r="10" fill="#444"/>
+  <text x="304" y="220" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <rect x="320" y="156" width="780" height="640" rx="4" fill="#fafafa" stroke="#bbb" stroke-width="1.2"/>
+  <text x="340" y="182" font-size="12" font-weight="600" fill="#666" text-anchor="start">Page 2 of 3 · Your visit</text>
+  <rect x="380" y="200" width="660" height="150" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="400" y="228" font-size="15" font-weight="600" fill="#111" text-anchor="start">How satisfied are you with our service? *</text>
+  <rect x="400" y="248" width="80" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="440" y="273" font-size="13" font-weight="600" fill="#333" text-anchor="middle">1</text>
+  <rect x="490" y="248" width="80" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="530" y="273" font-size="13" font-weight="600" fill="#333" text-anchor="middle">2</text>
+  <rect x="580" y="248" width="80" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="620" y="273" font-size="13" font-weight="600" fill="#333" text-anchor="middle">3</text>
+  <rect x="670" y="248" width="80" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="710" y="273" font-size="13" font-weight="600" fill="#333" text-anchor="middle">4</text>
+  <rect x="760" y="248" width="80" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="800" y="273" font-size="13" font-weight="600" fill="#333" text-anchor="middle">5</text>
+  <text x="400" y="328" font-size="11.5" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace">SAT_1 · Rating 1–5 · required</text>
+  <rect x="380" y="366" width="660" height="120" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <text x="400" y="394" font-size="15" font-weight="600" fill="#111" text-anchor="start">What could we improve?</text>
+  <rect x="400" y="408" width="620" height="50" rx="4" fill="#f6f6f6" stroke="#bbb" stroke-width="1.2"/>
+  <text x="400" y="476" font-size="11.5" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace">IMPROVE · Long text · optional</text>
+  <rect x="380" y="502" width="660" height="110" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="400" y="530" font-size="15" font-weight="600" fill="#111" text-anchor="start">Would you recommend us?</text>
+  <rect x="400" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="424" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">0</text>
+  <rect x="456" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="480" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">1</text>
+  <rect x="512" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="536" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">2</text>
+  <rect x="568" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="592" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">3</text>
+  <rect x="624" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="648" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">4</text>
+  <rect x="680" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="704" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">5</text>
+  <rect x="736" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="760" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">6</text>
+  <rect x="792" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="816" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">7</text>
+  <rect x="848" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="872" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">8</text>
+  <rect x="904" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="928" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">9</text>
+  <rect x="960" y="546" width="48" height="32" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="984" y="567" font-size="12" font-weight="600" fill="#333" text-anchor="middle">10</text>
+  <text x="380" y="642" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Click a question to see its settings on the right. Texts are not editable; no toolbars, no “+ Add question”.</text>
+  <text x="380" y="662" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">The canvas shows the language chosen at the top, like the editor.</text>
+  <circle cx="1050" cy="376" r="10" fill="#444"/>
+  <text x="1050" y="380" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <rect x="1114" y="156" width="332" height="640" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1130" y="184" font-size="13" font-weight="600" fill="#111" text-anchor="start">Question · IMPROVE</text>
+  <text x="1130" y="222" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">TYPE</text>
+  <text x="1130" y="242" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Long text</text>
+  <text x="1130" y="276" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">REQUIRED</text>
+  <text x="1130" y="296" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">No</text>
+  <text x="1130" y="330" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">VARIABLE</text>
+  <text x="1130" y="350" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">IMPROVE</text>
+  <text x="1130" y="384" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">CHARACTERS</text>
+  <text x="1130" y="404" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">up to 2,000</text>
+  <text x="1130" y="438" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">SHOWN WHEN</text>
+  <text x="1130" y="458" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">SAT_1 is 1, 2 or 3</text>
+  <text x="1130" y="492" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">TRANSLATIONS</text>
+  <text x="1130" y="512" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">DE ✓ · EN ✓</text>
+  <line x1="1130" y1="556" x2="1430" y2="556" stroke="#ddd" stroke-width="1.2"/>
+  <text x="1130" y="582" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Settings as text: no fields, no switches,</text>
+  <text x="1130" y="600" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">no Delete. Logic reads as a sentence.</text>
+  <circle cx="1446" cy="196" r="10" fill="#444"/>
+  <text x="1446" y="200" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="860" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · What changes for whom</text>
+  <rect x="40" y="874" width="1080" height="34" rx="0" fill="#e8e8e8" stroke="#bbb" stroke-width="1.2"/>
+  <text x="50" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">ROLE</text>
+  <text x="210" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">OPENS A SURVEY</text>
+  <text x="540" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">PREVIEW</text>
+  <text x="710" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">PDF</text>
+  <text x="830" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">RESULTS</text>
+  <text x="970" y="896" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">PUBLISH / EDIT</text>
+  <rect x="40" y="908" width="1080" height="34" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="50" y="930" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Owner, admin, editor</text>
+  <text x="210" y="930" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">the editor (W4), as today</text>
+  <text x="540" y="930" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="710" y="930" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="830" y="930" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="970" y="930" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <rect x="40" y="942" width="1080" height="34" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="50" y="964" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Analyst</text>
+  <text x="210" y="964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">this read-only view</text>
+  <text x="540" y="964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="710" y="964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="830" y="964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes, and export</text>
+  <text x="970" y="964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">no</text>
+  <rect x="40" y="976" width="1080" height="34" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="50" y="998" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Viewer</text>
+  <text x="210" y="998" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">this read-only view</text>
+  <text x="540" y="998" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="710" y="998" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="830" y="998" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">yes, no export</text>
+  <text x="970" y="998" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">no</text>
+  <circle cx="1140" cy="934" r="10" fill="#444"/>
+  <text x="1140" y="938" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="40" y="1040" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Top bar in German, and a draft with unpublished changes</text>
+  <rect x="40" y="1050" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="82" y="1079" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  ›  Kundenzufriedenheit 2026</text>
+  <rect x="370" y="1066" width="130.2" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="435.1" y="1080" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Veröffentlicht v3</text>
+  <rect x="500" y="1063" width="340" height="24" rx="12" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="514" y="1080" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Nur lesen · Redaktion und Admins ändern sie</text>
+  <rect x="860" y="1062" width="300" height="26" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="872" y="1080" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Zeigt: veröffentlicht v3  ·  Entwurf ▾</text>
+  <circle cx="1180" cy="1074" r="10" fill="#444"/>
+  <text x="1180" y="1078" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <rect x="40" y="1110" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="82" y="1139" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  ›  Mitarbeiterbefragung Q4</text>
+  <rect x="360" y="1126" width="64.19999999999999" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="392.1" y="1140" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Entwurf</text>
+  <rect x="450" y="1123" width="340" height="24" rx="12" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="464" y="1140" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Nur lesen · Redaktion und Admins ändern sie</text>
+  <text x="820" y="1140" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Never published: shows the draft; no Results tab yet (as today).</text>
+  <text x="40" y="1210" font-size="12" font-weight="400" fill="#333" text-anchor="start">1 A pill says the view is read only and who can change the survey. No Publish, no Save state, no “Draft · Saved 2 s ago”. Ctrl K offers only going to a page or question.</text>
+  <text x="40" y="1232" font-size="12" font-weight="400" fill="#333" text-anchor="start">2 Preview (side panel or new tab, as W9) and Download PDF stay: both store nothing. Results is one click, as for editors.</text>
+  <text x="40" y="1254" font-size="12" font-weight="400" fill="#333" text-anchor="start">3 The outline moves around the survey as in the editor; Survey settings shows the welcome and thank-you texts and the look, as text.</text>
+  <text x="40" y="1276" font-size="12" font-weight="400" fill="#333" text-anchor="start">4 The canvas is the survey as respondents see it; a click selects a question (outline) without any edit affordance: no toolbar, no inline text editing, no + buttons.</text>
+  <text x="40" y="1298" font-size="12" font-weight="400" fill="#333" text-anchor="start">5 The inspector shows the same settings as the editor's, as label and value. Logic and translation status read as sentences.</text>
+  <text x="40" y="1320" font-size="12" font-weight="400" fill="#333" text-anchor="start">6 Owners, admins and editors keep the editor. The server already refuses changes from analysts and viewers; this item makes the screen say so instead of failing on save.</text>
+  <text x="40" y="1342" font-size="12" font-weight="400" fill="#333" text-anchor="start">7 With unpublished changes, the view shows the published version (what respondents answer) and offers the draft in one switch.</text>
+  <text x="40" y="1364" font-size="12" font-weight="400" fill="#333" text-anchor="start">Email and PDF: unchanged; the PDF is the same document editors download.</text>
+  <text x="40" y="1386" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: (a) show the published version first, draft one switch away (recommended), or always the draft; (b) analysts and viewers may open Preview (recommended).</text>
+</svg>

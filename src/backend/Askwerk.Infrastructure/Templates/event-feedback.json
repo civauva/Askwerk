@@ -1,0 +1,154 @@
+{
+  "names": {
+    "de": "Feedback zur Veranstaltung",
+    "en": "Event feedback"
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wie war die Veranstaltung?",
+        "en": "How was the event?"
+      },
+      "text": {
+        "de": "Drei Minuten für Ihr Feedback, damit die nächste noch besser wird.",
+        "en": "Three minutes of feedback, so the next one is even better."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Ihre Antworten sind gespeichert.",
+        "en": "Thank you! Your answers are saved."
+      }
+    },
+    "pages": [
+      {
+        "id": "event",
+        "questions": [
+          {
+            "id": "overall",
+            "variable": "OVERALL",
+            "type": "rating",
+            "text": {
+              "de": "Wie hat Ihnen die Veranstaltung insgesamt gefallen?",
+              "en": "How did you like the event overall?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "parts",
+            "variable": "PARTS",
+            "type": "multiple",
+            "text": {
+              "de": "Was hat Ihnen besonders gefallen?",
+              "en": "What did you like most?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Vorträge",
+                  "en": "Talks"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Workshops",
+                  "en": "Workshops"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Austausch mit anderen",
+                  "en": "Meeting people"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Ort und Verpflegung",
+                  "en": "Venue and catering"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges:",
+                "en": "Other:"
+              },
+              "variable": "PARTS_OTHER"
+            }
+          },
+          {
+            "id": "length",
+            "variable": "LENGTH",
+            "type": "single",
+            "text": {
+              "de": "Wie fanden Sie die Länge?",
+              "en": "How was the length?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Zu kurz",
+                  "en": "Too short"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Genau richtig",
+                  "en": "Just right"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Zu lang",
+                  "en": "Too long"
+                }
+              }
+            ]
+          },
+          {
+            "id": "again",
+            "variable": "AGAIN",
+            "type": "yes-no",
+            "text": {
+              "de": "Kommen Sie nächstes Mal wieder?",
+              "en": "Will you come next time?"
+            },
+            "required": false
+          },
+          {
+            "id": "remarks",
+            "variable": "REMARKS",
+            "type": "long-text",
+            "text": {
+              "de": "Möchten Sie uns noch etwas sagen?",
+              "en": "Anything else you would like to tell us?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

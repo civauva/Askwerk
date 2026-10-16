@@ -1,0 +1,516 @@
+{
+  "order": 1,
+  "look": "atelier",
+  "responses": 180,
+  "title": {
+    "de": "Demo: Museumsbesuch",
+    "en": "Demo: City museum visit"
+  },
+  "names": {
+    "de": "Museumsbesuch",
+    "en": "City museum visit"
+  },
+  "kind": {
+    "de": "Bildreich",
+    "en": "Graphics-rich"
+  },
+  "features": {
+    "de": [
+      "Kopfbild",
+      "Bildauswahl",
+      "Bildblöcke",
+      "Regeln"
+    ],
+    "en": [
+      "header picture",
+      "picture choices",
+      "image blocks",
+      "rules"
+    ]
+  },
+  "texts": {
+    "remember": {
+      "de": [
+        "Die Vasen im Ostflügel",
+        "Das große Gemälde im Saal 3",
+        "Der Dinosaurier!",
+        "Das Café im Innenhof"
+      ],
+      "en": [
+        "The vases in the east wing",
+        "The big painting in room 3",
+        "The dinosaur!",
+        "The café in the courtyard"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Ihr Besuch im Stadtmuseum",
+        "en": "Your visit to the City Museum"
+      },
+      "text": {
+        "de": "Erzählen Sie uns in fünf Minuten, was Sie gesehen haben und was wir besser machen können.",
+        "en": "Tell us in five minutes what you saw and what we could do better."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Bis zur nächsten Ausstellung.",
+        "en": "Thank you! See you at the next exhibition."
+      }
+    },
+    "pages": [
+      {
+        "id": "visit",
+        "title": {
+          "de": "Ihr Besuch",
+          "en": "Your visit"
+        },
+        "questions": [
+          {
+            "id": "hall",
+            "variable": "HALL",
+            "type": "image",
+            "text": {
+              "de": "Die große Halle, frisch renoviert.",
+              "en": "The great hall, newly restored."
+            },
+            "required": false,
+            "image": {
+              "asset": "{picture:hall}",
+              "alt": {
+                "de": "Gezeichnete Museumshalle mit Säulen",
+                "en": "A drawn museum hall with columns"
+              },
+              "size": "wide",
+              "align": "centre"
+            }
+          },
+          {
+            "id": "date",
+            "variable": "VISIT_DATE",
+            "type": "date",
+            "text": {
+              "de": "Wann waren Sie bei uns?",
+              "en": "When did you visit?"
+            },
+            "required": true,
+            "mode": "date",
+            "latest": "today"
+          },
+          {
+            "id": "with",
+            "variable": "WITH",
+            "type": "single",
+            "text": {
+              "de": "Mit wem waren Sie hier?",
+              "en": "Who did you come with?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Allein",
+                  "en": "Alone"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Mit Partner oder Partnerin",
+                  "en": "With a partner"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Mit Kindern",
+                  "en": "With children"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Mit einer Gruppe",
+                  "en": "With a group"
+                }
+              }
+            ]
+          },
+          {
+            "id": "kids",
+            "variable": "KIDS_AGE",
+            "type": "multiple",
+            "text": {
+              "de": "Wie alt waren die Kinder?",
+              "en": "How old were the children?"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "with",
+                  "op": "is",
+                  "value": "3"
+                }
+              ]
+            },
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Unter 6",
+                  "en": "Under 6"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "6 bis 11",
+                  "en": "6 to 11"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "12 bis 17",
+                  "en": "12 to 17"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "exhibits",
+        "title": {
+          "de": "Die Ausstellung",
+          "en": "The exhibition"
+        },
+        "questions": [
+          {
+            "id": "favourite",
+            "variable": "FAVOURITE",
+            "type": "single",
+            "text": {
+              "de": "Was hat Ihnen am besten gefallen?",
+              "en": "What did you like best?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Die Gemälde",
+                  "en": "The paintings"
+                },
+                "image": {
+                  "asset": "{picture:painting}",
+                  "alt": {
+                    "de": "Die Gemälde",
+                    "en": "The paintings"
+                  }
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Die Keramik",
+                  "en": "The ceramics"
+                },
+                "image": {
+                  "asset": "{picture:vase}",
+                  "alt": {
+                    "de": "Die Keramik",
+                    "en": "The ceramics"
+                  }
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Die Skulpturen",
+                  "en": "The sculptures"
+                },
+                "image": {
+                  "asset": "{picture:sculpture}",
+                  "alt": {
+                    "de": "Die Skulpturen",
+                    "en": "The sculptures"
+                  }
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Die Fossilien",
+                  "en": "The fossils"
+                },
+                "image": {
+                  "asset": "{picture:fossil}",
+                  "alt": {
+                    "de": "Die Fossilien",
+                    "en": "The fossils"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "rooms",
+            "variable": "ROOMS",
+            "type": "matrix",
+            "text": {
+              "de": "Wie haben Ihnen die Räume gefallen?",
+              "en": "How did you like the rooms?"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "east",
+                "label": {
+                  "de": "Ostflügel",
+                  "en": "East wing"
+                }
+              },
+              {
+                "code": "west",
+                "label": {
+                  "de": "Westflügel",
+                  "en": "West wing"
+                }
+              },
+              {
+                "code": "garden",
+                "label": {
+                  "de": "Skulpturengarten",
+                  "en": "Sculpture garden"
+                }
+              },
+              {
+                "code": "kids",
+                "label": {
+                  "de": "Kinderwerkstatt",
+                  "en": "Kids' workshop"
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Schlecht",
+                  "en": "Poor"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Mittel",
+                  "en": "Fair"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Gut",
+                  "en": "Good"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Sehr gut",
+                  "en": "Very good"
+                }
+              }
+            ]
+          },
+          {
+            "id": "texts",
+            "variable": "TEXTS",
+            "type": "rating",
+            "text": {
+              "de": "Wie verständlich waren die Texte an den Exponaten?",
+              "en": "How clear were the texts at the exhibits?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "guide",
+            "variable": "AUDIO_GUIDE",
+            "type": "yes-no",
+            "text": {
+              "de": "Haben Sie den Audioguide benutzt?",
+              "en": "Did you use the audio guide?"
+            },
+            "required": true
+          },
+          {
+            "id": "guide-rating",
+            "variable": "AUDIO_RATING",
+            "type": "rating",
+            "text": {
+              "de": "Wie war der Audioguide?",
+              "en": "How was the audio guide?"
+            },
+            "required": true,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            },
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "guide",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "service",
+        "title": {
+          "de": "Service",
+          "en": "Service"
+        },
+        "questions": [
+          {
+            "id": "wait",
+            "variable": "WAIT",
+            "type": "slider",
+            "text": {
+              "de": "Wie lange haben Sie an der Kasse gewartet (Minuten)?",
+              "en": "How long did you wait at the ticket desk (minutes)?"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 30,
+              "minLabel": {
+                "de": "Gar nicht",
+                "en": "Not at all"
+              },
+              "maxLabel": {
+                "de": "30 Minuten",
+                "en": "30 minutes"
+              },
+              "step": 5,
+              "showValue": true
+            }
+          },
+          {
+            "id": "next",
+            "variable": "NEXT",
+            "type": "ranking",
+            "text": {
+              "de": "Welche Ausstellung sollen wir als Nächstes zeigen?",
+              "en": "Which exhibition should we show next?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Mode im Wandel",
+                  "en": "Fashion through time"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Stadt um 1900",
+                  "en": "The city around 1900"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Licht und Glas",
+                  "en": "Light and glass"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Welt der Insekten",
+                  "en": "World of insects"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "you",
+        "title": {
+          "de": "Zum Schluss",
+          "en": "Finally"
+        },
+        "questions": [
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Gar nicht",
+                "en": "Not at all"
+              },
+              "maxLabel": {
+                "de": "Sehr gerne",
+                "en": "Very likely"
+              }
+            }
+          },
+          {
+            "id": "remember",
+            "variable": "REMEMBER",
+            "type": "long-text",
+            "text": {
+              "de": "Woran werden Sie sich erinnern?",
+              "en": "What will you remember?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ],
+    "headerImage": {
+      "asset": "{picture:museum}",
+      "alt": {
+        "de": "Gezeichnete Fassade des Stadtmuseums",
+        "en": "A drawn front of the City Museum"
+      }
+    }
+  }
+}

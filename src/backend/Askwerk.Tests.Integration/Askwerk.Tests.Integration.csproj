@@ -1,0 +1,9 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Askwerk.Infrastructure/Askwerk.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Testcontainers.PostgreSql" />
+  </ItemGroup>
+</Project>

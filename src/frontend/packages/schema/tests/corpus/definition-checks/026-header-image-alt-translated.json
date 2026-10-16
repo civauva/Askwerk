@@ -1,0 +1,42 @@
+{
+  "name": "The alt text of a header image is translated like any text",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "long-text",
+            "text": {
+              "de": "Frage",
+              "en": "Question"
+            },
+            "required": false
+          }
+        ]
+      }
+    ],
+    "headerImage": {
+      "asset": "0199e000-0000-7000-8000-0000000000a1",
+      "alt": {
+        "de": "Unsere Filiale in Wien"
+      }
+    }
+  },
+  "expected": [
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "headerImage/alt",
+      "language": "en"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "order": 4,
+  "look": "graphit",
+  "responses": 24,
+  "names": {
+    "de": "Vorstands-Bewertung",
+    "en": "Board review"
+  },
+  "kind": {
+    "de": "Monochrom",
+    "en": "Monochrome"
+  },
+  "features": {
+    "de": [
+      "Matrix",
+      "Rangfolge",
+      "Pflichtfragen",
+      "Weiß nicht"
+    ],
+    "en": [
+      "matrix",
+      "ranking",
+      "required answers",
+      "don't know"
+    ]
+  },
+  "texts": {
+    "remarks": {
+      "de": [
+        "Mehr Zeit für Strategie",
+        "Unterlagen früher verschicken",
+        "Gute Zusammenarbeit"
+      ],
+      "en": [
+        "More time for strategy",
+        "Send papers earlier",
+        "Good cooperation"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Jährliche Bewertung des Vorstands",
+        "en": "Annual board review"
+      },
+      "text": {
+        "de": "Vertraulich. Etwa fünf Minuten.",
+        "en": "Confidential. About five minutes."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke. Die Ergebnisse werden in der nächsten Sitzung besprochen.",
+        "en": "Thank you. The results will be discussed at the next meeting."
+      }
+    },
+    "pages": [
+      {
+        "id": "work",
+        "questions": [
+          {
+            "id": "statements",
+            "variable": "BOARD",
+            "type": "matrix",
+            "text": {
+              "de": "Wie sehr stimmen Sie zu?",
+              "en": "How far do you agree?"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "goals",
+                "label": {
+                  "de": "Der Vorstand hat seine Ziele erreicht.",
+                  "en": "The board met its goals."
+                }
+              },
+              {
+                "code": "papers",
+                "label": {
+                  "de": "Die Unterlagen kamen rechtzeitig.",
+                  "en": "Papers arrived in time."
+                }
+              },
+              {
+                "code": "debate",
+                "label": {
+                  "de": "Kritik war willkommen.",
+                  "en": "Criticism was welcome."
+                }
+              },
+              {
+                "code": "decide",
+                "label": {
+                  "de": "Entscheidungen waren klar.",
+                  "en": "Decisions were clear."
+                }
+              },
+              {
+                "code": "time",
+                "label": {
+                  "de": "Die Sitzungen waren gut genutzt.",
+                  "en": "Meeting time was well used."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Stimme nicht zu",
+                  "en": "Disagree"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Eher nicht",
+                  "en": "Rather not"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Neutral",
+                  "en": "Neutral"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Eher ja",
+                  "en": "Rather agree"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Stimme zu",
+                  "en": "Agree"
+                }
+              }
+            ]
+          },
+          {
+            "id": "overall",
+            "variable": "OVERALL",
+            "type": "rating",
+            "text": {
+              "de": "Gesamturteil",
+              "en": "Overall rating"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 7,
+              "minLabel": {
+                "de": "Schwach",
+                "en": "Weak"
+              },
+              "maxLabel": {
+                "de": "Hervorragend",
+                "en": "Excellent"
+              }
+            }
+          }
+        ],
+        "title": {
+          "de": "Arbeitsweise",
+          "en": "How we work"
+        }
+      },
+      {
+        "id": "next",
+        "questions": [
+          {
+            "id": "priorities",
+            "variable": "PRIORITIES",
+            "type": "ranking",
+            "text": {
+              "de": "Was ist im nächsten Jahr am wichtigsten?",
+              "en": "What matters most next year?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Finanzen",
+                  "en": "Finances"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Nachfolge",
+                  "en": "Succession"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Digitalisierung",
+                  "en": "Digital"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Mitglieder",
+                  "en": "Members"
+                }
+              }
+            ]
+          },
+          {
+            "id": "remarks",
+            "variable": "REMARKS",
+            "type": "long-text",
+            "text": {
+              "de": "Weitere Anmerkungen",
+              "en": "Further remarks"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Nächstes Jahr",
+          "en": "Next year"
+        }
+      }
+    ]
+  }
+}

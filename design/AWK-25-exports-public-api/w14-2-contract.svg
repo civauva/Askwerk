@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1432" width="1500" height="1432" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W14 AWK-25 Public API contract sketch, part 2 -->
+  <rect x="0" y="0" width="1500" height="1432" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W14 · Public API v1, first endpoints: contract sketch · AWK-25 · 2026-10-15 · part 2 of 2</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">These endpoints become public (public-api.md, initial scope): surveys list and read, start an export, poll it, download it. Everything else stays App API.</text>
+  <rect x="40" y="80" width="700" height="221" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="40" y="80" width="700" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="52" y="100" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Calling the API</text>
+  <text x="54" y="130" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Authorization: Bearer awk_7Hq2xR…9fPq        // API key, Settings → API</text>
+  <text x="54" y="147" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Accept-Language: de | en                      // problem titles and details</text>
+  <text x="54" y="164" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve"></text>
+  <text x="54" y="181" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">401 unauthorized     no key, unknown, expired or revoked key</text>
+  <text x="54" y="198" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">403 scope-missing    the key lacks the endpoint's scope</text>
+  <text x="54" y="215" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">429 rate-limited     Retry-After: 12</text>
+  <text x="54" y="232" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">                     RateLimit-Limit: 600, RateLimit-Remaining, RateLimit-Reset</text>
+  <text x="54" y="249" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// 600 calls per minute per key; 3 exports running per organisation</text>
+  <text x="54" y="266" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// cookie sessions are refused here; API keys are refused on /api/app</text>
+  <text x="54" y="289" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Exports, downloads and every change made with a key are audited with the key as actor; other reads update its last use.</text>
+  <rect x="770" y="80" width="690" height="221" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="770" y="80" width="690" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="782" y="100" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Errors: RFC 7807 problem details</text>
+  <text x="784" y="130" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">HTTP/1.1 409 Conflict</text>
+  <text x="784" y="147" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Content-Type: application/problem+json</text>
+  <text x="784" y="164" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">{</text>
+  <text x="784" y="181" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "type": "https://askwerk.org/problems/not-published",</text>
+  <text x="784" y="198" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "title": "The survey is not published.",</text>
+  <text x="784" y="215" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "status": 409,</text>
+  <text x="784" y="232" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "detail": "Publish it before exporting its responses.",</text>
+  <text x="784" y="249" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "traceId": "4bf92f3577b34da6a3ce929d0e0e4736"</text>
+  <text x="784" y="266" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">}</text>
+  <text x="784" y="289" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">One type URI per error, listed in docs/api/errors.md; titles in German and English.</text>
+  <rect x="40" y="321" width="700" height="272" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="40" y="321" width="700" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="52" y="341" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">GET /api/v1/surveys            scope surveys:read</text>
+  <text x="54" y="371" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">?status=published|closed|draft   ?limit=50 (≤ 100)   ?cursor=…</text>
+  <text x="54" y="388" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">200</text>
+  <text x="54" y="405" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">{</text>
+  <text x="54" y="422" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "items": [{</text>
+  <text x="54" y="439" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">    "id": "0193f2c1-…", "code": "kz26b7mq",</text>
+  <text x="54" y="456" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">    "title": "Customer satisfaction 2026",</text>
+  <text x="54" y="473" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">    "status": "published", "publishedVersion": 3,</text>
+  <text x="54" y="490" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">    "languages": ["de", "en"], "responses": 12400,</text>
+  <text x="54" y="507" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">    "updatedAt": "2026-10-14T09:12:00Z"</text>
+  <text x="54" y="524" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  }],</text>
+  <text x="54" y="541" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "nextCursor": "MTcyO…"            // null on the last page</text>
+  <text x="54" y="558" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">}</text>
+  <text x="54" y="581" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Newest change first, on a cursor (no offsets in the Public API).</text>
+  <rect x="770" y="321" width="690" height="187" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="770" y="321" width="690" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="782" y="341" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">GET /api/v1/surveys/{surveyId}  scope surveys:read</text>
+  <text x="784" y="371" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">200  the item above, plus</text>
+  <text x="784" y="388" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">{</text>
+  <text x="784" y="405" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "versions": [{ "number": 3, "publishedAt": "2026-10-01T08:00:00Z" }],</text>
+  <text x="784" y="422" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "links": ["https://surveys.acme.at/s/kz26b7mq"],</text>
+  <text x="784" y="439" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "defaultLanguage": "de"</text>
+  <text x="784" y="456" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">}</text>
+  <text x="784" y="473" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">404 survey-not-found   // also for another organisation's survey</text>
+  <text x="784" y="496" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">The definition itself (Askwerk JSON) follows with survey import/export, not here.</text>
+  <rect x="40" y="613" width="700" height="272" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="40" y="613" width="700" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="52" y="633" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">POST /api/v1/surveys/{surveyId}/exports   scope responses:read</text>
+  <text x="54" y="663" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">Idempotency-Key: 2c7e…           // same key within 24 h → same export</text>
+  <text x="54" y="680" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">{</text>
+  <text x="54" y="697" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "format": "csv",                 // excel | csv | spss | stata | json</text>
+  <text x="54" y="714" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "layout": "wide",                // csv/excel: wide | long</text>
+  <text x="54" y="731" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "values": "labels",              // csv/excel: labels | codes | both</text>
+  <text x="54" y="748" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "language": "de",</text>
+  <text x="54" y="765" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "filter": { "status": "complete", "from": "2026-10-01T00:00:00Z",</text>
+  <text x="54" y="782" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">              "to": null, "version": null }</text>
+  <text x="54" y="799" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">}</text>
+  <text x="54" y="816" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">202 Accepted   Location: /api/v1/exports/0193f3…   body: the export</text>
+  <text x="54" y="833" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">400 unknown-format | too-many-rows (excel)   404 survey-not-found</text>
+  <text x="54" y="850" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">409 not-published   429 too-many-exports</text>
+  <text x="54" y="873" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Same exporters and codebook as the GUI (docs/api/exports.md).</text>
+  <rect x="770" y="613" width="690" height="306" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="770" y="613" width="690" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="782" y="633" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">GET /api/v1/exports/{exportId}    scope responses:read</text>
+  <text x="784" y="663" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">200</text>
+  <text x="784" y="680" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">{</text>
+  <text x="784" y="697" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "id": "0193f3…", "surveyId": "0193f2c1-…",</text>
+  <text x="784" y="714" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "status": "running",             // queued | running | ready | failed | expired</text>
+  <text x="784" y="731" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "format": "csv",</text>
+  <text x="784" y="748" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "progress": { "done": 3120, "total": 12400 },</text>
+  <text x="784" y="765" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "file": null,                    // when ready:</text>
+  <text x="784" y="782" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  // { "name": "customer-satisfaction-2026.csv",</text>
+  <text x="784" y="799" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  //   "contentType": "text/csv", "size": 1993421,</text>
+  <text x="784" y="816" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  //   "url": "/api/v1/exports/0193f3…/file" }</text>
+  <text x="784" y="833" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "error": null,                   // when failed: a problem</text>
+  <text x="784" y="850" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  "createdAt": "…", "finishedAt": null, "expiresAt": "2026-10-22T06:00:00Z"</text>
+  <text x="784" y="867" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">}</text>
+  <text x="784" y="884" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">404 export-not-found</text>
+  <text x="784" y="907" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Poll every few seconds, or wait for the export.completed webhook once webhooks exist.</text>
+  <rect x="40" y="939" width="700" height="103" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="40" y="939" width="700" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="52" y="959" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">GET /api/v1/exports/{exportId}/file   scope responses:read</text>
+  <text x="54" y="989" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">200  the file, Content-Disposition: attachment; filename=…</text>
+  <text x="54" y="1006" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">409 export-not-ready   410 export-expired   404 export-not-found</text>
+  <text x="54" y="1023" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// every download is audited (export.downloaded)</text>
+  <rect x="770" y="939" width="690" height="120" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="770" y="939" width="690" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="782" y="959" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">curl, start to finish</text>
+  <text x="784" y="989" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">curl -X POST -H "Authorization: Bearer $KEY" \</text>
+  <text x="784" y="1006" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">  -d '{"format":"csv"}' https://surveys.acme.at/api/v1/surveys/$ID/exports</text>
+  <text x="784" y="1023" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">curl -H "Authorization: Bearer $KEY" https://…/api/v1/exports/$EXPORT</text>
+  <text x="784" y="1040" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">curl -H "Authorization: Bearer $KEY" -o results.csv https://…/api/v1/exports/$EXPORT/file</text>
+  <text x="40" y="1089" font-size="13" font-weight="600" fill="#444" text-anchor="start">New entities (data model; entity diagram updated in docs/architecture/data-model.svg with the build)</text>
+  <rect x="40" y="1101" width="700" height="171" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="40" y="1101" width="700" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="52" y="1121" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">export</text>
+  <text x="54" y="1151" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">id, tenant_id, survey_id</text>
+  <text x="54" y="1168" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">requested_by_user_id | requested_by_api_key_id</text>
+  <text x="54" y="1185" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">format, options (json: layout, values, language, filter)</text>
+  <text x="54" y="1202" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">status, done, total, error</text>
+  <text x="54" y="1219" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">file_key, file_name, content_type, size</text>
+  <text x="54" y="1236" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">created_at, finished_at, expires_at</text>
+  <text x="54" y="1253" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// RLS per organisation; the job's payload is the export id</text>
+  <rect x="770" y="1101" width="690" height="154" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="770" y="1101" width="690" height="30" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1.2"/>
+  <text x="782" y="1121" font-size="13" font-weight="700" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">api_key</text>
+  <text x="784" y="1151" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">id, tenant_id, name</text>
+  <text x="784" y="1168" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">prefix (8 characters, shown), secret_hash (SHA-256)</text>
+  <text x="784" y="1185" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">scopes (text[]), expires_at, revoked_at</text>
+  <text x="784" y="1202" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">created_by, created_at, last_used_at</text>
+  <text x="784" y="1219" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// looked up by prefix, compared in constant time</text>
+  <text x="784" y="1236" font-size="12" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace" xml:space="preserve">// last_used_at written at most once a minute</text>
+  <text x="40" y="1302" font-size="12" font-weight="400" fill="#333" text-anchor="start">Public in this item: the five endpoints above, the API key authentication, rate limits, problem details, the OpenAPI snapshot (docs/api/openapi.json), docs/api/ (authentication, errors, exports) and a CHANGELOG entry.</text>
+  <text x="40" y="1324" font-size="12" font-weight="400" fill="#333" text-anchor="start">Not in this item: OAuth client credentials, webhooks (export.completed), the MCP server, workspaces on keys, write scopes beyond what the presets name. Each is its own item.</text>
+  <text x="40" y="1346" font-size="12" font-weight="400" fill="#333" text-anchor="start">SDKs: public-api.md asks for generated TypeScript, C# and Python SDKs with every public change. Generating them needs a generator, i.e. a new dependency.</text>
+  <text x="40" y="1368" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: (d) these five endpoints become public (recommended); (e) SDKs in a follow-up item with the generator choice and its warning (recommended), or here;</text>
+  <text x="40" y="1390" font-size="12" font-weight="600" fill="#333" text-anchor="start">(f) the problem type URIs under https://askwerk.org/problems/… (recommended; a URI is only a name, it need not resolve) or under the instance's own address.</text>
+</svg>

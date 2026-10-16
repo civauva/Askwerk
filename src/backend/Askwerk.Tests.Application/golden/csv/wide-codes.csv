@@ -1,0 +1,4 @@
+response_id,status,version,language,started_at,completed_at,duration_seconds,SOURCE,SOURCE_OTHER,CH_a,CH_b,SAT,TXT
+01a13b8f-0000-7000-8000-00000000000a,complete,1,en,2026-10-14T08:00:00Z,2026-10-14T08:03:10Z,190,9,"Trade fair, ""Vienna""",1,1,4,"'=SUM(A1)
+second line; Grüße"
+01a13b8f-0000-7000-8000-00000000000b,partial,1,de,2026-10-14T09:00:00Z,,,2,,,,-99,

@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Used only with `docker compose --profile caddy`. Caddy issues a certificate for any host name
+# that Askwerk confirms as verified (system subdomains and verified customer domains).
+{
+	on_demand_tls {
+		ask http://askwerk:8080/api/app/tls/ask
+	}
+}
+
+https:// {
+	tls {
+		on_demand
+	}
+	reverse_proxy askwerk:8080
+}

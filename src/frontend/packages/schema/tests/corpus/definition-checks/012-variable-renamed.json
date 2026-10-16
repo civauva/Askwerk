@@ -1,0 +1,75 @@
+{
+  "name": "A renamed variable is mapped from its old name; removed and new questions are not renames",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT_1",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q1"
+            },
+            "required": false
+          },
+          {
+            "id": "q3",
+            "variable": "NPS",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q3"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "previous": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SATISFACTION",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q1"
+            },
+            "required": false
+          },
+          {
+            "id": "q2",
+            "variable": "AGE",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q2"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [],
+  "expectedRenames": [
+    {
+      "questionId": "q1",
+      "from": "SATISFACTION",
+      "to": "SAT_1"
+    }
+  ]
+}

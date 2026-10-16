@@ -1,0 +1,49 @@
+{
+  "name": "Dark colours meet the same contrast pairs (W26)",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#d2440f",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card",
+    "mode": "dark",
+    "darkColours": {
+      "accent": "#5ee2c4",
+      "onAccent": "#0f1420",
+      "background": "#0f1420",
+      "surface": "#171e2e",
+      "text": "#e8ecf4",
+      "muted": "#3a4250",
+      "line": "#2c3650"
+    }
+  },
+  "expected": [
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "darkColours/muted",
+      "against": "darkColours/surface",
+      "ratio": 1.64
+    }
+  ]
+}

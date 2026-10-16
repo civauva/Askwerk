@@ -1,0 +1,41 @@
+{
+  "id": "klar",
+  "name": {
+    "de": "Klar",
+    "en": "Klar"
+  },
+  "description": {
+    "de": "Weiß, blau, luftig.",
+    "en": "White, blue, airy."
+  },
+  "tags": [
+    "calm"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#1f5f8b",
+      "onAccent": "#ffffff",
+      "background": "#ffffff",
+      "surface": "#ffffff",
+      "text": "#1b2733",
+      "muted": "#5b6b7a",
+      "line": "#d5dde5"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "airy",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "pills",
+    "progress": "bar",
+    "layout": "minimal"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "name": "Single, multiple, ranking and matrix questions need at least two options",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "single",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Ja"
+                }
+              }
+            ]
+          },
+          {
+            "id": "q2",
+            "variable": "Q2",
+            "type": "multiple",
+            "text": {
+              "de": "Frage 2"
+            },
+            "required": false
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "ranking",
+            "text": {
+              "de": "Frage 3"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "A"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "B"
+                }
+              }
+            ]
+          },
+          {
+            "id": "q4",
+            "variable": "Q4",
+            "type": "matrix",
+            "text": {
+              "de": "Frage 4"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Gut"
+                }
+              }
+            ],
+            "rows": [
+              {
+                "code": "r1",
+                "label": {
+                  "de": "Service"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "options-missing",
+      "severity": "error",
+      "path": "pages/0/questions/0/options"
+    },
+    {
+      "code": "options-missing",
+      "severity": "error",
+      "path": "pages/0/questions/1/options"
+    },
+    {
+      "code": "options-missing",
+      "severity": "error",
+      "path": "pages/0/questions/3/options"
+    }
+  ]
+}

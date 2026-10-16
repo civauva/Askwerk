@@ -1,0 +1,32 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* Grayscale wireframe style for HTML sketches (W20 onwards). */
+body { margin: 0; padding: 24px 32px; width: 1436px; background: #fafafa; color: #111; font: 13px/1.45 "Segoe UI", Arial, sans-serif; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+.lead { color: #444; margin: 0 0 18px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: start; }
+.box { background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 14px 16px; }
+h2 { font-size: 14px; margin: 0 0 8px; }
+h3 { font: 700 10.5px/1.3 "Segoe UI", Arial; text-transform: uppercase; letter-spacing: .05em; color: #666; margin: 14px 0 6px; }
+code, pre { font: 11.5px/1.45 Consolas, monospace; }
+pre { background: #f2f2f2; border: 1px solid #ddd; border-radius: 3px; padding: 8px 10px; margin: 6px 0; white-space: pre-wrap; }
+.muted { color: #666; }
+ul, ol { margin: 4px 0; padding-left: 18px; }
+.wire { border: 1px solid #999; border-radius: 4px; padding: 10px; background: #f6f6f6; }
+.row { display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid #ddd; padding: 6px 0; font-size: 12px; }
+.btn { display: inline-block; border: 1px solid #555; border-radius: 3px; padding: 3px 10px; font-weight: 600; font-size: 12px; background: #fff; }
+.btn.primary { background: #555; color: #fff; }
+.pill { border: 1px solid #999; border-radius: 9px; padding: 0 7px; font-size: 11px; }
+.field { border: 1px solid #999; border-radius: 3px; background: #fff; padding: 4px 8px; margin: 2px 0 8px; }
+.label { font: 600 10.5px/1.3 "Segoe UI"; text-transform: uppercase; color: #666; }
+.num { display: inline-block; width: 18px; height: 18px; border-radius: 9px; background: #444; color: #fff; font: 700 11px/18px "Segoe UI"; text-align: center; margin-right: 6px; }
+.notes { margin-top: 18px; }
+.notes p { margin: 3px 0; }
+.open { font-weight: 600; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; }
+th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; vertical-align: top; }
+th { background: #eee; font-weight: 600; }
+.frame { border: 2px dashed #888; border-radius: 4px; padding: 8px; background: #fff; }
+.host { border: 1px solid #999; background: #eee; padding: 8px; border-radius: 4px; }
+.seq { display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 12px; }
+.seq b { font-weight: 600; }

@@ -1,0 +1,68 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* Layout of the placeholder page (AWK-11 W2) in the Werkstatt look. Colours and sizes come from @askwerk/ui tokens only. */
+body {
+  margin: 0;
+  background: var(--aw-paper);
+  color: var(--aw-ink);
+  font: 400 14px/1.5 var(--aw-font);
+}
+
+.status-page__bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--aw-space-3) var(--aw-space-4);
+  background: var(--aw-surface);
+  border-bottom: 1px solid var(--aw-line);
+}
+
+.status-page__brand {
+  font: 700 18px/1 var(--aw-font-display);
+  letter-spacing: -0.01em;
+}
+
+.status-page__content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--aw-space-6) var(--aw-space-4);
+}
+
+.status-page__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--aw-space-3);
+}
+
+.status-page__stack h1 {
+  margin: 0;
+  font: 700 32px/1.1 var(--aw-font-display);
+  letter-spacing: -0.015em;
+}
+
+.status-page__stack p {
+  margin: 0;
+}
+
+.status-page__meta {
+  font-family: var(--aw-font-mono);
+  font-size: 13px;
+  color: var(--aw-muted);
+}
+
+/* The designer and Results inside a host product (AWK-13, W21). */
+.embed-state {
+  max-width: 32rem;
+  margin: 15vh auto;
+  padding: 0 16px;
+  color: var(--aw-ink);
+  font: 400 16px/1.5 var(--aw-font);
+}
+
+.embed-notice {
+  margin: 0;
+  padding: 8px 16px;
+  background: var(--aw-paper);
+  color: var(--aw-ink);
+  font: 400 14px/1.4 var(--aw-font);
+}

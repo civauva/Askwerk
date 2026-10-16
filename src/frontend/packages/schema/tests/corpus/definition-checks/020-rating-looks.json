@@ -1,0 +1,116 @@
+{
+  "name": "Each rating look has a step limit: numbers 11, stars and dots 10, faces 3 or 5",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "rating",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 11
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "Q2",
+            "type": "rating",
+            "text": {
+              "de": "Frage 2"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 11
+            },
+            "display": "stars"
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "rating",
+            "text": {
+              "de": "Frage 3"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 4
+            },
+            "display": "faces"
+          },
+          {
+            "id": "q4",
+            "variable": "Q4",
+            "type": "rating",
+            "text": {
+              "de": "Frage 4"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 3
+            },
+            "display": "faces"
+          },
+          {
+            "id": "q5",
+            "variable": "Q5",
+            "type": "rating",
+            "text": {
+              "de": "Frage 5"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "q6",
+            "variable": "Q6",
+            "type": "rating",
+            "text": {
+              "de": "Frage 6"
+            },
+            "required": false,
+            "scale": {
+              "min": -3,
+              "max": 3
+            },
+            "display": "dots"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "rating-steps-too-many",
+      "severity": "error",
+      "path": "pages/0/questions/0/scale"
+    },
+    {
+      "code": "rating-steps-too-many",
+      "severity": "error",
+      "path": "pages/0/questions/1/scale"
+    },
+    {
+      "code": "faces-need-three-or-five-steps",
+      "severity": "error",
+      "path": "pages/0/questions/2/scale"
+    }
+  ]
+}

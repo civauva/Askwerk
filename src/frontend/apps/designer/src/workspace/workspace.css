@@ -1,0 +1,431 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The survey workspace (AWK-29, W17): one bar and one row of tabs on every screen of a survey. Tokens only. */
+
+.survey-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  background: var(--aw-surface);
+  border-bottom: 1px solid var(--aw-line);
+  font-family: var(--aw-font);
+  color: var(--aw-ink);
+}
+
+.survey-bar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--aw-graphite);
+  text-decoration: none;
+  font-size: 13.5px;
+}
+
+.survey-bar__back:hover span {
+  text-decoration: underline;
+}
+
+.survey-bar__sep {
+  color: var(--aw-muted);
+}
+
+.survey-bar__title {
+  margin: 0;
+  font: inherit;
+  min-width: 0;
+}
+
+.survey-bar__name {
+  max-width: min(360px, 100%);
+  border: 0;
+  padding: 6px 4px;
+  background: transparent;
+  color: var(--aw-ink);
+  font: 600 15px/1.2 var(--aw-font);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.survey-bar__name:hover {
+  background: var(--aw-paper);
+}
+
+.survey-bar__name--plain {
+  cursor: default;
+}
+
+.survey-bar__name--plain:hover {
+  background: transparent;
+}
+
+/* Renaming in place (W23). */
+.survey-bar__name-input {
+  max-width: 360px;
+  padding: 5px 6px;
+  border: 1px solid var(--aw-ink);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  font: 600 15px/1.2 var(--aw-font);
+}
+
+.survey-bar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--aw-line-strong);
+}
+
+.survey-bar__status {
+  padding: 3px 10px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 999px;
+  font: 500 11.5px/1.2 var(--aw-font-mono);
+  color: var(--aw-graphite);
+  white-space: nowrap;
+}
+
+.survey-bar__grow {
+  flex: 1;
+}
+
+.survey-bar__search {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  height: 32px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  color: var(--aw-muted);
+  font: 400 13px/1 var(--aw-font);
+  cursor: pointer;
+}
+
+.survey-bar__search kbd {
+  font: 500 11px/1 var(--aw-font-mono);
+  white-space: nowrap;
+}
+
+.survey-bar > * {
+  flex-shrink: 0;
+}
+
+.survey-bar > .survey-bar__title {
+  flex-shrink: 1;
+}
+
+/* Narrow windows: search keeps its shortcut only, the status gives way. */
+@media (max-width: 1100px) {
+  .survey-bar__search > span,
+  .survey-bar__status {
+    display: none;
+  }
+}
+
+.survey-bar a[role="menuitem"] {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The places on three soft tiles, each with one strong icon at its start (W25 C); Settings at the right end. */
+.survey-tabs {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 0 24px;
+  background: var(--aw-paper);
+  border-bottom: 1px solid var(--aw-line);
+  font-family: var(--aw-font);
+}
+
+.survey-tabs__group {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 14px 0 4px;
+  border-radius: 8px;
+  /* A step darker than the row, in light and dark themes alike. */
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-paper));
+}
+
+.survey-tabs__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 26px;
+  height: 26px;
+  margin-right: -8px;
+  border-radius: 6px;
+  background: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.survey-tabs__grow {
+  flex: 1;
+}
+
+.survey-tabs__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--aw-line-strong);
+}
+
+.survey-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  color: var(--aw-graphite);
+  font-size: 14px;
+  line-height: 19px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.survey-tabs__tab--settings {
+  gap: 7px;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+.survey-tabs__tab--settings svg {
+  flex: none;
+}
+
+.survey-tabs__tab:hover {
+  color: var(--aw-ink);
+}
+
+.survey-tabs__tab[aria-current="page"] {
+  border-bottom-color: var(--aw-ink);
+  color: var(--aw-ink);
+  font-weight: 600;
+}
+
+.survey-tabs__count {
+  margin-left: 6px;
+  font: 500 12px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+}
+
+.survey-bar a:focus-visible,
+.survey-bar button:focus-visible,
+.survey-tabs__tab:focus-visible {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.survey-frame {
+  min-height: 100vh;
+  background: var(--aw-paper);
+}
+
+.survey-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+  font-family: var(--aw-font);
+  color: var(--aw-ink);
+}
+
+.survey-page--wide {
+  max-width: 1200px;
+}
+
+.survey-page > .designer-segment {
+  float: right;
+}
+
+.survey-page__empty {
+  margin: 48px 0;
+  color: var(--aw-graphite);
+  text-align: center;
+}
+
+.survey-page__title {
+  margin: 0 0 16px;
+  font: 600 20px/1.3 var(--aw-font);
+}
+
+/* Phone: two rows in the bar (the way back and the name, then the switches and actions); the tabs scroll. */
+@media (max-width: 760px) {
+  .survey-bar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 16px;
+    gap: 8px;
+  }
+
+  /* The name takes the first row beside the logo; everything else goes to the second. */
+  .survey-bar__title {
+    flex: 1 1 calc(100% - 64px);
+  }
+
+  .survey-bar__sep {
+    display: none;
+  }
+
+  /* Still the link's name for screen readers. */
+  .survey-bar__back > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .survey-bar__name {
+    max-width: 100%;
+  }
+
+  .survey-bar .designer-logo__word,
+  .survey-bar__status,
+  .survey-bar__search,
+  .survey-bar__grow,
+  .survey-bar__divider {
+    display: none;
+  }
+
+  .survey-tabs {
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+
+  .survey-tabs {
+    gap: 12px;
+  }
+
+  .survey-tabs__group {
+    flex: none;
+    gap: 16px;
+  }
+}
+
+/* Approvals (AWK-28, W16) */
+.approval-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 13px/1.3 var(--aw-font);
+}
+
+.approval-slot__state {
+  color: var(--aw-ok, var(--aw-ink));
+  font-weight: 600;
+}
+
+.approval-pill {
+  padding: 4px 10px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 999px;
+  background: var(--aw-surface);
+  color: var(--aw-graphite);
+  font: 500 12px/1.2 var(--aw-font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.approval-pill:disabled {
+  cursor: default;
+}
+
+.approval-pill--approved {
+  border-color: var(--aw-ink);
+  color: var(--aw-ink);
+}
+
+.approval-pill--earlier {
+  border-color: var(--aw-signal);
+  color: var(--aw-signal-ink);
+}
+
+.approval-list {
+  right: 0;
+  left: auto;
+  width: 300px;
+  padding: 12px;
+}
+
+.approval-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.approval-list li {
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.approval-list__note {
+  color: var(--aw-graphite);
+  font-style: italic;
+}
+
+.approval-dialog__what {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-control);
+  font-family: var(--aw-font);
+}
+
+/* ⚙ Survey settings (W23). */
+.survey-settings {
+  max-width: 760px;
+}
+
+.survey-settings__section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.survey-settings__section h3 {
+  margin: 0 0 8px;
+  font: 600 16px/1.3 var(--aw-font);
+}
+
+.survey-settings__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.survey-settings__name .aw-formfield {
+  flex: 1 1 320px;
+}
+
+.survey-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* A setting's value and its actions in one row (W24): the closing date with Change and Remove, the switch and Saved. */
+.survey-settings__value {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.survey-settings__danger {
+  color: var(--aw-signal-ink);
+}

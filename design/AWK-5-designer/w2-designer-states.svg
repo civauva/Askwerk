@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1150" width="1600" height="1150" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W2 AWK-5 designer states, grayscale wireframe -->
+  <rect x="0" y="0" width="1600" height="1150" rx="0" fill="#fafafa" stroke="none" stroke-width="1.2"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W2 · AWK-5 Designer — states (DE/EN) · 2026-10-13</text>
+  <text x="24" y="58" font-size="12" font-weight="400" fill="#555" text-anchor="start">Empty, loading, save error and translation view. Source design/AWK-5-designer/w2-designer-states.svg</text>
+  <text x="24" y="90" font-size="14" font-weight="600" fill="#111" text-anchor="start">1 · Empty survey (DE)</text>
+  <rect x="24" y="100" width="764" height="500" rx="6" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <rect x="24" y="100" width="764" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="38" y="126" font-size="13" font-weight="500" fill="#111" text-anchor="start">Askwerk › Neue Umfrage · Entwurf</text>
+  <rect x="666" y="105" width="114" height="30" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="723.0" y="125" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Veröffentlichen</text>
+  <rect x="24" y="140" width="180" height="460" rx="0" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <text x="38" y="170" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">1 · Seite 1</text>
+  <text x="38" y="196" font-size="12.5" font-weight="500" fill="#333" text-anchor="start">+ Seite hinzufügen</text>
+  <rect x="204" y="140" width="584" height="460" rx="0" fill="#f3f3f3" stroke="#ccc" stroke-width="1.2"/>
+  <text x="496.0" y="300" font-size="18" font-weight="600" fill="#111" text-anchor="middle">Noch keine Fragen</text>
+  <text x="496.0" y="328" font-size="13" font-weight="400" fill="#444" text-anchor="middle">Fügen Sie die erste Frage hinzu, wählen Sie eine Vorlage</text>
+  <text x="496.0" y="348" font-size="13" font-weight="400" fill="#444" text-anchor="middle">oder importieren Sie eine Umfrage aus LimeSurvey, Qualtrics, CSV oder Excel.</text>
+  <rect x="266.0" y="376" width="170" height="30" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="351.0" y="396" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Erste Frage hinzufügen</text>
+  <rect x="446.0" y="376" width="120" height="30" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="506.0" y="396" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Vorlage wählen</text>
+  <rect x="576.0" y="376" width="110" height="30" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="631.0" y="396" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Importieren</text>
+  <text x="496.0" y="440" font-size="11.5" font-weight="400" fill="#666" text-anchor="middle">EN: “No questions yet” · “Add the first question” · “Choose a template” · “Import”</text>
+  <text x="812" y="90" font-size="14" font-weight="600" fill="#111" text-anchor="start">2 · Loading (skeleton, no spinner)</text>
+  <rect x="812" y="100" width="764" height="500" rx="6" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <rect x="812" y="100" width="764" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="826" y="115" width="220" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1466" y="110" width="96" height="20" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="812" y="140" width="180" height="460" rx="0" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="826" y="164" width="140" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="194" width="120" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="224" width="100" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="254" width="140" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="284" width="120" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="314" width="100" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="826" y="344" width="140" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="992" y="140" width="400" height="460" rx="0" fill="#f3f3f3" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="1022" y="170" width="340" height="110" rx="8" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <rect x="1040" y="192" width="240" height="14" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="218" width="300" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="240" width="200" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1022" y="300" width="340" height="110" rx="8" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <rect x="1040" y="322" width="240" height="14" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="348" width="300" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="370" width="200" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1022" y="430" width="340" height="110" rx="8" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <rect x="1040" y="452" width="240" height="14" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="478" width="300" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1040" y="500" width="200" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1392" y="140" width="184" height="460" rx="0" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="1408" y="170" width="80" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="186" width="150" height="18" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="220" width="80" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="236" width="150" height="18" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="270" width="80" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="286" width="150" height="18" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="320" width="80" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="336" width="150" height="18" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="370" width="80" height="10" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <rect x="1408" y="386" width="150" height="18" rx="3" fill="#e2e2e2" stroke="none" stroke-width="1.2"/>
+  <text x="24" y="630" font-size="14" font-weight="600" fill="#111" text-anchor="start">3 · Save failed (EN) — the change stays on screen, nothing is lost</text>
+  <rect x="24" y="640" width="764" height="500" rx="6" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <rect x="24" y="640" width="764" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="38" y="666" font-size="13" font-weight="500" fill="#111" text-anchor="start">Askwerk › Customer satisfaction 2026</text>
+  <text x="324" y="666" font-size="12" font-weight="600" fill="#222" text-anchor="start">Not saved · retrying in 8 s</text>
+  <rect x="684" y="645" width="96" height="30" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="732.0" y="665" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Publish</text>
+  <rect x="24" y="680" width="764" height="460" rx="0" fill="#f3f3f3" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="134" y="730" width="540" height="120" rx="8" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="154" y="760" font-size="16" font-weight="600" fill="#111" text-anchor="start">How satisfied are you with our service?</text>
+  <text x="154" y="786" font-size="13" font-weight="400" fill="#555" text-anchor="start">Please think about your last visit.</text>
+  <rect x="134" y="1020" width="540" height="96" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="154" y="1048" font-size="14" font-weight="600" fill="#111" text-anchor="start">Your last change could not be saved.</text>
+  <text x="154" y="1070" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Check your connection. Askwerk keeps trying; you can keep working.</text>
+  <text x="154" y="1094" font-size="11.5" font-weight="400" fill="#555" text-anchor="start" font-family="Consolas, monospace">Reference: 4bf92f3577b34da6a3ce929d0e0e4736</text>
+  <rect x="584" y="1036" width="78" height="30" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="623.0" y="1056" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Retry now</text>
+  <text x="154" y="1132" font-size="11" font-weight="400" fill="#666" text-anchor="start">DE: “Ihre letzte Änderung konnte nicht gespeichert werden.” · “Jetzt erneut versuchen” · “Referenz”</text>
+  <text x="812" y="630" font-size="14" font-weight="600" fill="#111" text-anchor="start">4 · Translating (DE selected, English as source)</text>
+  <rect x="812" y="640" width="764" height="500" rx="6" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <rect x="812" y="640" width="764" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="826" y="666" font-size="13" font-weight="500" fill="#111" text-anchor="start">Askwerk › Kundenzufriedenheit 2026</text>
+  <rect x="1172" y="646" width="120" height="28" rx="6" fill="#fff" stroke="#888" stroke-width="1.2"/>
+  <rect x="1172" y="646" width="60" height="28" rx="6" fill="#d6d6d6" stroke="#888" stroke-width="1.2"/>
+  <text x="1202" y="665" font-size="12" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="1262" y="665" font-size="12" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <text x="1302" y="665" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">3 fehlen</text>
+  <rect x="812" y="680" width="764" height="460" rx="0" fill="#f3f3f3" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="922" y="710" width="540" height="120" rx="8" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="942" y="740" font-size="16" font-weight="600" fill="#111" text-anchor="start">Wie zufrieden sind Sie mit unserem Service?</text>
+  <text x="942" y="766" font-size="13" font-weight="400" fill="#555" text-anchor="start">Bitte denken Sie an Ihren letzten Besuch.</text>
+  <rect x="922" y="850" width="540" height="150" rx="8" fill="#fff" stroke="#222" stroke-width="2" stroke-dasharray="6 4"/>
+  <rect x="942" y="866" width="126.80000000000001" height="22" rx="11" fill="#e6e6e6" stroke="#888" stroke-width="1.2"/>
+  <text x="1005.4" y="881" font-size="11.5" font-weight="500" fill="#222" text-anchor="middle">Übersetzung fehlt</text>
+  <text x="942" y="912" font-size="13" font-weight="400" fill="#555" text-anchor="start">Englischer Text: “What could we improve?”</text>
+  <rect x="942" y="926" width="500" height="34" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="954" y="948" font-size="13" font-weight="400" fill="#999" text-anchor="start">Deutscher Text eingeben …</text>
+  <text x="942" y="982" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Tab: nächste fehlende Übersetzung</text>
+  <text x="942" y="1040" font-size="12" font-weight="400" fill="#444" text-anchor="start">Missing texts are counted in the language switch; publishing warns but</text>
+  <text x="942" y="1058" font-size="12" font-weight="400" fill="#444" text-anchor="start">does not block (respondents then see the default language for that text).</text>
+  <text x="942" y="1086" font-size="11" font-weight="400" fill="#666" text-anchor="start">EN: “Translation missing” · “English text” · “Enter German text…” · “Tab: next missing translation”</text>
+</svg>

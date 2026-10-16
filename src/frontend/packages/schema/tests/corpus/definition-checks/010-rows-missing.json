@@ -1,0 +1,48 @@
+{
+  "name": "A matrix needs at least one row",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "matrix",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Gut"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Schlecht"
+                }
+              }
+            ],
+            "rows": []
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "rows-missing",
+      "severity": "error",
+      "path": "pages/0/questions/0/rows"
+    }
+  ]
+}

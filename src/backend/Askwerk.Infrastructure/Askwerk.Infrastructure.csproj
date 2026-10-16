@@ -1,0 +1,21 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Askwerk.Application\Askwerk.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Seeding/demo-survey.json" LogicalName="Askwerk.Infrastructure.Seeding.demo-survey.json" />
+    <EmbeddedResource Include="Pdf/Fonts/*.woff" LogicalName="Askwerk.Infrastructure.Pdf.Fonts.%(Filename).woff" />
+    <EmbeddedResource Include="Templates/*.json" LogicalName="Askwerk.Infrastructure.Templates.%(Filename).json" />
+    <EmbeddedResource Include="Samples/*.json" LogicalName="Askwerk.Infrastructure.Samples.%(Filename).json" />
+    <EmbeddedResource Include="Seeding/Demos/*.json" LogicalName="Askwerk.Infrastructure.Demos.%(Filename).json" />
+    <EmbeddedResource Include="../../frontend/packages/schema/presets/*.json" LinkBase="Looks" LogicalName="Askwerk.Infrastructure.Looks.%(Filename).json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="PDFsharp-MigraDoc" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

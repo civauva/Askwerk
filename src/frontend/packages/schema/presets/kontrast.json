@@ -1,0 +1,53 @@
+{
+  "id": "kontrast",
+  "name": {
+    "de": "Kontrast",
+    "en": "Kontrast"
+  },
+  "description": {
+    "de": "Höchster Kontrast, große Schrift (AAA).",
+    "en": "Maximum contrast, big type (AAA)."
+  },
+  "tags": [
+    "monochrome"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#ffe600",
+      "onAccent": "#000000",
+      "background": "#000000",
+      "surface": "#000000",
+      "text": "#ffffff",
+      "muted": "#d0d0d0",
+      "line": "#ffffff"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "l",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "bar",
+    "layout": "minimal",
+    "components": {
+      "question": {
+        "size": "l",
+        "font": "heading"
+      },
+      "choices": {
+        "selected": "fill"
+      },
+      "textFields": {
+        "style": "boxes"
+      }
+    }
+  }
+}

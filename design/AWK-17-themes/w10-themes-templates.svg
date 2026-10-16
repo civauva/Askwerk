@@ -1,0 +1,538 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 3330" width="1500" height="3330" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W10 AWK-17 themes, templates, three outputs -->
+  <rect x="0" y="0" width="1500" height="3330" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W10 rev. 2 · Themes, templates, images and the three outputs (web, email, PDF) · AWK-17 · 2026-10-14</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">A look is data: tokens (colours, font, corners), images and a layout preset. One renderer per output maps the same data; nothing is web-only CSS.</text>
+  <text x="40" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Organisation → Look · themes and brand kit · EN</text>
+  <rect x="40" y="94" width="1420" height="660" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="94" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="108" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="123" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  |  Acme GmbH  ·  Organisation settings</text>
+  <rect x="40" y="142" width="200" height="612" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="60" y="175" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">General</text>
+  <text x="60" y="207" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Members</text>
+  <text x="60" y="239" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Email</text>
+  <rect x="48" y="252" width="184" height="28" rx="4" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="60" y="271" font-size="12.5" font-weight="600" fill="#fff" text-anchor="start">Look</text>
+  <text x="60" y="303" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Domains</text>
+  <text x="60" y="335" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Templates</text>
+  <text x="254" y="170" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">THEMES</text>
+  <rect x="254" y="180" width="250" height="56" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <rect x="264" y="190" width="36" height="36" rx="2" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="310" y="205" font-size="13" font-weight="600" fill="#111" text-anchor="start">Acme Standard</text>
+  <text x="310" y="223" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Organisation default</text>
+  <rect x="254" y="246" width="250" height="56" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="264" y="256" width="36" height="36" rx="2" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="310" y="271" font-size="13" font-weight="600" fill="#111" text-anchor="start">Acme Event</text>
+  <text x="310" y="289" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">2 surveys</text>
+  <rect x="254" y="312" width="250" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="379" y="337" font-size="12.5" font-weight="600" fill="#333" text-anchor="middle">+ New theme</text>
+  <text x="254" y="380" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">START FROM A PRESET</text>
+  <rect x="254" y="390" width="120" height="64" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="262" y="398" width="104" height="22" rx="2" fill="#999" stroke="none" stroke-width="1.2"/>
+  <text x="314" y="442" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Werkstatt</text>
+  <rect x="382" y="390" width="120" height="64" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="390" y="398" width="104" height="22" rx="2" fill="#ccc" stroke="none" stroke-width="1.2"/>
+  <text x="442" y="442" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Klar</text>
+  <rect x="254" y="464" width="120" height="64" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="262" y="472" width="104" height="22" rx="2" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="314" y="516" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Warm</text>
+  <rect x="382" y="464" width="120" height="64" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="390" y="472" width="104" height="22" rx="2" fill="#333" stroke="none" stroke-width="1.2"/>
+  <text x="442" y="516" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Kontrast (AAA)</text>
+  <circle cx="504" cy="166" r="10" fill="#444"/>
+  <text x="504" y="170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="526" y="170" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">ACME STANDARD · THEME</text>
+  <text x="526" y="188" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">NAME</text>
+  <rect x="526" y="196" width="300" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="536" y="215" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Acme Standard</text>
+  <text x="526" y="256" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LOGO</text>
+  <rect x="526" y="264" width="90" height="44" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="526" y1="264" x2="616" y2="308" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="616" y1="264" x2="526" y2="308" stroke="#aaa" stroke-width="1.2"/>
+  <text x="571.0" y="290.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">LOGO</text>
+  <rect x="626" y="270" width="90" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="671.0" y="290.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Replace…</text>
+  <text x="526" y="334" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">COLOURS</text>
+  <rect x="526" y="346" width="24" height="24" rx="2" fill="#777" stroke="#555" stroke-width="1.2"/>
+  <text x="560" y="363" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Accent</text>
+  <text x="666" y="363" font-size="12" font-weight="600" fill="#333" text-anchor="start">#D2440F</text>
+  <text x="746" y="363" font-size="11.5" font-weight="600" fill="#2a5" text-anchor="start">4.8 : 1  AA ✓</text>
+  <rect x="526" y="380" width="24" height="24" rx="2" fill="#eee" stroke="#555" stroke-width="1.2"/>
+  <text x="560" y="397" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Background</text>
+  <text x="666" y="397" font-size="12" font-weight="600" fill="#333" text-anchor="start">#F6F5F2</text>
+  <text x="746" y="397" font-size="11.5" font-weight="600" fill="#2a5" text-anchor="start"></text>
+  <rect x="526" y="414" width="24" height="24" rx="2" fill="#222" stroke="#555" stroke-width="1.2"/>
+  <text x="560" y="431" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Text</text>
+  <text x="666" y="431" font-size="12" font-weight="600" fill="#333" text-anchor="start">#1A1917</text>
+  <text x="746" y="431" font-size="11.5" font-weight="600" fill="#2a5" text-anchor="start">15.9 : 1  AAA ✓</text>
+  <rect x="526" y="448" width="24" height="24" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="560" y="465" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Buttons text</text>
+  <text x="666" y="465" font-size="12" font-weight="600" fill="#333" text-anchor="start">#FFFFFF</text>
+  <text x="746" y="465" font-size="11.5" font-weight="600" fill="#2a5" text-anchor="start">on accent 4.8 : 1 ✓</text>
+  <circle cx="836" cy="346" r="10" fill="#444"/>
+  <text x="836" y="350" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="526" y="494" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">FONT (SELF-HOSTED, OFL)</text>
+  <rect x="526" y="502" width="300" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="536" y="521" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">IBM Plex Sans  ▾</text>
+  <text x="526" y="558" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">CORNERS</text>
+  <rect x="526" y="566" width="78" height="28" rx="0" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="565" y="585" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">Sharp</text>
+  <rect x="610" y="566" width="78" height="28" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="649" y="585" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Rounded</text>
+  <rect x="694" y="566" width="78" height="28" rx="14" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="733" y="585" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Pill</text>
+  <text x="526" y="620" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">HEADER IMAGE</text>
+  <rect x="526" y="628" width="180" height="60" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="526" y1="628" x2="706" y2="688" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="706" y1="628" x2="526" y2="688" stroke="#aaa" stroke-width="1.2"/>
+  <text x="616.0" y="662.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER</text>
+  <text x="716" y="650" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Focal point: drag the dot.</text>
+  <text x="716" y="668" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">JPG/PNG/WebP, max. 5 MB.</text>
+  <text x="526" y="712" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Saved automatically · contrast checked on save, below AA cannot be saved.</text>
+  <text x="860" y="170" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">LAYOUT PRESET</text>
+  <rect x="860" y="182" width="130" height="100" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="885" y="194" width="80" height="62" rx="2" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="925" y="274" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Card</text>
+  <rect x="1000" y="182" width="130" height="100" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <rect x="1006" y="188" width="118" height="24" rx="0" fill="#ccc" stroke="none" stroke-width="1.2"/>
+  <rect x="1025" y="218" width="80" height="40" rx="2" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="1065" y="274" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Header image</text>
+  <rect x="860" y="294" width="130" height="100" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="866" y="300" width="50" height="70" rx="0" fill="#ccc" stroke="none" stroke-width="1.2"/>
+  <rect x="924" y="308" width="56" height="54" rx="2" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="925" y="386" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Split image</text>
+  <rect x="1000" y="294" width="130" height="100" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <line x1="1025" y1="324" x2="1105" y2="324" stroke="#999" stroke-width="1.2"/>
+  <line x1="1025" y1="340" x2="1090" y2="340" stroke="#999" stroke-width="1.2"/>
+  <line x1="1025" y1="356" x2="1100" y2="356" stroke="#999" stroke-width="1.2"/>
+  <text x="1065" y="386" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Minimal</text>
+  <circle cx="1122" cy="166" r="10" fill="#444"/>
+  <text x="1122" y="170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="1150" y="170" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">PREVIEW</text>
+  <rect x="1150" y="180" width="296" height="30" rx="15" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1152" y="182" width="96" height="26" rx="13" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="1200" y="200" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">Web</text>
+  <text x="1298" y="200" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Email</text>
+  <text x="1396" y="200" font-size="12" font-weight="600" fill="#111" text-anchor="middle">PDF</text>
+  <rect x="1150" y="224" width="296" height="470" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1150" y="224" width="296" height="80" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="1150" y1="224" x2="1446" y2="304" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="1446" y1="224" x2="1150" y2="304" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1298.0" y="268.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER IMAGE</text>
+  <rect x="1166" y="320" width="30" height="18" rx="2" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="1166" y="368" font-size="16" font-weight="700" fill="#111" text-anchor="start">Customer satisfaction 2026</text>
+  <text x="1166" y="390" font-size="12" font-weight="400" fill="#333" text-anchor="start">Thank you for taking part.</text>
+  <rect x="1166" y="414" width="48" height="36" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1190" y="437" font-size="12" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="1220" y="414" width="48" height="36" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1244" y="437" font-size="12" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="1274" y="414" width="48" height="36" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1298" y="437" font-size="12" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="1328" y="414" width="48" height="36" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1352" y="437" font-size="12" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="1382" y="414" width="48" height="36" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1406" y="437" font-size="12" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <rect x="1166" y="474" width="140" height="34" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1236.0" y="496.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Start the survey</text>
+  <text x="1166" y="534" font-size="11" font-weight="400" fill="#666" text-anchor="start">Shows the demo survey, or any survey</text>
+  <text x="1166" y="550" font-size="11" font-weight="400" fill="#666" text-anchor="start">picked below, in this theme.</text>
+  <circle cx="1436" cy="166" r="10" fill="#444"/>
+  <text x="1436" y="170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="40" y="790" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Designer → Survey settings → Look · EN (inspector section below Layout and Welcome page)</text>
+  <rect x="40" y="800" width="1420" height="470" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="800" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="814" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="829" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  |  Customer satisfaction 2026  · Draft · Saved</text>
+  <rect x="40" y="848" width="260" height="422" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="50" y="860" width="240" height="32" rx="4" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="62" y="881" font-size="13" font-weight="600" fill="#fff" text-anchor="start">⚙  Survey settings</text>
+  <rect x="310" y="848" width="760" height="422" rx="0" fill="#f6f6f6" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="370" y="864" width="640" height="90" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="370" y1="864" x2="1010" y2="954" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="1010" y1="864" x2="370" y2="954" stroke="#aaa" stroke-width="1.2"/>
+  <text x="690.0" y="913.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER IMAGE · this survey</text>
+  <rect x="370" y="954" width="640" height="196" rx="0" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="400" y="1000" font-size="24" font-weight="700" fill="#111" text-anchor="start">Customer satisfaction 2026</text>
+  <text x="400" y="1030" font-size="13" font-weight="400" fill="#333" text-anchor="start">Thank you for taking part. Your opinion helps us get better.</text>
+  <rect x="400" y="1060" width="180" height="38" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="490.0" y="1084.0" font-size="13.5" font-weight="600" fill="#fff" text-anchor="middle">Start the survey</text>
+  <text x="370" y="1180" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">The canvas shows the survey in its look; the designer's own controls stay in the Werkstatt look.</text>
+  <rect x="1080" y="848" width="380" height="422" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="1096" y="876" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">LOOK</text>
+  <text x="1096" y="902" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">THEME</text>
+  <rect x="1096" y="910" width="348" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1106" y="929" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Acme Standard (organisation default)  ▾</text>
+  <text x="1096" y="962" font-size="11" font-weight="400" fill="#666" text-anchor="start">Other themes: Acme Event, or a preset.</text>
+  <text x="1096" y="986" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">HEADER IMAGE FOR THIS SURVEY</text>
+  <rect x="1096" y="994" width="140" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="1096" y1="994" x2="1236" y2="1044" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="1236" y1="994" x2="1096" y2="1044" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1166.0" y="1023.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">IMAGE</text>
+  <rect x="1246" y="1004" width="90" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1291.0" y="1024.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Replace…</text>
+  <text x="1346" y="1024" font-size="12" font-weight="600" fill="#333" text-anchor="start">Remove</text>
+  <text x="1096" y="1070" font-size="12" font-weight="600" fill="#111" text-anchor="start">Alt text (EN)</text>
+  <rect x="1096" y="1078" width="348" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1106" y="1098" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Our shop in Vienna</text>
+  <text x="1096" y="1136" font-size="11" font-weight="400" fill="#666" text-anchor="start">Changes to a theme reach published surveys</text>
+  <text x="1096" y="1152" font-size="11" font-weight="400" fill="#666" text-anchor="start">at once; the survey version is not changed.</text>
+  <rect x="1096" y="1174" width="160" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1176.0" y="1194.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Edit theme ↗</text>
+  <circle cx="1440" cy="876" r="10" fill="#444"/>
+  <text x="1440" y="880" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="1300" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · New survey → Start from a template · EN</text>
+  <rect x="40" y="1310" width="700" height="520" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="70" y="1330" width="640" height="480" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="94" y="1366" font-size="18" font-weight="700" fill="#111" text-anchor="start">New survey</text>
+  <rect x="94" y="1382" width="260" height="30" rx="15" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="96" y="1384" width="128" height="26" rx="13" fill="#fff" stroke="none" stroke-width="1.2"/>
+  <text x="160" y="1402" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Blank</text>
+  <rect x="226" y="1384" width="126" height="26" rx="13" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="289" y="1402" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">From a template</text>
+  <rect x="380" y="1382" width="306" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="390" y="1402" font-size="12.5" font-weight="400" fill="#888" text-anchor="start">Search templates</text>
+  <text x="94" y="1440" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">ASKWERK</text>
+  <rect x="94" y="1450" width="290" height="66" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <rect x="102" y="1458" width="60" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="102" y1="1458" x2="162" y2="1508" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="162" y1="1458" x2="102" y2="1508" stroke="#aaa" stroke-width="1.2"/>
+  <text x="132.0" y="1487.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle"></text>
+  <text x="174" y="1480" font-size="13" font-weight="600" fill="#111" text-anchor="start">Customer satisfaction</text>
+  <text x="174" y="1498" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">20 questions · DE EN</text>
+  <rect x="394" y="1450" width="290" height="66" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="402" y="1458" width="60" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="402" y1="1458" x2="462" y2="1508" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="462" y1="1458" x2="402" y2="1508" stroke="#aaa" stroke-width="1.2"/>
+  <text x="432.0" y="1487.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle"></text>
+  <text x="474" y="1480" font-size="13" font-weight="600" fill="#111" text-anchor="start">Employee pulse</text>
+  <text x="474" y="1498" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">12 questions · DE EN</text>
+  <rect x="94" y="1526" width="290" height="66" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="102" y="1534" width="60" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="102" y1="1534" x2="162" y2="1584" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="162" y1="1534" x2="102" y2="1584" stroke="#aaa" stroke-width="1.2"/>
+  <text x="132.0" y="1563.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle"></text>
+  <text x="174" y="1556" font-size="13" font-weight="600" fill="#111" text-anchor="start">Event feedback</text>
+  <text x="174" y="1574" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">9 questions · DE EN</text>
+  <rect x="394" y="1526" width="290" height="66" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="402" y="1534" width="60" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="402" y1="1534" x2="462" y2="1584" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="462" y1="1534" x2="402" y2="1584" stroke="#aaa" stroke-width="1.2"/>
+  <text x="432.0" y="1563.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle"></text>
+  <text x="474" y="1556" font-size="13" font-weight="600" fill="#111" text-anchor="start">NPS, short</text>
+  <text x="474" y="1574" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">3 questions · DE EN</text>
+  <text x="94" y="1630" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">ACME GMBH</text>
+  <rect x="94" y="1640" width="290" height="66" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="102" y="1648" width="60" height="50" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="102" y1="1648" x2="162" y2="1698" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="162" y1="1648" x2="102" y2="1698" stroke="#aaa" stroke-width="1.2"/>
+  <text x="132.0" y="1677.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle"></text>
+  <text x="174" y="1670" font-size="13" font-weight="600" fill="#111" text-anchor="start">Onboarding check-in</text>
+  <text x="174" y="1688" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Saved by Anna · 14 questions</text>
+  <text x="94" y="1740" font-size="12" font-weight="600" fill="#111" text-anchor="start">Title (internal)</text>
+  <rect x="94" y="1748" width="330" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="104" y="1768" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Customer satisfaction 2026</text>
+  <rect x="450" y="1748" width="110" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="505.0" y="1768.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Preview</text>
+  <rect x="570" y="1748" width="116" height="30" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="628.0" y="1768.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Create</text>
+  <circle cx="720" cy="1330" r="10" fill="#444"/>
+  <text x="720" y="1334" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="760" y="1300" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · Organisation → Templates → Messages · DE</text>
+  <rect x="760" y="1310" width="700" height="520" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="760" y="1310" width="180" height="520" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="768" y="1324" width="164" height="28" rx="4" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="780" y="1343" font-size="12.5" font-weight="600" fill="#fff" text-anchor="start">Einladung</text>
+  <text x="780" y="1375" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Erinnerung</text>
+  <text x="780" y="1407" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Dank</text>
+  <text x="780" y="1439" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Ergebnis-PDF</text>
+  <rect x="1336" y="1322" width="100" height="26" rx="13" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1338" y="1324" width="48" height="22" rx="11" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="1362" y="1340" font-size="11.5" font-weight="600" fill="#fff" text-anchor="middle">DE</text>
+  <text x="1411" y="1340" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <text x="956" y="1340" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">BETREFF</text>
+  <rect x="956" y="1348" width="360" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="966" y="1367" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">{organisation}: Ihre Meinung zählt bis {frist}</text>
+  <text x="956" y="1406" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">TEXT</text>
+  <rect x="956" y="1414" width="488" height="150" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="968" y="1434" font-size="12" font-weight="400" fill="#111" text-anchor="start">Guten Tag {name},</text>
+  <text x="968" y="1450" font-size="12" font-weight="400" fill="#111" text-anchor="start"></text>
+  <text x="968" y="1466" font-size="12" font-weight="400" fill="#111" text-anchor="start">wir möchten wissen, wie zufrieden Sie mit uns sind.</text>
+  <text x="968" y="1482" font-size="12" font-weight="400" fill="#111" text-anchor="start">Die Umfrage dauert etwa {dauer}.</text>
+  <text x="968" y="1498" font-size="12" font-weight="400" fill="#111" text-anchor="start"></text>
+  <text x="968" y="1514" font-size="12" font-weight="700" fill="#111" text-anchor="start">[ Umfrage starten → {link} ]</text>
+  <text x="968" y="1530" font-size="12" font-weight="400" fill="#111" text-anchor="start"></text>
+  <text x="968" y="1546" font-size="12" font-weight="400" fill="#111" text-anchor="start">Danke! {organisation}</text>
+  <text x="956" y="1590" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">PLATZHALTER (klicken fügt ein)</text>
+  <rect x="956" y="1600" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1012" y="1618" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{name}</text>
+  <rect x="1076" y="1600" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1132" y="1618" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{link}</text>
+  <rect x="1196" y="1600" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1252" y="1618" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{frist}</text>
+  <rect x="956" y="1634" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1012" y="1652" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{dauer}</text>
+  <rect x="1076" y="1634" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1132" y="1652" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{organisation}</text>
+  <rect x="1196" y="1634" width="112" height="26" rx="13" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1252" y="1652" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">{umfrage}</text>
+  <text x="956" y="1700" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Erste Frage in der E-Mail beantworten</text>
+  <rect x="1256" y="1688" width="30" height="16" rx="8" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <circle cx="1278" cy="1696" r="6" fill="#fff"/>
+  <text x="956" y="1720" font-size="11" font-weight="400" fill="#666" text-anchor="start">nur Bewertung, NPS, Ja/Nein und Einfachauswahl.</text>
+  <rect x="956" y="1750" width="160" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1036.0" y="1770.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Test an mich senden</text>
+  <rect x="1126" y="1750" width="120" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1186.0" y="1770.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Vorschau ↗</text>
+  <text x="956" y="1804" font-size="11" font-weight="400" fill="#666" text-anchor="start">Fehlende Übersetzung oder unbekannter Platzhalter: Prüfung beim Speichern.</text>
+  <circle cx="1440" cy="1330" r="10" fill="#444"/>
+  <text x="1440" y="1334" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="40" y="1850" font-size="13" font-weight="600" fill="#444" text-anchor="start">E · One survey, one theme, three outputs (Header image preset, DE)</text>
+  <rect x="40" y="1860" width="1420" height="560" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <text x="80" y="1892" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">WEB · runner, phone</text>
+  <rect x="80" y="1904" width="300" height="510" rx="18" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="90" y="1916" width="280" height="70" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="90" y1="1916" x2="370" y2="1986" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="370" y1="1916" x2="90" y2="1986" stroke="#aaa" stroke-width="1.2"/>
+  <text x="230.0" y="1955.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER</text>
+  <text x="104" y="2014" font-size="10.5" font-weight="600" fill="#555" text-anchor="start">Seite 1 von 3 · Ihr Besuch</text>
+  <rect x="104" y="2022" width="252" height="4" rx="0" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="104" y="2054" font-size="15" font-weight="700" fill="#111" text-anchor="start">Wie zufrieden sind Sie?</text>
+  <rect x="104" y="2070" width="46" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="127" y="2095" font-size="13" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="155" y="2070" width="46" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="178" y="2095" font-size="13" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="206" y="2070" width="46" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="229" y="2095" font-size="13" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="257" y="2070" width="46" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="280" y="2095" font-size="13" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="308" y="2070" width="46" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="331" y="2095" font-size="13" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="104" y="2146" font-size="15" font-weight="700" fill="#111" text-anchor="start">Wie sauber war die Filiale?</text>
+  <circle cx="127" cy="2176" r="14" fill="#fff" stroke="#555"/>
+  <circle cx="178" cy="2176" r="14" fill="#fff" stroke="#555"/>
+  <circle cx="229" cy="2176" r="14" fill="#fff" stroke="#555"/>
+  <circle cx="280" cy="2176" r="14" fill="#fff" stroke="#555"/>
+  <circle cx="331" cy="2176" r="14" fill="#fff" stroke="#555"/>
+  <rect x="104" y="2334" width="252" height="44" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="230.0" y="2361.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Weiter</text>
+  <text x="104" y="2400" font-size="11" font-weight="400" fill="#555" text-anchor="start">All question types, logic, checks.</text>
+  <text x="420" y="1892" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">EMAIL · invitation, answerable first question</text>
+  <rect x="420" y="1904" width="470" height="510" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="420" y="1904" width="470" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="434" y="1926" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">Von: Acme GmbH &lt;umfragen@acme.at&gt;</text>
+  <text x="434" y="1944" font-size="11.5" font-weight="600" fill="#111" text-anchor="start">Betreff: Acme GmbH: Ihre Meinung zählt bis 30.10.</text>
+  <rect x="455" y="1968" width="400" height="430" rx="0" fill="#fafafa" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="455" y="1968" width="400" height="70" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="455" y1="1968" x2="855" y2="2038" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="855" y1="1968" x2="455" y2="2038" stroke="#aaa" stroke-width="1.2"/>
+  <text x="655.0" y="2007.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER (image, alt text)</text>
+  <rect x="471" y="2050" width="30" height="18" rx="2" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="471" y="2094" font-size="13" font-weight="400" fill="#111" text-anchor="start">Guten Tag Anna Berger,</text>
+  <text x="471" y="2116" font-size="12" font-weight="400" fill="#333" text-anchor="start">wir möchten wissen, wie zufrieden Sie mit uns sind.</text>
+  <text x="471" y="2154" font-size="14" font-weight="700" fill="#111" text-anchor="start">Wie zufrieden sind Sie?</text>
+  <rect x="471" y="2168" width="62" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="502" y="2193" font-size="13" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="541" y="2168" width="62" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="572" y="2193" font-size="13" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="611" y="2168" width="62" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="642" y="2193" font-size="13" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="681" y="2168" width="62" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="712" y="2193" font-size="13" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="751" y="2168" width="62" height="40" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="782" y="2193" font-size="13" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="471" y="2228" font-size="11" font-weight="400" fill="#555" text-anchor="start">Each number is a link: it opens the survey with</text>
+  <text x="471" y="2244" font-size="11" font-weight="400" fill="#555" text-anchor="start">that answer saved and goes on with question 2.</text>
+  <rect x="471" y="2264" width="200" height="40" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="571.0" y="2289.0" font-size="13.5" font-weight="600" fill="#fff" text-anchor="middle">Umfrage starten</text>
+  <text x="471" y="2334" font-size="10.5" font-weight="400" fill="#666" text-anchor="start">Abmelden · Datenschutz · Acme GmbH, Wien</text>
+  <text x="471" y="2374" font-size="10.5" font-weight="400" fill="#555" text-anchor="start">Tables and inline styles only; no JS, no web fonts</text>
+  <text x="471" y="2388" font-size="10.5" font-weight="400" fill="#555" text-anchor="start">(system fallback), images with alt text, dark-mode safe.</text>
+  <text x="930" y="1892" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">PDF · A4, to print, or fillable</text>
+  <rect x="936" y="1910" width="360" height="510" rx="0" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="930" y="1904" width="360" height="510" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="950" y="1920" width="320" height="46" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="950" y1="1920" x2="1270" y2="1966" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="1270" y1="1920" x2="950" y2="1966" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1110.0" y="1947.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">HEADER</text>
+  <text x="950" y="1992" font-size="16" font-weight="700" fill="#111" text-anchor="start">Kundenzufriedenheit 2026</text>
+  <text x="950" y="2012" font-size="11" font-weight="400" fill="#333" text-anchor="start">Bitte ankreuzen. Online: scannen →</text>
+  <rect x="1220" y="1976" width="50" height="50" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1245" y="2006" font-size="11" font-weight="700" fill="#555" text-anchor="middle">QR</text>
+  <text x="950" y="2056" font-size="12.5" font-weight="700" fill="#111" text-anchor="start">1  Wie zufrieden sind Sie?</text>
+  <rect x="966" y="2068" width="14" height="14" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="986" y="2080" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">1</text>
+  <rect x="1018" y="2068" width="14" height="14" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1038" y="2080" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">2</text>
+  <rect x="1070" y="2068" width="14" height="14" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1090" y="2080" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">3</text>
+  <rect x="1122" y="2068" width="14" height="14" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1142" y="2080" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">4</text>
+  <rect x="1174" y="2068" width="14" height="14" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1194" y="2080" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">5</text>
+  <text x="950" y="2114" font-size="12.5" font-weight="700" fill="#111" text-anchor="start">2  Wie haben Sie von uns erfahren?</text>
+  <rect x="966" y="2126" width="12" height="12" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="986" y="2137" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">Suchmaschine</text>
+  <rect x="966" y="2146" width="12" height="12" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="986" y="2157" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">Empfehlung</text>
+  <rect x="966" y="2166" width="12" height="12" rx="0" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="986" y="2177" font-size="11.5" font-weight="400" fill="#111" text-anchor="start">Sonstiges: ________</text>
+  <text x="950" y="2214" font-size="12.5" font-weight="700" fill="#111" text-anchor="start">3  Was können wir besser machen?</text>
+  <line x1="966" y1="2240" x2="1270" y2="2240" stroke="#999" stroke-width="1.2"/>
+  <line x1="966" y1="2262" x2="1270" y2="2262" stroke="#999" stroke-width="1.2"/>
+  <line x1="966" y1="2284" x2="1270" y2="2284" stroke="#999" stroke-width="1.2"/>
+  <text x="950" y="2320" font-size="11" font-weight="400" fill="#555" text-anchor="start">Ranking, slider: printed as numbered boxes.</text>
+  <line x1="950" y1="2384" x2="1270" y2="2384" stroke="#ccc" stroke-width="1.2"/>
+  <text x="950" y="2400" font-size="10" font-weight="400" fill="#666" text-anchor="start">Acme GmbH · Kundenzufriedenheit 2026</text>
+  <text x="1270" y="2400" font-size="10" font-weight="400" fill="#666" text-anchor="end">Seite 1 von 3</text>
+  <circle cx="1440" cy="1880" r="10" fill="#444"/>
+  <text x="1440" y="1884" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="1312" y="1920" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">Same data:</text>
+  <text x="1312" y="1942" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· accent colour</text>
+  <text x="1312" y="1960" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· font</text>
+  <text x="1312" y="1978" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· corners</text>
+  <text x="1312" y="1996" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· logo</text>
+  <text x="1312" y="2014" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· header image</text>
+  <text x="1312" y="2032" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· layout preset</text>
+  <text x="1312" y="2050" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">· texts DE/EN</text>
+  <text x="1312" y="2090" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">Each renderer</text>
+  <text x="1312" y="2108" font-size="11.5" font-weight="400" fill="#333" text-anchor="start">maps it its way.</text>
+  <text x="40" y="2440" font-size="13" font-weight="600" fill="#444" text-anchor="start">F · rev. 2 · Images placed on purpose, backgrounds, and styling that reaches every output · EN</text>
+  <rect x="40" y="2450" width="1420" height="560" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <text x="60" y="2480" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">F1 · Image block (type menu: Image), like a text block</text>
+  <rect x="60" y="2490" width="440" height="300" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <text x="76" y="2514" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">IMAGE · IMG_SHOP</text>
+  <rect x="76" y="2524" width="408" height="150" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="76" y1="2524" x2="484" y2="2674" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="484" y1="2524" x2="76" y2="2674" stroke="#aaa" stroke-width="1.2"/>
+  <text x="280.0" y="2603.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">IMAGE · full width</text>
+  <text x="76" y="2694" font-size="12" font-weight="400" fill="#333" text-anchor="start">Our new shop in Vienna (caption, EN)</text>
+  <text x="76" y="2730" font-size="11" font-weight="400" fill="#666" text-anchor="start">Drop a file here or Replace… · JPG, PNG, WebP, SVG</text>
+  <text x="76" y="2746" font-size="11" font-weight="400" fill="#666" text-anchor="start">Resized on upload (web, email 600 px, PDF 300 dpi).</text>
+  <rect x="510" y="2490" width="300" height="300" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="524" y="2514" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">IMAGE</text>
+  <text x="524" y="2540" font-size="12" font-weight="600" fill="#111" text-anchor="start">Alt text (EN) *</text>
+  <rect x="524" y="2548" width="272" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="534" y="2567" font-size="12" font-weight="400" fill="#111" text-anchor="start">Shop front with blue awning</text>
+  <text x="524" y="2596" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">SIZE</text>
+  <rect x="524" y="2604" width="62" height="26" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="555" y="2622" font-size="11.5" font-weight="600" fill="#fff" text-anchor="middle">Full</text>
+  <rect x="592" y="2604" width="62" height="26" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="623" y="2622" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Wide</text>
+  <rect x="660" y="2604" width="62" height="26" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="691" y="2622" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Half</text>
+  <rect x="728" y="2604" width="62" height="26" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="759" y="2622" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Small</text>
+  <text x="524" y="2652" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">ALIGN</text>
+  <rect x="524" y="2660" width="70" height="26" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="559" y="2678" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Left</text>
+  <rect x="600" y="2660" width="70" height="26" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="635" y="2678" font-size="11.5" font-weight="600" fill="#fff" text-anchor="middle">Centre</text>
+  <rect x="676" y="2660" width="70" height="26" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="711" y="2678" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Right</text>
+  <text x="524" y="2710" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Also: images as answer options</text>
+  <text x="524" y="2728" font-size="11" font-weight="400" fill="#555" text-anchor="start">(single, multiple: picture choices),</text>
+  <text x="524" y="2744" font-size="11" font-weight="400" fill="#555" text-anchor="start">and an image beside a question.</text>
+  <text x="524" y="2770" font-size="11" font-weight="400" fill="#555" text-anchor="start">Alt text is required per language.</text>
+  <circle cx="800" cy="2490" r="10" fill="#444"/>
+  <text x="800" y="2494" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">9</text>
+  <text x="840" y="2480" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">F2 · Background, in the theme (and per page)</text>
+  <rect x="840" y="2490" width="600" height="300" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="856" y="2514" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">BACKGROUND</text>
+  <circle cx="863" cy="2536" r="7" fill="#fff" stroke="#555"/>
+  <text x="876" y="2540" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Colour</text>
+  <circle cx="863" cy="2560" r="7" fill="#fff" stroke="#555"/>
+  <text x="876" y="2564" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Image</text>
+  <circle cx="863" cy="2584" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="863" cy="2584" r="3.5" fill="#555"/>
+  <text x="876" y="2588" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Image + colour overlay</text>
+  <rect x="856" y="2616" width="160" height="90" rx="0" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <line x1="856" y1="2616" x2="1016" y2="2706" stroke="#aaa" stroke-width="1.2"/>
+  <line x1="1016" y1="2616" x2="856" y2="2706" stroke="#aaa" stroke-width="1.2"/>
+  <text x="936.0" y="2665.0" font-size="10.5" font-weight="700" fill="#555" text-anchor="middle">BACKGROUND</text>
+  <text x="1030" y="2632" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">FIT</text>
+  <rect x="1030" y="2640" width="60" height="24" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1060" y="2657" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">Cover</text>
+  <rect x="1096" y="2640" width="60" height="24" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1126" y="2657" font-size="11" font-weight="600" fill="#111" text-anchor="middle">Contain</text>
+  <rect x="1162" y="2640" width="60" height="24" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1192" y="2657" font-size="11" font-weight="600" fill="#111" text-anchor="middle">Tile</text>
+  <text x="1030" y="2688" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">OVERLAY  #FFFFFF  at 80 %</text>
+  <rect x="1030" y="2696" width="190" height="8" rx="4" fill="#ddd" stroke="#999" stroke-width="1.2"/>
+  <rect x="1030" y="2696" width="152" height="8" rx="4" fill="#777" stroke="none" stroke-width="1.2"/>
+  <text x="1030" y="2728" font-size="11" font-weight="400" fill="#555" text-anchor="start">Contrast is checked on text over the</text>
+  <text x="1030" y="2744" font-size="11" font-weight="600" fill="#2a5" text-anchor="start">overlay: 7.2 : 1 AAA ✓</text>
+  <text x="1250" y="2540" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Per page:</text>
+  <text x="1250" y="2558" font-size="11" font-weight="400" fill="#555" text-anchor="start">page settings can</text>
+  <text x="1250" y="2574" font-size="11" font-weight="400" fill="#555" text-anchor="start">replace the background</text>
+  <text x="1250" y="2590" font-size="11" font-weight="400" fill="#555" text-anchor="start">(e.g. a photo on</text>
+  <text x="1250" y="2606" font-size="11" font-weight="400" fill="#555" text-anchor="start">the welcome page).</text>
+  <text x="856" y="2770" font-size="11" font-weight="400" fill="#555" text-anchor="start">Behind the content column; content cards stay readable (surface colour, optional transparency).</text>
+  <circle cx="1430" cy="2490" r="10" fill="#444"/>
+  <text x="1430" y="2494" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">10</text>
+  <text x="60" y="2820" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">F3 · Styling in the theme: the same values drive web, email and PDF</text>
+  <rect x="60" y="2830" width="760" height="160" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="76" y="2854" font-size="12" font-weight="600" fill="#111" text-anchor="start">Headings font</text>
+  <text x="206" y="2854" font-size="12" font-weight="400" fill="#333" text-anchor="start">IBM Plex Sans Condensed 700</text>
+  <text x="446" y="2854" font-size="12" font-weight="600" fill="#111" text-anchor="start">Body font</text>
+  <text x="576" y="2854" font-size="12" font-weight="400" fill="#333" text-anchor="start">IBM Plex Sans 400</text>
+  <text x="76" y="2886" font-size="12" font-weight="600" fill="#111" text-anchor="start">Type scale</text>
+  <text x="206" y="2886" font-size="12" font-weight="400" fill="#333" text-anchor="start">S · M · L</text>
+  <text x="446" y="2886" font-size="12" font-weight="600" fill="#111" text-anchor="start">Spacing</text>
+  <text x="576" y="2886" font-size="12" font-weight="400" fill="#333" text-anchor="start">Compact · Normal · Airy</text>
+  <text x="76" y="2918" font-size="12" font-weight="600" fill="#111" text-anchor="start">Buttons</text>
+  <text x="206" y="2918" font-size="12" font-weight="400" fill="#333" text-anchor="start">Filled · Outline</text>
+  <text x="446" y="2918" font-size="12" font-weight="600" fill="#111" text-anchor="start">Cards</text>
+  <text x="576" y="2918" font-size="12" font-weight="400" fill="#333" text-anchor="start">Surface #FFF, border 1 px, no shadow</text>
+  <text x="76" y="2950" font-size="12" font-weight="600" fill="#111" text-anchor="start">Answer controls</text>
+  <text x="206" y="2950" font-size="12" font-weight="400" fill="#333" text-anchor="start">Boxes · Pills · Underline</text>
+  <text x="446" y="2950" font-size="12" font-weight="600" fill="#111" text-anchor="start">Progress</text>
+  <text x="576" y="2950" font-size="12" font-weight="400" fill="#333" text-anchor="start">Ruler · Bar · Steps · None</text>
+  <circle cx="810" cy="2830" r="10" fill="#444"/>
+  <text x="810" y="2834" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">11</text>
+  <text x="840" y="2820" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">F4 · How each output draws it</text>
+  <rect x="840" y="2830" width="600" height="160" rx="0" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="852" y="2850" font-size="11.5" font-weight="700" fill="#333" text-anchor="start"></text>
+  <text x="1002" y="2850" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">Web</text>
+  <text x="1122" y="2850" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">Email</text>
+  <text x="1272" y="2850" font-size="11.5" font-weight="700" fill="#333" text-anchor="start">PDF (own renderer)</text>
+  <text x="852" y="2872" font-size="11" font-weight="600" fill="#111" text-anchor="start">Image block</text>
+  <text x="1002" y="2872" font-size="11" font-weight="400" fill="#111" text-anchor="start">img, srcset</text>
+  <text x="1122" y="2872" font-size="11" font-weight="400" fill="#111" text-anchor="start">img 600 px</text>
+  <text x="1272" y="2872" font-size="11" font-weight="400" fill="#111" text-anchor="start">image, 300 dpi</text>
+  <text x="852" y="2891" font-size="11" font-weight="600" fill="#111" text-anchor="start">Picture choices</text>
+  <text x="1002" y="2891" font-size="11" font-weight="400" fill="#111" text-anchor="start">image grid</text>
+  <text x="1122" y="2891" font-size="11" font-weight="400" fill="#111" text-anchor="start">links with images</text>
+  <text x="1272" y="2891" font-size="11" font-weight="400" fill="#111" text-anchor="start">images + boxes</text>
+  <text x="852" y="2910" font-size="11" font-weight="600" fill="#111" text-anchor="start">Background image</text>
+  <text x="1002" y="2910" font-size="11" font-weight="400" fill="#111" text-anchor="start">CSS background</text>
+  <text x="1122" y="2910" font-size="11" font-weight="400" fill="#111" text-anchor="start">colour; image *</text>
+  <text x="1272" y="2910" font-size="11" font-weight="400" fill="#111" text-anchor="start">image behind each page</text>
+  <text x="852" y="2929" font-size="11" font-weight="600" fill="#111" text-anchor="start">Overlay</text>
+  <text x="1002" y="2929" font-size="11" font-weight="400" fill="#111" text-anchor="start">colour layer</text>
+  <text x="1122" y="2929" font-size="11" font-weight="400" fill="#111" text-anchor="start">colour</text>
+  <text x="1272" y="2929" font-size="11" font-weight="400" fill="#111" text-anchor="start">colour layer</text>
+  <text x="852" y="2948" font-size="11" font-weight="600" fill="#111" text-anchor="start">Styling tokens</text>
+  <text x="1002" y="2948" font-size="11" font-weight="400" fill="#111" text-anchor="start">CSS variables</text>
+  <text x="1122" y="2948" font-size="11" font-weight="400" fill="#111" text-anchor="start">inline styles</text>
+  <text x="1272" y="2948" font-size="11" font-weight="400" fill="#111" text-anchor="start">styles in the renderer</text>
+  <text x="852" y="2967" font-size="11" font-weight="600" fill="#111" text-anchor="start">Custom CSS (flag)</text>
+  <text x="1002" y="2967" font-size="11" font-weight="400" fill="#111" text-anchor="start">yes</text>
+  <text x="1122" y="2967" font-size="11" font-weight="400" fill="#111" text-anchor="start">no</text>
+  <text x="1272" y="2967" font-size="11" font-weight="400" fill="#111" text-anchor="start">no</text>
+  <text x="852" y="2988" font-size="10.5" font-weight="400" fill="#666" text-anchor="start">* background images show where the mail client supports them; the colour always.</text>
+  <circle cx="1430" cy="2830" r="10" fill="#444"/>
+  <text x="1430" y="2834" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">12</text>
+  <text x="40" y="3030" font-size="12" font-weight="400" fill="#333" text-anchor="start">1 Themes belong to the organisation; one is the default. Presets are starting points: Werkstatt, Klar (calm, light), Warm (soft colours, rounded), Kontrast (AAA). A survey uses the default unless B picks another.</text>
+  <text x="40" y="3050" font-size="12" font-weight="400" fill="#333" text-anchor="start">2 Colours are checked on save: text and button contrast at least WCAG AA, also over background images with their overlay; below that the theme is not saved. Fonts: a fixed set of self-hosted OFL fonts.</text>
+  <text x="40" y="3070" font-size="12" font-weight="400" fill="#333" text-anchor="start">3 Layout presets place logo, header image and content: Card, Header image, Split image (image beside the questions on wide screens, above on phones), Minimal. Email and PDF map each preset to their own layout.</text>
+  <text x="40" y="3090" font-size="12" font-weight="400" fill="#333" text-anchor="start">4 The preview shows the same survey in Web, Email and PDF, so a theme is never judged on the web alone. Images are stored in the organisation's file storage (folder or S3), resized on upload.</text>
+  <text x="40" y="3110" font-size="12" font-weight="400" fill="#333" text-anchor="start">5 Per survey: pick a theme and an own header image with alt text per language. 6 Templates: Askwerk's own and the organisation's (Save as template in the designer's menu); creating copies the definition.</text>
+  <text x="40" y="3130" font-size="12" font-weight="400" fill="#333" text-anchor="start">7 Messages: invitation, reminder, thank-you and result PDF texts per language with placeholders; the first question can be answered in the email (rating, NPS, yes/no, single choice), as links.</text>
+  <text x="40" y="3150" font-size="12" font-weight="400" fill="#333" text-anchor="start">8 Email: table layout and inline styles, no JS. PDF: A4/Letter, page numbers, a QR code to the online survey; fillable PDF fields later. Emoji faces are drawn as images in email and PDF, so they look the same.</text>
+  <text x="40" y="3170" font-size="12" font-weight="400" fill="#333" text-anchor="start">9 Images placed on purpose: an Image block (size, alignment, caption, alt text required per language), picture choices for single and multiple choice, and an image beside a question. Part of the survey definition.</text>
+  <text x="40" y="3190" font-size="12" font-weight="400" fill="#333" text-anchor="start">10 Backgrounds: colour, image, or image with a colour overlay; cover, contain or tile; in the theme and per page. 11 Styling tokens (fonts, scale, spacing, buttons, cards, answer controls, progress) drive all three outputs.</text>
+  <text x="40" y="3210" font-size="12" font-weight="600" fill="#333" text-anchor="start">12 Decided (Dražan, 2026-10-14): PDF option (a), our own renderer in .NET (PdfSharp/MigraDoc, MIT), styled fully from the theme, with images and backgrounds. Custom CSS stays a flagged extra for the web only.</text>
+  <text x="40" y="3230" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: fonts — a fixed set of self-hosted fonts (recommended), or also font files uploaded by the organisation (licence is then their responsibility)?</text>
+</svg>

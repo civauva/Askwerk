@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1202" width="1500" height="1202" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W19 AWK-31 logic editor -->
+  <rect x="0" y="0" width="1500" height="1202" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W19 · Logic: show questions and pages under conditions, skip and end · AWK-31 · 2026-10-15</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Logic reads as sentences and is built only from questions before. It lives where the question or page is edited; one overview lists every rule.</text>
+  <text x="40" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · A question's logic, in the inspector (Build) · EN</text>
+  <rect x="40" y="94" width="900" height="330" rx="0" fill="#f4f4f4" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="56" y="110" width="420" height="300" rx="4" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <text x="72" y="136" font-size="11" font-weight="700" fill="#555" text-anchor="start" font-family="Consolas, monospace">Q5 · IMPROVE</text>
+  <text x="72" y="162" font-size="15" font-weight="600" fill="#111" text-anchor="start">What should we do better?</text>
+  <rect x="72" y="176" width="388" height="60" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="72" y="249" width="328.2" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="236.1" y="263" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">⑂ Shown when SAT is at most 2 and BEFORE is Yes</text>
+  <text x="72" y="290" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">The badge on the card and in the outline says the rule in words.</text>
+  <circle cx="470" cy="262" r="10" fill="#444"/>
+  <text x="470" y="266" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <rect x="496" y="110" width="428" height="300" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="512" y="134" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">QUESTION SETTINGS · LOGIC</text>
+  <text x="512" y="158" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Show this question</text>
+  <circle cx="519" cy="178" r="7" fill="#fff" stroke="#555"/>
+  <text x="532" y="182" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Always</text>
+  <circle cx="623" cy="178" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="623" cy="178" r="3.5" fill="#555"/>
+  <text x="636" y="182" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Only when …</text>
+  <rect x="512" y="198" width="210" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="520" y="217.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">All of these are true</text>
+  <text x="712" y="217.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <circle cx="906" cy="212" r="10" fill="#444"/>
+  <text x="906" y="216" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="512" y="236" width="160" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="520" y="255.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">Q2 · SAT</text>
+  <text x="662" y="255.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="678" y="236" width="100" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="686" y="255.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">is at most</text>
+  <text x="768" y="255.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="784" y="236" width="60" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="792" y="255.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">2</text>
+  <text x="834" y="255.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <text x="856" y="255" font-size="13" font-weight="600" fill="#555" text-anchor="start">✕</text>
+  <rect x="512" y="272" width="160" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="520" y="291.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">Q3 · BEFORE</text>
+  <text x="662" y="291.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="678" y="272" width="100" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="686" y="291.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">is</text>
+  <text x="768" y="291.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="784" y="272" width="60" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="792" y="291.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">Yes</text>
+  <text x="834" y="291.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <text x="856" y="291" font-size="13" font-weight="600" fill="#555" text-anchor="start">✕</text>
+  <text x="512" y="324" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">+ Add a condition</text>
+  <rect x="512" y="338" width="396" height="52" rx="4" fill="#f4f4f4" stroke="#ddd" stroke-width="1.2"/>
+  <text x="522" y="358" font-size="12" font-weight="600" fill="#333" text-anchor="start">Reads: Shown when SAT is at most 2</text>
+  <text x="522" y="376" font-size="12" font-weight="600" fill="#333" text-anchor="start">and BEFORE is Yes.</text>
+  <circle cx="906" cy="362" r="10" fill="#444"/>
+  <text x="906" y="366" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="960" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · A page's logic, in page settings · DE</text>
+  <rect x="960" y="94" width="500" height="330" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="976" y="118" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">SEITENEINSTELLUNGEN · LOGIK</text>
+  <text x="976" y="142" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Diese Seite zeigen</text>
+  <circle cx="983" cy="162" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="983" cy="162" r="3.5" fill="#555"/>
+  <text x="996" y="166" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Immer</text>
+  <circle cx="1077" cy="162" r="7" fill="#fff" stroke="#555"/>
+  <text x="1090" y="166" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Nur wenn …</text>
+  <text x="976" y="208" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Nach dieser Seite</text>
+  <circle cx="983" cy="228" r="7" fill="#fff" stroke="#555"/>
+  <text x="996" y="232" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Weiter mit der nächsten Seite</text>
+  <circle cx="983" cy="254" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="983" cy="254" r="3.5" fill="#555"/>
+  <text x="996" y="258" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Unter einer Bedingung springen …</text>
+  <rect x="996" y="270" width="444" height="92" rx="4" fill="#f8f8f8" stroke="#ddd" stroke-width="1.2"/>
+  <text x="1008" y="292" font-size="12" font-weight="400" fill="#111" text-anchor="start">Wenn</text>
+  <rect x="1046" y="276" width="150" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1054" y="295.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">F1 · ROLE</text>
+  <text x="1186" y="295.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="1202" y="276" width="70" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="295.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">ist</text>
+  <text x="1262" y="295.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <rect x="1278" y="276" width="150" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1286" y="295.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">Gast</text>
+  <text x="1418" y="295.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <text x="1008" y="332" font-size="12" font-weight="400" fill="#111" text-anchor="start">dann</text>
+  <rect x="1046" y="316" width="220" height="28" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1054" y="335.0" font-size="12" font-weight="400" fill="#111" text-anchor="start">Umfrage beenden</text>
+  <text x="1256" y="335.0" font-size="11" font-weight="400" fill="#555" text-anchor="end">▾</text>
+  <text x="1276" y="335" font-size="11" font-weight="400" fill="#666" text-anchor="start">oder: Seite 04 · Danke</text>
+  <circle cx="983" cy="384" r="7" fill="#fff" stroke="#555"/>
+  <text x="996" y="388" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Umfrage beenden</text>
+  <circle cx="1446" cy="114" r="10" fill="#444"/>
+  <text x="1446" y="118" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="960" y="444" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Jumps go only forward; a page can only skip to a later page or end the survey.</text>
+  <text x="40" y="470" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Every rule at one glance: Settings → Logic · EN</text>
+  <rect x="40" y="480" width="900" height="230" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="56" y="504" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">LOGIC · 3 RULES</text>
+  <rect x="56" y="526" width="868" height="36" rx="4" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="549" font-size="11.5" font-weight="600" fill="#333" text-anchor="start" font-family="Consolas, monospace">Q5 · IMPROVE</text>
+  <text x="280" y="549" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Shown when SAT is at most 2 and BEFORE is Yes.</text>
+  <text x="900" y="549" font-size="12" font-weight="600" fill="#333" text-anchor="end">Edit</text>
+  <rect x="56" y="570" width="868" height="36" rx="4" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="593" font-size="11.5" font-weight="600" fill="#333" text-anchor="start" font-family="Consolas, monospace">Page 03 · Your visit</text>
+  <text x="280" y="593" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Shown when VISITED is Yes.</text>
+  <text x="900" y="593" font-size="12" font-weight="600" fill="#333" text-anchor="end">Edit</text>
+  <rect x="56" y="614" width="868" height="36" rx="4" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="637" font-size="11.5" font-weight="600" fill="#333" text-anchor="start" font-family="Consolas, monospace">After page 01</text>
+  <text x="280" y="637" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Ends the survey when ROLE is Guest.</text>
+  <text x="900" y="637" font-size="12" font-weight="600" fill="#333" text-anchor="end">Edit</text>
+  <text x="56" y="674" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Edit jumps to the question or page with its logic open. Nothing is edited here twice.</text>
+  <circle cx="930" cy="500" r="10" fill="#444"/>
+  <text x="930" y="504" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="960" y="470" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · Checks that keep logic sound</text>
+  <rect x="960" y="480" width="500" height="230" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="976" y="504" font-size="10.5" font-weight="700" fill="#666" text-anchor="start"></text>
+  <text x="976" y="510" font-size="12" font-weight="400" fill="#333" text-anchor="start">The question picker offers only questions before this one.</text>
+  <text x="976" y="536" font-size="12" font-weight="400" fill="#333" text-anchor="start">Moving a question above one it depends on: “SAT is used</text>
+  <text x="976" y="562" font-size="12" font-weight="400" fill="#333" text-anchor="start">  by IMPROVE’s rule, so it must stay before it.” (move refused)</text>
+  <text x="976" y="588" font-size="12" font-weight="400" fill="#333" text-anchor="start">Deleting a question used in logic: “Used in 2 rules. Delete</text>
+  <text x="976" y="614" font-size="12" font-weight="400" fill="#333" text-anchor="start">  the question and those conditions?”</text>
+  <text x="976" y="640" font-size="12" font-weight="400" fill="#333" text-anchor="start">Publish check: a rule refers to a missing option or question.</text>
+  <text x="976" y="666" font-size="12" font-weight="400" fill="#333" text-anchor="start">A required question that is hidden is not required.</text>
+  <circle cx="1446" cy="500" r="10" fill="#444"/>
+  <text x="1446" y="504" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="40" y="740" font-size="13" font-weight="600" fill="#444" text-anchor="start">E · What a condition can say, by question type</text>
+  <rect x="40" y="750" width="1420" height="150" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="60" y="786" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Single choice, dropdown</text>
+  <text x="60" y="806" font-size="12" font-weight="400" fill="#444" text-anchor="start">is · is not · is one of</text>
+  <text x="530" y="786" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Multiple choice</text>
+  <text x="530" y="806" font-size="12" font-weight="400" fill="#444" text-anchor="start">includes · includes any of · includes none of</text>
+  <text x="1000" y="786" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Rating, NPS, number</text>
+  <text x="1000" y="806" font-size="12" font-weight="400" fill="#444" text-anchor="start">is · is at least · is at most · is between</text>
+  <text x="60" y="842" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Yes / no</text>
+  <text x="60" y="862" font-size="12" font-weight="400" fill="#444" text-anchor="start">is Yes · is No</text>
+  <text x="530" y="842" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Text, email</text>
+  <text x="530" y="862" font-size="12" font-weight="400" fill="#444" text-anchor="start">is answered · is not answered</text>
+  <text x="1000" y="842" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Any question</text>
+  <text x="1000" y="862" font-size="12" font-weight="400" fill="#444" text-anchor="start">is answered · is not answered</text>
+  <text x="40" y="940" font-size="12" font-weight="400" fill="#333" text-anchor="start">1 A question with logic carries a badge with its rule in words, on the canvas and in the outline.</text>
+  <text x="40" y="962" font-size="12" font-weight="400" fill="#333" text-anchor="start">2 One level only: all conditions or any condition, no nested groups. Most surveys need one or two conditions.</text>
+  <text x="40" y="984" font-size="12" font-weight="400" fill="#333" text-anchor="start">3 The rule reads back as a sentence under the builder, with the variables as they appear in exports.</text>
+  <text x="40" y="1006" font-size="12" font-weight="400" fill="#333" text-anchor="start">4 A page can be shown under conditions, and after it the survey can jump forward or end (respondents then see the thank-you page).</text>
+  <text x="40" y="1028" font-size="12" font-weight="400" fill="#333" text-anchor="start">5 Settings → Logic lists every rule as a sentence; Edit opens it where it lives.</text>
+  <text x="40" y="1050" font-size="12" font-weight="400" fill="#333" text-anchor="start">6 Only earlier questions can be used, jumps go only forward, so loops cannot happen. Moves and deletes that would break a rule say so.</text>
+  <text x="40" y="1072" font-size="12" font-weight="400" fill="#333" text-anchor="start">Runner: hidden questions and skipped pages are neither shown nor stored; required applies only when shown. The server checks the same rules (one test corpus for both).</text>
+  <text x="40" y="1094" font-size="12" font-weight="600" fill="#333" text-anchor="start">Scope note: the definition and the runner do not have logic yet (the item said they do). AWK-31 adds it to the schema, the runner, the server checks and the designer.</text>
+  <text x="40" y="1116" font-size="12" font-weight="400" fill="#333" text-anchor="start">Email and PDF: the PDF prints every question with its rule in words (“Shown when …”), so a paper reader can follow it.</text>
+  <text x="40" y="1138" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: (a) now only show, skip and end (recommended); piping answers into texts and quotas later in their own items;</text>
+  <text x="40" y="1160" font-size="12" font-weight="600" fill="#333" text-anchor="start">(b) one level of all/any (recommended) or nested groups; (c) ending shows the normal thank-you page (recommended) or a separate screen-out text.</text>
+</svg>

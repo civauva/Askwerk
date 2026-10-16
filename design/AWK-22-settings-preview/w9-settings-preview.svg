@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1560" width="1500" height="1560" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W9 AWK-22 survey settings and preview -->
+  <rect x="0" y="0" width="1500" height="1560" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W9 · Survey settings and preview · AWK-22 · 2026-10-14</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Follows the designer (M1, W4): outline · canvas · inspector. Settings are part of the draft, versioned with the survey; texts per survey language.</text>
+  <text x="40" y="80" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Survey settings · EN (outline entry “Survey settings” at the top, or Ctrl K → “Survey settings”)</text>
+  <rect x="40" y="90" width="1420" height="640" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="90" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="104" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="119" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  |  Customer satisfaction 2026  · Draft · Saved</text>
+  <text x="1130" y="120" font-size="12" font-weight="600" fill="#444" text-anchor="start">DE | EN</text>
+  <rect x="1210" y="99" width="70" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1245.0" y="120.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Ctrl K</text>
+  <rect x="1288" y="99" width="86" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1331.0" y="120.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="1380" y="99" width="70" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1415.0" y="120.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Publish</text>
+  <rect x="40" y="138" width="260" height="592" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="50" y="150" width="240" height="32" rx="4" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="62" y="171" font-size="13" font-weight="600" fill="#fff" text-anchor="start">⚙  Survey settings</text>
+  <text x="56" y="210" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">1 · Welcome</text>
+  <text x="56" y="234" font-size="12" font-weight="400" fill="#333" text-anchor="start">Welcome text  INTRO</text>
+  <text x="56" y="258" font-size="12" font-weight="600" fill="#333" text-anchor="start">2 · Your visit</text>
+  <text x="56" y="282" font-size="12" font-weight="400" fill="#333" text-anchor="start">  How satisfied…  SAT_1</text>
+  <text x="56" y="306" font-size="12" font-weight="400" fill="#333" text-anchor="start">  What could we improve?  IMPROVE</text>
+  <text x="56" y="330" font-size="12" font-weight="600" fill="#333" text-anchor="start">3 · About you</text>
+  <text x="56" y="354" font-size="12" font-weight="400" fill="#333" text-anchor="start">  Age group  AGE</text>
+  <text x="56" y="378" font-size="12" font-weight="400" fill="#333" text-anchor="start">+ Add page</text>
+  <text x="56" y="402" font-size="12" font-weight="400" fill="#333" text-anchor="start">Ending: thank-you page</text>
+  <circle cx="290" cy="166" r="10" fill="#444"/>
+  <text x="290" y="170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <rect x="310" y="138" width="760" height="592" rx="0" fill="#f6f6f6" stroke="#ccc" stroke-width="1.2"/>
+  <text x="340" y="170" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · the welcome page as respondents see it (edited inline)</text>
+  <rect x="370" y="184" width="640" height="300" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="400" y="230" font-size="26" font-weight="700" fill="#111" text-anchor="start">Customer satisfaction 2026</text>
+  <text x="400" y="262" font-size="14" font-weight="400" fill="#333" text-anchor="start">Thank you for taking part. Your opinion helps us get better.</text>
+  <text x="400" y="296" font-size="12.5" font-weight="600" fill="#555" text-anchor="start">About 3 minutes · 9 questions</text>
+  <rect x="400" y="320" width="190" height="40" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="495.0" y="345.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Start the survey</text>
+  <text x="400" y="400" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Title and text are edited here like question texts; the length is</text>
+  <text x="400" y="416" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">counted from the questions. Language switch DE | EN as everywhere.</text>
+  <rect x="370" y="504" width="640" height="140" rx="6" fill="#fff" stroke="#999" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="390" y="530" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">THANK-YOU PAGE</text>
+  <text x="390" y="562" font-size="18" font-weight="700" fill="#111" text-anchor="start">Thank you! Your answers are saved.</text>
+  <text x="390" y="588" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Shown after Send; empty means the standard text in the respondent's</text>
+  <text x="390" y="604" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">language.</text>
+  <circle cx="360" cy="200" r="10" fill="#444"/>
+  <text x="360" y="204" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="1080" y="138" width="380" height="592" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="1096" y="166" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">SURVEY SETTINGS</text>
+  <text x="1096" y="196" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LAYOUT</text>
+  <circle cx="1103" cy="216" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="1103" cy="216" r="3.5" fill="#555"/>
+  <text x="1116" y="220" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Classic: a page of questions at a time</text>
+  <circle cx="1103" cy="240" r="7" fill="#fff" stroke="#555"/>
+  <text x="1116" y="244" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">One question at a time</text>
+  <text x="1096" y="268" font-size="11" font-weight="400" fill="#666" text-anchor="start">Applies to new respondents after publishing.</text>
+  <rect x="1096" y="293" width="30" height="16" rx="8" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <circle cx="1118" cy="301" r="6" fill="#fff"/>
+  <text x="1136" y="306" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Welcome page</text>
+  <text x="1096" y="324" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">WELCOME TITLE (EN)</text>
+  <rect x="1096" y="332" width="348" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1106" y="351" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Customer satisfaction 2026</text>
+  <text x="1096" y="386" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">WELCOME TEXT (EN)</text>
+  <rect x="1096" y="394" width="348" height="54" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1106" y="413" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Thank you for taking part. Your opinion…</text>
+  <text x="1096" y="472" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">THANK-YOU TEXT (EN)</text>
+  <rect x="1096" y="480" width="348" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1106" y="499" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Thank you! Your answers are saved.</text>
+  <text x="1096" y="540" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LANGUAGES</text>
+  <text x="1096" y="562" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">German (default) · English   — Manage…</text>
+  <text x="1096" y="600" font-size="11" font-weight="400" fill="#666" text-anchor="start">Texts missing in a language show up in</text>
+  <text x="1096" y="616" font-size="11" font-weight="400" fill="#666" text-anchor="start">Translations and in the publish checks,</text>
+  <text x="1096" y="632" font-size="11" font-weight="400" fill="#666" text-anchor="start">like question texts.</text>
+  <circle cx="1440" cy="166" r="10" fill="#444"/>
+  <text x="1440" y="170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="40" y="760" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Preview ▾ → In a side panel · desktop width · EN</text>
+  <rect x="40" y="770" width="1000" height="560" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="770" width="1000" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="784" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="799" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  |  Customer satisfaction 2026  · Draft · Saved</text>
+  <text x="710" y="800" font-size="12" font-weight="600" fill="#444" text-anchor="start">DE | EN</text>
+  <rect x="790" y="779" width="70" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="825.0" y="800.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Ctrl K</text>
+  <rect x="868" y="779" width="86" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="911.0" y="800.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="960" y="779" width="70" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="995.0" y="800.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Publish</text>
+  <rect x="860" y="816" width="170" height="82" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="874" y="840" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">In a side panel  ✓</text>
+  <text x="874" y="864" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">In a new tab  ↗</text>
+  <text x="874" y="886" font-size="11" font-weight="400" fill="#888" text-anchor="start">Ctrl Shift P</text>
+  <rect x="40" y="818" width="470" height="512" rx="0" fill="#f6f6f6" stroke="#ccc" stroke-width="1.2"/>
+  <text x="60" y="850" font-size="12" font-weight="400" fill="#555" text-anchor="start">Canvas and outline stay usable;</text>
+  <text x="60" y="868" font-size="12" font-weight="400" fill="#555" text-anchor="start">the preview follows edits after saving.</text>
+  <rect x="520" y="908" width="510" height="412" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="520" y="908" width="510" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="534" y="933" font-size="11" font-weight="700" fill="#7a3b00" text-anchor="start">PREVIEW · answers are not saved</text>
+  <rect x="768" y="916" width="120" height="24" rx="12" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="800" y="933" font-size="11.5" font-weight="600" fill="#111" text-anchor="start">Phone</text>
+  <rect x="830" y="916" width="58" height="24" rx="12" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="859" y="933" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">Desktop</text>
+  <rect x="898" y="914" width="66" height="28" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="931.0" y="933.0" font-size="11.5" font-weight="600" fill="#111" text-anchor="middle">Restart</text>
+  <text x="1018" y="933" font-size="16" font-weight="600" fill="#111" text-anchor="end">×</text>
+  <text x="550" y="980" font-size="11" font-weight="600" fill="#555" text-anchor="start">Page 2 of 3 · Your visit</text>
+  <rect x="550" y="988" width="450" height="5" rx="0" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="550" y="1026" font-size="15" font-weight="700" fill="#111" text-anchor="start">How satisfied are you with our service? *</text>
+  <rect x="550" y="1040" width="82" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="591" y="1065" font-size="14" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="640" y="1040" width="82" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="681" y="1065" font-size="14" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="730" y="1040" width="82" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="771" y="1065" font-size="14" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="820" y="1040" width="82" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="861" y="1065" font-size="14" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="910" y="1040" width="82" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="951" y="1065" font-size="14" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="550" y="1110" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Same runner, same checks per page as the real survey:</text>
+  <text x="550" y="1126" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">missing answers, formats, limits. Nothing is stored,</text>
+  <text x="550" y="1142" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">no response is counted.</text>
+  <rect x="910" y="1260" width="90" height="36" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="955.0" y="1283.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Next</text>
+  <circle cx="1020" cy="790" r="10" fill="#444"/>
+  <text x="1020" y="794" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="1080" y="760" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · In a new tab · phone width · DE</text>
+  <rect x="1080" y="770" width="380" height="560" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1120" y="790" width="300" height="520" rx="18" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="1120" y="790" width="300" height="34" rx="0" fill="#7a3b00" stroke="none" stroke-width="1.2"/>
+  <text x="1270" y="812" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">VORSCHAU · Antworten werden nicht gespeichert</text>
+  <text x="1140" y="860" font-size="18" font-weight="700" fill="#111" text-anchor="start">Kundenzufriedenheit 2026</text>
+  <text x="1140" y="888" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Danke, dass Sie mitmachen.</text>
+  <text x="1140" y="916" font-size="12" font-weight="600" fill="#555" text-anchor="start">Etwa 3 Minuten · 9 Fragen</text>
+  <rect x="1140" y="936" width="260" height="44" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1270.0" y="963.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Umfrage starten</text>
+  <text x="1140" y="1020" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Address: /s/{survey}?preview (only for</text>
+  <text x="1140" y="1036" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">signed-in editors of the organisation;</text>
+  <text x="1140" y="1052" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">others see “Survey not found”).</text>
+  <text x="1140" y="1090" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">The banner stays on every screen,</text>
+  <text x="1140" y="1106" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">incl. the thank-you page.</text>
+  <circle cx="1440" cy="790" r="10" fill="#444"/>
+  <text x="1440" y="794" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="1380" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">1 “Survey settings” is the first outline entry; selecting it shows the settings in the inspector and the welcome and thank-you pages on the canvas (Ctrl K → “Survey settings” too).</text>
+  <text x="40" y="1404" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">2 Welcome title and text, and the thank-you text, are edited on the canvas like question texts, per language; missing translations count like any text (W4 / M2 rules).</text>
+  <text x="40" y="1428" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">3 Layout: classic (default) or one at a time; welcome page on/off. All of it is part of the draft and takes effect when published (versioned with the survey).</text>
+  <text x="40" y="1452" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">4 Preview in a side panel: the draft (saved state) in the real runner, phone or desktop width, Restart; the designer stays usable. 5 In a new tab: same, full window; for sharing with colleagues of the organisation.</text>
+  <text x="40" y="1476" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Preview checks each page on the server like the real survey, but stores nothing and never counts as a response.</text>
+</svg>

@@ -1,0 +1,32 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The logo (agents/ui-design-system.md, Logo): used by the designer, the account screens and the app bar. */
+.designer-logo {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--aw-space-2);
+}
+
+.designer-logo svg {
+  align-self: center;
+}
+
+.designer-logo__tile {
+  fill: var(--aw-signal);
+}
+
+.designer-logo__mark {
+  stroke: var(--aw-on-signal);
+}
+
+.designer-logo__dot {
+  fill: var(--aw-on-signal);
+}
+
+.designer-logo__word {
+  font: 700 19px/1 var(--aw-font-display);
+  letter-spacing: -0.01em;
+}
+
+.designer-logo__word b {
+  color: var(--aw-signal);
+}

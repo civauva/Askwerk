@@ -1,0 +1,125 @@
+{
+  "order": 2,
+  "look": "minimal",
+  "responses": 64,
+  "names": {
+    "de": "Wochen-Puls",
+    "en": "Quick pulse"
+  },
+  "kind": {
+    "de": "Schlicht",
+    "en": "Spartan"
+  },
+  "features": {
+    "de": [
+      "3 Fragen",
+      "ohne Begrüßung",
+      "eine Seite"
+    ],
+    "en": [
+      "3 questions",
+      "no welcome page",
+      "one page"
+    ]
+  },
+  "texts": {
+    "note": {
+      "de": [
+        "Zu viele Meetings",
+        "Gute Woche, danke",
+        "Wir brauchen mehr Zeit für das Release"
+      ],
+      "en": [
+        "Too many meetings",
+        "Good week, thanks",
+        "We need more time for the release"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wochen-Puls",
+        "en": "Quick pulse"
+      },
+      "text": {
+        "de": "Drei Fragen, eine Minute.",
+        "en": "Three questions, one minute."
+      },
+      "enabled": false
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke. Bis nächste Woche.",
+        "en": "Thanks. See you next week."
+      }
+    },
+    "pages": [
+      {
+        "id": "week",
+        "questions": [
+          {
+            "id": "mood",
+            "variable": "MOOD",
+            "type": "single",
+            "text": {
+              "de": "Wie war Ihre Woche?",
+              "en": "How was your week?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Gut",
+                  "en": "Good"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Okay",
+                  "en": "Okay"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Schwer",
+                  "en": "Hard"
+                }
+              }
+            ]
+          },
+          {
+            "id": "needs",
+            "variable": "NEEDS",
+            "type": "yes-no",
+            "text": {
+              "de": "Haben Sie, was Sie für Ihre Arbeit brauchen?",
+              "en": "Do you have what you need for your work?"
+            },
+            "required": true
+          },
+          {
+            "id": "note",
+            "variable": "NOTE",
+            "type": "short-text",
+            "text": {
+              "de": "Ein Satz dazu?",
+              "en": "Anything to add in one line?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

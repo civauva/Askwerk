@@ -1,0 +1,384 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The survey list (AWK-15 step 3, W6) in the Werkstatt look. Tokens from @askwerk/ui. */
+.surveys {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  display: grid;
+  gap: 18px;
+  color: var(--aw-ink);
+  font: 400 15px/1.5 var(--aw-font);
+}
+
+:where(.surveys) button,
+:where(.surveys) input,
+:where(.surveys) select {
+  font: inherit;
+  color: inherit;
+}
+
+.surveys :focus-visible {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.surveys h1 {
+  margin: 0;
+  font: 700 32px/1.1 var(--aw-font-display);
+}
+
+.surveys h2 {
+  margin: 0;
+  font: 700 20px/1.2 var(--aw-font-display);
+}
+
+.surveys__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.surveys__of {
+  margin: 4px 0 0;
+  color: var(--aw-graphite);
+  font-size: 13.5px;
+}
+
+.surveys__muted {
+  color: var(--aw-muted);
+  font-size: 13.5px;
+}
+
+.surveys__button {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--aw-ink);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  font-weight: 600;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.surveys .surveys__button--primary {
+  background: var(--aw-signal);
+  border-color: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.surveys__button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.surveys__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.surveys__search,
+.surveys__input {
+  height: 40px;
+  box-sizing: border-box;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  padding: 0 12px;
+}
+
+.surveys__search {
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+
+.surveys__input[aria-invalid="true"] {
+  border: 2px solid var(--aw-error);
+}
+
+.surveys__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.surveys__chips button {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 16px;
+  background: var(--aw-surface);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.surveys__chips button[aria-pressed="true"] {
+  background: var(--aw-ink);
+  border-color: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.surveys__title a,
+.surveys__title span {
+  display: block;
+}
+
+.surveys__title a {
+  color: var(--aw-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.surveys__title a:hover {
+  text-decoration: underline;
+}
+
+.surveys__empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 48px 20px;
+  border: 1px dashed var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  background: var(--aw-surface);
+  text-align: center;
+}
+
+.surveys__empty p {
+  margin: 0;
+}
+
+.surveys__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--aw-ink) 40%, transparent);
+}
+
+.surveys__dialog {
+  width: min(460px, 100%);
+  box-sizing: border-box;
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  font: 400 15px/1.5 var(--aw-font);
+}
+
+.surveys__dialog h2 {
+  margin: 0;
+  font: 700 22px/1.2 var(--aw-font-display);
+}
+
+.surveys__form,
+.surveys__field {
+  display: grid;
+  gap: 8px;
+}
+
+.surveys__form {
+  gap: 18px;
+}
+
+.surveys__field {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.surveys__label {
+  font: 500 11.5px/1 var(--aw-font-mono);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+  padding: 0;
+}
+
+.surveys__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.surveys__check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.surveys__check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--aw-signal);
+}
+
+.surveys__input--short {
+  justify-self: start;
+  min-width: 12rem;
+}
+
+.surveys__error {
+  color: var(--aw-error);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.surveys__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* W6 D: narrower margins on a phone; the grid turns rows into cards (W13 D). */
+@media (max-width: 640px) {
+  .surveys {
+    padding: 20px 16px 48px;
+  }
+}
+
+/* New survey from a template (AWK-17 step 5). */
+.surveys__templates {
+  display: grid;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.surveys__template {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  cursor: pointer;
+}
+
+.surveys__template .surveys__muted {
+  grid-column: 2;
+}
+
+.surveys__template--on {
+  border: 2px solid var(--aw-signal);
+  padding: 9px 11px;
+}
+
+/* The response count opens the results (AWK-24). */
+.surveys__count {
+  border: 0;
+  background: transparent;
+  padding: 2px 0;
+  font: inherit;
+  color: var(--aw-signal-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* The survey list keeps its W6 layout on the shared grid (owner, 2026-10-15): roomy rows, the creator under the
+   title, every column left-aligned in the reading face. The grid adds sorting and paging only. */
+.surveys .aw-grid__table th {
+  padding: 12px 16px;
+  letter-spacing: 0.07em;
+  background: var(--aw-surface);
+}
+
+.surveys .aw-grid__table td.aw-grid__cell--title {
+  font-weight: 400;
+}
+
+.surveys .aw-grid__table td {
+  height: auto;
+  padding: 12px 16px;
+  font-size: 14px;
+  white-space: normal;
+}
+
+.surveys .aw-grid__scroll {
+  border-radius: 0;
+}
+
+/* New survey from a sample (W26): cards with the sample's look. */
+.surveys__dialog--wide {
+  width: min(1040px, 100%);
+}
+
+.surveys__samples {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+  max-height: 52vh;
+  overflow-y: auto;
+}
+
+.surveys__sample {
+  position: relative;
+  display: grid;
+  border: 1px solid var(--aw-line);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.surveys__sample:has(input:focus-visible) {
+  outline: 3px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.surveys__sample--on {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: -1px;
+}
+
+.surveys__sample-radio {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.surveys__sample-thumb {
+  display: flex;
+  justify-content: center;
+  height: 150px;
+  padding-top: 8px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--aw-ink) 4%, var(--aw-paper));
+}
+
+.surveys__sample-thumb .lt {
+  zoom: 0.78;
+}
+
+.surveys__sample-body {
+  display: grid;
+  gap: 2px;
+  padding: 8px 12px 12px;
+  font-size: 13.5px;
+}
+
+.surveys__features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.surveys__features span {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+  color: var(--aw-graphite);
+  font-size: 11.5px;
+}

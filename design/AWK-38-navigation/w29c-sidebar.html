@@ -1,0 +1,216 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W29 round 3: the sidebar, designed. #list: organisation home; #survey: a survey open, nested under Surveys;
+     #switch: the organisation switcher open; #org: Administration → Organisation. -->
+<html lang="en"><head><meta charset="utf-8"><title>W29 round 3</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .v { display: none; height: 900px; } body.list #list, body.survey #survey, body.switch #switch, body.org #org { display: flex; }
+  .grow { flex: 1; }
+  svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* The sidebar */
+  .sb { width: 256px; flex: none; display: flex; flex-direction: column; background: #f0eee9; border-right: 1px solid var(--aw-line); position: relative; }
+  .sb-top { padding: 14px 14px 10px; }
+  .brand { display: flex; align-items: center; gap: 8px; padding: 2px 4px 12px; }
+  .brand b { font: 700 18px/1 var(--aw-font-display); } .brand b span { color: var(--aw-signal); }
+  .tenant { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; box-shadow: 0 1px 0 rgba(0,0,0,.03); }
+  .tenant.open { border-color: var(--aw-ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--aw-ink) 10%, transparent); }
+  .mark { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: #fff; font: 600 12px/1 var(--aw-font-mono); flex: none; }
+  .tenant .t1 { font-weight: 600; line-height: 1.2; } .tenant .t2 { font-size: 12px; color: var(--aw-muted); line-height: 1.2; }
+  .chev { margin-left: auto; color: var(--aw-muted); }
+  .find { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 7px 10px; border-radius: 8px; color: var(--aw-muted); font-size: 13px; background: color-mix(in srgb, var(--aw-ink) 5%, #f0eee9); }
+  .find kbd { margin-left: auto; font: 500 10.5px/1 var(--aw-font-mono); padding: 2px 5px; border: 1px solid var(--aw-line-strong); border-radius: 4px; background: var(--aw-surface); }
+  .sb-nav { flex: 1; padding: 4px 10px; overflow: hidden; }
+  .grp { margin: 16px 10px 6px; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); display: flex; align-items: center; }
+  .it { display: flex; align-items: center; gap: 11px; padding: 8px 10px; border-radius: 8px; color: #4a4741; font-size: 14px; position: relative; }
+  .it:hover { background: color-mix(in srgb, var(--aw-ink) 5%, #f0eee9); }
+  .it.on { background: var(--aw-surface); color: var(--aw-ink); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .it.on::before { content: ""; position: absolute; left: -10px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--aw-signal); }
+  .it .n { margin-left: auto; font: 500 11px/1 var(--aw-font-mono); color: var(--aw-muted); }
+  .it.parent { color: var(--aw-ink); font-weight: 600; }
+  /* the open survey, nested under Surveys */
+  .open { margin: 4px 0 6px 18px; padding: 10px 8px 8px; border-left: 2px solid color-mix(in srgb, var(--aw-ink) 12%, transparent); }
+  .sv-card { margin: 0 2px 8px; padding: 10px 12px; background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; }
+  .sv-card b { display: block; font-size: 13.5px; line-height: 1.3; }
+  .sv-card .st { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font: 500 11px/1 var(--aw-font-mono); color: var(--aw-graphite); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #c98a00; }
+  .sub { font: 500 10px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); margin: 10px 10px 4px; }
+  .open .it { padding: 6px 10px; font-size: 13.5px; }
+  .sb-foot { padding: 10px 14px 14px; border-top: 1px solid var(--aw-line); display: flex; align-items: center; gap: 10px; }
+  .av { width: 30px; height: 30px; border-radius: 50%; background: #3d4a55; color: #fff; display: grid; place-items: center; font: 600 11px/1 var(--aw-font-mono); flex: none; }
+  .foot-name { font-size: 13px; line-height: 1.25; } .foot-name span { display: block; color: var(--aw-muted); font-size: 12px; }
+
+  /* Pages */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+  .content { flex: 1; padding: 28px 36px; position: relative; }
+  .crumb { display: flex; align-items: center; gap: 8px; color: var(--aw-muted); font-size: 13px; margin-bottom: 6px; }
+  h1 { margin: 0; font: 700 28px/1.2 var(--aw-font-display); }
+  .muted { color: var(--aw-graphite); font-size: 13px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--aw-line-strong); background: var(--aw-surface); font-weight: 600; font-size: 13.5px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; }
+  .rows { margin-top: 20px; border: 1px solid var(--aw-line); border-radius: 12px; background: var(--aw-surface); overflow: hidden; }
+  .row { display: grid; grid-template-columns: 1fr 130px 110px 120px; padding: 13px 18px; border-bottom: 1px solid var(--aw-line); font-size: 13.5px; align-items: center; }
+  .row:last-child { border: 0; } .row.h { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--aw-muted); background: #faf9f6; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font: 500 11px/1.2 var(--aw-font-mono); padding: 3px 9px; border-radius: 999px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); width: fit-content; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; }
+  .note { position: absolute; padding: 11px 14px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 8px; font-size: 13px; line-height: 1.45; color: #4a3d00; max-width: 360px; box-shadow: 0 4px 12px rgba(0,0,0,.08); z-index: 6; }
+  .note b { display: block; margin-bottom: 2px; }
+  /* survey header, one row */
+  .shead { height: 60px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 20px; background: var(--aw-surface); border-bottom: 1px solid var(--aw-line); }
+  .shead .place { font: 700 18px/1 var(--aw-font-display); }
+  .shead .meta { color: var(--aw-muted); font-size: 12.5px; }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: 8px; overflow: hidden; } .seg span { padding: 7px 10px; font: 600 12px/1 var(--aw-font-mono); } .seg span.on { background: var(--aw-ink); color: var(--aw-paper); }
+  .work { flex: 1; display: grid; grid-template-columns: 250px 1fr 300px; min-height: 0; }
+  .outline { background: var(--aw-surface); border-right: 1px solid var(--aw-line); padding: 16px 12px; }
+  .outline .p { padding: 7px 10px; border-radius: 6px; font-size: 13px; color: var(--aw-graphite); } .outline .p.on { background: color-mix(in srgb, var(--aw-signal) 12%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .lbl { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); margin: 0 10px 8px; }
+  .canvas { padding: 24px 30px; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
+  .card.on { outline: 2px solid var(--aw-signal); }
+  .opt { padding: 8px 10px; border: 1px solid var(--aw-line-strong); border-radius: 4px; margin-top: 6px; font-size: 13px; }
+  .insp { background: var(--aw-surface); border-left: 1px solid var(--aw-line); padding: 18px; }
+  .fld { margin-bottom: 14px; } .fld span { display: block; font-size: 12px; color: var(--aw-graphite); margin-bottom: 4px; } .fld div { padding: 8px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; font-size: 13px; background: var(--aw-surface); }
+  /* switcher */
+  .menu { position: absolute; left: 14px; top: 98px; width: 330px; background: var(--aw-surface); border: 1px solid var(--aw-line-strong); border-radius: 12px; box-shadow: 0 18px 40px rgba(0,0,0,.16); padding: 8px; z-index: 5; }
+  .menu .lbl { margin: 8px 10px 6px; }
+  .org-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; }
+  .org-row.on { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); }
+  .org-row .r { font-size: 12px; color: var(--aw-muted); }
+  .sep { height: 1px; background: var(--aw-line); margin: 6px 4px; }
+  .act { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: #4a4741; }
+  /* organisation page */
+  .sec { display: grid; grid-template-columns: 240px 1fr; gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--aw-line); }
+  .sec h2 { margin: 0 0 4px; font: 600 15px/1.3 var(--aw-font); } .sec p { margin: 0; }
+  .form { display: grid; gap: 14px; max-width: 560px; }
+  .ffield span { display: block; font-size: 12.5px; color: var(--aw-graphite); margin-bottom: 5px; }
+  .input { padding: 9px 12px; border: 1px solid var(--aw-line-strong); border-radius: 8px; background: var(--aw-surface); font-size: 14px; display: flex; align-items: center; gap: 6px; }
+  .input .pre { color: var(--aw-muted); font: 500 13px/1 var(--aw-font-mono); }
+  .logo-up { display: flex; align-items: center; gap: 12px; }
+  .danger { border: 1px solid color-mix(in srgb, #b3261e 35%, var(--aw-line)); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+  .btn.red { color: #a3261e; border-color: color-mix(in srgb, #b3261e 45%, var(--aw-line-strong)); }
+</style></head>
+<body>
+<script>document.body.className = (location.hash || "#list").slice(1);</script>
+
+<template id="sidebar">
+  <aside class="sb">
+    <div class="sb-top">
+      <div class="brand"><b>Ask<span>werk</span></b></div>
+      <div class="tenant"><span class="mark" style="background:#1f5f8b">AC</span><div><div class="t1">Acme GmbH</div><div class="t2">Owner · 12 members</div></div><span class="chev">⌄</span></div>
+      <div class="find"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Find anything<kbd>Ctrl K</kbd></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="it SURVEYS"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Surveys<span class="n">24</span></div>
+      <div class="OPEN"></div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="13" height="16" rx="2"/><path d="M8 21h11a2 2 0 0 0 2-2V8"/></svg>Templates<span class="n">7</span></div>
+      <div class="grp">Administration</div>
+      <div class="it ORG"><svg class="i" viewBox="0 0 24 24"><path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 9h5a1 1 0 0 1 1 1v11M8 8h2M8 12h2M8 16h2M3 21h18"/></svg>Organisation</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21 20a6 6 0 0 0-4-5.6"/></svg>Members<span class="n">12</span></div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Sign-in</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>Look of surveys</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Messages</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Domains</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg>Developers &amp; API</div>
+    </nav>
+    <div class="sb-foot"><span class="av">AB</span><div class="foot-name">Anna Berger<span>anna@acme.at</span></div><span class="chev">⋯</span></div>
+  </aside>
+</template>
+
+<template id="openSurvey">
+  <div class="open">
+    <div class="sv-card"><b>Customer satisfaction 2026</b><span class="st"><span class="dot"></span>Draft · 3 changes to publish</span></div>
+    <div class="sub">Create</div>
+    <div class="it on"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Questions</div>
+    <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg>Look</div>
+    <div class="sub">Collect</div>
+    <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 15V3M8 7l4-4 4 4"/></svg>Share</div>
+    <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M21 20a6 6 0 0 0-4-5.6"/></svg>Participants<span class="n">640</span></div>
+    <div class="sub">Analyse</div>
+    <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/></svg>Results<span class="n">248</span></div>
+    <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.7 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.8 14H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3.8V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>Survey settings</div>
+  </div>
+</template>
+
+<template id="list">
+  <div class="content">
+    <div style="display:flex;align-items:flex-end;gap:12px"><div><h1>Surveys</h1><div class="muted" style="margin-top:4px">24 surveys · 3 collecting · 1 waiting for approval</div></div><span class="grow"></span><span class="btn primary">+ New survey</span></div>
+    <div class="rows"><div class="row h"><span>Title</span><span>Status</span><span>Responses</span><span>Changed</span></div>
+      <div class="row"><b>Customer satisfaction 2026</b><span class="pill"><i style="background:#c98a00"></i>Draft</span><span>248</span><span>Today</span></div>
+      <div class="row"><b>Employee pulse Q4</b><span class="pill"><i style="background:#2f7d4f"></i>Collecting</span><span>132</span><span>Yesterday</span></div>
+      <div class="row"><b>Café visit</b><span class="pill"><i style="background:#888"></i>Closed</span><span>86</span><span>14 Oct</span></div>
+      <div class="row"><b>Festival feedback</b><span class="pill"><i style="background:#2f7d4f"></i>Collecting</span><span>140</span><span>12 Oct</span></div>
+      <div class="row"><b>Board review</b><span class="pill"><i style="background:#888"></i>Closed</span><span>24</span><span>2 Oct</span></div>
+    </div>
+  </div>
+</template>
+
+<section class="v" id="list"><div class="SB" data-active="surveys"></div><div class="main"><div class="L"></div>
+  <div class="note" style="left:36px;bottom:30px;max-width:520px"><b>The sidebar, designed.</b>Warm grey panel, white cards for what is active, a red tick on the left edge. Top: the organisation as a card (mark, name, your role), then Find anything. Work first, Administration as one group; Organisation leads it. You at the foot.</div></div></section>
+
+<section class="v" id="survey"><div class="SB" data-active="survey"></div>
+  <div class="main">
+    <div class="shead"><span class="place">Questions</span><span class="meta">Customer satisfaction 2026 · saved 12:41</span><span class="grow"></span><span class="seg"><span class="on">DE</span><span>EN</span></span><span class="btn">Preview ⌄</span><span class="btn primary">Publish</span></div>
+    <div class="work">
+      <div class="outline"><div class="lbl">Pages</div><div class="p">Welcome page</div><div class="p on">1 · Your visit</div><div class="p">2 · Your opinion</div><div class="p">3 · About you</div><div class="p">Thank-you page</div><div class="p">All rules</div></div>
+      <div class="canvas"><div class="card on"><b>How satisfied are you with your visit?</b><div style="display:flex;gap:6px;margin-top:8px"><span class="opt">1</span><span class="opt">2</span><span class="opt">3</span><span class="opt">4</span><span class="opt">5</span></div></div><div class="card"><b>Which branch did you visit?</b><div class="opt">Vienna</div><div class="opt">Graz</div></div><div class="card"><b>What could we improve?</b><div class="opt" style="height:56px"></div></div></div>
+      <div class="insp"><b>Question</b><div class="fld" style="margin-top:12px"><span>Type</span><div>Rating scale</div></div><div class="fld"><span>Variable</span><div>SAT</div></div><div class="fld"><span>Scale</span><div>1 – 5</div></div></div>
+    </div>
+    <div class="note" style="left:300px;bottom:30px;max-width:560px"><b>The survey opens inside Surveys, not instead of it.</b>The organisation stays at the top. The open survey hangs under Surveys as an indented branch: its card (name, status), then Create · Collect · Analyse and Survey settings. Back is simply Surveys, one line up. Administration folds to one line while a survey is open. One header row: the place, Preview and Publish; the second row is gone.</div></div></section>
+
+<section class="v" id="switch"><div class="SB" data-active="surveys" data-menu="1"></div><div class="main"><div class="L"></div>
+  <div class="note" style="left:120px;top:250px;max-width:400px"><b>Switching organisation always lands on its start page.</b>The survey list of the chosen organisation, never a page from the other one. Your role shows per organisation; Organisation settings and New organisation sit at the end.</div></div></section>
+
+<section class="v" id="org"><div class="SB" data-active="org"></div>
+  <div class="main"><div class="content" style="padding-top:22px">
+    <div class="crumb">Administration</div><h1>Organisation</h1><div class="muted" style="margin-top:4px">Acme GmbH · created 12 October 2026</div>
+    <div class="sec"><div><h2>Name and mark</h2><p class="muted">Shown in the sidebar, invitations and the PDF footer.</p></div>
+      <div class="form"><div class="ffield"><span>Name</span><div class="input">Acme GmbH</div></div>
+        <div class="logo-up"><span class="mark" style="background:#1f5f8b;width:44px;height:44px;border-radius:10px">AC</span><span class="btn">Upload a logo</span><span class="muted">or keep the initials and pick a colour</span></div></div></div>
+    <div class="sec"><div><h2>Address</h2><p class="muted">The short name in sign-in links: company login uses it.</p></div>
+      <div class="form"><div class="ffield"><span>Short name</span><div class="input"><span class="pre">surveys.acme.at/sso/</span>acme</div></div></div></div>
+    <div class="sec"><div><h2>Defaults</h2><p class="muted">For new surveys and dates.</p></div>
+      <div class="form" style="grid-template-columns:1fr 1fr"><div class="ffield"><span>Time zone</span><div class="input">Europe/Vienna ⌄</div></div><div class="ffield"><span>Survey languages</span><div class="input">Deutsch, English ⌄</div></div></div></div>
+    <div class="sec" style="border:0"><div><h2>Ownership</h2><p class="muted">Owners can do everything, including this.</p></div>
+      <div class="form"><div class="danger"><div class="grow"><b>Transfer ownership</b><div class="muted">Make another member the owner.</div></div><span class="btn">Transfer…</span></div>
+        <div class="danger"><div class="grow"><b>Delete organisation</b><div class="muted">Surveys, answers and files go after 30 days.</div></div><span class="btn red">Delete…</span></div></div></div>
+    <div class="note" style="right:30px;top:24px;max-width:340px"><b>New: the organisation's own page.</b>There is none today: the name and short name are set once at sign-up, the time zone is instance-wide (W24). This page gathers them, adds a logo or coloured initials for the sidebar, and holds transfer and delete.</div>
+  </div></div></section>
+
+<script>
+const t = (id) => document.getElementById(id).content.cloneNode(true);
+document.querySelectorAll(".SB").forEach((slot) => {
+  const sb = t("sidebar");
+  const active = slot.dataset.active;
+  const surveys = sb.querySelector(".SURVEYS");
+  if (active === "surveys") surveys.classList.add("on");
+  if (active === "org") sb.querySelector(".ORG").classList.add("on");
+  if (active === "survey") {
+    surveys.classList.add("parent");
+    sb.querySelector(".OPEN").replaceWith(t("openSurvey"));
+    const nav = sb.querySelector(".sb-nav");
+    const grp = nav.querySelector(".grp");
+    let n = grp.nextElementSibling;
+    while (n) { const next = n.nextElementSibling; n.remove(); n = next; }
+    grp.insertAdjacentHTML("beforeend", "<span style=\"margin-left:auto\">7 ›</span>");
+  }
+  if (slot.dataset.menu) {
+    sb.querySelector(".tenant").classList.add("open");
+    sb.querySelector(".sb").insertAdjacentHTML("beforeend", `<div class="menu"><div class="lbl">Your organisations</div>
+      <div class="org-row on"><span class="mark" style="background:#1f5f8b">AC</span><div><b>Acme GmbH</b><div class="r">Owner</div></div><span style="margin-left:auto">✓</span></div>
+      <div class="org-row"><span class="mark" style="background:#2f6f4f">HR</span><div><b>Acme HR Services</b><div class="r">Admin</div></div></div>
+      <div class="org-row"><span class="mark" style="background:#7a5b0b">FA</span><div><b>Falke &amp; Co</b><div class="r">Editor</div></div></div>
+      <div class="sep"></div><div class="act">⚙ Organisation settings</div><div class="act">＋ New organisation</div></div>`);
+  }
+  slot.replaceWith(sb);
+});
+document.querySelectorAll(".L").forEach((slot) => slot.replaceWith(t("list")));
+</script>
+</body></html>

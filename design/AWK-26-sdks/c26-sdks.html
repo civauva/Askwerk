@@ -1,0 +1,61 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>C26 SDKs</title><link rel="stylesheet" href="../sketch.css"></head>
+<body>
+<h1>C26 · SDKs for the Public API: TypeScript, C# and Python · AWK-26 · 2026-10-15</h1>
+<p class="lead">Zero runtime dependencies, generated from docs/api/openapi.json, one hand-written auth helper each (API key, or OAuth client credentials with token refresh), tested against a real Askwerk. Source in src/sdks/ (Apache-2.0).</p>
+<div class="grid3">
+<div class="box">
+  <h2>How they are generated</h2>
+  <p><b>Recommended: our own small generator</b> (src/sdks/generate.mjs, Node, no package), because every ready-made generator brings runtime packages:</p>
+  <table>
+    <tr><th>Generator</th><th>Licence</th><th>What the SDK then needs</th></tr>
+    <tr><td>openapi-generator</td><td>Apache-2.0</td><td>Java to run; Python SDK needs urllib3, pydantic; C# needs Newtonsoft or Polly</td></tr>
+    <tr><td>Kiota (Microsoft)</td><td>MIT</td><td>Microsoft.Kiota.* runtime packages in every SDK</td></tr>
+    <tr><td>NSwag</td><td>MIT</td><td>C# and TS only; no Python</td></tr>
+    <tr><td>openapi-python-client</td><td>MIT</td><td>httpx and attrs in the SDK</td></tr>
+  </table>
+  <p class="muted">The Public API is small (12 operations); a generator of about 400 lines reads the OpenAPI document and writes one typed client per language with the standard library's HTTP client (fetch, HttpClient, urllib). It runs in the build; the snapshot test fails when an SDK is stale.</p>
+</div>
+<div class="box">
+  <h2>What a developer writes</h2>
+<pre>// TypeScript (npm: @askwerk/sdk)
+import { Askwerk } from "@askwerk/sdk";
+const askwerk = new Askwerk({ baseUrl: "https://surveys.acme.at", apiKey: process.env.ASKWERK_KEY });
+const { items } = await askwerk.surveys.list({ status: "published" });
+const exp = await askwerk.exports.start(items[0].id, { format: "csv" });
+const ready = await askwerk.exports.waitUntilReady(exp.id);</pre>
+<pre>// C# (NuGet: Askwerk.Sdk)
+var askwerk = new AskwerkClient(new Uri("https://surveys.acme.at"),
+    AskwerkAuth.ClientCredentials("cl_…", secret));
+var page = await askwerk.Surveys.ListAsync(status: "published");</pre>
+<pre># Python (PyPI: askwerk)
+from askwerk import Askwerk
+askwerk = Askwerk("https://surveys.acme.at", api_key=os.environ["ASKWERK_KEY"])
+hooks = askwerk.webhooks.list()</pre>
+  <ul>
+    <li>Errors become one exception type with status, problem type, title and trace id.</li>
+    <li>Cursor paging helpers (iterate all pages); Idempotency-Key on retried creates; 429 waits as Retry-After says.</li>
+    <li>Webhook signature check helper in all three.</li>
+  </ul>
+</div>
+<div class="box">
+  <h2>Layout, tests, release</h2>
+<pre>src/sdks/
+  generate.mjs        reads docs/api/openapi.json
+  typescript/         package.json, src/, tests/
+  csharp/             Askwerk.Sdk.csproj, tests/
+  python/             pyproject.toml, askwerk/, tests/</pre>
+  <ul>
+    <li>Tests: each SDK runs the same scenario against the API in a container in the full run (list surveys, export, webhook create, OAuth token) — nothing mocked.</li>
+    <li>Version = API version + SDK patch (1.0.x for v1).</li>
+    <li>Release: a manual script builds the three packages into artifacts/; publishing to npm, NuGet and PyPI happens only when you say so, with your accounts.</li>
+  </ul>
+  <h3>Tooling needed to build (not shipped)</h3>
+  <p class="muted">Node and .NET are already there. Python 3.12 for the Python SDK's tests (already used for scripts). No new packages.</p>
+</div>
+</div>
+<div class="notes">
+  <p class="open">Open for Dražan: (a) our own generator, no new package (recommended), or one of the listed generators (then its name, licence and dependencies come to you first); (b) package names @askwerk/sdk, Askwerk.Sdk, askwerk (recommended); (c) publishing stays manual on your word (recommended).</p>
+</div>
+</body></html>

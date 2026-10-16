@@ -1,0 +1,358 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W29 round 4, in the Werkstatt language (agents/ui-design-system.md): sharp corners, borders over shadows, mono figures,
+     signal only for the selected item. #list: today's survey list with the sidebar; #tree: a survey open under Surveys, its
+     places on the measuring rule; #drill: a survey open as a drill-in with a breadcrumb back; #switch: the organisation menu;
+     #org: Administration → Organisation. -->
+<html lang="en"><head><meta charset="utf-8"><title>W29 round 5</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2"); }
+  :root { --signal: #d2440f; --soft: #fbe6da; --soft-ink: #8f2c06; --ink: #1a1917; --graphite: #4a4640; --muted: #6e6962; --line: #e3dfd8; --strong: #c8c2b8; --paper: #f6f5f2; --surface: #fff; --steel: #3e4a56; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--paper); color: var(--ink); font: 400 14px/1.45 "IBM Plex Sans", sans-serif; }
+  .v { display: none; height: 900px; } body.list #list, body.tree #tree, body.drill #drill, body.switch #switch, body.org #org, body.install #install { display: flex; }
+  .grow { flex: 1; }
+  .mono { font-family: "IBM Plex Mono", monospace; }
+  svg.i { width: 16px; height: 16px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: square; stroke-linejoin: miter; }
+
+  /* Sidebar */
+  .sb { width: 248px; flex: none; display: flex; flex-direction: column; background: var(--surface); border-right: 1px solid var(--line); position: relative; }
+  .logo { height: 56px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .logo .word { font: 600 19px/1 "IBM Plex Sans Condensed"; letter-spacing: -.01em; } .logo .word b { color: var(--signal); font-weight: 700; }
+  .tenant { display: flex; align-items: center; gap: 10px; margin: 12px 12px 4px; padding: 8px 10px; border: 1px solid var(--strong); border-radius: 2px; }
+  .tenant.open { border-color: var(--ink); outline: 2px solid var(--ink); outline-offset: -2px; }
+  .tile { width: 28px; height: 28px; border-radius: 2px; display: grid; place-items: center; color: #fff; font: 600 11px/1 "IBM Plex Mono"; flex: none; }
+  .tenant .name { font-weight: 600; font-size: 14px; line-height: 1.2; }
+  .tenant .role { font: 500 10.5px/1.3 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .caret { margin-left: auto; color: var(--muted); }
+  .find { display: flex; align-items: center; gap: 8px; margin: 8px 12px 0; padding: 0 10px; height: 32px; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); font-size: 13px; }
+  .find .k { margin-left: auto; font: 500 10.5px/1 "IBM Plex Mono"; color: var(--graphite); border: 1px solid var(--strong); border-radius: 2px; padding: 2px 4px; }
+  .nav { flex: 1; padding: 8px 0; }
+  .lbl { display: flex; align-items: center; margin: 18px 16px 6px; font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .lbl::after { content: ""; flex: 1; height: 1px; background: var(--line); margin-left: 8px; }
+  .it { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 16px; color: var(--graphite); font-size: 14px; position: relative; }
+  .it .n { margin-left: auto; font: 500 11.5px/1 "IBM Plex Mono"; color: var(--muted); }
+  .it.on { background: var(--soft); color: var(--soft-ink); font-weight: 600; }
+  .it.on::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--signal); }
+  .it.on .n { color: var(--soft-ink); }
+  .it.up { color: var(--ink); font-weight: 600; }
+  .foot { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--line); }
+  .av { width: 28px; height: 28px; border-radius: 50%; background: var(--steel); color: #fff; display: grid; place-items: center; font: 600 11px/1 "IBM Plex Mono"; flex: none; }
+  .foot .who { font-size: 13px; line-height: 1.25; } .foot .who span { display: block; color: var(--muted); font-size: 12px; }
+
+  /* The open survey on the measuring rule (tree) */
+  .branch { position: relative; margin: 2px 0 6px 25px; padding-left: 14px; }
+  .branch::before { content: ""; position: absolute; left: 0; top: 0; bottom: 10px; width: 1px; background: var(--strong); }
+  .branch .it { height: 30px; padding: 0 16px 0 10px; font-size: 13.5px; }
+  .branch .it::after { content: ""; position: absolute; left: -14px; top: 50%; width: 8px; height: 1px; background: var(--strong); }
+  .branch .it.on::before { left: -15px; width: 3px; }
+  .branch .it.on::after { display: none; }
+  .svhead { padding: 8px 16px 8px 10px; position: relative; }
+  .svhead::after { content: ""; position: absolute; left: -14px; top: 18px; width: 8px; height: 1px; background: var(--strong); }
+  .svhead b { display: block; font: 600 14.5px/1.25 "IBM Plex Sans Condensed"; }
+  .svhead .st { font: 500 10.5px/1.6 "IBM Plex Mono"; letter-spacing: .04em; color: var(--muted); }
+  .svhead .st i { display: inline-block; width: 6px; height: 6px; background: #a86a12; margin-right: 6px; vertical-align: 1px; }
+  .tick { font: 500 9.5px/1 "IBM Plex Mono"; letter-spacing: .1em; color: var(--muted); margin: 8px 0 2px 10px; text-transform: uppercase; }
+
+  /* drill-in header */
+  .crumb { display: flex; align-items: center; gap: 6px; margin: 14px 16px 2px; font: 500 12px/1 "IBM Plex Mono"; color: var(--steel); }
+  .drill-title { margin: 6px 16px 2px; font: 700 20px/1.15 "IBM Plex Sans Condensed"; }
+  .drill-st { margin: 0 16px 6px; font: 500 10.5px/1.6 "IBM Plex Mono"; letter-spacing: .04em; color: var(--muted); }
+  .drill-st i { display: inline-block; width: 6px; height: 6px; background: #a86a12; margin-right: 6px; vertical-align: 1px; }
+
+  /* Pages */
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+  .page { width: 1040px; margin: 0 auto; padding: 32px 0; }
+  h1 { margin: 0; font: 700 32px/1.1 "IBM Plex Sans Condensed"; letter-spacing: -.01em; }
+  .sub { color: var(--graphite); font-size: 14px; margin-top: 6px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 16px; border-radius: 2px; border: 1px solid var(--strong); background: var(--surface); font-weight: 600; font-size: 14px; white-space: nowrap; }
+  .btn.primary { background: var(--signal); border-color: var(--signal); color: #fff; }
+  .btn.sm { height: 32px; padding: 0 12px; font-size: 13px; }
+  .tools { display: flex; align-items: center; gap: 8px; margin: 24px 0 16px; }
+  .search { width: 360px; height: 40px; display: flex; align-items: center; padding: 0 12px; border: 1px solid var(--strong); border-radius: 2px; background: var(--surface); color: var(--muted); }
+  .chip { height: 32px; display: inline-flex; align-items: center; padding: 0 14px; border: 1px solid var(--strong); border-radius: 999px; background: var(--surface); font: 600 13px/1 "IBM Plex Sans"; }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .grid { background: var(--surface); border: 1px solid var(--line); }
+  .gr { display: grid; grid-template-columns: 1fr 160px 120px 110px 130px; align-items: center; min-height: 60px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+  .gr:last-child { border: 0; }
+  .gr.h { min-height: 40px; font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom-color: var(--strong); }
+  .gr b { font-size: 14px; } .gr .by { display: block; color: var(--muted); font-size: 13px; }
+  .num { font-family: "IBM Plex Mono"; text-align: right; } .gr .num a { color: var(--signal); text-decoration: underline; text-underline-offset: 3px; }
+  .note { position: absolute; padding: 11px 14px; background: #fff7cc; border: 1px solid #e3cf6a; font-size: 13px; line-height: 1.45; color: #4a3d00; max-width: 380px; z-index: 6; }
+  .note b { display: block; margin-bottom: 2px; }
+  .label { position: absolute; bottom: 14px; right: 18px; padding: 5px 10px; background: var(--ink); color: #fff; font: 600 12px/1.2 "IBM Plex Mono"; z-index: 7; }
+
+  /* survey header and designer */
+  .shead { height: 56px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .shead .place { font: 700 20px/1 "IBM Plex Sans Condensed"; }
+  .shead .meta { font: 500 11.5px/1 "IBM Plex Mono"; color: var(--muted); }
+  .seg { display: inline-flex; border: 1px solid var(--strong); border-radius: 2px; } .seg span { padding: 9px 11px; font: 600 12px/1 "IBM Plex Mono"; } .seg span.on { background: var(--ink); color: #fff; }
+  .work { flex: 1; display: grid; grid-template-columns: 248px 1fr 300px; min-height: 0; }
+  .outline { background: var(--surface); border-right: 1px solid var(--line); padding: 14px 0; }
+  .outline .p { height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 16px; font-size: 13.5px; color: var(--graphite); }
+  .outline .p .q { font: 500 11px/1 "IBM Plex Mono"; color: var(--muted); width: 22px; }
+  .outline .p.on { background: var(--paper); color: var(--ink); font-weight: 600; box-shadow: inset 2px 0 0 var(--ink); }
+  .canvas { padding: 24px 32px; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 24px 24px; background-color: var(--paper); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 16px 18px; margin-bottom: 12px; }
+  .card.on { border-color: var(--signal); box-shadow: inset 3px 0 0 var(--signal); }
+  .card .qn { font: 500 11px/1 "IBM Plex Mono"; color: var(--muted); margin-bottom: 6px; }
+  .card b { font: 600 17px/1.3 "IBM Plex Sans Condensed"; }
+  .opt { padding: 8px 10px; border: 1px solid var(--strong); border-radius: 2px; margin-top: 6px; font-size: 13px; }
+  .scale { display: flex; gap: 6px; margin-top: 10px; } .scale span { width: 40px; height: 36px; display: grid; place-items: center; border: 1px solid var(--strong); border-radius: 2px; font: 600 13px/1 "IBM Plex Mono"; }
+  .insp { background: var(--surface); border-left: 1px solid var(--line); padding: 18px; }
+  .insp h3 { margin: 0 0 14px; font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .fld { margin-bottom: 14px; } .fld span { display: block; font-size: 12.5px; color: var(--graphite); margin-bottom: 4px; } .fld div { height: 36px; display: flex; align-items: center; padding: 0 10px; border: 1px solid var(--strong); border-radius: 2px; font-size: 13.5px; }
+
+  /* menu */
+  .menu { position: absolute; left: 12px; top: 108px; width: 300px; background: var(--surface); border: 1px solid var(--strong); box-shadow: 0 12px 28px rgba(26,25,23,.14); z-index: 5; }
+  .menu .mh { padding: 10px 12px 6px; font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .mrow { display: flex; align-items: center; gap: 10px; padding: 8px 12px; }
+  .mrow.on { background: var(--soft); }
+  .mrow .r { font: 500 10.5px/1.3 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .mrow.act { color: var(--graphite); border-top: 1px solid var(--line); }
+
+  /* organisation page */
+  .sec { display: grid; grid-template-columns: 260px 1fr; gap: 32px; padding: 24px 0; border-top: 1px solid var(--line); }
+  .sec h2 { margin: 0 0 4px; font: 600 16px/1.3 "IBM Plex Sans Condensed"; } .sec p { margin: 0; color: var(--graphite); font-size: 13.5px; }
+  .form { display: grid; gap: 16px; max-width: 560px; }
+  .ff span { display: block; font-size: 13px; color: var(--graphite); margin-bottom: 6px; }
+  .in { height: 40px; display: flex; align-items: center; gap: 4px; padding: 0 12px; border: 1px solid var(--strong); border-radius: 2px; background: var(--surface); }
+  .in .pre { color: var(--muted); font: 500 13px/1 "IBM Plex Mono"; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .danger { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--strong); background: var(--surface); }
+  .danger.red { border-color: #e4b4ae; }
+  .btn.red { color: #b42318; border-color: #e4b4ae; }
+
+  /* Round 4b: the look of the round-2 list page the owner liked (white sidebar, soft grey selection, blue organisation box). */
+  .sb { width: 232px; }
+  .logo { height: auto; border: 0; padding: 18px 20px 12px; }
+  .logo .a2 { font: 700 19px/1 "IBM Plex Sans Condensed"; } .logo .a2 span { color: var(--signal); }
+  .tenant { margin: 0 14px 10px; padding: 7px 10px; border-radius: 8px; border-color: var(--strong); }
+  .tenant .tile { width: 22px; height: 22px; border-radius: 5px; background: #1f5f8b !important; font-size: 10.5px; }
+  .tenant .role { display: none; }
+  .tenant.open { outline: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 10%, transparent); }
+  .find { display: none; }
+  .nav { padding: 0 10px; }
+  .it { height: auto; padding: 8px 10px; border-radius: 6px; gap: 12px; }
+  .it svg.i { width: 15px; height: 15px; color: var(--muted); stroke-width: 1.6; }
+  .it.on { background: color-mix(in srgb, var(--ink) 7%, var(--surface)); color: var(--ink); }
+  .it.on::before { display: none; }
+  .it.on .n, .it .n { color: var(--muted); font-size: 11px; }
+  .it.up { background: none; }
+  .lbl { margin: 18px 10px 6px; }
+  .lbl::after { display: none; }
+  .branch { margin: 0 0 6px 17px; padding-left: 12px; }
+  .branch::before { background: var(--line); }
+  .branch .it { padding: 6px 10px; }
+  .branch .it::after, .svhead::after { background: var(--line); left: -12px; }
+  .branch .it.on::before { display: none; }
+  .svhead b { font: 600 14px/1.3 "IBM Plex Sans"; }
+  .tick { margin: 10px 0 4px 10px; }
+  .crumb { margin: 6px 10px 4px; padding: 6px 8px; width: fit-content; border-radius: 6px; color: var(--graphite); font: 500 13px/1 "IBM Plex Sans"; background: color-mix(in srgb, var(--ink) 5%, var(--surface)); }
+  .drill-title { margin: 10px 10px 4px; font: 700 20px/1.15 "IBM Plex Sans Condensed"; }
+  .drill-st { margin: 0 10px 4px; }
+  .foot { border: 0; padding: 14px 20px; }
+  .menu { left: 14px; top: 92px; border-radius: 10px; padding: 6px; }
+  .mrow { border-radius: 6px; } .mrow.on { background: color-mix(in srgb, var(--ink) 6%, var(--surface)); }
+  .mrow .tile { width: 26px; height: 26px; border-radius: 6px; }
+  .mrow.act { border-top: 0; } .menu .sepline { height: 1px; background: var(--line); margin: 4px 6px; }
+  .page { width: auto; margin: 0; padding: 26px 32px; }
+  .rows { margin-top: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+  .row { display: grid; grid-template-columns: 1fr 120px 100px 120px; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .row:last-child { border: 0; } .row.h { font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .pill { font: 500 11px/1.2 "IBM Plex Mono"; padding: 2px 8px; border: 1px solid var(--strong); border-radius: 999px; width: fit-content; }
+  .btn { border-radius: 6px; height: 36px; font-size: 13px; }
+  h1 { font-size: 26px; }
+  .sec h2 { font: 600 15px/1.3 "IBM Plex Sans"; }
+  .in, .danger { border-radius: 8px; }
+  .shead .seg, .seg { border-radius: 6px; overflow: hidden; }
+
+  /* Round 5: back is a normal row of the sidebar, the survey's name below it on a hairline. */
+  .back { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 6px; color: var(--graphite); font-size: 14px; }
+  .back:hover, .back.hover { background: color-mix(in srgb, var(--ink) 5%, var(--surface)); color: var(--ink); }
+  .back svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .back .n { margin-left: auto; font: 500 11px/1 "IBM Plex Mono"; color: var(--muted); }
+  .svblock { margin: 6px 0 4px; padding: 14px 10px 12px; border-top: 1px solid var(--line); }
+  .svblock .t { font: 700 18px/1.2 "IBM Plex Sans Condensed"; }
+  .svblock .s { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .svblock .s span { font: 500 10.5px/1 "IBM Plex Mono"; padding: 3px 6px; border: 1px solid var(--strong); border-radius: 999px; color: var(--graphite); white-space: nowrap; }
+  .svblock .s span.draft { border-color: #e6c58f; color: #7a4b05; background: #fbf1df; }
+  /* Installation: outside any organisation, marked by a dark strip */
+  .inst-strip { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: var(--ink); color: #fff; font: 500 12px/1 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; }
+  .inst-strip span { opacity: .7; }
+  .tenantgrid { margin-top: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden; }
+  .tg { display: grid; grid-template-columns: 1fr 110px 140px 90px 80px 110px 30px 90px 100px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .tg:last-child { border: 0; } .tg.h { font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .tg .nm { display: flex; align-items: center; gap: 10px; font-weight: 600; } .tg .nm .tile { width: 26px; height: 26px; border-radius: 6px; }
+  .tg .mono { font-family: "IBM Plex Mono"; font-size: 12.5px; color: var(--graphite); }
+  .tg .r { text-align: right; font-family: "IBM Plex Mono"; }
+  .stat { font: 500 11px/1.2 "IBM Plex Mono"; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--strong); width: fit-content; }
+  .stat.ok { border-color: #b7dcc4; color: #1f5f3a; background: #eaf5ee; } .stat.off { color: var(--muted); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .kpi b { display: block; font: 600 24px/1.1 "IBM Plex Mono"; margin-top: 6px; } .kpi span { font: 500 10.5px/1 "IBM Plex Mono"; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+</style></head>
+<body>
+<script>document.body.className = (location.hash || "#list").slice(1);</script>
+
+<template id="logo"><div class="logo"><span class="a2">Ask<span>werk</span></span></div></template>
+<template id="tenant"><div class="tenant"><span class="tile" style="background:#3e4a56">AC</span><div><div class="name">Acme GmbH</div><div class="role">Owner · 12 members</div></div><svg class="i caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></div>
+  <div class="find"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>Find<span class="k">Ctrl K</span></div></template>
+<template id="foot"><div class="foot"><span class="av">AB</span><div class="who">Anna Berger<span>anna@acme.at</span></div><span class="grow"></span><svg class="i" viewBox="0 0 24 24" style="color:var(--muted)"><circle cx="5" cy="12" r=".8"/><circle cx="12" cy="12" r=".8"/><circle cx="19" cy="12" r=".8"/></svg></div></template>
+<template id="i-surveys"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></template>
+<template id="admin">
+  <div class="lbl">Administration</div>
+  <div class="it ORG"><svg class="i" viewBox="0 0 24 24"><path d="M4 21V4h10v17M14 9h6v12M3 21h18M7 8h3M7 12h3M7 16h3"/></svg>Organisation</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M21.5 20a6.5 6.5 0 0 0-4.5-6.2"/></svg>Members<span class="n">12</span></div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Sign-in</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/><path d="M12 4a8 8 0 0 0 0 16" fill="currentColor"/></svg>Look of surveys</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="M3 6l9 7 9-7"/></svg>Messages</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Domains</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>Developers &amp; API</div>
+</template>
+<template id="places">
+  <div class="tick">Create</div>
+  <div class="it on"><svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Questions</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16" fill="currentColor"/></svg>Look</div>
+  <div class="tick">Collect</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M4 13v7h16v-7M12 16V4M7.5 8.5L12 4l4.5 4.5"/></svg>Share</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8"/></svg>Participants<span class="n">640</span></div>
+  <div class="tick">Analyse</div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M4 4v16h16M8 16v-4M12 16V8M16 16v-6"/></svg>Results<span class="n">248</span></div>
+  <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><rect x="14" y="4" width="4" height="4"/><rect x="8" y="10" width="4" height="4"/><rect x="16" y="16" width="4" height="4"/></svg>Settings</div>
+</template>
+
+<template id="listpage">
+  <div class="page">
+    <div style="display:flex;align-items:flex-end;gap:12px"><div><h1>Surveys</h1><div class="sub" style="font-size:13px;margin-top:4px">Acme GmbH · 24 surveys</div></div><span class="grow"></span><span class="btn primary">New survey</span></div>
+    <div class="rows"><div class="row h"><span>Title</span><span>Status</span><span>Responses</span><span>Changed</span></div>
+      <div class="row"><b>Customer satisfaction 2026</b><span class="pill">Published</span><span>248</span><span>Today</span></div>
+      <div class="row"><b>Employee pulse Q4</b><span class="pill">Draft</span><span>0</span><span>Yesterday</span></div>
+      <div class="row"><b>Café visit</b><span class="pill">Closed</span><span>86</span><span>14 Oct</span></div>
+      <div class="row"><b>Festival feedback</b><span class="pill">Published</span><span>140</span><span>12 Oct</span></div></div>
+  </div>
+</template>
+
+<template id="designer">
+  <div class="work">
+    <div class="outline"><div class="lbl" style="margin-top:4px">Pages</div><div class="p"><span class="q">—</span>Welcome page</div><div class="p on"><span class="q">01</span>Your visit</div><div class="p"><span class="q">02</span>Your opinion</div><div class="p"><span class="q">03</span>About you</div><div class="p"><span class="q">—</span>Thank-you page</div><div class="p"><span class="q">↳</span>All rules</div></div>
+    <div class="canvas"><div class="card on"><div class="qn">Q1 · SAT · required</div><b>How satisfied are you with your visit?</b><div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div><div class="card"><div class="qn">Q2 · BRANCH</div><b>Which branch did you visit?</b><div class="opt">Vienna</div><div class="opt">Graz</div></div><div class="card"><div class="qn">Q3 · IMPROVE</div><b>What could we improve?</b><div class="opt" style="height:52px"></div></div></div>
+    <div class="insp"><h3>Question</h3><div class="fld"><span>Type</span><div>Rating scale</div></div><div class="fld"><span>Variable</span><div class="mono">SAT</div></div><div class="fld"><span>Scale</span><div class="mono">1 – 5</div></div><div class="fld"><span>Display</span><div>Numbers</div></div></div>
+  </div>
+</template>
+<template id="shead"><div class="shead"><span class="place">Questions</span><span class="meta">Saved 12:41</span><span class="grow"></span><span class="seg"><span class="on">DE</span><span>EN</span></span><span class="btn sm">Preview ▾</span><span class="btn sm primary">Publish</span></div></template>
+
+<!-- list -->
+<section class="v" id="list"><aside class="sb" data-s="list"></aside><div class="main"><div data-t="listpage"></div>
+  <div class="note" style="left:40px;bottom:24px;max-width:520px"><b>The round-2 page, kept.</b>White sidebar, soft grey for the selected place, the blue organisation box, line icons in quiet grey. Organisation now leads Administration; Developers &amp; API ends it.</div>
+  <div class="label">R4 · List</div></div></section>
+
+<!-- tree -->
+<section class="v" id="tree"><aside class="sb" data-s="tree"></aside><div class="main"><div data-t="shead"></div><div data-t="designer" class="work-slot"></div>
+  <div class="note" style="left:300px;bottom:24px;max-width:540px"><b>Variant 1 · Under Surveys.</b>The open survey hangs under Surveys on a thin line: its name and status, then its places grouped Create · Collect · Analyse. Surveys stays the line above it, plain and bold, so the way back is where you came from. Administration keeps its place below.</div>
+  <div class="label">R4 · Survey, under Surveys</div></div></section>
+
+<!-- drill -->
+<section class="v" id="drill"><aside class="sb" data-s="drill"></aside><div class="main"><div data-t="shead"></div><div data-t="designer"></div>
+  <div class="note" style="left:300px;bottom:24px;max-width:540px"><b>Drill-in, back restyled.</b>The sidebar steps into the survey: "‹ All surveys" is an ordinary row of the sidebar, in its place and style (shown here on hover), with the count. Below a hairline: the survey's name and three facts as quiet pills, then its places. Esc goes back too. The organisation box stays on top.</div>
+  <div class="label">R5 · Survey, drill-in</div></div></section>
+
+<!-- switch -->
+<section class="v" id="switch"><aside class="sb" data-s="switch"></aside><div class="main"><div data-t="listpage"></div>
+  <div class="note" style="left:360px;top:200px;max-width:380px"><b>Switching lands on that organisation's survey list.</b>Your role per organisation. For the installation administrators, All organisations and New organisation end the menu.</div>
+  <div class="label">R5 · Organisations</div></div></section>
+
+<!-- org -->
+<section class="v" id="org"><aside class="sb" data-s="org"></aside><div class="main"><div class="page" style="width:900px">
+  <div style="font:500 11px 'IBM Plex Mono';letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Administration</div>
+  <h1 style="margin-top:6px">Organisation</h1><div class="sub">Acme GmbH · since 12 Oct 2026 · 12 members · 24 surveys</div>
+  <div style="height:20px"></div>
+  <div class="sec"><div><h2>Name and mark</h2><p>Shown in the sidebar, invitations and the PDF footer.</p></div>
+    <div class="form"><div class="ff"><span>Name</span><div class="in">Acme GmbH</div></div>
+      <div style="display:flex;align-items:center;gap:12px"><span class="tile" style="width:40px;height:40px;background:#3e4a56">AC</span><span class="btn sm">Upload logo</span><span style="color:var(--muted);font-size:13px">or keep the initials</span></div></div></div>
+  <div class="sec"><div><h2>Address</h2><p>The short name in sign-in links; company login uses it.</p></div>
+    <div class="form"><div class="ff"><span>Short name</span><div class="in"><span class="pre">surveys.acme.at/sso/</span>acme</div></div></div></div>
+  <div class="sec"><div><h2>Defaults</h2><p>For new surveys and for dates.</p></div>
+    <div class="form"><div class="row2"><div class="ff"><span>Time zone</span><div class="in">Europe/Vienna</div></div><div class="ff"><span>Survey languages</span><div class="in">Deutsch · English</div></div></div></div></div>
+  <div class="sec"><div><h2>Ownership</h2><p>Only owners see this.</p></div>
+    <div class="form"><div class="danger"><div class="grow"><b>Transfer ownership</b><div style="color:var(--graphite);font-size:13px">Another member becomes the owner.</div></div><span class="btn sm">Transfer…</span></div>
+      <div class="danger red"><div class="grow"><b>Delete organisation</b><div style="color:var(--graphite);font-size:13px">Surveys, answers and files go after 30 days.</div></div><span class="btn sm red">Delete…</span></div></div></div>
+  </div>
+  <div class="note" style="right:24px;top:24px;max-width:300px"><b>New page.</b>Today there is none: name and short name are set at sign-up, the time zone is per installation.</div>
+  <div class="label">R4 · Organisation</div></div></section>
+
+
+<!-- install: all organisations of this installation -->
+<section class="v" id="install"><aside class="sb" data-s="install"></aside><div class="main">
+  <div class="inst-strip">Installation <span>· surveys.acme.at · outside any organisation</span><span class="grow"></span><span style="opacity:1">← Back to Acme GmbH</span></div>
+  <div class="page">
+    <div style="display:flex;align-items:flex-end;gap:12px"><div><h1>Organisations</h1><div class="sub" style="font-size:13px;margin-top:4px">Every organisation on this Askwerk</div></div><span class="grow"></span><span class="btn primary">New organisation</span></div>
+    <div class="kpis"><div class="kpi"><span>Organisations</span><b>4</b></div><div class="kpi"><span>Members</span><b>58</b></div><div class="kpi"><span>Surveys</span><b>61</b></div><div class="kpi"><span>Responses, 30 days</span><b>3,412</b></div></div>
+    <div class="tenantgrid">
+      <div class="tg h"><span>Organisation</span><span>Short name</span><span>Owner</span><span class="r">Members</span><span class="r">Surveys</span><span class="r">Responses</span><span></span><span>Created</span><span>Status</span></div>
+      <div class="tg"><span class="nm"><span class="tile" style="background:#1f5f8b">AC</span>Acme GmbH</span><span class="mono">acme</span><span>Anna Berger</span><span class="r">12</span><span class="r">24</span><span class="r">1,790</span><span></span><span>12 Oct</span><span class="stat ok">Active</span></div>
+      <div class="tg"><span class="nm"><span class="tile" style="background:#2e7d4f">HR</span>Acme HR Services</span><span class="mono">acme-hr</span><span>Ben Huber</span><span class="r">31</span><span class="r">19</span><span class="r">1,204</span><span></span><span>13 Oct</span><span class="stat ok">Active</span></div>
+      <div class="tg"><span class="nm"><span class="tile" style="background:#a86a12">FA</span>Falke &amp; Co</span><span class="mono">falke</span><span>Clara Wolf</span><span class="r">9</span><span class="r">14</span><span class="r">418</span><span></span><span>14 Oct</span><span class="stat ok">Active</span></div>
+      <div class="tg"><span class="nm"><span class="tile" style="background:#888">TS</span>Test lab</span><span class="mono">test</span><span>Anna Berger</span><span class="r">6</span><span class="r">4</span><span class="r">0</span><span></span><span>15 Oct</span><span class="stat off">Suspended</span></div>
+    </div>
+  </div>
+  <div class="note" style="right:24px;bottom:24px;max-width:430px"><b>There is no such list today.</b>Setup creates exactly one organisation and nothing can add a second one. This adds the installation level: its administrators (whoever ran setup, plus those they name) see every organisation here, create one (name, short name, first owner by email), open it, suspend or delete it. Reached from the organisation menu; the dark strip says you are outside any organisation. Below: installation settings, like the address and email.</div>
+  <div class="label">R5 · All organisations</div></div></section>
+
+<script>
+const t = (id) => document.getElementById(id).content.cloneNode(true);
+const icon = () => t("i-surveys");
+document.querySelectorAll(".sb").forEach((sb) => {
+  const mode = sb.dataset.s;
+  sb.append(t("logo"), t("tenant"));
+  const nav = document.createElement("nav"); nav.className = "nav";
+  if (mode === "install") {
+    const box = sb.querySelector(".tenant");
+    box.querySelector(".tile").style.cssText = "background:#1a1917 !important";
+    box.querySelector(".tile").textContent = "⌂";
+    box.querySelector(".name").textContent = "Installation";
+    nav.insertAdjacentHTML("beforeend", `<div class="lbl" style="margin-top:6px">Installation</div>
+      <div class="it on"><svg class="i" viewBox="0 0 24 24"><path d="M4 21V4h10v17M14 9h6v12M3 21h18M7 8h3M7 12h3M7 16h3"/></svg>Organisations<span class="n">4</span></div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/></svg>Administrators<span class="n">2</span></div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>Address &amp; email</div>
+      <div class="it"><svg class="i" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Health &amp; backups</div>`);
+  } else if (mode === "drill") {
+    nav.insertAdjacentHTML("beforeend", `<div class="back hover"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>All surveys<span class="n">24</span></div>
+      <div class="svblock"><div class="t">Customer satisfaction 2026</div><div class="s"><span class="draft">Draft · 3 changes</span><span>248 responses</span><span>DE EN</span></div></div>`);
+    const places = t("places"); places.querySelectorAll(".tick").forEach((tick) => { tick.className = "lbl"; });
+    nav.append(places);
+  } else {
+    const surveys = document.createElement("div"); surveys.className = "it"; surveys.append(icon()); surveys.insertAdjacentHTML("beforeend", "Surveys<span class=\"n\">24</span>");
+    if (mode === "list" || mode === "switch") surveys.classList.add("on");
+    nav.append(surveys);
+    if (mode === "tree") {
+      surveys.classList.add("up");
+      const branch = document.createElement("div"); branch.className = "branch";
+      branch.insertAdjacentHTML("beforeend", `<div class="svhead"><b>Customer satisfaction 2026</b><span class="st"><i></i>DRAFT · 3 CHANGES</span></div>`);
+      branch.append(t("places")); nav.append(branch);
+    }
+    nav.insertAdjacentHTML("beforeend", `<div class="it"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="12" height="15"/><path d="M8 21h12V7"/></svg>Templates<span class="n">7</span></div>`);
+    const admin = t("admin");
+    if (mode === "org") admin.querySelector(".ORG").classList.add("on");
+    if (mode === "tree") { nav.insertAdjacentHTML("beforeend", `<div class="lbl">Administration <span style="margin-left:auto;order:2;padding-left:8px">7 ›</span></div>`); } else nav.append(admin);
+  }
+  sb.append(nav, t("foot"));
+  if (mode === "switch") {
+    sb.querySelector(".tenant").classList.add("open");
+    sb.insertAdjacentHTML("beforeend", `<div class="menu"><div class="mh">Your organisations</div>
+      <div class="mrow on"><span class="tile" style="background:#3e4a56">AC</span><div class="grow"><b>Acme GmbH</b><div class="r">Owner</div></div>✓</div>
+      <div class="mrow"><span class="tile" style="background:#2e7d4f">HR</span><div><b>Acme HR Services</b><div class="r">Admin</div></div></div>
+      <div class="mrow"><span class="tile" style="background:#a86a12">FA</span><div><b>Falke &amp; Co</b><div class="r">Editor</div></div></div>
+      <div class="sepline"></div><div class="mrow act">Organisation settings</div><div class="sepline"></div><div class="mrow act" style="border-top:0"><b>All organisations</b><span style="margin-left:auto;font:500 10.5px IBM Plex Mono;color:var(--muted)">INSTALLATION</span></div><div class="mrow act">+ New organisation</div></div>`);
+  }
+});
+document.querySelectorAll("[data-t]").forEach((slot) => slot.replaceWith(t(slot.dataset.t)));
+</script>
+</body></html>

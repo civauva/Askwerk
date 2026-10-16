@@ -1,0 +1,61 @@
+{
+  "id": "sonne",
+  "name": {
+    "de": "Sonne",
+    "en": "Sonne"
+  },
+  "description": {
+    "de": "Gelb und Orange, warm und laut.",
+    "en": "Yellow and orange, warm and loud."
+  },
+  "tags": [
+    "colourful"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#b8410e",
+      "onAccent": "#ffffff",
+      "background": "#fff8d6",
+      "surface": "#ffffff",
+      "text": "#2b1d0e",
+      "muted": "#6d5a43",
+      "line": "#f0dfa0"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "pill",
+    "buttons": "filled",
+    "controls": "pills",
+    "progress": "steps",
+    "layout": "card",
+    "decoration": {
+      "pattern": "stripes"
+    },
+    "components": {
+      "question": {
+        "font": "heading"
+      },
+      "buttons": {
+        "width": "wide",
+        "align": "end"
+      }
+    },
+    "pages": {
+      "welcome": {
+        "layout": "band"
+      },
+      "end": {
+        "layout": "band"
+      }
+    }
+  }
+}

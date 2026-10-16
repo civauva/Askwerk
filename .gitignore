@@ -1,0 +1,33 @@
+# secrets and local-only files — never commit
+*.local
+*.local.*
+.env
+.env.*
+!.env.example
+.throughly-token.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vs/
+.vscode/
+.idea/
+*.user
+
+# build output (.NET project output lives under src/; /bin at the root holds our scripts)
+src/**/bin/
+docs/**/bin/
+obj/
+node_modules/
+dist/
+
+# test output
+TestResults/
+coverage/
+playwright-report/
+test-results/
+src/sdks/typescript/dist/
+src/sdks/python/build/
+src/sdks/python/*.egg-info/
+__pycache__/
+artifacts/

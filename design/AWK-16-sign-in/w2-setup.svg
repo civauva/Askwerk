@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1400" width="1500" height="1400" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W2 AWK-16 first-run setup wizard: account, instance, organisation, email, done, error -->
+  <rect x="0" y="0" width="1500" height="1400" rx="0" fill="#fafafa" stroke="none" stroke-width="1.2"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W2 · First-run setup · AWK-16 · 2026-10-13</text>
+  <text x="40" y="70" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Step 1 · Account · DE</text>
+  <rect x="40" y="80" width="700" height="600" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="64" y="105" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="92" y="120" font-size="16" font-weight="700" fill="#111" text-anchor="start">askwerk</text>
+  <text x="170" y="120" font-size="13" font-weight="500" fill="#555" text-anchor="start">Einrichtung</text>
+  <rect x="632" y="102" width="84" height="26" rx="5" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="632" y="102" width="42" height="26" rx="5" fill="#d6d6d6" stroke="#999" stroke-width="1.2"/>
+  <text x="653" y="120" font-size="12" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="695" y="120" font-size="12" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <circle cx="90" cy="166" r="10" fill="#222" stroke="#222"/>
+  <text x="90" y="170" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="106" y="170" font-size="12" font-weight="600" fill="#111" text-anchor="start">Konto</text>
+  <line x1="143.0" y1="166" x2="226" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="240" cy="166" r="10" fill="#fff" stroke="#222"/>
+  <text x="240" y="170" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">2</text>
+  <text x="256" y="170" font-size="12" font-weight="400" fill="#777" text-anchor="start">Installation</text>
+  <line x1="339.2" y1="166" x2="376" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="390" cy="166" r="10" fill="#fff" stroke="#222"/>
+  <text x="390" y="170" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">3</text>
+  <text x="406" y="170" font-size="12" font-weight="400" fill="#777" text-anchor="start">Organisation</text>
+  <line x1="489.2" y1="166" x2="526" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="540" cy="166" r="10" fill="#fff" stroke="#222"/>
+  <text x="540" y="170" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">4</text>
+  <text x="556" y="170" font-size="12" font-weight="400" fill="#777" text-anchor="start">E-Mail</text>
+  <rect x="80" y="192" width="620" height="460" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="104" y="236" font-size="22" font-weight="700" fill="#111" text-anchor="start">Ihr Konto</text>
+  <text x="104" y="260" font-size="13" font-weight="400" fill="#444" text-anchor="start">Sie werden Eigentümerin dieser Installation.</text>
+  <text x="104" y="288" font-size="12" font-weight="600" fill="#333" text-anchor="start">Name</text>
+  <rect x="104" y="296" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="116" y="319" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Anna Berger</text>
+  <text x="398.0" y="288" font-size="12" font-weight="600" fill="#333" text-anchor="start">E-Mail</text>
+  <rect x="398.0" y="296" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="410.0" y="319" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">anna@acme.at</text>
+  <text x="104" y="364" font-size="12" font-weight="600" fill="#333" text-anchor="start">Passwort</text>
+  <rect x="104" y="372" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="116" y="395" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••••••</text>
+  <text x="104" y="426" font-size="12" font-weight="400" fill="#666" text-anchor="start">Mindestens 12 Zeichen. Stärke: gut ▮▮▮▯</text>
+  <text x="104" y="462" font-size="12" font-weight="600" fill="#333" text-anchor="start">Passwort wiederholen</text>
+  <rect x="104" y="470" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="116" y="493" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••••••</text>
+  <text x="104" y="550" font-size="13" font-weight="400" fill="#111" text-anchor="start">☐  Zwei-Faktor gleich einrichten (empfohlen)</text>
+  <rect x="556" y="572" width="120" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="616.0" y="595.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Weiter</text>
+  <circle cx="90" cy="236" r="10" fill="#444"/>
+  <text x="90" y="240" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="780" y="70" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Step 2 · Instance · EN</text>
+  <rect x="780" y="80" width="700" height="600" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="804" y="105" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="832" y="120" font-size="16" font-weight="700" fill="#111" text-anchor="start">askwerk</text>
+  <text x="910" y="120" font-size="13" font-weight="500" fill="#555" text-anchor="start">Setup</text>
+  <rect x="1372" y="102" width="84" height="26" rx="5" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1414" y="102" width="42" height="26" rx="5" fill="#d6d6d6" stroke="#999" stroke-width="1.2"/>
+  <text x="1393" y="120" font-size="12" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="1435" y="120" font-size="12" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <circle cx="830" cy="166" r="10" fill="#222" stroke="#222"/>
+  <text x="830" y="170" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="846" y="170" font-size="12" font-weight="400" fill="#111" text-anchor="start">Account</text>
+  <line x1="896.2" y1="166" x2="966" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="980" cy="166" r="10" fill="#222" stroke="#222"/>
+  <text x="980" y="170" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="996" y="170" font-size="12" font-weight="600" fill="#111" text-anchor="start">Instance</text>
+  <line x1="1052.8" y1="166" x2="1116" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="1130" cy="166" r="10" fill="#fff" stroke="#222"/>
+  <text x="1130" y="170" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">3</text>
+  <text x="1146" y="170" font-size="12" font-weight="400" fill="#777" text-anchor="start">Organisation</text>
+  <line x1="1229.2" y1="166" x2="1266" y2="166" stroke="#999" stroke-width="1"/>
+  <circle cx="1280" cy="166" r="10" fill="#fff" stroke="#222"/>
+  <text x="1280" y="170" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">4</text>
+  <text x="1296" y="170" font-size="12" font-weight="400" fill="#777" text-anchor="start">Email</text>
+  <rect x="820" y="192" width="620" height="460" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="844" y="236" font-size="22" font-weight="700" fill="#111" text-anchor="start">This installation</text>
+  <text x="844" y="272" font-size="12" font-weight="600" fill="#333" text-anchor="start">Instance name</text>
+  <rect x="844" y="280" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="303" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Acme Surveys</text>
+  <text x="844" y="348" font-size="12" font-weight="600" fill="#333" text-anchor="start">Base address</text>
+  <rect x="844" y="356" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="379" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">https://surveys.acme.at</text>
+  <text x="844" y="410" font-size="12" font-weight="400" fill="#666" text-anchor="start">Detected from this browser. Survey links use it until domains are set up (AWK-7).</text>
+  <text x="844" y="450" font-size="12" font-weight="600" fill="#333" text-anchor="start">Default language</text>
+  <rect x="844" y="458" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="481" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Deutsch ▾</text>
+  <text x="1138.0" y="450" font-size="12" font-weight="600" fill="#333" text-anchor="start">Time zone</text>
+  <rect x="1138.0" y="458" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1150.0" y="481" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Europe/Vienna ▾</text>
+  <rect x="844" y="572" width="90" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="889.0" y="595.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Back</text>
+  <rect x="1296" y="572" width="120" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1356.0" y="595.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Next</text>
+  <circle cx="830" cy="236" r="10" fill="#444"/>
+  <text x="830" y="240" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="40" y="710" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Step 3 · Organisation, name taken · DE</text>
+  <rect x="40" y="720" width="700" height="600" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="64" y="745" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="92" y="760" font-size="16" font-weight="700" fill="#111" text-anchor="start">askwerk</text>
+  <text x="170" y="760" font-size="13" font-weight="500" fill="#555" text-anchor="start">Einrichtung</text>
+  <rect x="632" y="742" width="84" height="26" rx="5" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="632" y="742" width="42" height="26" rx="5" fill="#d6d6d6" stroke="#999" stroke-width="1.2"/>
+  <text x="653" y="760" font-size="12" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="695" y="760" font-size="12" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <circle cx="90" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="90" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="106" y="810" font-size="12" font-weight="400" fill="#111" text-anchor="start">Konto</text>
+  <line x1="143.0" y1="806" x2="226" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="240" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="240" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="256" y="810" font-size="12" font-weight="400" fill="#111" text-anchor="start">Installation</text>
+  <line x1="339.2" y1="806" x2="376" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="390" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="390" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="406" y="810" font-size="12" font-weight="600" fill="#111" text-anchor="start">Organisation</text>
+  <line x1="489.2" y1="806" x2="526" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="540" cy="806" r="10" fill="#fff" stroke="#222"/>
+  <text x="540" y="810" font-size="10.5" font-weight="700" fill="#222" text-anchor="middle">4</text>
+  <text x="556" y="810" font-size="12" font-weight="400" fill="#777" text-anchor="start">E-Mail</text>
+  <rect x="80" y="832" width="620" height="460" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="104" y="876" font-size="22" font-weight="700" fill="#111" text-anchor="start">Erste Organisation</text>
+  <text x="104" y="900" font-size="13" font-weight="400" fill="#444" text-anchor="start">Umfragen, Kontakte und Ergebnisse gehören zu einer Organisation.</text>
+  <text x="104" y="918" font-size="13" font-weight="400" fill="#444" text-anchor="start">Weitere legen Sie später unter Einstellungen an.</text>
+  <text x="104" y="946" font-size="12" font-weight="600" fill="#333" text-anchor="start">Name</text>
+  <rect x="104" y="954" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="116" y="977" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="104" y="1022" font-size="12" font-weight="600" fill="#333" text-anchor="start">Kurzname (in Adressen)</text>
+  <rect x="104" y="1030" width="572" height="36" rx="6" fill="#fff" stroke="#111" stroke-width="2"/>
+  <text x="116" y="1053" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">acme</text>
+  <text x="104" y="1084" font-size="12" font-weight="500" fill="#111" text-anchor="start">⚠ „acme“ ist schon vergeben</text>
+  <text x="104" y="1122" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">Vorschlag: acme-gmbh</text>
+  <rect x="104" y="1212" width="90" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="149.0" y="1235.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Zurück</text>
+  <rect x="556" y="1212" width="120" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="616.0" y="1235.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Weiter</text>
+  <circle cx="90" cy="876" r="10" fill="#444"/>
+  <text x="90" y="880" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="780" y="710" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · Step 4 · Email, optional · EN</text>
+  <rect x="780" y="720" width="700" height="600" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="804" y="745" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="832" y="760" font-size="16" font-weight="700" fill="#111" text-anchor="start">askwerk</text>
+  <text x="910" y="760" font-size="13" font-weight="500" fill="#555" text-anchor="start">Setup</text>
+  <rect x="1372" y="742" width="84" height="26" rx="5" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1414" y="742" width="42" height="26" rx="5" fill="#d6d6d6" stroke="#999" stroke-width="1.2"/>
+  <text x="1393" y="760" font-size="12" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="1435" y="760" font-size="12" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <circle cx="830" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="830" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="846" y="810" font-size="12" font-weight="400" fill="#111" text-anchor="start">Account</text>
+  <line x1="896.2" y1="806" x2="966" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="980" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="980" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="996" y="810" font-size="12" font-weight="400" fill="#111" text-anchor="start">Instance</text>
+  <line x1="1052.8" y1="806" x2="1116" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="1130" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="1130" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="1146" y="810" font-size="12" font-weight="400" fill="#111" text-anchor="start">Organisation</text>
+  <line x1="1229.2" y1="806" x2="1266" y2="806" stroke="#999" stroke-width="1"/>
+  <circle cx="1280" cy="806" r="10" fill="#222" stroke="#222"/>
+  <text x="1280" y="810" font-size="10.5" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="1296" y="810" font-size="12" font-weight="600" fill="#111" text-anchor="start">Email</text>
+  <rect x="820" y="832" width="620" height="460" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="844" y="876" font-size="22" font-weight="700" fill="#111" text-anchor="start">Email (optional)</text>
+  <text x="844" y="900" font-size="13" font-weight="400" fill="#444" text-anchor="start">Needed for invitations and password reset. You can add it later.</text>
+  <text x="844" y="928" font-size="12" font-weight="600" fill="#333" text-anchor="start">SMTP server</text>
+  <rect x="844" y="936" width="354.64" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="959" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">smtp.acme.at</text>
+  <text x="1214.6399999999999" y="928" font-size="12" font-weight="600" fill="#333" text-anchor="start">Port</text>
+  <rect x="1214.6399999999999" y="936" width="201.36" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1226.6399999999999" y="959" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">587</text>
+  <text x="844" y="1004" font-size="12" font-weight="600" fill="#333" text-anchor="start">User</text>
+  <rect x="844" y="1012" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="1035" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">surveys@acme.at</text>
+  <text x="1138.0" y="1004" font-size="12" font-weight="600" fill="#333" text-anchor="start">Password</text>
+  <rect x="1138.0" y="1012" width="278.0" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1150.0" y="1035" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••</text>
+  <text x="844" y="1080" font-size="12" font-weight="600" fill="#333" text-anchor="start">Sender</text>
+  <rect x="844" y="1088" width="572" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="856" y="1111" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Acme Surveys &lt;surveys@acme.at&gt;</text>
+  <rect x="844" y="1162" width="150" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="919.0" y="1185.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Send test email</text>
+  <text x="1008" y="1185" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">✓ Sent to anna@acme.at</text>
+  <rect x="844" y="1212" width="90" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="889.0" y="1235.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Back</text>
+  <text x="1166" y="1235" font-size="13" font-weight="500" fill="#111" text-anchor="start">Skip for now</text>
+  <rect x="1276" y="1212" width="140" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1346.0" y="1235.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Finish setup</text>
+  <circle cx="830" cy="876" r="10" fill="#444"/>
+  <text x="830" y="880" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="40" y="1340" font-size="12" font-weight="400" fill="#333" text-anchor="start">1  Shown only while the database has no owner; afterwards /setup answers 404. Creating the owner is audited on the instance chain.</text>
+  <text x="40" y="1358" font-size="12" font-weight="400" fill="#333" text-anchor="start">2  Base address and language are prefilled; nothing is typed into files (architecture.md, zero-config first run).</text>
+  <text x="40" y="1376" font-size="12" font-weight="400" fill="#333" text-anchor="start">3  Errors at the field with a suggestion. 4  Email can be skipped; Askwerk works without SMTP (invitations and reset then disabled, said so in Settings).</text>
+</svg>

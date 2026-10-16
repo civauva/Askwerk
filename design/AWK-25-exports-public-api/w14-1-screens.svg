@@ -1,0 +1,253 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 2350" width="1500" height="2350" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W14 AWK-25 background exports and API keys, part 1 -->
+  <rect x="0" y="0" width="1500" height="2350" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W14 · Background exports and API keys · AWK-25 · 2026-10-15 · part 1 of 2: screens</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Every export becomes a job: the dialog shows progress, may be closed, and keeps the file under Recent exports. Settings → API creates keys for the Public API. Builds on W11 C.</text>
+  <text x="40" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Results → Export, after choosing the format (W11 C) · EN · desktop</text>
+  <text x="40" y="110" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">A1 PREPARING</text>
+  <rect x="40" y="120" width="450" height="420" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="60" y="152" font-size="16" font-weight="600" fill="#111" text-anchor="start">Export responses</text>
+  <text x="470" y="152" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="60" y="176" font-size="12" font-weight="400" fill="#555" text-anchor="start">Excel · one row per response · labels · as filtered</text>
+  <text x="60" y="208" font-size="14" font-weight="600" fill="#111" text-anchor="start">Preparing…</text>
+  <rect x="60" y="224" width="410" height="10" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="60" y="224" width="102.5" height="10" rx="2" fill="#555" stroke="none" stroke-width="1.2"/>
+  <line x1="60.0" y1="234" x2="60.0" y2="240" stroke="#999" stroke-width="1"/>
+  <line x1="101.0" y1="234" x2="101.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="142.0" y1="234" x2="142.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="183.0" y1="234" x2="183.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="224.0" y1="234" x2="224.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="265.0" y1="234" x2="265.0" y2="240" stroke="#999" stroke-width="1"/>
+  <line x1="306.0" y1="234" x2="306.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="347.0" y1="234" x2="347.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="388.0" y1="234" x2="388.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="429.0" y1="234" x2="429.0" y2="237" stroke="#999" stroke-width="1"/>
+  <line x1="470.0" y1="234" x2="470.0" y2="240" stroke="#999" stroke-width="1"/>
+  <text x="60" y="262" font-size="12.5" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace">3,120 / 12,400 responses</text>
+  <text x="470" y="262" font-size="12" font-weight="400" fill="#666" text-anchor="end">about 1 min</text>
+  <text x="60" y="298" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">You can close this. The file waits under</text>
+  <text x="60" y="316" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Recent exports, and a notice says when it is ready.</text>
+  <rect x="370" y="484" width="100" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="420.0" y="505.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Close</text>
+  <circle cx="480" cy="214" r="10" fill="#444"/>
+  <text x="480" y="218" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="515" y="110" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">A2 READY</text>
+  <rect x="515" y="120" width="450" height="420" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="535" y="152" font-size="16" font-weight="600" fill="#111" text-anchor="start">Export responses</text>
+  <text x="945" y="152" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="535" y="176" font-size="12" font-weight="400" fill="#555" text-anchor="start">Excel · one row per response · labels · as filtered</text>
+  <text x="535" y="208" font-size="14" font-weight="600" fill="#111" text-anchor="start">Ready.</text>
+  <rect x="535" y="224" width="410" height="64" rx="4" fill="#f6f6f6" stroke="#bbb" stroke-width="1.2"/>
+  <text x="551" y="250" font-size="13" font-weight="600" fill="#111" text-anchor="start">customer-satisfaction-2026.xlsx</text>
+  <text x="551" y="272" font-size="12" font-weight="400" fill="#555" text-anchor="start" font-family="Consolas, monospace">12,400 responses · 2.4 MB</text>
+  <text x="535" y="316" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Kept until 22 Oct, then deleted. Every download is</text>
+  <text x="535" y="334" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">in the audit log.</text>
+  <rect x="735" y="484" width="100" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="785.0" y="505.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Close</text>
+  <rect x="845" y="484" width="100" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="895.0" y="505.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Download</text>
+  <circle cx="955" cy="214" r="10" fill="#444"/>
+  <text x="955" y="218" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="990" y="110" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">A3 TRYING AGAIN / FAILED</text>
+  <rect x="990" y="120" width="450" height="420" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="1010" y="152" font-size="16" font-weight="600" fill="#111" text-anchor="start">Export responses</text>
+  <text x="1420" y="152" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="1010" y="176" font-size="12" font-weight="400" fill="#555" text-anchor="start">Excel · one row per response · labels · as filtered</text>
+  <text x="1010" y="208" font-size="14" font-weight="600" fill="#111" text-anchor="start">Not ready yet.</text>
+  <text x="1010" y="232" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">The export stopped at 3,120 responses. Askwerk tries</text>
+  <text x="1010" y="250" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">again in 1 min (try 2 of 5).</text>
+  <line x1="1010" y1="280" x2="1420" y2="280" stroke="#ddd" stroke-width="1.2"/>
+  <text x="1010" y="310" font-size="11.5" font-weight="600" fill="#666" text-anchor="start">After the fifth try:</text>
+  <text x="1010" y="332" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Could not prepare the export. Nothing was lost.</text>
+  <text x="1010" y="350" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Try again; if it fails again, the reference helps</text>
+  <text x="1010" y="368" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">your administrator.  Ref. 4bf92f35</text>
+  <rect x="1320" y="484" width="100" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1370.0" y="505.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Try again</text>
+  <circle cx="1430" cy="214" r="10" fill="#444"/>
+  <text x="1430" y="218" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="40" y="560" font-size="13" font-weight="600" fill="#444" text-anchor="start">A4 · The same dialog, first step: Recent exports below the choices (this survey, last 7 days)</text>
+  <rect x="40" y="570" width="920" height="440" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="60" y="602" font-size="16" font-weight="600" fill="#111" text-anchor="start">Export responses</text>
+  <text x="940" y="602" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="60" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">FORMAT</text>
+  <rect x="60" y="644" width="68" height="30" rx="2" fill="#555" stroke="#999" stroke-width="1.2"/>
+  <text x="94.0" y="664" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Excel</text>
+  <rect x="134" y="644" width="52" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="160.0" y="664" font-size="12.5" font-weight="600" fill="#333" text-anchor="middle">CSV</text>
+  <rect x="192" y="644" width="60" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="222.0" y="664" font-size="12.5" font-weight="600" fill="#333" text-anchor="middle">SPSS</text>
+  <rect x="258" y="644" width="68" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="292.0" y="664" font-size="12.5" font-weight="600" fill="#333" text-anchor="middle">Stata</text>
+  <rect x="332" y="644" width="60" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="362.0" y="664" font-size="12.5" font-weight="600" fill="#333" text-anchor="middle">JSON</text>
+  <text x="60" y="700" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">12,400 responses, as filtered · More ▸</text>
+  <rect x="820" y="684" width="120" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="880.0" y="705.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Export</text>
+  <line x1="60" y1="730" x2="940" y2="730" stroke="#ddd" stroke-width="1.2"/>
+  <text x="60" y="756" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">RECENT EXPORTS</text>
+  <rect x="60" y="766" width="880" height="34" rx="0" fill="#e8e8e8" stroke="#bbb" stroke-width="1.2"/>
+  <text x="70" y="788" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">FILE</text>
+  <text x="400" y="788" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">BY</text>
+  <text x="660" y="788" font-size="10.5" font-weight="700" fill="#666" text-anchor="end">STARTED</text>
+  <text x="750" y="788" font-size="10.5" font-weight="700" fill="#666" text-anchor="end">SIZE</text>
+  <rect x="60" y="800" width="880" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="825" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">customer-satisfaction-2026.xlsx</text>
+  <text x="400" y="825" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Anna Berger</text>
+  <text x="670" y="825" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">today 09:12</text>
+  <text x="760" y="825" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace"></text>
+  <rect x="780" y="814" width="100" height="10" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="780" y="814" width="25.0" height="10" rx="2" fill="#555" stroke="none" stroke-width="1.2"/>
+  <line x1="780.0" y1="824" x2="780.0" y2="830" stroke="#999" stroke-width="1"/>
+  <line x1="790.0" y1="824" x2="790.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="800.0" y1="824" x2="800.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="810.0" y1="824" x2="810.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="820.0" y1="824" x2="820.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="830.0" y1="824" x2="830.0" y2="830" stroke="#999" stroke-width="1"/>
+  <line x1="840.0" y1="824" x2="840.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="850.0" y1="824" x2="850.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="860.0" y1="824" x2="860.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="870.0" y1="824" x2="870.0" y2="827" stroke="#999" stroke-width="1"/>
+  <line x1="880.0" y1="824" x2="880.0" y2="830" stroke="#999" stroke-width="1"/>
+  <text x="930" y="825" font-size="12" font-weight="400" fill="#555" text-anchor="end" font-family="Consolas, monospace">25 %</text>
+  <rect x="60" y="840" width="880" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="865" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">customer-satisfaction-2026.csv</text>
+  <text x="400" y="865" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Reporting server (API)</text>
+  <text x="670" y="865" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">today 06:00</text>
+  <text x="760" y="865" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">1.9 MB</text>
+  <text x="930" y="865" font-size="12.5" font-weight="600" fill="#333" text-anchor="end">Download</text>
+  <rect x="60" y="880" width="880" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="905" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">customer-satisfaction-2026-spss.zip</text>
+  <text x="400" y="905" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Josef Huber</text>
+  <text x="670" y="905" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">13 Oct</text>
+  <text x="760" y="905" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">3.1 MB</text>
+  <text x="930" y="905" font-size="12.5" font-weight="600" fill="#333" text-anchor="end">Download</text>
+  <rect x="60" y="920" width="880" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="70" y="945" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">customer-satisfaction-2026.json</text>
+  <text x="400" y="945" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Anna Berger</text>
+  <text x="670" y="945" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">12 Oct</text>
+  <text x="760" y="945" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace"></text>
+  <text x="930" y="945" font-size="12.5" font-weight="600" fill="#333" text-anchor="end">Failed · Try again</text>
+  <circle cx="975" cy="820" r="10" fill="#444"/>
+  <text x="975" y="824" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="40" y="1030" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Empty: the section is left out. Viewers see no Export button at all (W11, as now).</text>
+  <text x="1000" y="560" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Notice after closing the dialog · DE</text>
+  <rect x="1000" y="570" width="460" height="200" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1000" y="570" width="460" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="1014" y="595" font-size="12" font-weight="600" fill="#111" text-anchor="start">askwerk | Kundenzufriedenheit 2026</text>
+  <rect x="1030" y="640" width="400" height="64" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="1046" y="666" font-size="13" font-weight="600" fill="#111" text-anchor="start">Export fertig</text>
+  <text x="1046" y="688" font-size="12" font-weight="400" fill="#555" text-anchor="start">customer-satisfaction-2026.xlsx · 2,4 MB</text>
+  <text x="1414" y="666" font-size="12.5" font-weight="600" fill="#333" text-anchor="end">Herunterladen</text>
+  <text x="1030" y="736" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Bleibt stehen, bis man herunterlädt oder ✕ drückt.</text>
+  <text x="1030" y="754" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Nur in Askwerk; keine E-Mail.</text>
+  <circle cx="1450" cy="656" r="10" fill="#444"/>
+  <text x="1450" y="660" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="1080" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Organisation menu → API (owners and admins) · EN · desktop</text>
+  <rect x="40" y="1090" width="1420" height="470" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="1090" width="1420" height="48" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="1104" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="82" y="1119" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">askwerk  |  Acme GmbH ▾</text>
+  <text x="250" y="1184" font-size="22" font-weight="600" fill="#111" text-anchor="start">API</text>
+  <text x="250" y="1208" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Keys let other systems read this organisation's surveys and results through the Public API. A key is shown only once.</text>
+  <text x="250" y="1228" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">API documentation ↗</text>
+  <rect x="1120" y="1164" width="130" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1185.0" y="1185.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Create key</text>
+  <rect x="250" y="1250" width="1000" height="40" rx="0" fill="#e8e8e8" stroke="#bbb" stroke-width="1.2"/>
+  <text x="262" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">NAME</text>
+  <text x="532" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">ACCESS</text>
+  <text x="732" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">KEY</text>
+  <text x="978" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="end">CREATED</text>
+  <text x="1108" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="end">LAST USED</text>
+  <text x="1208" y="1275" font-size="10.5" font-weight="700" fill="#666" text-anchor="end">EXPIRES</text>
+  <rect x="250" y="1290" width="1000" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="262" y="1315" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Reporting server</text>
+  <text x="532" y="1315" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Read results</text>
+  <text x="732" y="1315" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace">awk_7Hq2…</text>
+  <text x="978" y="1315" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">1 Oct</text>
+  <text x="1108" y="1315" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">today 06:00</text>
+  <text x="1208" y="1315" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">30 Dec</text>
+  <text x="1238" y="1315" font-size="12.5" font-weight="400" fill="#111" text-anchor="end">⋯</text>
+  <rect x="250" y="1330" width="1000" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="262" y="1355" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">HR system sync</text>
+  <text x="532" y="1355" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Full access</text>
+  <text x="732" y="1355" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace">awk_Lm9x…</text>
+  <text x="978" y="1355" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">14 Sep</text>
+  <text x="1108" y="1355" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">yesterday</text>
+  <text x="1208" y="1355" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">never</text>
+  <text x="1238" y="1355" font-size="12.5" font-weight="400" fill="#111" text-anchor="end">⋯</text>
+  <rect x="250" y="1370" width="1000" height="40" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <text x="262" y="1395" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Old intranet</text>
+  <text x="532" y="1395" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Read results</text>
+  <text x="732" y="1395" font-size="12" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace">awk_c41T…</text>
+  <text x="978" y="1395" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">2 Mar</text>
+  <text x="1108" y="1395" font-size="12" font-weight="400" fill="#111" text-anchor="end" font-family="Consolas, monospace">3 Apr</text>
+  <text x="1208" y="1395" font-size="12" font-weight="400" fill="#888" text-anchor="end" font-family="Consolas, monospace">expired</text>
+  <text x="1238" y="1395" font-size="12.5" font-weight="400" fill="#111" text-anchor="end">⋯</text>
+  <circle cx="1270" cy="1310" r="10" fill="#444"/>
+  <text x="1270" y="1314" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="250" y="1440" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">⋯ = Revoke. Asks first: “Revoke “Reporting server”? Systems using it stop working at once.” Revoked keys leave the list; the audit log keeps them.</text>
+  <text x="250" y="1460" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Empty: “No keys yet. Create one to connect another system.” · Create key</text>
+  <text x="250" y="1480" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">The grid is the shared one (W13): paging, sort by Name, Last used, Expires.</text>
+  <text x="40" y="1590" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · Create key, two steps · DE</text>
+  <rect x="40" y="1600" width="560" height="470" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="60" y="1632" font-size="16" font-weight="600" fill="#111" text-anchor="start">Schlüssel erstellen</text>
+  <text x="580" y="1632" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="60" y="1664" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">NAME</text>
+  <rect x="60" y="1672" width="520" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="70" y="1691" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Reporting-Server</text>
+  <text x="60" y="1730" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">ZUGRIFF</text>
+  <circle cx="67" cy="1752" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="67" cy="1752" r="3.5" fill="#555"/>
+  <text x="80" y="1756" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Ergebnisse lesen (empfohlen)</text>
+  <text x="80" y="1772" font-size="11" font-weight="400" fill="#666" text-anchor="start">Umfragen und Antworten lesen, Exporte starten und herunterladen</text>
+  <circle cx="67" cy="1798" r="7" fill="#fff" stroke="#555"/>
+  <text x="80" y="1802" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Voller Zugriff</text>
+  <text x="80" y="1818" font-size="11" font-weight="400" fill="#666" text-anchor="start">Alles, was die Public API kann, auch Umfragen anlegen und veröffentlichen</text>
+  <text x="60" y="1858" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Mehr ▾</text>
+  <text x="60" y="1886" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">BERECHTIGUNGEN</text>
+  <rect x="60" y="1900" width="14" height="14" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="67" y="1911" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="82" y="1912" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">surveys:read</text>
+  <rect x="320" y="1900" width="14" height="14" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="327" y="1911" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+  <text x="342" y="1912" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">responses:read</text>
+  <rect x="60" y="1926" width="14" height="14" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="82" y="1938" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">surveys:write</text>
+  <rect x="320" y="1926" width="14" height="14" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="342" y="1938" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">responses:write</text>
+  <text x="60" y="1976" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LÄUFT AB</text>
+  <rect x="60" y="1984" width="240" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="70" y="2003" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">in 90 Tagen ▾</text>
+  <rect x="360" y="2022" width="100" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="410.0" y="2043.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Abbrechen</text>
+  <rect x="470" y="2022" width="110" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="525.0" y="2043.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Erstellen</text>
+  <circle cx="615" cy="1630" r="10" fill="#444"/>
+  <text x="615" y="1634" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <rect x="660" y="1600" width="560" height="300" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="680" y="1632" font-size="16" font-weight="600" fill="#111" text-anchor="start">Schlüssel erstellt</text>
+  <text x="1200" y="1632" font-size="14" font-weight="600" fill="#555" text-anchor="end">✕</text>
+  <text x="680" y="1664" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Kopieren Sie den Schlüssel jetzt. Er wird nicht wieder angezeigt.</text>
+  <rect x="680" y="1684" width="410" height="40" rx="2" fill="#f6f6f6" stroke="#999" stroke-width="1.2"/>
+  <text x="692" y="1710" font-size="13" font-weight="400" fill="#111" text-anchor="start" font-family="Consolas, monospace">awk_7Hq2xR…9fPq  (48 Zeichen)</text>
+  <rect x="1100" y="1688" width="100" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1150.0" y="1709.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Kopieren</text>
+  <text x="680" y="1758" font-size="12" font-weight="400" fill="#555" text-anchor="start">Senden als:  Authorization: Bearer &lt;Schlüssel&gt;</text>
+  <text x="680" y="1778" font-size="12" font-weight="400" fill="#555" text-anchor="start">Wer ihn kennt, kann lesen, was er erlaubt. Bewahren Sie ihn wie ein</text>
+  <text x="680" y="1796" font-size="12" font-weight="400" fill="#555" text-anchor="start">Passwort auf.</text>
+  <rect x="1100" y="1842" width="100" height="32" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1150.0" y="1863.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">Fertig</text>
+  <circle cx="1235" cy="1630" r="10" fill="#444"/>
+  <text x="1235" y="1634" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="40" y="2110" font-size="12" font-weight="400" fill="#333" text-anchor="start">1 Every export runs as a job (one path for GUI and API). A small export is ready within a second, so the dialog goes straight to Ready, as today. The measuring rule shows progress.</text>
+  <text x="40" y="2132" font-size="12" font-weight="400" fill="#333" text-anchor="start">2 Files are kept 7 days in the organisation's file storage (as uploads), then deleted by a daily job. Downloads need the export roles (owner, admin, editor, analyst) and are audited.</text>
+  <text x="40" y="2154" font-size="12" font-weight="400" fill="#333" text-anchor="start">3 A failed try is retried like any job (5 tries, growing pauses). After the last one the dialog says so with the trace reference; Try again starts a new export.</text>
+  <text x="40" y="2176" font-size="12" font-weight="400" fill="#333" text-anchor="start">4 Recent exports lists this survey's exports of the last 7 days, newest first, by person or API key; anyone who may export sees all of them.</text>
+  <text x="40" y="2198" font-size="12" font-weight="400" fill="#333" text-anchor="start">5 A notice in the Results header when an export the person started becomes ready while the dialog is closed; it stays until downloaded or dismissed.</text>
+  <text x="40" y="2220" font-size="12" font-weight="400" fill="#333" text-anchor="start">6 Settings → API is one screen in the organisation menu (owners and admins), like Domains. Keys belong to the organisation; who created a key is in the audit log.</text>
+  <text x="40" y="2242" font-size="12" font-weight="400" fill="#333" text-anchor="start">7 Two presets, details under More: Read results (default) and Full access; expiry 90 days by default (30 days, 1 year, never). No key can manage users, roles or settings.</text>
+  <text x="40" y="2264" font-size="12" font-weight="400" fill="#333" text-anchor="start">8 The key is shown once and stored only as a hash; its first 8 characters stay visible to tell keys apart. Exports, downloads and changes through a key are audited with the key as actor.</text>
+  <text x="40" y="2286" font-size="12" font-weight="400" fill="#333" text-anchor="start">Email and PDF: not affected; export files are data files, not themed documents.</text>
+  <text x="40" y="2308" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: (a) keep export files 7 days (recommended) or 30; (b) every export as a job, also small ones (recommended); (c) presets Read results / Full access (recommended).</text>
+</svg>

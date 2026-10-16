@@ -1,0 +1,82 @@
+{
+  "name": "An image block needs its file and an alt text; the caption is optional and it cannot be required",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "IMG_SHOP",
+            "type": "image",
+            "text": {},
+            "required": false,
+            "image": {
+              "asset": "0199e000-0000-7000-8000-0000000000a1",
+              "alt": {
+                "de": "Filiale",
+                "en": "Shop"
+              },
+              "size": "full",
+              "align": "centre"
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "IMG_EMPTY",
+            "type": "image",
+            "text": {
+              "de": "Bildunterschrift"
+            },
+            "required": true
+          },
+          {
+            "id": "q3",
+            "variable": "IMG_NOALT",
+            "type": "image",
+            "text": {},
+            "required": false,
+            "image": {
+              "asset": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "required-not-allowed",
+      "severity": "error",
+      "path": "pages/0/questions/1/required"
+    },
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/1/text",
+      "language": "en"
+    },
+    {
+      "code": "image-missing",
+      "severity": "error",
+      "path": "pages/0/questions/1/image"
+    },
+    {
+      "code": "image-missing",
+      "severity": "error",
+      "path": "pages/0/questions/2/image/asset"
+    },
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "pages/0/questions/2/image/alt",
+      "language": "de"
+    }
+  ]
+}

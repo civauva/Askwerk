@@ -1,0 +1,134 @@
+{
+  "name": "Every text that exists must exist in every survey language; missing translations warn but do not block",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en",
+      "fr"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "title": {
+          "de": "Ihr Besuch",
+          "en": "Your visit",
+          "fr": "Votre visite"
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT_1",
+            "type": "rating",
+            "text": {
+              "de": "Wie zufrieden?",
+              "en": "How satisfied?"
+            },
+            "help": {
+              "de": "Letzter Besuch",
+              "en": "",
+              "fr": "Dernière visite"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "minLabel": {
+                "de": "Gar nicht",
+                "en": "Not at all",
+                "fr": "Pas du tout"
+              },
+              "maxLabel": {
+                "de": "Sehr",
+                "fr": "Très"
+              }
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "BRANCH",
+            "type": "single",
+            "text": {
+              "de": "Filiale?",
+              "en": "Branch?",
+              "fr": "Agence ?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Wien",
+                  "en": "Vienna"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Graz",
+                  "en": "Graz",
+                  "fr": "Graz"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "p2",
+        "questions": [
+          {
+            "id": "q3",
+            "variable": "IMPROVE",
+            "type": "long-text",
+            "text": {
+              "de": "Was verbessern?",
+              "en": "What to improve?",
+              "fr": "Quoi améliorer ?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ],
+    "endPage": {
+      "text": {
+        "de": "Danke.",
+        "en": "Thank you."
+      }
+    }
+  },
+  "expected": [
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/0/text",
+      "language": "fr"
+    },
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/0/help",
+      "language": "en"
+    },
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/0/scale/maxLabel",
+      "language": "en"
+    },
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/1/options/0/label",
+      "language": "fr"
+    },
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "endPage/text",
+      "language": "fr"
+    }
+  ]
+}

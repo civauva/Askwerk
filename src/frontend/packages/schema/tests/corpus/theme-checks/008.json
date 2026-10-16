@@ -1,0 +1,71 @@
+{
+  "name": "Images need a file, focal points lie between 0 and 1, and opacity too",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#d2440f",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card",
+    "background": {
+      "kind": "image-overlay",
+      "fit": "cover",
+      "overlay": "#ffffff",
+      "overlayOpacity": 1.5
+    },
+    "headerImage": {
+      "asset": "h1",
+      "focalX": 1.2,
+      "focalY": -0.1
+    },
+    "logo": {
+      "asset": ""
+    }
+  },
+  "expected": [
+    {
+      "code": "asset-missing",
+      "severity": "error",
+      "path": "logo/asset"
+    },
+    {
+      "code": "focal-out-of-range",
+      "severity": "error",
+      "path": "headerImage/focalX"
+    },
+    {
+      "code": "focal-out-of-range",
+      "severity": "error",
+      "path": "headerImage/focalY"
+    },
+    {
+      "code": "background-image-missing",
+      "severity": "error",
+      "path": "background/image"
+    },
+    {
+      "code": "opacity-out-of-range",
+      "severity": "error",
+      "path": "background/overlayOpacity"
+    }
+  ]
+}

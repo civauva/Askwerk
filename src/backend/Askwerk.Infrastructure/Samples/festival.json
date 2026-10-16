@@ -1,0 +1,264 @@
+{
+  "order": 3,
+  "look": "konfetti",
+  "responses": 140,
+  "names": {
+    "de": "Festival-Feedback",
+    "en": "Festival feedback"
+  },
+  "kind": {
+    "de": "Bunt",
+    "en": "Colourful"
+  },
+  "features": {
+    "de": [
+      "zwei Spalten",
+      "Schieberegler",
+      "Gesichter",
+      "Schritte als Fortschritt"
+    ],
+    "en": [
+      "two columns",
+      "slider",
+      "faces",
+      "progress steps"
+    ]
+  },
+  "texts": {
+    "best": {
+      "de": [
+        "Das Konzert am See!",
+        "Die Food-Trucks",
+        "Mehr Schatten bitte",
+        "Toiletten waren zu weit weg"
+      ],
+      "en": [
+        "The lake concert!",
+        "The food trucks",
+        "More shade, please",
+        "Toilets were too far away"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wie war das Sommerfest?",
+        "en": "How was the summer festival?"
+      },
+      "text": {
+        "de": "Zwei kurze Seiten. Danke, dass Sie da waren!",
+        "en": "Two short pages. Thanks for being there!"
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Wir sehen uns nächsten Sommer.",
+        "en": "Thank you! See you next summer."
+      }
+    },
+    "pages": [
+      {
+        "id": "day",
+        "questions": [
+          {
+            "id": "stage",
+            "variable": "STAGE",
+            "type": "single",
+            "text": {
+              "de": "Welche Bühne war die beste?",
+              "en": "Which stage was the best?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Hauptbühne",
+                  "en": "Main stage"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Waldbühne",
+                  "en": "Forest stage"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Zelt",
+                  "en": "Tent"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Seebühne",
+                  "en": "Lake stage"
+                }
+              }
+            ]
+          },
+          {
+            "id": "mood",
+            "variable": "MOOD",
+            "type": "rating",
+            "text": {
+              "de": "Wie war die Stimmung?",
+              "en": "How was the mood?"
+            },
+            "required": true,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "loud",
+            "variable": "LOUD",
+            "type": "slider",
+            "text": {
+              "de": "Wie laut war es?",
+              "en": "How loud was it?"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Zu leise",
+                "en": "Too quiet"
+              },
+              "maxLabel": {
+                "de": "Zu laut",
+                "en": "Too loud"
+              },
+              "step": 1,
+              "showValue": true
+            }
+          }
+        ],
+        "title": {
+          "de": "Ihr Tag",
+          "en": "Your day"
+        }
+      },
+      {
+        "id": "more",
+        "questions": [
+          {
+            "id": "enjoy",
+            "variable": "ENJOY",
+            "type": "multiple",
+            "text": {
+              "de": "Was hat Ihnen gefallen?",
+              "en": "What did you enjoy?"
+            },
+            "required": false,
+            "randomize": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Musik",
+                  "en": "Music"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Essen",
+                  "en": "Food"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Kinderprogramm",
+                  "en": "Kids' programme"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Workshops",
+                  "en": "Workshops"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Feuerwerk",
+                  "en": "Fireworks"
+                }
+              },
+              {
+                "code": "6",
+                "label": {
+                  "de": "Leute",
+                  "en": "People"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "ENJOY_OTHER"
+            }
+          },
+          {
+            "id": "again",
+            "variable": "AGAIN",
+            "type": "yes-no",
+            "text": {
+              "de": "Kommen Sie nächstes Jahr wieder?",
+              "en": "Will you come back next year?"
+            },
+            "required": true
+          },
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie das Fest weiter?",
+              "en": "How likely are you to recommend the festival?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "best",
+            "variable": "BEST",
+            "type": "long-text",
+            "text": {
+              "de": "Ihr schönster Moment, oder was fehlte?",
+              "en": "Your best moment, or what was missing?"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Mehr davon",
+          "en": "More of it"
+        }
+      }
+    ]
+  }
+}

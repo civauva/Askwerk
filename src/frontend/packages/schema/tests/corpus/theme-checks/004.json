@@ -1,0 +1,47 @@
+{
+  "name": "Colours must be #rrggbb and fonts need a family; contrast is checked only for valid colours",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "red",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#12345"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": " "
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card"
+  },
+  "expected": [
+    {
+      "code": "colour-invalid",
+      "severity": "error",
+      "path": "colours/accent"
+    },
+    {
+      "code": "colour-invalid",
+      "severity": "error",
+      "path": "colours/line"
+    },
+    {
+      "code": "font-missing",
+      "severity": "error",
+      "path": "fonts/body"
+    }
+  ]
+}

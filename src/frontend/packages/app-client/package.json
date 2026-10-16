@@ -1,0 +1,21 @@
+{
+  "name": "@askwerk/app-client",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "generate": "openapi-typescript openapi.json -o src/schema.ts && node scripts/add-header.mjs"
+  },
+  "dependencies": {
+    "@askwerk/telemetry": "workspace:*"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0"
+  }
+}

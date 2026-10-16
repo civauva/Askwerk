@@ -1,0 +1,55 @@
+{
+  "id": "wald",
+  "name": {
+    "de": "Wald",
+    "en": "Wald"
+  },
+  "description": {
+    "de": "Moosgrün, Punkte, ruhig.",
+    "en": "Moss green, dots, quiet."
+  },
+  "tags": [
+    "calm",
+    "colourful"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#2d6a3e",
+      "onAccent": "#ffffff",
+      "background": "#f0f4ec",
+      "surface": "#ffffff",
+      "text": "#1c2a1f",
+      "muted": "#56665a",
+      "line": "#cfdcc8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "bar",
+    "layout": "card",
+    "decoration": {
+      "pattern": "dots"
+    },
+    "components": {
+      "choices": {
+        "selected": "fill"
+      }
+    },
+    "pages": {
+      "questions": {
+        "cards": true
+      }
+    }
+  }
+}

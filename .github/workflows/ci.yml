@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# CI calls only the scripts in bin/, so any CI system can run the same thing and a contributor
+# can reproduce every result locally (agents/workflow.md). Stages and gates: agents/architecture.md.
+name: ci
+
+# Paused on the owner's request (2026-10-14) until the product is complete: no runs, no failure emails on every
+# push. The full local run (bin/test-all.sh --full) gates every merge meanwhile. Start a run by hand from the
+# Actions tab; put the pull_request and push triggers back to resume.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run all test layers (image built once)
+        run: bin/test-all.sh --full

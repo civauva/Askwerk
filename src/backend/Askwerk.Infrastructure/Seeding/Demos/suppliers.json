@@ -1,0 +1,505 @@
+{
+  "order": 6,
+  "look": "papier",
+  "responses": 36,
+  "title": {
+    "de": "Demo: Lieferantenbewertung",
+    "en": "Demo: Supplier assessment"
+  },
+  "names": {
+    "de": "Lieferantenbewertung",
+    "en": "Supplier assessment"
+  },
+  "kind": {
+    "de": "Industrie",
+    "en": "Manufacturing"
+  },
+  "features": {
+    "de": [
+      "druckfertig",
+      "Pflichtfelder",
+      "Matrix",
+      "Folgefragen"
+    ],
+    "en": [
+      "print-ready",
+      "required answers",
+      "matrix",
+      "follow-up questions"
+    ]
+  },
+  "texts": {
+    "supplier": {
+      "de": [
+        "Stahlbau Kerner",
+        "Hydraulik Nord",
+        "Elektro Brunner"
+      ],
+      "en": [
+        "Kerner Steel",
+        "Hydraulik Nord",
+        "Brunner Electrics"
+      ]
+    },
+    "actions": {
+      "de": [
+        "Liefertermine wöchentlich bestätigen",
+        "Zweites Werk qualifizieren",
+        "8D-Bericht bis Monatsende"
+      ],
+      "en": [
+        "Confirm delivery dates weekly",
+        "Qualify a second plant",
+        "8D report by month end"
+      ]
+    },
+    "notes": {
+      "de": [
+        "Sehr zuverlässig",
+        "Preise gestiegen",
+        "Neuer Ansprechpartner seit März"
+      ],
+      "en": [
+        "Very reliable",
+        "Prices went up",
+        "New contact since March"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Lieferantenbewertung 2026",
+        "en": "Supplier assessment 2026"
+      },
+      "text": {
+        "de": "Für den Einkauf und die Qualitätssicherung. Bitte je Lieferant einmal ausfüllen; das Formular lässt sich auch drucken.",
+        "en": "For purchasing and quality. Please fill in once per supplier; the form also prints."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke. Die Bewertung ist gespeichert.",
+        "en": "Thank you. The assessment is saved."
+      }
+    },
+    "pages": [
+      {
+        "id": "supplier",
+        "title": {
+          "de": "Lieferant",
+          "en": "Supplier"
+        },
+        "questions": [
+          {
+            "id": "supplier",
+            "variable": "SUPPLIER",
+            "type": "short-text",
+            "text": {
+              "de": "Name des Lieferanten",
+              "en": "Supplier name"
+            },
+            "required": true
+          },
+          {
+            "id": "category",
+            "variable": "CATEGORY",
+            "type": "dropdown",
+            "text": {
+              "de": "Warengruppe",
+              "en": "Commodity group"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Elektronik",
+                  "en": "Electronics"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Guss",
+                  "en": "Castings"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Hydraulik",
+                  "en": "Hydraulics"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Kunststoff",
+                  "en": "Plastics"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Stahl",
+                  "en": "Steel"
+                }
+              },
+              {
+                "code": "6",
+                "label": {
+                  "de": "Verpackung",
+                  "en": "Packaging"
+                }
+              }
+            ]
+          },
+          {
+            "id": "spend",
+            "variable": "SPEND",
+            "type": "number",
+            "text": {
+              "de": "Einkaufsvolumen im Jahr (Tausend Euro)",
+              "en": "Yearly spend (thousand euros)"
+            },
+            "required": true
+          },
+          {
+            "id": "since",
+            "variable": "SINCE",
+            "type": "date",
+            "text": {
+              "de": "Lieferant seit",
+              "en": "Supplier since"
+            },
+            "required": false,
+            "mode": "date",
+            "latest": "today"
+          }
+        ]
+      },
+      {
+        "id": "quality",
+        "title": {
+          "de": "Qualität und Lieferung",
+          "en": "Quality and delivery"
+        },
+        "questions": [
+          {
+            "id": "kpis",
+            "variable": "KPIS",
+            "type": "matrix",
+            "text": {
+              "de": "Bewerten Sie die Leistung",
+              "en": "Rate the performance"
+            },
+            "required": true,
+            "rows": [
+              {
+                "code": "quality",
+                "label": {
+                  "de": "Qualität der Teile",
+                  "en": "Part quality"
+                }
+              },
+              {
+                "code": "ontime",
+                "label": {
+                  "de": "Liefertreue",
+                  "en": "On-time delivery"
+                }
+              },
+              {
+                "code": "docs",
+                "label": {
+                  "de": "Dokumentation",
+                  "en": "Documentation"
+                }
+              },
+              {
+                "code": "response",
+                "label": {
+                  "de": "Reaktionszeit",
+                  "en": "Response time"
+                }
+              },
+              {
+                "code": "price",
+                "label": {
+                  "de": "Preis",
+                  "en": "Price"
+                }
+              },
+              {
+                "code": "innovation",
+                "label": {
+                  "de": "Innovation",
+                  "en": "Innovation"
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Ungenügend",
+                  "en": "Unacceptable"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Verbesserungsbedarf",
+                  "en": "Needs improvement"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Erfüllt",
+                  "en": "Meets"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Übertrifft",
+                  "en": "Exceeds"
+                }
+              }
+            ]
+          },
+          {
+            "id": "ppm",
+            "variable": "PPM",
+            "type": "number",
+            "text": {
+              "de": "Reklamationsquote (ppm)",
+              "en": "Defect rate (ppm)"
+            },
+            "required": true
+          },
+          {
+            "id": "claims",
+            "variable": "CLAIMS",
+            "type": "yes-no",
+            "text": {
+              "de": "Gab es Reklamationen im letzten Jahr?",
+              "en": "Were there complaints in the last year?"
+            },
+            "required": true
+          },
+          {
+            "id": "claim-kind",
+            "variable": "CLAIM_KIND",
+            "type": "multiple",
+            "text": {
+              "de": "Welcher Art?",
+              "en": "What kind?"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "claims",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            },
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Maßabweichung",
+                  "en": "Dimensions"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Oberfläche",
+                  "en": "Surface"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Material",
+                  "en": "Material"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Verpackung",
+                  "en": "Packaging"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Termin",
+                  "en": "Delivery date"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "risk",
+        "title": {
+          "de": "Risiko",
+          "en": "Risk"
+        },
+        "questions": [
+          {
+            "id": "risk",
+            "variable": "RISK",
+            "type": "rating",
+            "text": {
+              "de": "Lieferrisiko",
+              "en": "Supply risk"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "minLabel": {
+                "de": "Gering",
+                "en": "Low"
+              },
+              "maxLabel": {
+                "de": "Hoch",
+                "en": "High"
+              }
+            }
+          },
+          {
+            "id": "certs",
+            "variable": "CERTS",
+            "type": "multiple",
+            "text": {
+              "de": "Gültige Zertifikate",
+              "en": "Valid certificates"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "ISO 9001",
+                  "en": "ISO 9001"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "IATF 16949",
+                  "en": "IATF 16949"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "ISO 14001",
+                  "en": "ISO 14001"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "ISO 45001",
+                  "en": "ISO 45001"
+                }
+              }
+            ]
+          },
+          {
+            "id": "status",
+            "variable": "STATUS",
+            "type": "single",
+            "text": {
+              "de": "Empfehlung",
+              "en": "Recommendation"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Bevorzugt",
+                  "en": "Preferred"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Freigegeben",
+                  "en": "Approved"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Unter Beobachtung",
+                  "en": "On watch"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Auslaufend",
+                  "en": "Phase out"
+                }
+              }
+            ]
+          },
+          {
+            "id": "actions",
+            "variable": "ACTIONS",
+            "type": "long-text",
+            "text": {
+              "de": "Vereinbarte Maßnahmen",
+              "en": "Agreed actions"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "any",
+              "conditions": [
+                {
+                  "question": "status",
+                  "op": "is-one-of",
+                  "values": [
+                    "3",
+                    "4"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "notes",
+            "variable": "NOTES",
+            "type": "long-text",
+            "text": {
+              "de": "Anmerkungen",
+              "en": "Notes"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

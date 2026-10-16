@@ -1,0 +1,58 @@
+{
+  "id": "blaupause",
+  "name": {
+    "de": "Blaupause",
+    "en": "Blueprint"
+  },
+  "description": {
+    "de": "Technisch, Raster, Unterstriche.",
+    "en": "Technical, grid, underlines."
+  },
+  "tags": [
+    "monochrome"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#1d4ed8",
+      "onAccent": "#ffffff",
+      "background": "#eef3fb",
+      "surface": "#ffffff",
+      "text": "#0b1f44",
+      "muted": "#4a5d80",
+      "line": "#b9c8e4"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Mono"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "underline",
+    "progress": "steps",
+    "layout": "card",
+    "decoration": {
+      "pattern": "grid"
+    },
+    "components": {
+      "question": {
+        "numbered": true
+      },
+      "choices": {
+        "marker": "check"
+      },
+      "textFields": {
+        "style": "underline"
+      },
+      "matrix": {
+        "header": "tinted"
+      }
+    }
+  }
+}

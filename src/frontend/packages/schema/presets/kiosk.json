@@ -1,0 +1,72 @@
+{
+  "id": "kiosk",
+  "name": {
+    "de": "Kiosk",
+    "en": "Kiosk"
+  },
+  "description": {
+    "de": "Große Flächen für Tablets.",
+    "en": "Huge targets for tablets."
+  },
+  "tags": [
+    "kiosk",
+    "colourful"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#ffbe0b",
+      "onAccent": "#00303d",
+      "background": "#004e64",
+      "surface": "#004e64",
+      "text": "#ffffff",
+      "muted": "#c9e8ee",
+      "line": "#4d8a9b"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "l",
+    "spacing": "airy",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "tiles",
+    "progress": "none",
+    "layout": "minimal",
+    "components": {
+      "question": {
+        "size": "l",
+        "font": "heading"
+      },
+      "choices": {
+        "columns": "two",
+        "selected": "fill",
+        "marker": "none"
+      },
+      "buttons": {
+        "width": "full"
+      },
+      "rating": {
+        "size": "l",
+        "selected": "fill"
+      }
+    },
+    "pages": {
+      "header": {
+        "organisation": false,
+        "logoSize": "l"
+      },
+      "welcome": {
+        "layout": "centre"
+      },
+      "end": {
+        "layout": "centre"
+      }
+    }
+  }
+}

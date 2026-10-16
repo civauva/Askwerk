@@ -1,0 +1,143 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>C32 Public API follow-ups</title>
+<style>
+  body { margin: 0; padding: 24px 32px; width: 1436px; background: #fafafa; color: #111; font: 13px/1.45 "Segoe UI", Arial, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .lead { color: #444; margin: 0 0 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; align-items: start; }
+  .box { background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 14px 16px; }
+  h2 { font-size: 14px; margin: 0 0 8px; }
+  h3 { font: 700 10.5px/1.3 "Segoe UI", Arial; text-transform: uppercase; letter-spacing: .05em; color: #666; margin: 14px 0 6px; }
+  code, pre { font: 11.5px/1.45 Consolas, monospace; }
+  pre { background: #f2f2f2; border: 1px solid #ddd; border-radius: 3px; padding: 8px 10px; margin: 6px 0; white-space: pre-wrap; }
+  .ep { margin: 4px 0; }
+  .ep b { display: inline-block; min-width: 50px; font: 700 11px Consolas, monospace; }
+  .muted { color: #666; }
+  ul { margin: 4px 0; padding-left: 18px; }
+  .wire { border: 1px solid #999; border-radius: 4px; padding: 10px; background: #f6f6f6; }
+  .row { display: flex; justify-content: space-between; gap: 10px; border-top: 1px solid #ddd; padding: 6px 0; font-size: 12px; }
+  .btn { display: inline-block; border: 1px solid #555; border-radius: 3px; padding: 3px 10px; font-weight: 600; font-size: 12px; background: #fff; }
+  .btn.primary { background: #555; color: #fff; }
+  .pill { border: 1px solid #999; border-radius: 9px; padding: 0 7px; font-size: 11px; }
+  .notes { margin-top: 18px; }
+  .notes p { margin: 3px 0; }
+  .open { font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>C32 · Public API follow-ups: webhooks, OAuth client credentials, MCP server · AWK-32 · 2026-10-15</h1>
+<p class="lead">Contract sketch. Everything below is additive to /api/v1 (no breaking change). Scopes as today; every call is audited with the key or client as actor. Errors are problem details under https://askwerk.org/problems/…, DE/EN.</p>
+
+<div class="grid">
+<div class="box">
+  <h2>A · Webhooks (scope webhooks:manage)</h2>
+  <div class="ep"><b>GET</b><code>/api/v1/webhooks</code></div>
+  <div class="ep"><b>POST</b><code>/api/v1/webhooks</code> → 201, the secret once</div>
+  <div class="ep"><b>PATCH</b><code>/api/v1/webhooks/{id}</code> url, events, active</div>
+  <div class="ep"><b>DELETE</b><code>/api/v1/webhooks/{id}</code> → 204</div>
+  <div class="ep"><b>GET</b><code>/api/v1/webhooks/{id}/deliveries?cursor=</code></div>
+  <div class="ep"><b>POST</b><code>/api/v1/webhooks/{id}/deliveries/{deliveryId}/replay</code> → 202</div>
+  <h3>Create</h3>
+<pre>POST /api/v1/webhooks
+{ "url": "https://hr.acme.at/askwerk",
+  "events": ["response.completed", "export.completed"],
+  "description": "HR sync" }
+
+201 { "webhook": { "id": "wh_7f3a…", "url": "…", "events": […],
+                   "active": true, "createdAt": "2026-10-15T09:00:00Z" },
+      "secret": "whsec_Q2l…" }       ← shown only here</pre>
+  <p class="muted">400 url-invalid (https only; http://localhost allowed in development), events-invalid, 409 webhooks-too-many (20 per organisation).</p>
+  <h3>Delivery</h3>
+<pre>POST https://hr.acme.at/askwerk
+Askwerk-Event: response.completed
+Askwerk-Delivery: dlv_91c…
+Askwerk-Signature: t=1760518800,v1=5e2c…   HMAC-SHA256(secret, "t.body")
+
+{ "id": "evt_0199…", "type": "response.completed",
+  "occurredAt": "2026-10-15T09:00:00Z", "tenantId": "…",
+  "data": { "surveyId": "…", "responseId": "…", "version": 3 } }</pre>
+  <ul>
+    <li>Any 2xx within 10 s counts; otherwise retries after 1 min, 5 min, 30 min, 2 h, 6 h, 12 h, then failed.</li>
+    <li>At-least-once: receivers deduplicate by <code>id</code>. Sent through the job table (outbox), so a rolled-back change sends nothing.</li>
+    <li>A webhook failing for 3 days is paused; the API page says so and Resume starts it again.</li>
+  </ul>
+  <h3>Events now</h3>
+  <ul>
+    <li><code>export.completed</code> {exportId, surveyId, format, file: {name, size, url}}</li>
+    <li><code>response.completed</code> {surveyId, responseId, version, completedAt}</li>
+    <li><code>survey.published</code> {surveyId, version} · <code>survey.closed</code> {surveyId}</li>
+  </ul>
+  <p class="muted">Later, with their features in the Public API: response.started/updated, participant.created, import.completed.</p>
+</div>
+
+<div class="box">
+  <h2>B · OAuth 2.0 client credentials</h2>
+  <div class="ep"><b>POST</b><code>/api/v1/oauth/token</code> application/x-www-form-urlencoded</div>
+<pre>grant_type=client_credentials
+client_id=cl_4b8…&amp;client_secret=…     (or HTTP Basic)
+scope=surveys:read responses:read       (optional subset)
+
+200 { "access_token": "awt_…", "token_type": "Bearer",
+      "expires_in": 900, "scope": "surveys:read responses:read" }</pre>
+  <p class="muted">Errors as RFC 6749 requires: 401 invalid_client, 400 invalid_scope, 400 unsupported_grant_type. Rate-limited per client.</p>
+  <ul>
+    <li>The token is sent like a key: <code>Authorization: Bearer awt_…</code>; every /api/v1 endpoint accepts both.</li>
+    <li>Tokens live 15 minutes; deleting the client ends them at once.</li>
+    <li>Clients are created where keys are: Organisation → API, “OAuth clients”, with the same presets (Read results, Full access) and expiry. The secret is shown once.</li>
+  </ul>
+  <h3>Organisation → API (owners and admins)</h3>
+  <div class="wire">
+    <div style="display:flex;gap:14px;border-bottom:1px solid #ccc;padding-bottom:6px;margin-bottom:6px"><b>Keys</b><span>OAuth clients</span><span>Webhooks</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><b>Webhooks</b><span class="btn primary">Add webhook…</span></div>
+    <div class="row"><span>https://hr.acme.at/askwerk</span><span>response.completed, export.completed</span><span class="pill">delivered · 09:01</span><span>Deliveries · ⋯</span></div>
+    <div class="row"><span>https://old.acme.at/hook</span><span>survey.published</span><span class="pill">paused · failing 3 days</span><span>Resume · ⋯</span></div>
+    <div style="margin-top:8px;font-weight:600">Deliveries · https://hr.acme.at/askwerk</div>
+    <div class="row"><span>response.completed</span><span>09:01 · 200 · 1 attempt</span><span>Replay</span></div>
+    <div class="row"><span>export.completed</span><span>08:40 · 503, 504, 200 · 3 attempts</span><span>Replay</span></div>
+  </div>
+  <p class="muted">Add webhook: URL, events as checkboxes (all four preselected), optional description; then the secret once, with Copy. Test sends a <code>ping</code> event.</p>
+</div>
+
+<div class="box">
+  <h2>C · MCP server</h2>
+  <div class="ep"><b>POST</b><code>/mcp</code> Streamable HTTP, JSON-RPC 2.0</div>
+  <p>Authenticated with an API key or an OAuth access token; it can never do more than the Public API with the same scopes.</p>
+  <h3>Tools now</h3>
+  <ul>
+    <li><code>list_surveys</code> {status?, search?} → surveys</li>
+    <li><code>get_survey</code> {surveyId} → survey with its definition</li>
+    <li><code>start_export</code> {surveyId, format, filter?} → export</li>
+    <li><code>get_export</code> {exportId} → status and download link</li>
+  </ul>
+  <p class="muted">New tools appear as their endpoints become public (create survey, publish, list responses).</p>
+<pre>→ { "jsonrpc": "2.0", "id": 1, "method": "tools/call",
+    "params": { "name": "list_surveys",
+                "arguments": { "status": "published" } } }
+← { "jsonrpc": "2.0", "id": 1, "result": { "content": [
+    { "type": "text", "text": "[{\"id\":\"…\",\"title\":\"Customer satisfaction 2026\"…}]" } ] } }</pre>
+  <ul>
+    <li>Methods: initialize, tools/list, tools/call (and ping). No resources or prompts now.</li>
+    <li>Each tool call is audited like the endpoint it uses.</li>
+  </ul>
+  <h3>Docs and SDKs</h3>
+  <ul>
+    <li>docs/api: webhooks catalogue with payload schemas, signature check in curl/Node/C#/Python, OAuth guide, MCP setup (Claude Desktop, VS Code).</li>
+    <li>OpenAPI snapshot updated; the SDKs (AWK-26) pick these up when they are built.</li>
+  </ul>
+</div>
+</div>
+
+<div class="notes">
+  <p>Email and PDF: not involved.</p>
+  <p class="open">Open for Dražan: (a) access tokens as opaque random strings stored hashed, like keys, revocable at once, no new package (recommended); or signed JWTs with Microsoft.AspNetCore.Authentication.JwtBearer (a new package, needs your OK).</p>
+  <p class="open">(b) MCP with our own small JSON-RPC handler (initialize, tools/list, tools/call; recommended, no package); or the official ModelContextProtocol.AspNetCore package (new package, needs your OK).</p>
+  <p class="open">(c) Events now: export.completed, response.completed, survey.published, survey.closed (recommended); others when their features become public.</p>
+  <p class="open">(d) Webhook URLs https only, http://localhost allowed in development (recommended).</p>
+  <p class="open">(e) Build and merge in three steps: webhooks, then OAuth, then MCP (recommended), each merged on your word.</p>
+</div>
+</body>
+</html>

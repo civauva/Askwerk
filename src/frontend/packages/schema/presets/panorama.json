@@ -1,0 +1,82 @@
+{
+  "id": "panorama",
+  "name": {
+    "de": "Panorama",
+    "en": "Panorama"
+  },
+  "description": {
+    "de": "Berge im Morgenlicht, Text auf Milchglas.",
+    "en": "Mountains at dawn, text on frosted glass."
+  },
+  "tags": [
+    "pictures",
+    "calm"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#b4532a",
+      "onAccent": "#ffffff",
+      "background": "#f4efe9",
+      "surface": "#fffcf7",
+      "text": "#1d2a33",
+      "muted": "#5f564e",
+      "line": "#d9cfc3"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Serif"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "steps",
+    "layout": "card",
+    "components": {
+      "question": {
+        "font": "heading"
+      },
+      "choices": {
+        "columns": "two",
+        "selected": "accent"
+      },
+      "buttons": {
+        "width": "wide"
+      },
+      "textBlock": {
+        "style": "tinted"
+      }
+    },
+    "pages": {
+      "header": {
+        "organisation": true
+      },
+      "welcome": {
+        "layout": "centre"
+      },
+      "questions": {
+        "panel": "frosted"
+      },
+      "end": {
+        "layout": "centre"
+      },
+      "title": "over-picture"
+    },
+    "decoration": {
+      "pattern": "mountains"
+    },
+    "email": {
+      "header": "band"
+    },
+    "pdf": {
+      "header": "full",
+      "numbered": true
+    }
+  }
+}

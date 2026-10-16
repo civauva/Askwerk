@@ -1,0 +1,22 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Askwerk.Api/Askwerk.Api.csproj" />
+    <ProjectReference Include="../Askwerk.HealthProbe/Askwerk.HealthProbe.csproj" />
+    <!-- The C# SDK, tested against this API with the TypeScript and Python SDKs (AWK-26). -->
+    <ProjectReference Include="../../sdks/csharp/Askwerk.Sdk/Askwerk.Sdk.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="OpenTelemetry.Exporter.InMemory" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The same PostgreSQL fixture as the integration tests. -->
+    <Compile Include="../Askwerk.Tests.Integration/PostgresServer.cs" Link="PostgresServer.cs" />
+    <!-- The SQL Server sync example, tested against this API and a real SQL Server (AWK-14). -->
+    <Compile Include="../../../docs/integrations/sql-server-sync/Sync.cs" Link="Examples/Sync.cs" />
+    <None Include="../../../docs/integrations/sql-server-sync/create-tables.sql" Link="Examples/create-tables.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

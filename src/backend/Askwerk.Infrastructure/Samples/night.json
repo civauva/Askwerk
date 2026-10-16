@@ -1,0 +1,183 @@
+{
+  "order": 8,
+  "look": "nacht",
+  "responses": 95,
+  "names": {
+    "de": "Konzertabend",
+    "en": "Night event"
+  },
+  "kind": {
+    "de": "Dunkel",
+    "en": "Dark"
+  },
+  "features": {
+    "de": [
+      "dunkler Modus",
+      "NPS",
+      "Sterne"
+    ],
+    "en": [
+      "dark mode",
+      "NPS",
+      "stars"
+    ]
+  },
+  "texts": {
+    "say": {
+      "de": [
+        "Gänsehaut beim Finale",
+        "Bar zu voll",
+        "Bitte mehr Sitzplätze"
+      ],
+      "en": [
+        "Goosebumps at the finale",
+        "Bar too crowded",
+        "More seats, please"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Nach dem Konzert",
+        "en": "After the show"
+      },
+      "text": {
+        "de": "Wie war der Abend?",
+        "en": "How was the night?"
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke und gute Nacht!",
+        "en": "Thank you and good night!"
+      }
+    },
+    "pages": [
+      {
+        "id": "show",
+        "questions": [
+          {
+            "id": "again",
+            "variable": "AGAIN",
+            "type": "single",
+            "text": {
+              "de": "Kommen Sie wieder?",
+              "en": "Would you come again?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Ja",
+                  "en": "Yes"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Vielleicht",
+                  "en": "Maybe"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Nein",
+                  "en": "No"
+                }
+              }
+            ]
+          },
+          {
+            "id": "sound",
+            "variable": "SOUND",
+            "type": "rating",
+            "text": {
+              "de": "Wie war der Klang?",
+              "en": "How was the sound?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "drinks",
+            "variable": "DRINKS",
+            "type": "multiple",
+            "text": {
+              "de": "Was haben Sie an der Bar bestellt?",
+              "en": "What did you order at the bar?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Wein",
+                  "en": "Wine"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Bier",
+                  "en": "Beer"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Cocktail",
+                  "en": "Cocktail"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Ohne Alkohol",
+                  "en": "Alcohol-free"
+                }
+              }
+            ]
+          },
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "say",
+            "variable": "SAY",
+            "type": "long-text",
+            "text": {
+              "de": "Was möchten Sie uns sagen?",
+              "en": "Anything you want to tell us?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

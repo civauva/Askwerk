@@ -1,0 +1,80 @@
+{
+  "names": {
+    "de": "NPS, kurz",
+    "en": "NPS, short"
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "one-at-a-time",
+    "welcome": {
+      "title": {
+        "de": "Eine Frage, eine Minute",
+        "en": "One question, one minute"
+      },
+      "text": {
+        "de": "Wie wahrscheinlich ist es, dass Sie uns weiterempfehlen?",
+        "en": "How likely are you to recommend us?"
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Ihre Antworten sind gespeichert.",
+        "en": "Thank you! Your answers are saved."
+      }
+    },
+    "pages": [
+      {
+        "id": "nps",
+        "questions": [
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich ist es, dass Sie uns weiterempfehlen?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Sehr unwahrscheinlich",
+                "en": "Very unlikely"
+              },
+              "maxLabel": {
+                "de": "Sehr wahrscheinlich",
+                "en": "Very likely"
+              }
+            }
+          },
+          {
+            "id": "why",
+            "variable": "WHY",
+            "type": "long-text",
+            "text": {
+              "de": "Was ist der wichtigste Grund für Ihre Bewertung?",
+              "en": "What is the main reason for your score?"
+            },
+            "required": false
+          },
+          {
+            "id": "contact",
+            "variable": "CONTACT",
+            "type": "yes-no",
+            "text": {
+              "de": "Dürfen wir Sie dazu kontaktieren?",
+              "en": "May we contact you about it?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

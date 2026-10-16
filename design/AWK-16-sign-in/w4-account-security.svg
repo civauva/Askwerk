@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1860" width="1500" height="1860" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W4 AWK-16 account and security page with passkeys, two-factor, password, preferences -->
+  <rect x="0" y="0" width="1500" height="1860" rx="0" fill="#fafafa" stroke="none" stroke-width="1.2"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W4 · Account and security · AWK-16 · 2026-10-13</text>
+  <text x="40" y="70" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Account and security · EN (opened from the account menu)</text>
+  <rect x="40" y="80" width="900" height="1180" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="80" width="900" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="56" y="98" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="84" y="113" font-size="16" font-weight="700" fill="#111" text-anchor="start">askwerk</text>
+  <text x="150" y="112" font-size="14" font-weight="600" fill="#111" text-anchor="start">|  Acme GmbH ▾</text>
+  <circle cx="910" cy="106" r="15" fill="#ccc" stroke="#555"/>
+  <text x="910" y="111" font-size="11" font-weight="700" fill="#111" text-anchor="middle">AB</text>
+  <text x="80" y="184" font-size="26" font-weight="700" fill="#111" text-anchor="start">Account and security</text>
+  <text x="80" y="208" font-size="13" font-weight="400" fill="#555" text-anchor="start">Anna Berger · anna@acme.at · Owner of Acme GmbH</text>
+  <rect x="80" y="230" width="820" height="250" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="100" y="262" font-size="16" font-weight="700" fill="#111" text-anchor="start">Passkeys</text>
+  <text x="880" y="262" font-size="11.5" font-weight="500" fill="#555" text-anchor="end">Sign in with your fingerprint, face or device PIN</text>
+  <circle cx="70" cy="258" r="10" fill="#444"/>
+  <text x="70" y="262" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <rect x="100" y="282" width="780" height="48" rx="6" fill="#fafafa" stroke="#bbb" stroke-width="1.2"/>
+  <text x="116" y="303" font-size="14" font-weight="600" fill="#111" text-anchor="start">MacBook · Touch ID</text>
+  <text x="116" y="321" font-size="12" font-weight="400" fill="#555" text-anchor="start">Added 13 Oct 2026 · last used today</text>
+  <text x="730" y="312" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">Rename</text>
+  <text x="800" y="312" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">Remove</text>
+  <rect x="100" y="340" width="780" height="48" rx="6" fill="#fafafa" stroke="#bbb" stroke-width="1.2"/>
+  <text x="116" y="361" font-size="14" font-weight="600" fill="#111" text-anchor="start">Pixel 7</text>
+  <text x="116" y="379" font-size="12" font-weight="400" fill="#555" text-anchor="start">Added 13 Oct 2026 · never used</text>
+  <text x="730" y="370" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">Rename</text>
+  <text x="800" y="370" font-size="12.5" font-weight="500" fill="#111" text-anchor="start">Remove</text>
+  <rect x="100" y="410" width="160" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="180.0" y="433.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">+ Add a passkey</text>
+  <text x="276" y="432" font-size="12" font-weight="400" fill="#555" text-anchor="start">Your browser asks for your fingerprint, face or PIN. The key stays on your device.</text>
+  <rect x="80" y="500" width="820" height="200" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="100" y="532" font-size="16" font-weight="700" fill="#111" text-anchor="start">Two-factor (authenticator app)</text>
+  <text x="880" y="532" font-size="11.5" font-weight="500" fill="#555" text-anchor="end">Required for owners and admins</text>
+  <circle cx="70" cy="528" r="10" fill="#444"/>
+  <text x="70" y="532" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="100" y="550" width="120" height="26" rx="13" fill="#e6e6e6" stroke="#888" stroke-width="1.2"/>
+  <text x="160" y="568" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">✓ On</text>
+  <text x="236" y="568" font-size="13" font-weight="400" fill="#333" text-anchor="start">Set up 13 Oct 2026 · 8 of 10 recovery codes left</text>
+  <rect x="100" y="596" width="170" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="185.0" y="619.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">New recovery codes</text>
+  <rect x="286" y="596" width="180" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="376.0" y="619.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Move to a new phone</text>
+  <rect x="482" y="596" width="90" height="36" rx="6" fill="#ececec" stroke="#bbb" stroke-width="1.2" stroke-dasharray="3 3"/>
+  <text x="527" y="619" font-size="13" font-weight="500" fill="#999" text-anchor="middle">Turn off</text>
+  <rect x="588" y="596" width="230" height="36" rx="6" fill="#f4f4f4" stroke="#bbb" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="600" y="613" font-size="11" font-weight="400" fill="#555" text-anchor="start">“Turn off” is disabled for your role:</text>
+  <text x="600" y="627" font-size="11" font-weight="400" fill="#555" text-anchor="start">required for owners and admins.</text>
+  <text x="100" y="670" font-size="12" font-weight="400" fill="#555" text-anchor="start" font-style="italic">Each action asks for your password or a code first.</text>
+  <rect x="80" y="720" width="820" height="260" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="100" y="752" font-size="16" font-weight="700" fill="#111" text-anchor="start">Password</text>
+  <circle cx="70" cy="748" r="10" fill="#444"/>
+  <text x="70" y="752" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="100" y="780" font-size="12" font-weight="600" fill="#333" text-anchor="start">Current password</text>
+  <rect x="100" y="788" width="360" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="112" y="811" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••</text>
+  <text x="100" y="856" font-size="12" font-weight="600" fill="#333" text-anchor="start">New password</text>
+  <rect x="100" y="864" width="360" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="112" y="887" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••••••••</text>
+  <text x="100" y="918" font-size="12" font-weight="400" fill="#666" text-anchor="start">At least 12 characters. Strength: good ▮▮▮▯</text>
+  <text x="480" y="856" font-size="12" font-weight="600" fill="#333" text-anchor="start">Repeat new password</text>
+  <rect x="480" y="864" width="340" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="492" y="887" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••••••••</text>
+  <rect x="100" y="928" width="160" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="180.0" y="951.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Change password</text>
+  <text x="276" y="950" font-size="12" font-weight="400" fill="#555" text-anchor="start">Signs you out everywhere else.</text>
+  <rect x="80" y="1000" width="820" height="150" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="100" y="1032" font-size="16" font-weight="700" fill="#111" text-anchor="start">Preferences</text>
+  <circle cx="70" cy="1028" r="10" fill="#444"/>
+  <text x="70" y="1032" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="100" y="1060" font-size="12" font-weight="600" fill="#333" text-anchor="start">Language</text>
+  <rect x="100" y="1068" width="240" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="112" y="1091" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">English ▾</text>
+  <text x="360" y="1060" font-size="12" font-weight="600" fill="#333" text-anchor="start">Theme</text>
+  <rect x="360" y="1068" width="240" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="372" y="1091" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">System ▾</text>
+  <text x="620" y="1092" font-size="12" font-weight="400" fill="#555" text-anchor="start">Saved as you change them.</text>
+  <rect x="80" y="1168" width="180" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="170.0" y="1191.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Sign out everywhere</text>
+  <text x="276" y="1191" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Ends all sessions on other browsers and devices.</text>
+  <circle cx="70" cy="1186" r="10" fill="#444"/>
+  <text x="70" y="1190" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="980" y="70" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Adding a passkey · DE</text>
+  <rect x="980" y="80" width="480" height="300" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1010" y="110" width="420" height="240" rx="8" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <text x="1030" y="146" font-size="18" font-weight="700" fill="#111" text-anchor="start">Passkey hinzufügen</text>
+  <text x="1030" y="172" font-size="13" font-weight="400" fill="#444" text-anchor="start">Ihr Browser fragt jetzt nach Fingerabdruck,</text>
+  <text x="1030" y="190" font-size="13" font-weight="400" fill="#444" text-anchor="start">Gesicht oder PIN …</text>
+  <text x="1030" y="214" font-size="12" font-weight="600" fill="#333" text-anchor="start">Name (damit Sie ihn wiedererkennen)</text>
+  <rect x="1030" y="222" width="380" height="36" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1042" y="245" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">Pixel 7</text>
+  <rect x="1030" y="290" width="110" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="1085.0" y="313.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Abbrechen</text>
+  <rect x="1300" y="290" width="110" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1355.0" y="313.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Speichern</text>
+  <circle cx="1020" cy="146" r="10" fill="#444"/>
+  <text x="1020" y="150" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="980" y="410" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Passkey not possible / cancelled · EN</text>
+  <rect x="980" y="420" width="480" height="260" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1010" y="450" width="420" height="70" rx="6" fill="#eee" stroke="#111" stroke-width="2"/>
+  <text x="1026" y="476" font-size="13" font-weight="600" fill="#111" text-anchor="start">This browser does not support passkeys.</text>
+  <text x="1026" y="498" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Use a current Chrome, Edge, Safari or Firefox.</text>
+  <rect x="1010" y="536" width="420" height="70" rx="6" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="1026" y="562" font-size="13" font-weight="600" fill="#111" text-anchor="start">The passkey was not added.</text>
+  <text x="1026" y="584" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">You cancelled, or the device did not answer. Try again.</text>
+  <text x="1010" y="640" font-size="12" font-weight="400" fill="#555" text-anchor="start" font-style="italic">Nothing changes; the list stays as it was.</text>
+  <text x="980" y="710" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · Confirm it is you · EN</text>
+  <rect x="980" y="720" width="480" height="300" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1010" y="750" width="420" height="240" rx="8" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <text x="1030" y="786" font-size="18" font-weight="700" fill="#111" text-anchor="start">Confirm it is you</text>
+  <text x="1030" y="810" font-size="13" font-weight="400" fill="#444" text-anchor="start">Removing “Pixel 7”. Enter your password</text>
+  <text x="1030" y="828" font-size="13" font-weight="400" fill="#444" text-anchor="start">or use another passkey.</text>
+  <text x="1030" y="850" font-size="12" font-weight="600" fill="#333" text-anchor="start">Password</text>
+  <rect x="1030" y="858" width="380" height="36" rx="6" fill="#fff" stroke="#111" stroke-width="2"/>
+  <text x="1042" y="881" font-size="13.5" font-weight="400" fill="#111" text-anchor="start">••••••••</text>
+  <rect x="1030" y="930" width="130" height="36" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="1095.0" y="953.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Use a passkey</text>
+  <rect x="1300" y="930" width="110" height="36" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1355.0" y="953.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Remove</text>
+  <circle cx="1020" cy="786" r="10" fill="#444"/>
+  <text x="1020" y="790" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="980" y="1050" font-size="13" font-weight="600" fill="#444" text-anchor="start">E · Sign-in with a passkey · DE (W1 A, button now active)</text>
+  <rect x="980" y="1060" width="480" height="300" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1010" y="1090" width="420" height="240" rx="8" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1030" y="1126" font-size="20" font-weight="700" fill="#111" text-anchor="start">Anmelden</text>
+  <rect x="1030" y="1146" width="380" height="30" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1042" y="1166" font-size="12.5" font-weight="400" fill="#999" text-anchor="start">name@firma.at</text>
+  <rect x="1030" y="1186" width="380" height="30" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="1030" y="1228" width="380" height="32" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1220.0" y="1249.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Anmelden</text>
+  <rect x="1030" y="1272" width="380" height="32" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="1220.0" y="1293.0" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Mit Passkey anmelden</text>
+  <circle cx="1020" cy="1286" r="10" fill="#444"/>
+  <text x="1020" y="1290" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="980" y="1390" font-size="13" font-weight="600" fill="#444" text-anchor="start">F · Phone · EN (sections stack)</text>
+  <rect x="980" y="1400" width="300" height="280" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="996" y="1420" width="268" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1010" y="1447" font-size="14" font-weight="700" fill="#111" text-anchor="start">Passkeys</text>
+  <rect x="996" y="1474" width="268" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1010" y="1501" font-size="14" font-weight="700" fill="#111" text-anchor="start">Two-factor  ✓ On</text>
+  <rect x="996" y="1528" width="268" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1010" y="1555" font-size="14" font-weight="700" fill="#111" text-anchor="start">Password</text>
+  <rect x="996" y="1582" width="268" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1010" y="1609" font-size="14" font-weight="700" fill="#111" text-anchor="start">Preferences</text>
+  <text x="40" y="1720" font-size="12" font-weight="400" fill="#333" text-anchor="start">1  Passkeys (WebAuthn, ASP.NET Core Identity in .NET 10). A passkey with user verification counts as two-factor: owners and admins may use it instead of the app code.</text>
+  <text x="40" y="1740" font-size="12" font-weight="400" fill="#333" text-anchor="start">2  Two-factor: shows status and recovery codes left. New codes replace the old ones. &#x27;Turn off&#x27; is shown disabled (greyed out) for owners and admins, with the reason next to it.</text>
+  <text x="40" y="1760" font-size="12" font-weight="400" fill="#333" text-anchor="start">3  Password change needs the current password and signs out other sessions. 4  Language and theme per user, stored with the account, not only in the browser.</text>
+  <text x="40" y="1780" font-size="12" font-weight="400" fill="#333" text-anchor="start">5  Sign out everywhere ends all other sessions (security stamp).  6  Adding: browser prompt first, then an optional name.  7  Removing a passkey, new recovery codes,</text>
+  <text x="40" y="1800" font-size="12" font-weight="400" fill="#333" text-anchor="start">    moving to a new phone and turning two-factor off ask for the password or another passkey first.  8  The sign-in button from W1 becomes active; it hides where the browser has no passkey support.</text>
+  <text x="40" y="1820" font-size="12" font-weight="400" fill="#333" text-anchor="start">All changes are audited on the instance chain. Account menu (M3): &#x27;Account and security&#x27; opens this page; the menu lines &#x27;Two-factor: on&#x27;, &#x27;Passkeys&#x27;, &#x27;Language&#x27;, &#x27;Theme&#x27; link to its sections.</text>
+</svg>

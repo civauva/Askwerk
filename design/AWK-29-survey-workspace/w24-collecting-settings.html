@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>W24 Collecting responses: closing date and one response per person</title><link rel="stylesheet" href="../sketch.css">
+<style>
+  body { width: 1640px; }
+  .cap { font: 600 10.5px/1.3 "Segoe UI"; text-transform: uppercase; color: #666; margin: 0 0 4px; }
+  .page { background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 12px 14px; }
+  .page h4 { margin: 0 0 6px; font-size: 13px; }
+  .line { margin: 6px 0; }
+  .lbl { color: #555; font-weight: 600; margin-right: 6px; }
+  .note { color: #666; font-size: 11.5px; margin: 2px 0 8px; }
+  .in { display: inline-block; border: 1px solid #888; border-radius: 3px; padding: 2px 8px; background: #fff; font-family: Consolas, monospace; font-size: 12px; }
+  .tog { display: inline-block; width: 28px; height: 15px; border-radius: 8px; background: #bbb; vertical-align: middle; position: relative; margin-right: 6px; }
+  .tog::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+  .tog.on { background: #444; } .tog.on::after { left: 15px; }
+  .q { border: 1px solid transparent; color: #333; padding: 3px 6px; font-weight: 400; }
+  .bar { display: flex; gap: 10px; align-items: center; background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 6px 10px; font-size: 12px; }
+  .bar b { font-size: 14px; } .bar .st { color: #555; } .grow { flex: 1; }
+  .phone { width: 300px; border: 1px solid #999; border-radius: 14px; padding: 14px; background: #fff; text-align: center; }
+  .phone .org { font-size: 11px; color: #666; text-align: left; border-bottom: 1px solid #ddd; padding-bottom: 6px; margin-bottom: 26px; }
+  .phone h4 { font-size: 15px; margin: 0 0 6px; } .phone p { margin: 0 0 18px; color: #444; }
+  .err { color: #000; border-left: 3px solid #333; padding-left: 6px; font-size: 12px; }
+  .de { color: #555; font-style: italic; font-size: 11.5px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; align-items: start; }
+</style></head><body>
+<h1>W24 · ⚙ Survey settings → Collecting responses · closing date and one response per person</h1>
+<p class="lead">AWK-29 follow-up to W23. Two settings in the existing section "Collecting responses / Antworten sammeln". Defaults: no closing date; one response per person on (today's behaviour, now enforced by the server). Native date-time field, no new dependency.</p>
+
+<h2>A · The section in its states (EN; DE below each)</h2>
+<div class="grid4">
+  <div><p class="cap">A1 · Published, no closing date (default)</p><div class="page">
+    <h4>Collecting responses</h4>
+    <p class="line">Collecting responses.</p>
+    <p class="line"><span class="lbl">Closing date</span> None · <span class="btn q">Set a closing date</span></p>
+    <p class="line"><span class="tog on"></span><b>One response per person</b></p>
+    <p class="note">After finishing, this browser cannot answer again. Personal invitation links always allow one response.</p>
+    <span class="btn">Close for responses</span>
+    <p class="de">DE: Antworten werden gesammelt. · Enddatum: Keines · Enddatum festlegen · Eine Antwort pro Person · Nach dem Abschicken kann dieser Browser nicht erneut antworten. Persönliche Einladungslinks erlauben immer eine Antwort. · Für Antworten schließen</p>
+  </div></div>
+
+  <div><p class="cap">A2 · Setting the date (field opens in place)</p><div class="page">
+    <h4>Collecting responses</h4>
+    <p class="line">Collecting responses.</p>
+    <p class="line"><span class="lbl">Closing date</span> <span class="in">31.10.2026 18:00</span> <span class="btn">Save</span> <span class="btn q">Cancel</span></p>
+    <p class="note">Time zone Europe/Vienna (this Askwerk's time zone). The survey closes by itself at this moment.</p>
+    <p class="err">Error state: "Pick a moment in the future." / "Wählen Sie einen Zeitpunkt in der Zukunft."</p>
+    <p class="de">DE: Zeitzone Europe/Vienna (Zeitzone dieses Askwerk). Die Umfrage schließt sich zu diesem Zeitpunkt selbst. · Speichern · Abbrechen</p>
+  </div></div>
+
+  <div><p class="cap">A3 · Date set</p><div class="page">
+    <h4>Collecting responses</h4>
+    <p class="line">Collecting responses until 31 October 2026, 18:00.</p>
+    <p class="line"><span class="lbl">Closing date</span> 31 Oct 2026, 18:00 · <span class="btn q">Change</span> <span class="btn q">Remove</span></p>
+    <p class="line"><span class="tog on"></span><b>One response per person</b></p>
+    <span class="btn">Close for responses</span>
+    <p class="de">DE: Antworten werden bis 31. Oktober 2026, 18:00 gesammelt. · Ändern · Entfernen</p>
+  </div></div>
+
+  <div><p class="cap">A4 · Closed by the date</p><div class="page">
+    <h4>Collecting responses</h4>
+    <p class="line">Closed on 31 October 2026, 18:00 (closing date).</p>
+    <span class="btn">Reopen</span>
+    <p class="note">Reopening removes the passed closing date; set a new one if needed.</p>
+    <p class="de">DE: Geschlossen am 31. Oktober 2026, 18:00 (Enddatum). · Wieder öffnen · Wiederöffnen entfernt das vergangene Enddatum; legen Sie bei Bedarf ein neues fest.</p>
+  </div></div>
+</div>
+<p class="muted">Draft (never published): same two settings, can be set ahead; the date only matters once published. Reader role: the same lines as text, no buttons, toggle shown as "On / Off". Saving the toggle is instant with a "Saved" status; a failure shows the page's existing error line and the toggle flips back.</p>
+
+<h2 style="margin-top:18px">B · Status in the survey bar</h2>
+<div class="grid3">
+  <div class="bar"><span>← Surveys</span><b>Employee survey 2026</b><span class="st">Published v3 · closes 31 Oct, 18:00</span><span class="grow"></span><span>⚙</span></div>
+  <div class="bar"><span>← Surveys</span><b>Employee survey 2026</b><span class="st">Closed 31 Oct</span><span class="grow"></span><span>⚙</span></div>
+  <div class="bar"><span>← Surveys</span><b>Employee survey 2026</b><span class="st">Veröffentlicht v3 · endet 31. Okt., 18:00</span><span class="grow"></span><span>⚙</span></div>
+</div>
+
+<h2 style="margin-top:18px">C · Runner (respondent, phone)</h2>
+<div class="grid4">
+  <div><p class="cap">C1 · Closed by the date (EN)</p><div class="phone"><div class="org">ACME GmbH</div><h4>This survey has closed</h4><p>It closed on 31 October 2026.<br>Thank you for your interest.</p></div></div>
+  <div><p class="cap">C2 · Closed by the date (DE)</p><div class="phone"><div class="org">ACME GmbH</div><h4>Diese Umfrage ist geschlossen</h4><p>Sie wurde am 31. Oktober 2026 geschlossen.<br>Danke für Ihr Interesse.</p></div></div>
+  <div><p class="cap">C3 · One per person on, browser already answered</p><div class="phone"><div class="org">ACME GmbH</div><h4>You have already answered</h4><p>Thank you – your answers are in.</p><p class="de">DE: Sie haben bereits geantwortet · Danke – Ihre Antworten sind angekommen.</p></div></div>
+  <div><p class="cap">C4 · One per person off (kiosk, tablet at a stand)</p><div class="phone"><div class="org">ACME GmbH</div><h4>Thank you!</h4><p>(the survey's end page)</p><span class="btn">Answer again</span><p class="de">DE: Erneut antworten</p></div></div>
+</div>
+<p class="muted">Closed manually (no date) keeps today's page without the date line.</p>
+
+<h2 style="margin-top:18px">D · Behaviour</h2>
+<div class="grid2">
+<div class="box"><ul>
+  <li><b>Closing date</b> is stored in UTC, entered and shown in this Askwerk's time zone (set in setup; organisations have none of their own yet). The runner refuses new and unfinished responses from that moment, even before the background close runs.</li>
+  <li>A background job closes the survey at the date, so the list and Results show "Closed"; audit entry <code>survey.closed</code> by the system, reason "closing-date".</li>
+  <li>Closing by hand before the date keeps the date; reopening removes a date that has passed.</li>
+  <li>Audit: <code>survey.closing-date-set</code> (old → new), <code>survey.closing-date-removed</code>, <code>survey.one-response-changed</code> (on/off).</li>
+</ul></div>
+<div class="box"><ul>
+  <li><b>One response per person</b> (default on, also for existing surveys): the server refuses a second start from a browser whose response is complete (409 "already-answered"); the browser keeps its cookie for a year after finishing. Off: the end page offers "Answer again", which starts a new response.</li>
+  <li>Honest limit, in the note and the docs: it is per browser; another browser or a private window can answer again. For a strict one per person, use personal invitations.</li>
+  <li>Data: two columns on <code>surveys</code> (<code>closes_at</code>, <code>one_response_per_person</code>); the table's row-level security policy covers them, no new table.</li>
+</ul></div>
+</div>
+</body></html>

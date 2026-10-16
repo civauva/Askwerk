@@ -1,0 +1,353 @@
+{
+  "order": 9,
+  "look": "panorama",
+  "responses": 120,
+  "names": {
+    "de": "Berghütte",
+    "en": "Mountain lodge"
+  },
+  "kind": {
+    "de": "Bild im Hintergrund",
+    "en": "Background picture"
+  },
+  "features": {
+    "de": [
+      "Bild hinter der Seite",
+      "Milchglas-Flächen",
+      "Textblöcke getönt",
+      "druckt schön"
+    ],
+    "en": [
+      "picture behind the page",
+      "frosted panels",
+      "tinted text blocks",
+      "prints nicely"
+    ]
+  },
+  "texts": {
+    "wish": {
+      "de": [
+        "Mehr Wanderkarten im Zimmer",
+        "Die Sauna war wunderbar",
+        "Frühstück etwas länger bitte",
+        "Ruhiger als erwartet, perfekt"
+      ],
+      "en": [
+        "More hiking maps in the room",
+        "The sauna was wonderful",
+        "Breakfast a bit longer, please",
+        "Quieter than expected, perfect"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Ihr Aufenthalt in den Bergen",
+        "en": "Your stay in the mountains"
+      },
+      "text": {
+        "de": "Vier kurze Seiten. Danke, dass Sie uns helfen, den nächsten Aufenthalt noch schöner zu machen.",
+        "en": "Four short pages. Thank you for helping us make the next stay even better."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Wir freuen uns auf Ihren nächsten Besuch.",
+        "en": "Thank you! We look forward to your next visit."
+      }
+    },
+    "pages": [
+      {
+        "id": "arrival",
+        "title": {
+          "de": "Ihre Anreise",
+          "en": "Your arrival"
+        },
+        "questions": [
+          {
+            "id": "intro",
+            "variable": "INTRO",
+            "type": "text-block",
+            "text": {
+              "de": "Die Hütte liegt auf 1.640 Metern. Diese Seite fragt nach Ihrer Anreise.",
+              "en": "The lodge lies at 1,640 metres. This page asks about your arrival."
+            },
+            "required": false
+          },
+          {
+            "id": "date",
+            "variable": "STAY_DATE",
+            "type": "date",
+            "text": {
+              "de": "Wann waren Sie bei uns?",
+              "en": "When did you stay with us?"
+            },
+            "required": true,
+            "mode": "date",
+            "latest": "today"
+          },
+          {
+            "id": "nights",
+            "variable": "NIGHTS",
+            "type": "number",
+            "text": {
+              "de": "Wie viele Nächte?",
+              "en": "How many nights?"
+            },
+            "required": true
+          },
+          {
+            "id": "travel",
+            "variable": "TRAVEL",
+            "type": "single",
+            "text": {
+              "de": "Wie sind Sie angereist?",
+              "en": "How did you travel here?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Auto",
+                  "en": "Car"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Bahn und Bus",
+                  "en": "Train and bus"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Zu Fuß",
+                  "en": "On foot"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Fahrrad",
+                  "en": "Bicycle"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "lodge",
+        "title": {
+          "de": "Die Hütte",
+          "en": "The lodge"
+        },
+        "questions": [
+          {
+            "id": "reason",
+            "variable": "REASON",
+            "type": "single",
+            "text": {
+              "de": "Was hat Sie zu uns geführt?",
+              "en": "What brought you to the lodge?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Wandern",
+                  "en": "Hiking"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Ruhe",
+                  "en": "Rest and quiet"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Skifahren",
+                  "en": "Skiing"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Ein Fest",
+                  "en": "A celebration"
+                }
+              }
+            ]
+          },
+          {
+            "id": "kitchen",
+            "variable": "KITCHEN",
+            "type": "text-block",
+            "text": {
+              "de": "Unsere Küche verwendet Milch und Käse vom Hof nebenan. Die nächste Frage betrifft das Frühstück.",
+              "en": "Our kitchen uses milk and cheese from the farm next door. The next question is about breakfast."
+            },
+            "required": false
+          },
+          {
+            "id": "breakfast",
+            "variable": "BREAKFAST",
+            "type": "rating",
+            "text": {
+              "de": "Wie war das Frühstück?",
+              "en": "How was breakfast?"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "minLabel": {
+                "de": "Schwach",
+                "en": "Poor"
+              },
+              "maxLabel": {
+                "de": "Hervorragend",
+                "en": "Excellent"
+              }
+            }
+          },
+          {
+            "id": "room",
+            "variable": "ROOM",
+            "type": "rating",
+            "text": {
+              "de": "Wie haben Sie geschlafen?",
+              "en": "How did you sleep?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "outside",
+        "title": {
+          "de": "Draußen",
+          "en": "Outside"
+        },
+        "questions": [
+          {
+            "id": "trails",
+            "variable": "TRAILS",
+            "type": "multiple",
+            "text": {
+              "de": "Welche Wege sind Sie gegangen?",
+              "en": "Which trails did you take?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Seeweg",
+                  "en": "Lake path"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Gipfelsteig",
+                  "en": "Summit trail"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Almrunde",
+                  "en": "Pasture loop"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Keinen",
+                  "en": "None"
+                }
+              }
+            ]
+          },
+          {
+            "id": "weather",
+            "variable": "WEATHER",
+            "type": "slider",
+            "text": {
+              "de": "Wie war das Wetter?",
+              "en": "How was the weather?"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Stürmisch",
+                "en": "Stormy"
+              },
+              "maxLabel": {
+                "de": "Strahlend",
+                "en": "Glorious"
+              },
+              "step": 1,
+              "showValue": true
+            }
+          }
+        ]
+      },
+      {
+        "id": "next",
+        "title": {
+          "de": "Nächstes Mal",
+          "en": "Next time"
+        },
+        "questions": [
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "wish",
+            "variable": "WISH",
+            "type": "long-text",
+            "text": {
+              "de": "Was dürfen wir besser machen?",
+              "en": "What could we do better?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

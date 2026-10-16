@@ -1,0 +1,78 @@
+{
+  "name": "Earliest and latest must be written for the question's mode and in order; the minute step divides an hour",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "date",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "earliest": "2026-12-31",
+            "latest": "2026-01-01"
+          },
+          {
+            "id": "q2",
+            "variable": "Q2",
+            "type": "date",
+            "text": {
+              "de": "Frage 2"
+            },
+            "required": false,
+            "mode": "time",
+            "earliest": "2026-10-01",
+            "minuteStep": 7
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "date",
+            "text": {
+              "de": "Frage 3"
+            },
+            "required": false,
+            "mode": "date-time",
+            "latest": "2026-10-14T09:30"
+          },
+          {
+            "id": "q4",
+            "variable": "Q4",
+            "type": "date",
+            "text": {
+              "de": "Frage 4"
+            },
+            "required": false,
+            "latest": "today"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "date-range-invalid",
+      "severity": "error",
+      "path": "pages/0/questions/0/latest"
+    },
+    {
+      "code": "date-value-invalid",
+      "severity": "error",
+      "path": "pages/0/questions/1/earliest"
+    },
+    {
+      "code": "minute-step-invalid",
+      "severity": "error",
+      "path": "pages/0/questions/1/minuteStep"
+    }
+  ]
+}

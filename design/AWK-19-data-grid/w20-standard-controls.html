@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>W20 Standard controls</title><link rel="stylesheet" href="../sketch.css"></head>
+<body>
+<h1>W20 · The rest of the shared controls, one look in packages/ui · AWK-19 · 2026-10-15</h1>
+<p class="lead">Combo boxes, date and time pickers, the data grid and the code boxes are already shared. The controls below still exist several times with slightly different looks (designer, results, members, API page, account). They move into packages/ui once, and every screen uses them.</p>
+<div class="grid3">
+  <div class="box">
+    <h2><span class="num">1</span>Dialog</h2>
+    <div class="wire">
+      <b>Remove member</b> <span style="float:right">✕</span>
+      <p>Remove Ben Huber from Acme GmbH? Their surveys and results stay.</p>
+      <div style="text-align:right"><span class="btn">Cancel</span> <span class="btn primary">Remove</span></div>
+    </div>
+    <ul>
+      <li>One component: title, text or form, buttons right, Escape and ✕ close, focus trapped and returned, 560 px wide (wide variant 720 px).</li>
+      <li>A confirm variant (title, question, Cancel + one action) replaces the eight hand-made ones.</li>
+      <li>Phones: full width at the bottom, buttons stacked.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2><span class="num">2</span>Menu</h2>
+    <div class="wire" style="width:220px">
+      <div>Rename</div><div>Duplicate</div><div>Download PDF ↓</div><div style="border-top:1px solid #ccc;margin-top:4px;padding-top:4px">Archive…</div>
+    </div>
+    <ul>
+      <li>One menu button + menu: arrow keys, Home/End, type to jump, Escape returns focus; items are buttons or links; a separator for risky items.</li>
+      <li>Used by the survey's menu, page actions, Preview, organisation and account menus.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2><span class="num">3</span>Tabs</h2>
+    <div class="wire"><b style="border-bottom:3px solid #333">Overview</b> &nbsp;&nbsp; Responses &nbsp;&nbsp; Participants 640</div>
+    <ul>
+      <li>Two kinds, one look: page tabs (links, aria-current, the survey workspace) and panel tabs (tablist, arrow keys: Results, API page, inspector).</li>
+      <li>An optional count after the label, in the mono face.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2><span class="num">4</span>Checkbox, radio, switch</h2>
+    <div class="wire">☑ Send a reminder &nbsp; ◉ Classic &nbsp; ○ One at a time &nbsp; <span class="pill">⬤━ On</span></div>
+    <ul>
+      <li>Native inputs underneath (forms and screen readers keep working), drawn in the token colours, 18 px, focus ring.</li>
+      <li>A group with a legend and an optional hint per option.</li>
+      <li>Switch only for settings that apply at once; checkbox inside forms.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2><span class="num">5</span>Text input and field</h2>
+    <div class="label">Title (internal, not shown to respondents)</div><div class="field">Customer satisfaction 2026</div>
+    <div class="label">Email</div><div class="field" style="border-color:#333">anna@acme…</div><div class="muted">Enter an email address.</div>
+    <ul>
+      <li>Field = label + input + hint or error, linked for screen readers; error text replaces the hint.</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2><span class="num">6</span>Notice and status</h2>
+    <div class="wire">✓ 2 invitations sent. <span style="float:right">✕</span></div>
+    <ul>
+      <li>One toast for “done” messages (role status, fades after 5 s) and one inline alert for errors with the trace reference.</li>
+    </ul>
+    <h3>Where they come from now</h3>
+    <p class="muted">designer-dialog, api-keys__dialog, appbar__dialog, members__dialog, results dialogs; designer-menu, appbar__menu; results-tabs, api-keys__tabs, survey-tabs; designer-radio, designer-check, switches in the inspector.</p>
+  </div>
+</div>
+<div class="notes">
+  <p>Nothing changes in what screens do; only how the controls look and behave becomes the same everywhere. Every moved screen keeps its tests; packages/ui gets the component tests (keyboard, focus, axe).</p>
+  <p>Email and PDF: not involved (they use their own templates).</p>
+  <p class="open">Open for Dražan: (a) move all screens in one pass (recommended) or one area at a time; (b) dialogs on phones as bottom sheets (recommended) or centred.</p>
+</div>
+</body></html>

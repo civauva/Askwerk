@@ -1,0 +1,189 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W27 hi-fi. #start: the Developers hub; #reference: the API reference with Try it; #samples: SDKs, samples and downloads (Postman). -->
+<html lang="en"><head><meta charset="utf-8"><title>W27 developers</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.5 var(--aw-font); }
+  .view { display: none; } body.start #start, body.reference #reference, body.samples #samples { display: block; }
+  .bar { height: 56px; display: flex; align-items: center; gap: 14px; padding: 0 16px; background: var(--aw-surface); border-bottom: 1px solid var(--aw-line); }
+  .logo b { font: 700 19px/1 var(--aw-font-display); } .logo b span { color: var(--aw-signal); }
+  .navlink { padding: 8px 10px; color: var(--aw-graphite); border-radius: 6px; }
+  .navlink.on { background: color-mix(in srgb, var(--aw-ink) 7%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .grow { flex: 1; }
+  .org { padding: 7px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; color: var(--aw-graphite); }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #3d4a55; color: #fff; display: grid; place-items: center; font: 600 12px/1 var(--aw-font-mono); }
+  .body { display: grid; grid-template-columns: 250px 1fr; height: 844px; }
+  .side { border-right: 1px solid var(--aw-line); background: var(--aw-surface); padding: 18px 0; overflow: hidden; }
+  .side h4 { margin: 14px 20px 6px; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); }
+  .side a { display: block; padding: 6px 20px; color: var(--aw-graphite); font-size: 13.5px; }
+  .side a.on { color: var(--aw-ink); font-weight: 600; box-shadow: inset 3px 0 0 var(--aw-signal); background: color-mix(in srgb, var(--aw-ink) 4%, var(--aw-surface)); }
+  .main { padding: 28px 40px; overflow: hidden; position: relative; }
+  h1 { margin: 0; font: 700 28px/1.2 var(--aw-font-display); }
+  h2 { margin: 0 0 10px; font: 700 18px/1.2 var(--aw-font-display); }
+  .lead { color: var(--aw-graphite); margin: 6px 0 0; max-width: 720px; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; padding: 16px 18px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .label { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); }
+  .mono { font-family: var(--aw-font-mono); }
+  .base { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding: 10px 14px; background: var(--aw-surface); border: 1px solid var(--aw-line-strong); border-radius: 8px; width: fit-content; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--aw-line-strong); border-radius: 6px; background: var(--aw-surface); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; }
+  .step { display: flex; gap: 12px; } .step i { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--aw-ink); color: var(--aw-paper); display: grid; place-items: center; font: 600 12px/1 var(--aw-font-mono); font-style: normal; }
+  .step b { display: block; }
+  .muted { color: var(--aw-graphite); font-size: 13px; }
+  .guide b { display: block; margin: 6px 0 2px; } .guide .tag { font: 500 10.5px/1 var(--aw-font-mono); color: var(--aw-signal-ink, #8f2c06); }
+  pre { margin: 0; padding: 12px 14px; background: #16191d; color: #e6e9ee; border-radius: 8px; font: 400 12.5px/1.55 var(--aw-font-mono); overflow: hidden; white-space: pre; }
+  pre .k { color: #ffb38a; } pre .s { color: #9fe1cb; } pre .c { color: #8a93a0; }
+  .method { display: inline-block; min-width: 54px; text-align: center; padding: 2px 6px; border-radius: 4px; font: 600 11px/1.4 var(--aw-font-mono); color: #fff; }
+  .get { background: #1f6f4f; } .post { background: #1f5f8b; } .put { background: #7a5b0b; } .patch { background: #6a4ce0; } .del { background: #a3261e; }
+  .ep { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; font-size: 13px; }
+  .ep.on { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); }
+  .field { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; font-size: 13px; margin: 8px 0; }
+  .input { padding: 7px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; background: var(--aw-surface); font: 400 12.5px/1.2 var(--aw-font-mono); }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 6px 10px; font-size: 12px; border-right: 1px solid var(--aw-line-strong); } .seg span:last-child { border: 0; } .seg span.on { background: var(--aw-ink); color: var(--aw-paper); }
+  .ok { color: #2f7d4f; font-weight: 600; }
+  .note { position: absolute; padding: 8px 12px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,.08); z-index: 3; }
+  .chip { display: inline-block; padding: 2px 7px; border-radius: 4px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); font-size: 11.5px; color: var(--aw-graphite); margin: 2px 2px 0 0; }
+</style></head>
+<body>
+<script>document.body.className = (location.hash || "#start").slice(1);</script>
+<template id="top">
+  <div class="bar"><span class="logo"><b>Ask<span>werk</span></b></span>
+    <span class="navlink">Surveys</span><span class="navlink on">&lt;/&gt; Developers</span>
+    <span class="grow"></span><span class="org">Acme GmbH ▾</span><span class="avatar">DK</span></div>
+</template>
+<template id="side">
+  <div class="side">
+    <a data-k="start">Start</a>
+    <h4>Guides</h4>
+    <a>Read responses into your system</a><a>Export data: CSV, Excel, SPSS</a><a>React to events with webhooks</a><a>Create surveys and invite from HR</a><a>Sign in with your company login</a><a>Embed the designer and results</a><a>Sync to SQL Server</a><a>AI assistants (MCP)</a>
+    <h4>API reference</h4>
+    <a data-k="reference">Surveys</a><a>Responses &amp; codebook</a><a>Exports</a><a>Webhooks</a><a>Users</a><a>Authentication</a>
+    <h4>Tools</h4>
+    <a data-k="samples">SDKs, samples &amp; downloads</a><a>Your API keys →</a>
+  </div>
+</template>
+
+<section class="view" id="start"><div class="hdr"></div>
+  <div class="body"><div class="side-slot" data-on="start"></div>
+    <div class="main">
+      <h1>Askwerk for developers</h1>
+      <p class="lead">Read responses, start exports, create surveys and invite people from your own systems. Everything here works against this Askwerk, with its address already filled in.</p>
+      <div class="base"><span class="label">Base URL</span><span class="mono">https://surveys.acme.at/api/v1</span><span class="btn">Copy</span><span class="btn">Download Postman collection</span><span class="btn">OpenAPI</span></div>
+      <h2 style="margin-top:26px">Your first call in three steps</h2>
+      <div class="grid3">
+        <div class="card step"><i>1</i><div><b>Get a key</b><span class="muted">Owners and admins create keys with scopes. Or a 1-hour read-only key for trying.</span><div style="margin-top:8px"><span class="btn">Create a trial key</span></div></div></div>
+        <div class="card step"><i>2</i><div><b>Make a call</b><span class="muted">List your surveys right here, in Try it, or with curl:</span><pre style="margin-top:8px">curl -H <span class="s">"Authorization: Bearer $KEY"</span> \
+  https://surveys.acme.at/api/v1/surveys</pre></div></div>
+        <div class="card step"><i>3</i><div><b>Stay in sync</b><span class="muted">A webhook tells you when a response arrives; read it with <span class="mono">since</span>.</span><div style="margin-top:8px"><span class="btn">Read the guide →</span></div></div></div>
+      </div>
+      <h2 style="margin-top:26px">Fit Askwerk into your processes</h2>
+      <div class="grid4">
+        <div class="card guide"><span class="tag">DATA OUT</span><b>Responses into your system</b><span class="muted">Poll with a sequence, never miss or repeat one.</span></div>
+        <div class="card guide"><span class="tag">DATA OUT</span><b>Exports for analysis</b><span class="muted">CSV, Excel, SPSS with codebook, on a schedule.</span></div>
+        <div class="card guide"><span class="tag">EVENTS</span><b>Webhooks</b><span class="muted">Signed events, retries, replay from the log.</span></div>
+        <div class="card guide"><span class="tag">DATA IN</span><b>From your HR system</b><span class="muted">Users and participants in, invitations out.</span></div>
+        <div class="card guide"><span class="tag">IDENTITY</span><b>Company login</b><span class="muted">OIDC, directory password, handover tokens.</span></div>
+        <div class="card guide"><span class="tag">EMBED</span><b>Inside your product</b><span class="muted">Designer and results in a frame.</span></div>
+        <div class="card guide"><span class="tag">EXAMPLE</span><b>Sync to SQL Server</b><span class="muted">A ready console app, Dockerfile included.</span></div>
+        <div class="card guide"><span class="tag">AI</span><b>AI assistants</b><span class="muted">Connect over MCP with your key.</span></div>
+      </div>
+      <div class="note" style="right:30px;top:20px;max-width:320px"><b>&lt;/&gt; Developers</b> sits in the top bar beside Surveys, outside the Organisation menu. Every member can read it; keys stay with owners and admins (Organisation → API).</div>
+    </div></div>
+</section>
+
+<section class="view" id="reference"><div class="hdr"></div>
+  <div class="body"><div class="side-slot" data-on="reference"></div>
+    <div class="main" style="display:grid;grid-template-columns:280px minmax(0,1fr) minmax(0,0.9fr);gap:16px;padding:22px 24px">
+      <div>
+        <h2>Surveys</h2>
+        <div class="ep on"><span class="method get">GET</span>/surveys</div>
+        <div class="ep"><span class="method get">GET</span>/surveys/{id}</div>
+        <div class="ep"><span class="method get">GET</span>/surveys/{id}/responses</div>
+        <div class="ep"><span class="method get">GET</span>/surveys/{id}/codebook</div>
+        <div class="ep"><span class="method post">POST</span>/surveys/{id}/exports</div>
+        <div class="ep"><span class="method get">GET</span>/exports/{id}</div>
+        <div class="ep"><span class="method post">POST</span>/webhooks</div>
+        <div class="ep"><span class="method put">PUT</span>/users/{externalId}</div>
+        <div class="ep"><span class="method del">DELETE</span>/users/{externalId}</div>
+        <p class="muted" style="margin-top:14px">Every endpoint of the public API, from its OpenAPI description. Scopes say what a key may do.</p>
+      </div>
+      <div class="card">
+        <span class="method get">GET</span> <b class="mono">/api/v1/surveys</b>
+        <p class="muted">Lists surveys, newest change first. Scope <span class="mono">surveys:read</span>.</p>
+        <div class="label" style="margin-top:14px">Parameters</div>
+        <div class="field"><span>status</span><span class="input">published</span></div>
+        <div class="field"><span>limit</span><span class="input">25</span></div>
+        <div class="field"><span>cursor</span><span class="input" style="color:var(--aw-muted)">optional</span></div>
+        <div class="label" style="margin-top:14px">Key</div>
+        <div class="field"><span>Bearer</span><span class="input">aw_trial_••••••••3f9c</span></div>
+        <p class="muted">Trial key, read-only, ends 18:42. Kept in this tab only.</p>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="btn primary">Send ▸</span><span class="btn">Copy as curl</span></div>
+        <div class="label" style="margin-top:16px">Example</div>
+        <div class="seg" style="margin-top:6px"><span>curl</span><span class="on">TypeScript</span><span>C#</span><span>Python</span></div>
+        <pre style="margin-top:8px"><span class="k">const</span> askwerk = <span class="k">new</span> Askwerk({ baseUrl: <span class="s">"https://surveys.acme.at"</span>, key });
+<span class="k">const</span> page = <span class="k">await</span> askwerk.surveys.list({ status: <span class="s">"published"</span> });</pre>
+      </div>
+      <div class="card" style="background:#fbfbfa">
+        <div style="display:flex;align-items:center;gap:10px"><span class="ok">200 OK</span><span class="muted">· 84 ms · trace 4bf92f35…</span><span class="grow"></span><span class="btn">Copy</span></div>
+        <pre style="margin-top:10px;height:560px">{
+  <span class="s">"items"</span>: [
+    {
+      <span class="s">"id"</span>: <span class="s">"0192c3e1-7a4b-7c2e-9f10-6b1d2e3f4a5b"</span>,
+      <span class="s">"title"</span>: <span class="s">"Customer satisfaction 2026"</span>,
+      <span class="s">"status"</span>: <span class="s">"published"</span>,
+      <span class="s">"languages"</span>: [<span class="s">"de"</span>, <span class="s">"en"</span>],
+      <span class="s">"responses"</span>: 248,
+      <span class="s">"updatedAt"</span>: <span class="s">"2026-10-15T14:02:11Z"</span>
+    },
+    …
+  ],
+  <span class="s">"cursor"</span>: <span class="s">"eyJ1IjoiMjAyNi0xMC0x…"</span>
+}</pre>
+      </div>
+      <div class="note" style="left:360px;top:600px;max-width:340px"><b>Try it calls this Askwerk with real data.</b> Reads go at once; writes (POST, PUT, PATCH, DELETE) ask first. The key never leaves the browser tab.</div>
+    </div></div>
+</section>
+
+<section class="view" id="samples"><div class="hdr"></div>
+  <div class="body"><div class="side-slot" data-on="samples"></div>
+    <div class="main">
+      <h1>SDKs, samples &amp; downloads</h1>
+      <p class="lead">Everything comes with this Askwerk's address built in.</p>
+      <div class="grid3" style="margin-top:18px">
+        <div class="card"><div class="label">Postman</div><b style="display:block;margin:8px 0 4px">Askwerk API · surveys.acme.at</b><span class="muted">17 requests in 6 folders. <span class="mono">baseUrl</span> is set; paste your key into <span class="mono">apiKey</span>.</span><div style="margin-top:12px"><span class="btn primary">Download collection (.json)</span></div></div>
+        <div class="card"><div class="label">OpenAPI</div><b style="display:block;margin:8px 0 4px">openapi.json, version 1</b><span class="muted">For code generators, Insomnia, Bruno and your API gateway.</span><div style="margin-top:12px"><span class="btn">Download OpenAPI</span></div></div>
+        <div class="card"><div class="label">Example project</div><b style="display:block;margin:8px 0 4px">Sync responses to SQL Server</b><span class="muted">.NET console app, runs on a schedule or in Docker.</span><div style="margin-top:12px"><span class="btn">Download (.zip)</span></div></div>
+      </div>
+      <h2 style="margin-top:26px">SDKs</h2>
+      <div class="grid3">
+        <div class="card"><b>TypeScript</b><pre style="margin-top:8px">npm install @askwerk/sdk</pre><p class="muted">Node 20+ and browsers. Webhook signatures checked for you.</p></div>
+        <div class="card"><b>C# / .NET</b><pre style="margin-top:8px">dotnet add package Askwerk.Sdk</pre><p class="muted">.NET 8+. Typed models, retries with backoff.</p></div>
+        <div class="card"><b>Python</b><pre style="margin-top:8px">pip install askwerk</pre><p class="muted">3.10+. No dependencies.</p></div>
+      </div>
+      <h2 style="margin-top:26px">Samples</h2>
+      <div class="grid3">
+        <div class="card"><b>New responses every night</b><p class="muted">Read since the last sequence, write to a table.</p><span class="chip">TypeScript</span><span class="chip">C#</span><span class="chip">Python</span></div>
+        <div class="card"><b>Invite new employees</b><p class="muted">From an HR event: user in, participant added, invitation sent.</p><span class="chip">C#</span><span class="chip">Python</span></div>
+        <div class="card"><b>Webhook receiver</b><p class="muted">Check the signature, answer 2xx, queue the work.</p><span class="chip">TypeScript</span><span class="chip">C#</span><span class="chip">Python</span></div>
+      </div>
+      <div class="note" style="right:30px;top:20px;max-width:300px"><b>The collection is made for this Askwerk</b> when downloaded: base URL from the instance settings, requests from the OpenAPI description, so it never goes stale.</div>
+    </div></div>
+</section>
+<script>
+document.querySelectorAll(".hdr").forEach((el) => el.replaceWith(document.getElementById("top").content.cloneNode(true)));
+document.querySelectorAll(".side-slot").forEach((el) => {
+  const side = document.getElementById("side").content.cloneNode(true);
+  side.querySelectorAll("a[data-k='" + el.dataset.on + "']").forEach((a) => a.classList.add("on"));
+  el.replaceWith(side);
+});
+</script>
+</body></html>

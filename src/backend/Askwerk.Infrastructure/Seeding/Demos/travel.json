@@ -1,0 +1,409 @@
+{
+  "order": 2,
+  "look": "panorama",
+  "responses": 150,
+  "title": {
+    "de": "Demo: Traumurlaub",
+    "en": "Demo: Dream holiday"
+  },
+  "names": {
+    "de": "Traumurlaub",
+    "en": "Dream holiday"
+  },
+  "kind": {
+    "de": "Bildreich",
+    "en": "Graphics-rich"
+  },
+  "features": {
+    "de": [
+      "Bildauswahl",
+      "Berge im Hintergrund",
+      "Budget-Regler",
+      "Einzelne Fragen"
+    ],
+    "en": [
+      "picture choices",
+      "mountains behind",
+      "budget slider",
+      "one at a time"
+    ]
+  },
+  "texts": {
+    "dream": {
+      "de": [
+        "Eine Woche am Meer ohne Handy",
+        "Wandern in Norwegen",
+        "Zugreise durch Italien"
+      ],
+      "en": [
+        "A week by the sea without a phone",
+        "Hiking in Norway",
+        "A train journey through Italy"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "one-at-a-time",
+    "welcome": {
+      "title": {
+        "de": "Wohin geht Ihre nächste Reise?",
+        "en": "Where is your next journey?"
+      },
+      "text": {
+        "de": "Zehn Fragen, jede auf ihrem eigenen Bildschirm. Wir planen damit die Reisen für 2027.",
+        "en": "Ten questions, each on its own screen. We use them to plan the 2027 trips."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Unter allen Teilnehmenden verlosen wir ein Wochenende in den Bergen.",
+        "en": "Thank you! We are giving away a mountain weekend among everyone who took part."
+      }
+    },
+    "pages": [
+      {
+        "id": "dream",
+        "title": {
+          "de": "Ihr Traum",
+          "en": "Your dream"
+        },
+        "questions": [
+          {
+            "id": "place",
+            "variable": "PLACE",
+            "type": "single",
+            "text": {
+              "de": "Wo fühlen Sie sich am wohlsten?",
+              "en": "Where do you feel most at home?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Am Strand",
+                  "en": "On the beach"
+                },
+                "image": {
+                  "asset": "{picture:beach}",
+                  "alt": {
+                    "de": "Am Strand",
+                    "en": "On the beach"
+                  }
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "In der Stadt",
+                  "en": "In the city"
+                },
+                "image": {
+                  "asset": "{picture:city}",
+                  "alt": {
+                    "de": "In der Stadt",
+                    "en": "In the city"
+                  }
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "In den Bergen",
+                  "en": "In the mountains"
+                },
+                "image": {
+                  "asset": "{picture:peaks}",
+                  "alt": {
+                    "de": "In den Bergen",
+                    "en": "In the mountains"
+                  }
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Im Wald",
+                  "en": "In the forest"
+                },
+                "image": {
+                  "asset": "{picture:forest}",
+                  "alt": {
+                    "de": "Im Wald",
+                    "en": "In the forest"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "activities",
+            "variable": "ACTIVITIES",
+            "type": "multiple",
+            "text": {
+              "de": "Was möchten Sie dort tun?",
+              "en": "What would you like to do there?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Schwimmen",
+                  "en": "Swimming"
+                },
+                "image": {
+                  "asset": "{picture:swim}",
+                  "alt": {
+                    "de": "Schwimmen",
+                    "en": "Swimming"
+                  }
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Wandern",
+                  "en": "Hiking"
+                },
+                "image": {
+                  "asset": "{picture:hike}",
+                  "alt": {
+                    "de": "Wandern",
+                    "en": "Hiking"
+                  }
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Gut essen",
+                  "en": "Eating well"
+                },
+                "image": {
+                  "asset": "{picture:food}",
+                  "alt": {
+                    "de": "Gut essen",
+                    "en": "Eating well"
+                  }
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Kultur",
+                  "en": "Culture"
+                },
+                "image": {
+                  "asset": "{picture:culture}",
+                  "alt": {
+                    "de": "Kultur",
+                    "en": "Culture"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "plan",
+        "title": {
+          "de": "Ihr Plan",
+          "en": "Your plan"
+        },
+        "questions": [
+          {
+            "id": "when",
+            "variable": "WHEN",
+            "type": "single",
+            "text": {
+              "de": "Wann möchten Sie reisen?",
+              "en": "When would you like to travel?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Frühling",
+                  "en": "Spring"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Sommer",
+                  "en": "Summer"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Herbst",
+                  "en": "Autumn"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Winter",
+                  "en": "Winter"
+                }
+              }
+            ]
+          },
+          {
+            "id": "nights",
+            "variable": "NIGHTS",
+            "type": "slider",
+            "text": {
+              "de": "Wie viele Nächte?",
+              "en": "How many nights?"
+            },
+            "required": true,
+            "scale": {
+              "min": 2,
+              "max": 21,
+              "step": 1,
+              "showValue": true
+            }
+          },
+          {
+            "id": "budget",
+            "variable": "BUDGET",
+            "type": "slider",
+            "text": {
+              "de": "Ihr Budget pro Person (Euro)",
+              "en": "Your budget per person (euros)"
+            },
+            "required": true,
+            "scale": {
+              "min": 500,
+              "max": 5000,
+              "minLabel": {
+                "de": "500",
+                "en": "500"
+              },
+              "maxLabel": {
+                "de": "5.000",
+                "en": "5,000"
+              },
+              "step": 250,
+              "showValue": true
+            }
+          },
+          {
+            "id": "travel",
+            "variable": "TRAVEL",
+            "type": "single",
+            "text": {
+              "de": "Wie möchten Sie anreisen?",
+              "en": "How would you like to get there?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Bahn",
+                  "en": "Train"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Flugzeug",
+                  "en": "Plane"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Auto",
+                  "en": "Car"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Egal",
+                  "en": "Don't mind"
+                }
+              }
+            ]
+          },
+          {
+            "id": "rail",
+            "variable": "RAIL_PASS",
+            "type": "yes-no",
+            "text": {
+              "de": "Interessiert Sie ein Interrail-Pass?",
+              "en": "Are you interested in a rail pass?"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "travel",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "you",
+        "title": {
+          "de": "Über Sie",
+          "en": "About you"
+        },
+        "questions": [
+          {
+            "id": "size",
+            "variable": "GROUP",
+            "type": "number",
+            "text": {
+              "de": "Mit wie vielen Personen reisen Sie?",
+              "en": "How many people travel with you?"
+            },
+            "required": true
+          },
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "dream",
+            "variable": "DREAM",
+            "type": "long-text",
+            "text": {
+              "de": "Beschreiben Sie Ihren Traumurlaub in einem Satz.",
+              "en": "Describe your dream holiday in one sentence."
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

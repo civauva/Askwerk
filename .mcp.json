@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "throughly": {
+      "type": "http",
+      "url": "https://my.throughly.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${THROUGHLY_TOKEN}"
+      }
+    }
+  }
+}

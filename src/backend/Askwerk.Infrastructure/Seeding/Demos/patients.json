@@ -1,0 +1,506 @@
+{
+  "order": 3,
+  "look": "klar",
+  "responses": 240,
+  "title": {
+    "de": "Demo: Patientenzufriedenheit",
+    "en": "Demo: Patient experience"
+  },
+  "names": {
+    "de": "Patientenzufriedenheit",
+    "en": "Patient experience"
+  },
+  "kind": {
+    "de": "Gesundheitswesen",
+    "en": "Healthcare"
+  },
+  "features": {
+    "de": [
+      "Matrix",
+      "Folgefragen",
+      "Weiß nicht",
+      "Sprung ans Ende"
+    ],
+    "en": [
+      "matrix",
+      "follow-up questions",
+      "don't know",
+      "jump to the end"
+    ]
+  },
+  "texts": {
+    "improve": {
+      "de": [
+        "Wartezeit war zu lang",
+        "Sehr freundliches Team",
+        "Parkplätze fehlen",
+        "Befund schneller schicken"
+      ],
+      "en": [
+        "The wait was too long",
+        "Very friendly team",
+        "Not enough parking",
+        "Send results faster"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Ihre Erfahrung in unserer Ambulanz",
+        "en": "Your experience at our outpatient clinic"
+      },
+      "text": {
+        "de": "Ihre Antworten sind anonym und helfen uns, die Versorgung zu verbessern. Etwa sechs Minuten.",
+        "en": "Your answers are anonymous and help us improve care. About six minutes."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Gute Besserung.",
+        "en": "Thank you! Get well soon."
+      }
+    },
+    "pages": [
+      {
+        "id": "visit",
+        "title": {
+          "de": "Ihr Termin",
+          "en": "Your appointment"
+        },
+        "questions": [
+          {
+            "id": "department",
+            "variable": "DEPARTMENT",
+            "type": "dropdown",
+            "text": {
+              "de": "In welcher Abteilung waren Sie?",
+              "en": "Which department did you visit?"
+            },
+            "required": true,
+            "order": "alphabetical",
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Augenheilkunde",
+                  "en": "Ophthalmology"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Chirurgie",
+                  "en": "Surgery"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Dermatologie",
+                  "en": "Dermatology"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Innere Medizin",
+                  "en": "Internal medicine"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Kardiologie",
+                  "en": "Cardiology"
+                }
+              },
+              {
+                "code": "6",
+                "label": {
+                  "de": "Orthopädie",
+                  "en": "Orthopaedics"
+                }
+              },
+              {
+                "code": "7",
+                "label": {
+                  "de": "Radiologie",
+                  "en": "Radiology"
+                }
+              }
+            ]
+          },
+          {
+            "id": "first",
+            "variable": "FIRST_VISIT",
+            "type": "yes-no",
+            "text": {
+              "de": "War es Ihr erster Besuch bei uns?",
+              "en": "Was this your first visit?"
+            },
+            "required": true
+          },
+          {
+            "id": "booking",
+            "variable": "BOOKING",
+            "type": "single",
+            "text": {
+              "de": "Wie haben Sie den Termin vereinbart?",
+              "en": "How did you book the appointment?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Telefon",
+                  "en": "Phone"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Online",
+                  "en": "Online"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Überweisung",
+                  "en": "Referral"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "BOOKING_OTHER"
+            }
+          }
+        ]
+      },
+      {
+        "id": "care",
+        "title": {
+          "de": "Ihre Behandlung",
+          "en": "Your care"
+        },
+        "questions": [
+          {
+            "id": "care",
+            "variable": "CARE",
+            "type": "matrix",
+            "text": {
+              "de": "Wie sehr stimmen Sie zu?",
+              "en": "How far do you agree?"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "time",
+                "label": {
+                  "de": "Die Ärztin oder der Arzt nahm sich Zeit.",
+                  "en": "The doctor took time for me."
+                }
+              },
+              {
+                "code": "explain",
+                "label": {
+                  "de": "Alles wurde verständlich erklärt.",
+                  "en": "Everything was explained clearly."
+                }
+              },
+              {
+                "code": "questions",
+                "label": {
+                  "de": "Ich konnte alle Fragen stellen.",
+                  "en": "I could ask all my questions."
+                }
+              },
+              {
+                "code": "privacy",
+                "label": {
+                  "de": "Meine Privatsphäre wurde respektiert.",
+                  "en": "My privacy was respected."
+                }
+              },
+              {
+                "code": "pain",
+                "label": {
+                  "de": "Schmerzen wurden ernst genommen.",
+                  "en": "Pain was taken seriously."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Stimme nicht zu",
+                  "en": "Disagree"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Eher nicht",
+                  "en": "Rather not"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Teils",
+                  "en": "Partly"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Eher ja",
+                  "en": "Rather agree"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Stimme zu",
+                  "en": "Agree"
+                }
+              }
+            ]
+          },
+          {
+            "id": "wait",
+            "variable": "WAIT",
+            "type": "slider",
+            "text": {
+              "de": "Wie lange haben Sie gewartet (Minuten)?",
+              "en": "How long did you wait (minutes)?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 120,
+              "step": 10,
+              "showValue": true
+            }
+          },
+          {
+            "id": "wait-ok",
+            "variable": "WAIT_OK",
+            "type": "rating",
+            "text": {
+              "de": "Wie fanden Sie die Wartezeit?",
+              "en": "How did you find the waiting time?"
+            },
+            "required": true,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "problems",
+        "title": {
+          "de": "Probleme",
+          "en": "Problems"
+        },
+        "questions": [
+          {
+            "id": "problem",
+            "variable": "PROBLEM",
+            "type": "yes-no",
+            "text": {
+              "de": "Gab es ein Problem während Ihres Besuchs?",
+              "en": "Was there a problem during your visit?"
+            },
+            "required": true
+          },
+          {
+            "id": "problem-kind",
+            "variable": "PROBLEM_KIND",
+            "type": "multiple",
+            "text": {
+              "de": "Welches Problem?",
+              "en": "Which problem?"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "problem",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            },
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Wartezeit",
+                  "en": "Waiting time"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Kommunikation",
+                  "en": "Communication"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Abrechnung",
+                  "en": "Billing"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Sauberkeit",
+                  "en": "Cleanliness"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "PROBLEM_OTHER"
+            }
+          }
+        ],
+        "after": {
+          "when": {
+            "match": "all",
+            "conditions": [
+              {
+                "question": "problem",
+                "op": "is",
+                "value": "0"
+              }
+            ]
+          },
+          "goTo": "overall"
+        }
+      },
+      {
+        "id": "followup",
+        "title": {
+          "de": "Nachbetreuung",
+          "en": "Follow-up"
+        },
+        "questions": [
+          {
+            "id": "contact",
+            "variable": "CONTACT_OK",
+            "type": "yes-no",
+            "text": {
+              "de": "Dürfen wir Sie dazu kontaktieren?",
+              "en": "May we contact you about it?"
+            },
+            "required": true
+          },
+          {
+            "id": "phone",
+            "variable": "PHONE",
+            "type": "short-text",
+            "text": {
+              "de": "Ihre Telefonnummer",
+              "en": "Your phone number"
+            },
+            "required": true,
+            "format": "phone",
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "contact",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "overall",
+        "title": {
+          "de": "Gesamt",
+          "en": "Overall"
+        },
+        "questions": [
+          {
+            "id": "overall",
+            "variable": "OVERALL",
+            "type": "rating",
+            "text": {
+              "de": "Gesamturteil",
+              "en": "Overall rating"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 10,
+              "minLabel": {
+                "de": "Sehr schlecht",
+                "en": "Very poor"
+              },
+              "maxLabel": {
+                "de": "Ausgezeichnet",
+                "en": "Excellent"
+              }
+            }
+          },
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "improve",
+            "variable": "IMPROVE",
+            "type": "long-text",
+            "text": {
+              "de": "Was sollen wir verbessern?",
+              "en": "What should we improve?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

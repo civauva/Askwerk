@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>W22 Identity integration</title><link rel="stylesheet" href="../sketch.css"></head>
+<body>
+<h1>W22 · Identity integration: hand-over, OIDC, LDAP, provisioning · AWK-12 · 2026-10-15</h1>
+<p class="lead">Off by default: Askwerk's own accounts stay the standard. An organisation that switches a path on lets its own system stay the master of users. Every sign-in and provisioning change is audited; host users have no Askwerk password.</p>
+<div class="grid2">
+<div class="box">
+  <h2><span class="num">1</span>Organisation → Sign-in (owners) · EN</h2>
+  <div class="wire">
+    <b>How people sign in</b>
+    <div class="row"><span>☑ Askwerk accounts (email, password, two-factor)</span><span class="pill">always on for owners</span></div>
+    <div class="row"><span>☐ Hand-over from your product</span><span class="btn">Set up…</span></div>
+    <div class="row"><span>☐ Single sign-on (OIDC: Entra ID, ADFS, Google, Okta…)</span><span class="btn">Set up…</span></div>
+    <div class="row"><span>☐ LDAP / Active Directory</span><span class="btn">Set up…</span></div>
+    <div class="row"><span>☐ Provisioning API</span><span class="btn">Set up…</span></div>
+    <div style="margin-top:8px"><b>Roles from your system</b></div>
+    <div class="row"><span>group “HR-Survey-Admins”</span><span>→ Admin</span></div>
+    <div class="row"><span>group “HR-Analysts”</span><span>→ Analyst</span></div>
+    <div class="row"><span>anyone else who signs in</span><span>→ Viewer ▾ (or: not let in)</span></div>
+  </div>
+  <p class="muted">Switched off (the default): the page shows only the first line and “Connect your own sign-in” as a hint. An owner always keeps an Askwerk account, so nobody is locked out when a provider fails.</p>
+</div>
+<div class="box">
+  <h2><span class="num">2</span>Hand-over (main path)</h2>
+  <div class="seq">
+    <b>Set up</b><span>paste the host's public key (PEM or JWKS URL), issuer and audience; Askwerk shows its own audience value to copy. Keys can be rotated: two may be active.</span>
+    <b>Sign in</b><span>host signs a JWT (RS256/ES256): iss, aud, sub (host user id), email, name, roles or groups, exp ≤ 5 min, jti → <code>POST /handover</code> or <code>/handover?token=…</code></span>
+    <b>Askwerk</b><span>checks signature, issuer, audience, expiry and that the jti is new; creates or updates the user and membership; maps roles; starts the session (or an embedded one, AWK-13); audits user.handover.</span>
+    <b>Errors</b><span>bad signature / expired / used token → “This sign-in link no longer works. Start again from your product.” (DE: „Dieser Anmeldelink gilt nicht mehr. Starten Sie erneut in Ihrem Produkt.“)</span>
+  </div>
+</div>
+<div class="box">
+  <h2><span class="num">3</span>OIDC and LDAP</h2>
+  <div class="seq">
+    <b>OIDC</b><span>issuer URL (discovery), client id and secret, scopes; the sign-in page shows “Sign in with Acme” above the password form. Authorization-code flow with PKCE; email and groups from the ID token or userinfo.</span>
+    <b>LDAP</b><span>server, port, LDAPS, bind user, base DN, user filter, group attribute. The sign-in form checks the password against the directory; nothing is stored. “Test connection” with a test user.</span>
+    <b>Both</b><span>a user is matched by the provider's id, then by email once; first sign-in creates the membership with the mapped role; if no rule matches and “not let in” is set: “Your account has no access to Acme GmbH. Ask your administrator.”</span>
+  </div>
+</div>
+<div class="box">
+  <h2><span class="num">4</span>Provisioning API (Public API, scope users:manage)</h2>
+<pre>PUT    /api/v1/users/{externalId}      { email, name, role, active }
+GET    /api/v1/users?cursor=
+DELETE /api/v1/users/{externalId}      → deactivated, never deleted</pre>
+  <ul>
+    <li>The host stays the master: changes in Askwerk's Members page are locked for provisioned users (“Managed by HR Suite”), as W18 promised.</li>
+    <li>External ids live in ExternalReference (data model W2); responses keep their person after deactivation.</li>
+    <li>Audit: user.provisioned, user.deactivated, membership.role-changed with the key or client as actor.</li>
+  </ul>
+</div>
+</div>
+<div class="notes">
+  <p>Respondents identified by the host use the same hand-over token (survey audience); see W21 for embedding.</p>
+  <p>New dependencies needed, to be confirmed one by one before they are added: Microsoft.AspNetCore.Authentication.OpenIdConnect (MIT, Microsoft) for OIDC; System.DirectoryServices.Protocols (MIT, Microsoft) for LDAP. JWT checks for the hand-over can be done with .NET's own crypto (no package).</p>
+  <p class="open">Open for Dražan: (a) build in three steps: hand-over + provisioning, then OIDC, then LDAP (recommended); (b) owners always keep an Askwerk password as a break-glass (recommended); (c) users matched by email on their first external sign-in (recommended) or only by provider id.</p>
+</div>
+</body></html>

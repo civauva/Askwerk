@@ -1,0 +1,20 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Askwerk.Infrastructure\Askwerk.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+    <PackageReference Include="Npgsql.OpenTelemetry" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The Developers hub (AWK-34): the committed public contract and the example project. -->
+    <EmbeddedResource Include="../../../docs/api/openapi.json" LinkBase="Developers" LogicalName="Askwerk.Api.Developers.openapi.json" />
+    <EmbeddedResource Include="../../../docs/integrations/sql-server-sync/*" Exclude="../../../docs/integrations/sql-server-sync/bin/**;../../../docs/integrations/sql-server-sync/obj/**" LinkBase="Developers/SqlServerSync" LogicalName="Askwerk.Api.Developers.SqlServerSync.%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,470 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 2360" width="1500" height="2360" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W7 AWK-20 question types: dropdown, other-specify, yes/no, slider, email/phone/url, date-time/time -->
+  <rect x="0" y="0" width="1500" height="2360" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W7 rev. 4 · Question types 1–6, choice options and rating looks · AWK-20 · 2026-10-14</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Each panel: the question on the canvas (as respondents see it, edited inline) and its settings in the inspector. EN; German texts follow the same rules.</text>
+  <rect x="40" y="80" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="60" cy="104" r="10" fill="#444"/>
+  <text x="60" y="108" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="80" y="109" font-size="16" font-weight="700" fill="#111" text-anchor="start">Dropdown</text>
+  <text x="80" y="128" font-size="12" font-weight="400" fill="#555" text-anchor="start">Single choice from a long list; searchable. New type “dropdown”.</text>
+  <rect x="56" y="142" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="68" y="162" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="468" y="142" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="480" y="162" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="68" y="190" font-size="14" font-weight="600" fill="#111" text-anchor="start">Which branch did you visit? *</text>
+  <rect x="68" y="202" width="360" height="34" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="80" y="224" font-size="13" font-weight="400" fill="#888" text-anchor="start">Choose…</text>
+  <text x="412" y="224" font-size="13" font-weight="600" fill="#111" text-anchor="end">▾</text>
+  <rect x="68" y="242" width="360" height="168" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="76" y="250" width="344" height="28" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="86" y="269" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">⌕  wie</text>
+  <rect x="76" y="284" width="344" height="28" rx="3" fill="#e8e8e8" stroke="none" stroke-width="1.2"/>
+  <text x="86" y="303" font-size="13" font-weight="400" fill="#111" text-anchor="start">Wien Mitte</text>
+  <rect x="76" y="314" width="344" height="28" rx="3" fill="#fff" stroke="none" stroke-width="1.2"/>
+  <text x="86" y="333" font-size="13" font-weight="400" fill="#111" text-anchor="start">Wien Favoriten</text>
+  <rect x="76" y="344" width="344" height="28" rx="3" fill="#fff" stroke="none" stroke-width="1.2"/>
+  <text x="86" y="363" font-size="13" font-weight="400" fill="#111" text-anchor="start">Wiener Neustadt</text>
+  <text x="76" y="392" font-size="11" font-weight="400" fill="#666" text-anchor="start">3 of 48 · type to filter · ↑↓ Enter</text>
+  <text x="68" y="436" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Search appears from 10 options. Keyboard: type, ↑↓, Enter.</text>
+  <text x="68" y="454" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Uses the shared combo box (AWK-19).</text>
+  <text x="480" y="184" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">OPTIONS (48)</text>
+  <rect x="480" y="192" width="230" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="490" y="212" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Paste a list: one per line</text>
+  <text x="480" y="246" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">ORDER</text>
+  <circle cx="488" cy="264" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="488" cy="264" r="3.5" fill="#555"/>
+  <text x="502" y="268" font-size="13" font-weight="400" fill="#111" text-anchor="start">As entered</text>
+  <circle cx="488" cy="286" r="7" fill="#fff" stroke="#555"/>
+  <text x="502" y="290" font-size="13" font-weight="400" fill="#111" text-anchor="start">Alphabetical (per language)</text>
+  <rect x="480" y="311" width="30" height="16" rx="8" fill="#ddd" stroke="#555" stroke-width="1.2"/>
+  <circle cx="488" cy="319" r="6" fill="#fff"/>
+  <text x="520" y="324" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">“Other, please specify”</text>
+  <rect x="480" y="337" width="30" height="16" rx="8" fill="#ddd" stroke="#555" stroke-width="1.2"/>
+  <circle cx="488" cy="345" r="6" fill="#fff"/>
+  <text x="520" y="350" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">“Don't know”</text>
+  <text x="480" y="390" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Export: one column BRANCH with</text>
+  <text x="480" y="406" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">the option code.</text>
+  <rect x="760" y="80" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="780" cy="104" r="10" fill="#444"/>
+  <text x="780" y="108" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="800" y="109" font-size="16" font-weight="700" fill="#111" text-anchor="start">Single and multiple choice, with “Other, please specify”</text>
+  <text x="800" y="128" font-size="12" font-weight="400" fill="#555" text-anchor="start">Existing types, unchanged; “Other” is an optional extra last option (a switch).</text>
+  <rect x="776" y="142" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="788" y="162" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="1188" y="142" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="1200" y="162" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="788" y="186" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">Multiple choice (check boxes)</text>
+  <text x="788" y="204" font-size="13.5" font-weight="600" fill="#111" text-anchor="start">How did you hear about us?</text>
+  <rect x="789" y="217" width="14" height="14" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="810" y="228" font-size="13" font-weight="400" fill="#111" text-anchor="start">Search engine</text>
+  <rect x="789" y="239" width="14" height="14" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="810" y="250" font-size="13" font-weight="400" fill="#111" text-anchor="start">Recommendation</text>
+  <rect x="971" y="217" width="14" height="14" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="992" y="228" font-size="13" font-weight="400" fill="#111" text-anchor="start">Advertising</text>
+  <rect x="971" y="239" width="14" height="14" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="992" y="250" font-size="13" font-weight="400" fill="#111" text-anchor="start">Social media</text>
+  <rect x="789" y="263" width="14" height="14" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="810" y="274" font-size="13" font-weight="400" fill="#111" text-anchor="start">Other, please specify:</text>
+  <rect x="956" y="258" width="196" height="24" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="964" y="275" font-size="12" font-weight="400" fill="#111" text-anchor="start">trade fair in Linz</text>
+  <line x1="788" y1="294" x2="1152" y2="294" stroke="#ddd"/>
+  <text x="788" y="314" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">Single choice (radio buttons)</text>
+  <text x="788" y="332" font-size="13.5" font-weight="600" fill="#111" text-anchor="start">Which product do you use most?</text>
+  <circle cx="796" cy="352" r="7" fill="#fff" stroke="#555"/>
+  <text x="810" y="356" font-size="13" font-weight="400" fill="#111" text-anchor="start">Askwerk Cloud</text>
+  <circle cx="978" cy="352" r="7" fill="#fff" stroke="#555"/>
+  <text x="992" y="356" font-size="13" font-weight="400" fill="#111" text-anchor="start">Askwerk Server</text>
+  <circle cx="796" cy="376" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="796" cy="376" r="3.5" fill="#555"/>
+  <text x="810" y="380" font-size="13" font-weight="400" fill="#111" text-anchor="start">Other, please specify:</text>
+  <rect x="956" y="364" width="196" height="24" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="964" y="381" font-size="12" font-weight="400" fill="#111" text-anchor="start">self-built</text>
+  <text x="788" y="410" font-size="11" font-weight="400" fill="#555" text-anchor="start">The text field takes focus when “Other” is chosen and is</text>
+  <text x="788" y="425" font-size="11" font-weight="400" fill="#555" text-anchor="start">required then; another radio choice clears it. Drag ⋮⋮ and</text>
+  <text x="788" y="440" font-size="11" font-weight="400" fill="#555" text-anchor="start">edit labels inline on the canvas, as today (M1/M2).</text>
+  <text x="1200" y="184" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">OPTIONS</text>
+  <rect x="1200" y="192" width="230" height="26" rx="3" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1208" y="210" font-size="11" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="1226" y="210" font-size="11.5" font-weight="600" fill="#666" text-anchor="start">1</text>
+  <text x="1244" y="210" font-size="12" font-weight="400" fill="#111" text-anchor="start">Search engine</text>
+  <text x="1422" y="210" font-size="12" font-weight="600" fill="#888" text-anchor="end">×</text>
+  <rect x="1200" y="222" width="230" height="26" rx="3" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1208" y="240" font-size="11" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="1226" y="240" font-size="11.5" font-weight="600" fill="#666" text-anchor="start">2</text>
+  <text x="1244" y="240" font-size="12" font-weight="400" fill="#111" text-anchor="start">Recommendation</text>
+  <text x="1422" y="240" font-size="12" font-weight="600" fill="#888" text-anchor="end">×</text>
+  <rect x="1200" y="252" width="230" height="26" rx="3" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1208" y="270" font-size="11" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="1226" y="270" font-size="11.5" font-weight="600" fill="#666" text-anchor="start">3</text>
+  <text x="1244" y="270" font-size="12" font-weight="400" fill="#111" text-anchor="start">Advertising</text>
+  <text x="1422" y="270" font-size="12" font-weight="600" fill="#888" text-anchor="end">×</text>
+  <rect x="1200" y="282" width="230" height="26" rx="3" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1208" y="300" font-size="11" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="1226" y="300" font-size="11.5" font-weight="600" fill="#666" text-anchor="start">4</text>
+  <text x="1244" y="300" font-size="12" font-weight="400" fill="#111" text-anchor="start">Social media</text>
+  <text x="1422" y="300" font-size="12" font-weight="600" fill="#888" text-anchor="end">×</text>
+  <text x="1200" y="328" font-size="12" font-weight="600" fill="#111" text-anchor="start">+ Add option   ·   Paste a list</text>
+  <rect x="1200" y="343" width="30" height="16" rx="8" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <circle cx="1222" cy="351" r="6" fill="#fff"/>
+  <text x="1240" y="356" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">“Other, please specify”</text>
+  <text x="1200" y="380" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">CODE</text>
+  <rect x="1200" y="388" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="408" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">OTHER</text>
+  <text x="1320" y="380" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">TEXT VARIABLE</text>
+  <rect x="1320" y="388" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1330" y="408" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">SOURCE_OTHER</text>
+  <rect x="1200" y="433" width="30" height="16" rx="8" fill="#ddd" stroke="#555" stroke-width="1.2"/>
+  <circle cx="1208" cy="441" r="6" fill="#fff"/>
+  <text x="1240" y="446" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Random order (Other stays last)</text>
+  <text x="1200" y="478" font-size="10.5" font-weight="400" fill="#555" text-anchor="start">Export: SOURCE as usual + text SOURCE_OTHER.</text>
+  <rect x="40" y="530" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="60" cy="554" r="10" fill="#444"/>
+  <text x="60" y="558" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="80" y="559" font-size="16" font-weight="700" fill="#111" text-anchor="start">Yes / No</text>
+  <text x="80" y="578" font-size="12" font-weight="400" fill="#555" text-anchor="start">Two big buttons; new type “yes-no”.</text>
+  <rect x="56" y="592" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="68" y="612" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="468" y="592" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="480" y="612" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="68" y="640" font-size="14" font-weight="600" fill="#111" text-anchor="start">Have you been here before? *</text>
+  <rect x="68" y="654" width="120" height="40" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="128.0" y="679.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Yes</text>
+  <rect x="198" y="654" width="120" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="258.0" y="679.0" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">No</text>
+  <text x="68" y="726" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">One tap answers; tap again to change.</text>
+  <text x="68" y="742" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Keyboard: Y / N or ← →.</text>
+  <text x="480" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">YES LABEL</text>
+  <rect x="480" y="642" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="490" y="662" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Yes</text>
+  <text x="600" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">CODE</text>
+  <rect x="600" y="642" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="610" y="662" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">1</text>
+  <text x="480" y="696" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">NO LABEL</text>
+  <rect x="480" y="704" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="490" y="724" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">No</text>
+  <text x="600" y="696" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">CODE</text>
+  <rect x="600" y="704" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="610" y="724" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">0</text>
+  <rect x="480" y="757" width="30" height="16" rx="8" fill="#ddd" stroke="#555" stroke-width="1.2"/>
+  <circle cx="488" cy="765" r="6" fill="#fff"/>
+  <text x="520" y="770" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">“Don't know”</text>
+  <text x="480" y="810" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Labels translated like any text;</text>
+  <text x="480" y="826" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">codes default to 1 / 0.</text>
+  <rect x="760" y="530" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="780" cy="554" r="10" fill="#444"/>
+  <text x="780" y="558" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="800" y="559" font-size="16" font-weight="700" fill="#111" text-anchor="start">Slider</text>
+  <text x="800" y="578" font-size="12" font-weight="400" fill="#555" text-anchor="start">A scale with a handle; new type “slider”.</text>
+  <rect x="776" y="592" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="788" y="612" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="1188" y="592" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="1200" y="612" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="788" y="640" font-size="14" font-weight="600" fill="#111" text-anchor="start">How likely are you to come back?</text>
+  <line x1="800" y1="680" x2="1140" y2="680" stroke="#999" stroke-width="4" stroke-linecap="round"/>
+  <line x1="800" y1="686" x2="800" y2="692" stroke="#999"/>
+  <line x1="834" y1="686" x2="834" y2="692" stroke="#999"/>
+  <line x1="868" y1="686" x2="868" y2="692" stroke="#999"/>
+  <line x1="902" y1="686" x2="902" y2="692" stroke="#999"/>
+  <line x1="936" y1="686" x2="936" y2="692" stroke="#999"/>
+  <line x1="970" y1="686" x2="970" y2="692" stroke="#999"/>
+  <line x1="1004" y1="686" x2="1004" y2="692" stroke="#999"/>
+  <line x1="1038" y1="686" x2="1038" y2="692" stroke="#999"/>
+  <line x1="1072" y1="686" x2="1072" y2="692" stroke="#999"/>
+  <line x1="1106" y1="686" x2="1106" y2="692" stroke="#999"/>
+  <line x1="1140" y1="686" x2="1140" y2="692" stroke="#999"/>
+  <text x="800" y="712" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">0 · not likely</text>
+  <text x="1140" y="712" font-size="11.5" font-weight="400" fill="#555" text-anchor="end">very likely · 100</text>
+  <text x="970" y="666" font-size="11.5" font-weight="600" fill="#888" text-anchor="middle">not answered yet</text>
+  <text x="788" y="746" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">No handle until the respondent touches the bar:</text>
+  <text x="788" y="762" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">an untouched slider is “not answered”, never 50.</text>
+  <line x1="800" y1="810" x2="1140" y2="810" stroke="#999" stroke-width="4" stroke-linecap="round"/>
+  <line x1="800" y1="810" x2="1038" y2="810" stroke="#555" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="1038" cy="810" r="11" fill="#555"/>
+  <text x="1038" y="792" font-size="12" font-weight="700" fill="#111" text-anchor="middle">70</text>
+  <text x="788" y="846" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">After touching: the value is shown above the handle.</text>
+  <text x="788" y="862" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Keyboard: ← → by step, Page keys by 10 steps.</text>
+  <text x="1200" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MIN</text>
+  <rect x="1200" y="642" width="70" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="662" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">0</text>
+  <text x="1280" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MAX</text>
+  <rect x="1280" y="642" width="70" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1290" y="662" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">100</text>
+  <text x="1360" y="634" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">STEP</text>
+  <rect x="1360" y="642" width="70" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1370" y="662" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">5</text>
+  <text x="1200" y="696" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LABEL AT MIN</text>
+  <rect x="1200" y="704" width="230" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="724" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">not likely</text>
+  <text x="1200" y="758" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LABEL AT MAX</text>
+  <rect x="1200" y="766" width="230" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="786" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">very likely</text>
+  <rect x="1200" y="817" width="30" height="16" rx="8" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <circle cx="1222" cy="825" r="6" fill="#fff"/>
+  <text x="1240" y="830" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Show value</text>
+  <text x="1200" y="860" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Check: max &gt; min, step divides</text>
+  <text x="1200" y="876" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">the range.</text>
+  <rect x="40" y="980" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="60" cy="1004" r="10" fill="#444"/>
+  <text x="60" y="1008" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="80" y="1009" font-size="16" font-weight="700" fill="#111" text-anchor="start">Email, phone, web address</text>
+  <text x="80" y="1028" font-size="12" font-weight="400" fill="#555" text-anchor="start">Short text with a format; the type menu offers them as their own entries.</text>
+  <rect x="56" y="1042" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="68" y="1062" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="468" y="1042" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="480" y="1062" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="68" y="1090" font-size="14" font-weight="600" fill="#111" text-anchor="start">Your email address *</text>
+  <rect x="68" y="1102" width="360" height="34" rx="4" fill="#fff" stroke="#b42318" stroke-width="2"/>
+  <text x="80" y="1124" font-size="13" font-weight="400" fill="#111" text-anchor="start">anna@acme</text>
+  <text x="68" y="1154" font-size="12" font-weight="600" fill="#b42318" text-anchor="start">Enter an email address, e.g. name@example.com.</text>
+  <text x="68" y="1190" font-size="14" font-weight="600" fill="#111" text-anchor="start">Phone</text>
+  <rect x="68" y="1202" width="360" height="34" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="80" y="1224" font-size="13" font-weight="400" fill="#111" text-anchor="start">+43 1 234 56 78</text>
+  <text x="68" y="1270" font-size="14" font-weight="600" fill="#111" text-anchor="start">Web address</text>
+  <rect x="68" y="1282" width="360" height="34" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="80" y="1304" font-size="13" font-weight="400" fill="#111" text-anchor="start">acme.at</text>
+  <text x="68" y="1336" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Checked when leaving the field and on Next. Phones</text>
+  <text x="68" y="1352" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">keep the digits and +; web addresses get https://.</text>
+  <text x="68" y="1368" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Mobile keyboards: email, tel and url layouts.</text>
+  <text x="480" y="1084" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">FORMAT</text>
+  <circle cx="488" cy="1102" r="7" fill="#fff" stroke="#555"/>
+  <text x="502" y="1106" font-size="13" font-weight="400" fill="#111" text-anchor="start">Free text</text>
+  <circle cx="488" cy="1124" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="488" cy="1124" r="3.5" fill="#555"/>
+  <text x="502" y="1128" font-size="13" font-weight="400" fill="#111" text-anchor="start">Email</text>
+  <circle cx="488" cy="1146" r="7" fill="#fff" stroke="#555"/>
+  <text x="502" y="1150" font-size="13" font-weight="400" fill="#111" text-anchor="start">Phone</text>
+  <circle cx="488" cy="1168" r="7" fill="#fff" stroke="#555"/>
+  <text x="502" y="1172" font-size="13" font-weight="400" fill="#111" text-anchor="start">Web address</text>
+  <text x="480" y="1196" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">PLACEHOLDER</text>
+  <rect x="480" y="1204" width="230" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="490" y="1224" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">name@example.com</text>
+  <text x="480" y="1270" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Personal data: email and phone are</text>
+  <text x="480" y="1286" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">flagged so the anonymity mode can</text>
+  <text x="480" y="1302" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">warn before publishing.</text>
+  <rect x="760" y="980" width="700" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="780" cy="1004" r="10" fill="#444"/>
+  <text x="780" y="1008" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="800" y="1009" font-size="16" font-weight="700" fill="#111" text-anchor="start">Date and time, time only</text>
+  <text x="800" y="1028" font-size="12" font-weight="400" fill="#555" text-anchor="start">The date question gets a mode: date · date and time · time.</text>
+  <rect x="776" y="1042" width="400" height="352" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="788" y="1062" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">CANVAS · as respondents see it</text>
+  <rect x="1188" y="1042" width="256" height="352" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="1200" y="1062" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR</text>
+  <text x="788" y="1090" font-size="14" font-weight="600" fill="#111" text-anchor="start">When did the problem start?</text>
+  <rect x="788" y="1102" width="170" height="34" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="800" y="1124" font-size="13" font-weight="400" fill="#111" text-anchor="start">14.10.2026</text>
+  <text x="946" y="1124" font-size="13" font-weight="400" fill="#111" text-anchor="end">▦</text>
+  <rect x="966" y="1102" width="100" height="34" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="978" y="1124" font-size="13" font-weight="400" fill="#111" text-anchor="start">09:30</text>
+  <text x="1056" y="1124" font-size="13" font-weight="400" fill="#111" text-anchor="end">◷</text>
+  <rect x="788" y="1144" width="250" height="190" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="800" y="1164" font-size="12.5" font-weight="700" fill="#111" text-anchor="start">‹  October 2026  ›</text>
+  <text x="911" y="1191" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">1</text>
+  <text x="944" y="1191" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">2</text>
+  <text x="977" y="1191" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">3</text>
+  <text x="1010" y="1191" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">4</text>
+  <text x="812" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">5</text>
+  <text x="845" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">6</text>
+  <text x="878" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">7</text>
+  <text x="911" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">8</text>
+  <text x="944" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">9</text>
+  <text x="977" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">10</text>
+  <text x="1010" y="1221" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">11</text>
+  <text x="812" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">12</text>
+  <text x="845" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">13</text>
+  <rect x="864" y="1234" width="28" height="24" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="878" y="1251" font-size="11.5" font-weight="400" fill="#fff" text-anchor="middle">14</text>
+  <text x="911" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">15</text>
+  <text x="944" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">16</text>
+  <text x="977" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">17</text>
+  <text x="1010" y="1251" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">18</text>
+  <text x="812" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">19</text>
+  <text x="845" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">20</text>
+  <text x="878" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">21</text>
+  <text x="911" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">22</text>
+  <text x="944" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">23</text>
+  <text x="977" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">24</text>
+  <text x="1010" y="1281" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">25</text>
+  <text x="812" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">26</text>
+  <text x="845" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">27</text>
+  <text x="878" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">28</text>
+  <text x="911" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">29</text>
+  <text x="944" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">30</text>
+  <text x="977" y="1311" font-size="11.5" font-weight="400" fill="#111" text-anchor="middle">31</text>
+  <text x="1050" y="1166" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Typing works too:</text>
+  <text x="1050" y="1182" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">“14.10.2026 9:30”</text>
+  <text x="1050" y="1208" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Format follows the</text>
+  <text x="1050" y="1224" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">respondent's language;</text>
+  <text x="1050" y="1240" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">24-hour clock in DE.</text>
+  <text x="788" y="1358" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Shared date and time pickers (AWK-19).</text>
+  <text x="1200" y="1084" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MODE</text>
+  <circle cx="1208" cy="1102" r="7" fill="#fff" stroke="#555"/>
+  <text x="1222" y="1106" font-size="13" font-weight="400" fill="#111" text-anchor="start">Date</text>
+  <circle cx="1208" cy="1124" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="1208" cy="1124" r="3.5" fill="#555"/>
+  <text x="1222" y="1128" font-size="13" font-weight="400" fill="#111" text-anchor="start">Date and time</text>
+  <circle cx="1208" cy="1146" r="7" fill="#fff" stroke="#555"/>
+  <text x="1222" y="1150" font-size="13" font-weight="400" fill="#111" text-anchor="start">Time only</text>
+  <text x="1200" y="1174" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">EARLIEST</text>
+  <rect x="1200" y="1182" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="1202" font-size="12.5" font-weight="400" fill="#888" text-anchor="start">optional</text>
+  <text x="1320" y="1174" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">LATEST</text>
+  <rect x="1320" y="1182" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1330" y="1202" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">today</text>
+  <text x="1200" y="1236" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MINUTE STEP</text>
+  <rect x="1200" y="1244" width="110" height="30" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1210" y="1264" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">15</text>
+  <text x="1200" y="1304" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Stored as entered (local time, no</text>
+  <text x="1200" y="1320" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">time zone) plus the survey's time</text>
+  <text x="1200" y="1336" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">zone in the export codebook.</text>
+  <rect x="40" y="1430" width="1420" height="420" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <circle cx="60" cy="1454" r="10" fill="#444"/>
+  <text x="60" y="1458" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="80" y="1459" font-size="16" font-weight="700" fill="#111" text-anchor="start">Rating: a choice of looks (new “Display” setting); slider stays a bar</text>
+  <text x="80" y="1478" font-size="12" font-weight="400" fill="#555" text-anchor="start">Min and max are set per question (e.g. 1–5, 1–7, 1–10, 0–10); the look only changes the presentation, not the stored value or export.</text>
+  <rect x="56" y="1492" width="268" height="270" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="68" y="1514" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">NUMBERS (TODAY)</text>
+  <text x="68" y="1538" font-size="13" font-weight="600" fill="#111" text-anchor="start">How satisfied are you? (1–5)</text>
+  <rect x="74.0" y="1554" width="36" height="36" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="92.0" y="1577" font-size="13" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="122.0" y="1554" width="36" height="36" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="140.0" y="1577" font-size="13" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="170.0" y="1554" width="36" height="36" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="188.0" y="1577" font-size="13" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="218.0" y="1554" width="36" height="36" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="236.0" y="1577" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">4</text>
+  <rect x="266.0" y="1554" width="36" height="36" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="284.0" y="1577" font-size="13" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="68" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="start">Very unsatisfied</text>
+  <text x="312" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="end">Very satisfied</text>
+  <text x="68" y="1644" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Answered: 4 (button pressed)</text>
+  <text x="68" y="1666" font-size="11" font-weight="400" fill="#555" text-anchor="start">Keyboard: ← → or 1–5</text>
+  <rect x="336" y="1492" width="268" height="270" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="348" y="1514" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">STARS</text>
+  <text x="348" y="1538" font-size="13" font-weight="600" fill="#111" text-anchor="start">Rate the event (1–10)</text>
+  <text x="360.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="384.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="408.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="432.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="456.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="480.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="504.0" y="1582" font-size="22" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="528.0" y="1582" font-size="22" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="552.0" y="1582" font-size="22" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="576.0" y="1582" font-size="22" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="348" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="start">Very unsatisfied</text>
+  <text x="592" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="end">Very satisfied</text>
+  <text x="348" y="1644" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Answered: 7 of 10 stars</text>
+  <text x="348" y="1666" font-size="11" font-weight="400" fill="#555" text-anchor="start">Hover previews; click sets</text>
+  <rect x="616" y="1492" width="268" height="270" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="628" y="1514" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">DOTS</text>
+  <text x="628" y="1538" font-size="13" font-weight="600" fill="#111" text-anchor="start">How easy was it? (1–7)</text>
+  <circle cx="645.1428571428571" cy="1572" r="8.0" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <circle cx="679.4285714285714" cy="1572" r="9.5" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <circle cx="713.7142857142857" cy="1572" r="11.0" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <circle cx="748.0" cy="1572" r="12.5" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <circle cx="782.2857142857142" cy="1572" r="14.0" fill="#555" stroke="#555" stroke-width="1.5"/>
+  <circle cx="816.5714285714286" cy="1572" r="15.5" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <circle cx="850.8571428571429" cy="1572" r="17.0" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="628" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="start">Very unsatisfied</text>
+  <text x="872" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="end">Very satisfied</text>
+  <text x="628" y="1644" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Answered: dot 5 of 7</text>
+  <text x="628" y="1666" font-size="11" font-weight="400" fill="#555" text-anchor="start">Larger dot = more</text>
+  <rect x="896" y="1492" width="268" height="270" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="908" y="1514" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">FACES</text>
+  <text x="908" y="1538" font-size="13" font-weight="600" fill="#111" text-anchor="start">How satisfied are you? (1–5)</text>
+  <rect x="913.0" y="1552" width="38" height="40" rx="19" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="932.0" y="1580" font-size="22" font-weight="400" fill="#111" text-anchor="middle">☹</text>
+  <rect x="961.0" y="1552" width="38" height="40" rx="19" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="980.0" y="1580" font-size="22" font-weight="400" fill="#111" text-anchor="middle">🙁</text>
+  <rect x="1009.0" y="1552" width="38" height="40" rx="19" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1028.0" y="1580" font-size="22" font-weight="400" fill="#111" text-anchor="middle">😐</text>
+  <rect x="1057.0" y="1552" width="38" height="40" rx="19" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1076.0" y="1580" font-size="22" font-weight="400" fill="#fff" text-anchor="middle">🙂</text>
+  <rect x="1105.0" y="1552" width="38" height="40" rx="19" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1124.0" y="1580" font-size="22" font-weight="400" fill="#111" text-anchor="middle">😀</text>
+  <text x="908" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="start">Very unsatisfied</text>
+  <text x="1152" y="1616" font-size="11" font-weight="400" fill="#555" text-anchor="end">Very satisfied</text>
+  <text x="908" y="1644" font-size="11.5" font-weight="600" fill="#333" text-anchor="start">Answered: 🙂 = 4</text>
+  <text x="908" y="1666" font-size="11" font-weight="400" fill="#555" text-anchor="start">Labels read aloud: “Satisfied”</text>
+  <rect x="1176" y="1492" width="268" height="270" rx="6" fill="#fafafa" stroke="#999" stroke-width="1.2"/>
+  <text x="1188" y="1514" font-size="10.5" font-weight="700" fill="#7a3b00" text-anchor="start">INSPECTOR · RATING</text>
+  <text x="1188" y="1538" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">DISPLAY</text>
+  <circle cx="1196" cy="1556" r="7" fill="#fff" stroke="#555"/>
+  <text x="1210" y="1560" font-size="13" font-weight="400" fill="#111" text-anchor="start">Numbers</text>
+  <circle cx="1196" cy="1578" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="1196" cy="1578" r="3.5" fill="#555"/>
+  <text x="1210" y="1582" font-size="13" font-weight="400" fill="#111" text-anchor="start">Stars</text>
+  <circle cx="1196" cy="1600" r="7" fill="#fff" stroke="#555"/>
+  <text x="1210" y="1604" font-size="13" font-weight="400" fill="#111" text-anchor="start">Dots</text>
+  <circle cx="1196" cy="1622" r="7" fill="#fff" stroke="#555"/>
+  <text x="1210" y="1626" font-size="13" font-weight="400" fill="#111" text-anchor="start">Faces (3 or 5 steps)</text>
+  <text x="1188" y="1650" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">RANGE</text>
+  <rect x="1188" y="1656" width="120" height="26" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1196" y="1674" font-size="12" font-weight="400" fill="#111" text-anchor="start">Custom…</text>
+  <text x="1302" y="1674" font-size="12" font-weight="600" fill="#111" text-anchor="end">▾</text>
+  <text x="1316" y="1666" font-size="10" font-weight="400" fill="#666" text-anchor="start">1–5 · 1–7 · 1–10</text>
+  <text x="1316" y="1679" font-size="10" font-weight="400" fill="#666" text-anchor="start">0–10 · Custom…</text>
+  <text x="1188" y="1700" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MIN</text>
+  <text x="1276" y="1700" font-size="10.5" font-weight="600" fill="#666" text-anchor="start">MAX</text>
+  <rect x="1188" y="1706" width="76" height="26" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1196" y="1724" font-size="12" font-weight="400" fill="#111" text-anchor="start">-3</text>
+  <rect x="1276" y="1706" width="76" height="26" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1284" y="1724" font-size="12" font-weight="400" fill="#111" text-anchor="start">3</text>
+  <text x="1188" y="1748" font-size="10" font-weight="400" fill="#555" text-anchor="start">Whole numbers, min &lt; max. Numbers ≤ 11</text>
+  <text x="1188" y="1760" font-size="10" font-weight="400" fill="#555" text-anchor="start">steps · stars, dots ≤ 10 · faces 3 or 5.</text>
+  <text x="56" y="1790" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Rating = whole steps you tap (looks: numbers, stars, dots, faces). Slider (panel 4) = fine values on a bar, e.g. 0–100 in steps of 5.</text>
+  <text x="56" y="1812" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Accessibility for every look: a radio group underneath, each step with its number and label read aloud; contrast and target size ≥ 44 px on phones.</text>
+  <text x="56" y="1834" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Definition: rating gets  display?: "numbers" | "stars" | "dots" | "faces"  (optional, default numbers); “Custom…” range with free min/max; publish checks rating-steps-too-many (numbers &gt; 11, stars/dots &gt; 10), faces-need-three-or-five-steps.</text>
+  <text x="40" y="1880" font-size="13" font-weight="600" fill="#444" text-anchor="start">Type menu (M1, “+ Add question”) with the new entries · EN</text>
+  <rect x="40" y="1890" width="700" height="330" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="60" y="1906" width="300" height="300" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <rect x="70" y="1916" width="280" height="28" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="80" y="1935" font-size="12.5" font-weight="400" fill="#888" text-anchor="start">⌕  Filter types</text>
+  <text x="76" y="1964" font-size="10" font-weight="700" fill="#666" text-anchor="start">CHOICE</text>
+  <text x="84" y="1982" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Single choice</text>
+  <text x="84" y="2000" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Multiple choice</text>
+  <text x="84" y="2018" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Dropdown  · new</text>
+  <text x="84" y="2036" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Yes / No  · new</text>
+  <text x="84" y="2054" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Ranking</text>
+  <text x="84" y="2072" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Matrix</text>
+  <text x="76" y="2094" font-size="10" font-weight="700" fill="#666" text-anchor="start">SCALES</text>
+  <text x="84" y="2112" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Rating scale</text>
+  <text x="84" y="2130" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Net Promoter Score</text>
+  <text x="84" y="2148" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Slider  · new</text>
+  <rect x="380" y="1906" width="340" height="300" rx="6" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="396" y="1928" font-size="10" font-weight="700" fill="#666" text-anchor="start">TEXT AND NUMBERS</text>
+  <text x="404" y="1946" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Short text</text>
+  <text x="404" y="1964" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Long text</text>
+  <text x="404" y="1982" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Number</text>
+  <text x="404" y="2000" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Email  · new</text>
+  <text x="404" y="2018" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Phone  · new</text>
+  <text x="404" y="2036" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Web address  · new</text>
+  <text x="396" y="2058" font-size="10" font-weight="700" fill="#666" text-anchor="start">DATE AND TIME</text>
+  <text x="404" y="2076" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Date</text>
+  <text x="404" y="2094" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Date and time  · new</text>
+  <text x="404" y="2112" font-size="12.5" font-weight="600" fill="#7a3b00" text-anchor="start">Time  · new</text>
+  <text x="396" y="2134" font-size="10" font-weight="700" fill="#666" text-anchor="start">OTHER</text>
+  <text x="404" y="2152" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Text block</text>
+  <text x="780" y="1880" font-size="13" font-weight="600" fill="#444" text-anchor="start">Definition (packages/schema and C#, schema version stays 1: only additions)</text>
+  <rect x="780" y="1890" width="680" height="330" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <text x="800" y="1920" font-size="12" font-weight="400" fill="#222" text-anchor="start">type: "dropdown"   options[], order?: "entered" | "alphabetical"</text>
+  <text x="800" y="1942" font-size="12" font-weight="400" fill="#222" text-anchor="start">type: "yes-no"     yes?: {label, code}, no?: {label, code}   (defaults Yes/1, No/0)</text>
+  <text x="800" y="1964" font-size="12" font-weight="400" fill="#222" text-anchor="start">type: "slider"     scale: {min, max, step, minLabel?, maxLabel?, showValue?}</text>
+  <text x="800" y="1986" font-size="12" font-weight="400" fill="#222" text-anchor="start">type: "short-text" format?: "email" | "phone" | "url"   placeholder?</text>
+  <text x="800" y="2008" font-size="12" font-weight="400" fill="#222" text-anchor="start">type: "date"       mode?: "date" | "date-time" | "time"   earliest?, latest?, minuteStep?</text>
+  <text x="800" y="2030" font-size="12" font-weight="400" fill="#222" text-anchor="start">single | multiple | dropdown:  other?: {label, code, variable}</text>
+  <text x="800" y="2052" font-size="12" font-weight="400" fill="#222" text-anchor="start"></text>
+  <text x="800" y="2074" font-size="12" font-weight="400" fill="#222" text-anchor="start">New publish checks (same corpus in C# and TypeScript):</text>
+  <text x="800" y="2096" font-size="12" font-weight="400" fill="#222" text-anchor="start">  slider-range-invalid · other-code-taken · other-variable-taken</text>
+  <text x="800" y="2118" font-size="12" font-weight="400" fill="#222" text-anchor="start">  yes-no-codes-equal · date-range-invalid</text>
+  <text x="800" y="2140" font-size="12" font-weight="400" fill="#222" text-anchor="start">Older definitions stay valid: every new field is optional.</text>
+  <text x="800" y="2162" font-size="12" font-weight="400" fill="#222" text-anchor="start">Index at publish: “other” becomes an option row (kind other) plus its</text>
+  <text x="800" y="2184" font-size="12" font-weight="400" fill="#222" text-anchor="start">  text variable; yes/no become two option rows.</text>
+  <text x="40" y="2250" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Notes · 1 Dropdown and 6 date/time use the shared controls of AWK-19; until those exist, this work item builds them for these two uses only, to AWK-19's rules, and AWK-19 takes them over.</text>
+  <text x="40" y="2272" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">2 “Other” is an option property so a survey can add it to any choice question without changing the question type (and without breaking the variable names).</text>
+  <text x="40" y="2294" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">4 An untouched slider is “not answered”: no default value is ever recorded.  5 Email and phone are flagged as personal data for the anonymity checks (later work item).</text>
+  <text x="40" y="2316" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Respondent views shown here are what the designer's canvas previews; the runner (later work item) renders the same.</text>
+</svg>

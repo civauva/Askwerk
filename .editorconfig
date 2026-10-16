@@ -1,0 +1,73 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Formatting rules for every editor and for `dotnet format` / Prettier (agents/coding-standards.md).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{cs,csx}]
+indent_size = 4
+
+[*.{csproj,props,targets,sln,slnx}]
+indent_size = 2
+
+[*.sh]
+indent_size = 2
+
+[*.cs]
+# Usings and namespaces
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:error
+csharp_style_namespace_declarations = file_scoped:error
+
+# Braces and layout: one statement per line, braces always
+csharp_new_line_before_open_brace = all
+csharp_prefer_braces = true:error
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+
+# Readability over cleverness
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_constructors = false:error
+csharp_style_prefer_switch_expression = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = false:none
+
+# Naming: interfaces start with I, private fields _camelCase, everything public PascalCase
+dotnet_naming_rule.interfaces_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_start_with_i.style = prefix_i
+dotnet_naming_rule.interfaces_start_with_i.severity = error
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.prefix_i.required_prefix = I
+dotnet_naming_style.prefix_i.capitalization = pascal_case
+
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_rule.private_fields_underscore.severity = error
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+
+dotnet_naming_rule.public_members_pascal.symbols = public_members
+dotnet_naming_rule.public_members_pascal.style = pascal
+dotnet_naming_rule.public_members_pascal.severity = error
+dotnet_naming_symbols.public_members.applicable_kinds = class, struct, enum, property, method, event, delegate, namespace
+dotnet_naming_style.pascal.capitalization = pascal_case
+
+# Analyzers: missing XML docs and async misuse are errors (agents/coding-standards.md)
+dotnet_diagnostic.CS1591.severity = error
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA2016.severity = error
+
+# EF Core migrations are generated code: analyzers and style rules do not apply.
+[**/Migrations/*.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none

@@ -1,0 +1,39 @@
+{
+  "name": "A survey's header image needs an alt text in the default language",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "long-text",
+            "text": {
+              "de": "Frage",
+              "en": "Question"
+            },
+            "required": false
+          }
+        ]
+      }
+    ],
+    "headerImage": {
+      "asset": "0199e000-0000-7000-8000-0000000000a1"
+    }
+  },
+  "expected": [
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "headerImage/alt",
+      "language": "de"
+    }
+  ]
+}

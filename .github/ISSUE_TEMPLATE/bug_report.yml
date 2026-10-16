@@ -1,0 +1,58 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Bug report
+description: Something in Askwerk does not work as it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Security problems must **not** be reported here; see SECURITY.md.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did and what you saw, including error messages.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Click …
+        3. See …
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Askwerk version or commit
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Designer
+        - Respondent app (runner)
+        - Results and analytics
+        - Settings and publishing
+        - Import / export
+        - Public API, webhooks, SDKs, MCP
+        - Install and operations
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and device for UI problems; OS, Docker version and proxy for install problems.

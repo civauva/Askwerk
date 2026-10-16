@@ -1,0 +1,69 @@
+{
+  "name": "A question may show an image with alt text, and options may be pictures with their label as alt text",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "STORE",
+            "type": "single",
+            "text": {
+              "de": "Welche Filiale?",
+              "en": "Which branch?"
+            },
+            "required": true,
+            "image": {
+              "asset": "0199e000-0000-7000-8000-0000000000a1",
+              "alt": {
+                "de": "Karte"
+              }
+            },
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Wien",
+                  "en": "Vienna"
+                },
+                "image": {
+                  "asset": "0199e000-0000-7000-8000-0000000000a1"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Graz",
+                  "en": "Graz"
+                },
+                "image": {
+                  "asset": ""
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "translation-missing",
+      "severity": "warning",
+      "path": "pages/0/questions/0/image/alt",
+      "language": "en"
+    },
+    {
+      "code": "image-missing",
+      "severity": "error",
+      "path": "pages/0/questions/0/options/1/image"
+    }
+  ]
+}

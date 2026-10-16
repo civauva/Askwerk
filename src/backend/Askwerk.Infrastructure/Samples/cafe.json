@@ -1,0 +1,306 @@
+{
+  "order": 1,
+  "look": "atelier",
+  "responses": 86,
+  "names": {
+    "de": "Café-Besuch",
+    "en": "Café visit"
+  },
+  "kind": {
+    "de": "Bildreich",
+    "en": "Graphics-rich"
+  },
+  "features": {
+    "de": [
+      "Bildauswahl",
+      "Kopfbild",
+      "Bildblock",
+      "Sterne und Gesichter"
+    ],
+    "en": [
+      "picture choices",
+      "header picture",
+      "image block",
+      "stars and faces"
+    ]
+  },
+  "texts": {
+    "wish": {
+      "de": [
+        "Mehr vegane Kuchen",
+        "Größere Tassen bitte",
+        "Die Terrasse ist wunderbar",
+        "Etwas schnellerer Service am Wochenende"
+      ],
+      "en": [
+        "More vegan cakes",
+        "Bigger cups, please",
+        "The terrace is lovely",
+        "Slightly faster service at weekends"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wie war Ihr Besuch im Café Falke?",
+        "en": "How was your visit to Café Falke?"
+      },
+      "text": {
+        "de": "Drei Minuten, ein paar Bilder, und Sie helfen uns beim nächsten Kuchen.",
+        "en": "Three minutes, a few pictures, and you help us bake the next cake."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Beim nächsten Besuch geht der Kaffee auf uns.",
+        "en": "Thank you! Your next coffee is on us."
+      }
+    },
+    "headerImage": {
+      "asset": "{picture:cafe}",
+      "alt": {
+        "de": "Gezeichnete Kaffeetasse mit Dampf",
+        "en": "A drawn coffee cup with steam"
+      }
+    },
+    "pages": [
+      {
+        "id": "taste",
+        "questions": [
+          {
+            "id": "room",
+            "variable": "IMG_ROOM",
+            "type": "image",
+            "text": {
+              "de": "Unser Gastgarten im Sommer.",
+              "en": "Our garden in summer."
+            },
+            "required": false,
+            "image": {
+              "asset": "{picture:garden}",
+              "alt": {
+                "de": "Gezeichneter Gastgarten mit Tischen unter Bäumen",
+                "en": "A drawn café garden with tables under trees"
+              },
+              "size": "wide",
+              "align": "centre"
+            }
+          },
+          {
+            "id": "cake",
+            "variable": "CAKE",
+            "type": "single",
+            "text": {
+              "de": "Welchen Kuchen haben Sie probiert?",
+              "en": "Which cake did you try?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Apfelstrudel",
+                  "en": "Apple strudel"
+                },
+                "image": {
+                  "asset": "{picture:strudel}",
+                  "alt": {
+                    "de": "Apfelstrudel",
+                    "en": "Apple strudel"
+                  }
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Sachertorte",
+                  "en": "Sacher cake"
+                },
+                "image": {
+                  "asset": "{picture:sacher}",
+                  "alt": {
+                    "de": "Sachertorte",
+                    "en": "Sacher cake"
+                  }
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Käsekuchen",
+                  "en": "Cheesecake"
+                },
+                "image": {
+                  "asset": "{picture:cheesecake}",
+                  "alt": {
+                    "de": "Käsekuchen",
+                    "en": "Cheesecake"
+                  }
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Croissant",
+                  "en": "Croissant"
+                },
+                "image": {
+                  "asset": "{picture:croissant}",
+                  "alt": {
+                    "de": "Croissant",
+                    "en": "Croissant"
+                  }
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "CAKE_OTHER"
+            }
+          },
+          {
+            "id": "taste",
+            "variable": "TASTE",
+            "type": "rating",
+            "text": {
+              "de": "Wie hat es geschmeckt?",
+              "en": "How did it taste?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "service",
+            "variable": "SERVICE",
+            "type": "rating",
+            "text": {
+              "de": "Wie war die Bedienung?",
+              "en": "How was the service?"
+            },
+            "required": false,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          }
+        ],
+        "title": {
+          "de": "Was Sie probiert haben",
+          "en": "What you tried"
+        }
+      },
+      {
+        "id": "next",
+        "questions": [
+          {
+            "id": "drinks",
+            "variable": "DRINKS",
+            "type": "multiple",
+            "text": {
+              "de": "Was möchten Sie beim nächsten Mal trinken?",
+              "en": "What would you like to drink next time?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Melange",
+                  "en": "Melange"
+                },
+                "image": {
+                  "asset": "{picture:coffee}",
+                  "alt": {
+                    "de": "Kaffee",
+                    "en": "Coffee"
+                  }
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Tee",
+                  "en": "Tea"
+                },
+                "image": {
+                  "asset": "{picture:tea}",
+                  "alt": {
+                    "de": "Tee",
+                    "en": "Tea"
+                  }
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Limonade",
+                  "en": "Lemonade"
+                },
+                "image": {
+                  "asset": "{picture:lemonade}",
+                  "alt": {
+                    "de": "Limonade",
+                    "en": "Lemonade"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10,
+              "minLabel": {
+                "de": "Gar nicht",
+                "en": "Not at all"
+              },
+              "maxLabel": {
+                "de": "Sehr gerne",
+                "en": "Very likely"
+              }
+            }
+          },
+          {
+            "id": "wish",
+            "variable": "WISH",
+            "type": "long-text",
+            "text": {
+              "de": "Was dürfen wir für Sie backen?",
+              "en": "What should we bake for you?"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Beim nächsten Mal",
+          "en": "Next time"
+        }
+      }
+    ]
+  }
+}

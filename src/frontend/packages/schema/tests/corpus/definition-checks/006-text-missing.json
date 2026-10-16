@@ -1,0 +1,49 @@
+{
+  "name": "Question text is required in the default language; an empty or blank text counts as missing",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "A",
+            "type": "short-text",
+            "text": {},
+            "required": false
+          },
+          {
+            "id": "q2",
+            "variable": "B",
+            "type": "short-text",
+            "text": {
+              "de": "  ",
+              "en": "Name"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "pages/0/questions/0/text",
+      "language": "de"
+    },
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "pages/0/questions/1/text",
+      "language": "de"
+    }
+  ]
+}

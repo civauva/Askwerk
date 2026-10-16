@@ -1,0 +1,56 @@
+{
+  "id": "graphit",
+  "name": {
+    "de": "Graphit",
+    "en": "Graphit"
+  },
+  "description": {
+    "de": "Nur Grautöne, Mono-Schrift.",
+    "en": "Greys only, mono labels."
+  },
+  "tags": [
+    "monochrome"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#1a1a1a",
+      "onAccent": "#f7f7f5",
+      "background": "#e9e9e7",
+      "surface": "#f7f7f5",
+      "text": "#1a1a1a",
+      "muted": "#5c5c5c",
+      "line": "#bdbdbb"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Mono"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "steps",
+    "layout": "card",
+    "components": {
+      "choices": {
+        "selected": "text",
+        "marker": "check"
+      },
+      "rating": {
+        "selected": "text"
+      },
+      "matrix": {
+        "header": "tinted"
+      },
+      "slider": {
+        "thumb": "square"
+      }
+    }
+  }
+}

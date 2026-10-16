@@ -1,0 +1,199 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>W23 Bar and tabs, second round</title><link rel="stylesheet" href="../sketch.css">
+<style>
+  body { width: 1640px; }
+  :root { --paper: #f6f5f2; --ink: #1a1917; --graphite: #4a4640; --line: #e3dfd8; --line2: #c8c2b8; --signal: #d2440f; --soft: #fbe6da; --sink: #8f2c06; }
+  .why { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .option { background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 14px 16px; margin-bottom: 18px; }
+  .option h2 { margin: 0 0 4px; }
+  .option > p { margin: 0 0 10px; color: #333; max-width: 1180px; }
+  .states { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 14px; align-items: start; }
+  .state .cap { font: 600 10.5px/1.3 "Segoe UI"; text-transform: uppercase; color: #666; margin-bottom: 4px; }
+  .app { border: 1px solid var(--line2); border-radius: 6px; overflow: hidden; background: var(--paper); font: 12px/1.35 "Segoe UI", sans-serif; color: var(--ink); }
+  .appbar { background: #fff; border-bottom: 1px solid var(--line); padding: 5px 10px; display: flex; justify-content: space-between; color: var(--graphite); font-size: 11px; }
+  .appbar b { color: var(--ink); }
+  .r { display: flex; align-items: center; gap: 10px; padding: 0 10px; min-height: 34px; background: #fff; border-bottom: 1px solid var(--line); }
+  .r .grow { flex: 1; }
+  .name { font: 600 14px/1.2 "Segoe UI"; }
+  .back { color: var(--graphite); }
+  .chip { border: 1px solid var(--line2); border-radius: 10px; padding: 0 7px; font-size: 11px; color: var(--graphite); white-space: nowrap; }
+  .chip.warn { border-color: var(--signal); color: var(--sink); background: var(--soft); }
+  .tab { padding: 9px 0 7px; color: var(--graphite); border-bottom: 2px solid transparent; white-space: nowrap; }
+  .tab.on { color: var(--ink); font-weight: 600; border-bottom-color: var(--signal); }
+  .seg { display: inline-flex; border: 1px solid var(--line2); border-radius: 5px; overflow: hidden; }
+  .seg span { padding: 3px 9px; border-right: 1px solid var(--line2); color: var(--graphite); }
+  .seg span:last-child { border-right: 0; }
+  .seg span.on { background: var(--ink); color: #fff; }
+  .b { border: 1px solid var(--line2); border-radius: 5px; padding: 3px 10px; background: #fff; font-weight: 600; white-space: nowrap; }
+  .b.p { background: var(--signal); border-color: var(--signal); color: #fff; }
+  .b.q { border-color: transparent; color: var(--graphite); font-weight: 400; }
+  .link { color: var(--sink); text-decoration: underline; white-space: nowrap; }
+  .tools { background: #fbfaf8; }
+  .body { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 6px; padding: 6px; height: 74px; }
+  .body.results { grid-template-columns: 1fr 1fr 1fr; }
+  .body div { border: 1px dashed var(--line2); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #9a948a; font-size: 11px; background: #fff; }
+  .phone { width: 270px; border: 1px solid var(--line2); border-radius: 18px; padding: 8px 6px 10px; background: #fff; }
+  .phone .app { border-radius: 10px; }
+  .phone .body { grid-template-columns: 1fr; height: 92px; }
+  .scroll { overflow: hidden; white-space: nowrap; gap: 14px; }
+  .fade { color: #bbb; }
+  .notes { font-size: 12px; margin: 10px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+  .notes p { margin: 0; }
+  .tag { display: inline-block; font: 700 10px/16px "Segoe UI"; background: var(--signal); color: #fff; border-radius: 3px; padding: 0 6px; margin-left: 6px; vertical-align: 2px; }
+  .principle { background: #fff; border: 1px solid #bbb; border-radius: 4px; padding: 12px 16px; }
+  .principle p { margin: 3px 0; }
+  .principle ol { margin: 4px 0 0 18px; padding: 0; }
+</style>
+</head>
+<body>
+<h1>W23 · The survey's bar and tabs, second round · AWK-29 · 2026-10-15</h1>
+<p class="lead">You rejected all five options of the first round. They all moved the same two buttons around. This round starts from why today's bar feels upside down, and then changes what goes where, not just where it sits. Each option is shown in three states: a draft while you edit it; a published survey with changes, seen from Results; and a phone.</p>
+
+<div class="why">
+  <div class="principle">
+    <p class="open">Why today feels inverted</p>
+    <ol>
+      <li>The top row mixes <i>which survey</i> (name, status) with <i>what to do now</i> (Preview, Publish).</li>
+      <li>The tabs mix two kinds of work: <i>making</i> the survey (Build, Settings) and <i>after it is out</i> (Share, Results, Participants). Publish is the bridge between them, but it floats above both.</li>
+      <li>Preview is part of making a survey, not a command for the whole survey.</li>
+    </ol>
+  </div>
+  <div class="principle">
+    <p class="open">Rules every option below follows</p>
+    <ol>
+      <li>Top to bottom goes from general to specific: the survey, then where you are, then the tools for that place.</li>
+      <li>An action sits next to the thing it acts on.</li>
+      <li>The status says what Publish would do ("2 changes not published"), so the button is never a guess.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- Option 1 -->
+<div class="option">
+  <h2>1 · Places above, tools below</h2>
+  <p>The tabs move up into the survey's row, so it reads like a menu: this survey and its places. Below it is a tool row that belongs to the open tab, so its buttons change with the place. Publish appears in the tool row of Build and Settings. On Results, the tool row holds Filter and Export. This is the usual order of desktop tools: menus first, then the toolbar for the open document.</p>
+  <div class="states">
+    <div class="state"><div class="cap">Draft · Build</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span><span class="tab on">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab">Participants</span></div>
+        <div class="r tools"><span class="chip">Draft · saved</span><span class="grow"></span><span class="b">Preview ▾</span><span class="b p">Publish</span></div>
+        <div class="body"><div>Outline</div><div>Canvas</div><div>Inspector</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Published v3, 2 changes · Results</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span><span class="tab">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab on">Results</span><span class="tab">Participants</span></div>
+        <div class="r tools"><span class="chip">Published v3 · 214 responses</span><span class="grow"></span><span class="b">Filter ▾</span><span class="b p">Export…</span></div>
+        <div class="body results"><div>Summary</div><div>Charts</div><div>Responses</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Phone · Build</div>
+      <div class="phone"><div class="app">
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span></div>
+        <div class="r scroll"><span class="tab on">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab fade">Results…</span></div>
+        <div class="r tools"><span class="chip">Draft</span><span class="grow"></span><span class="b">Preview</span><span class="b p">Publish</span></div>
+        <div class="body"><div>Canvas</div></div>
+      </div></div></div>
+  </div>
+  <div class="notes"><p>+ The direction is fixed: the survey, then the place, then the tools. Nothing above refers to something below.</p><p>– Publish is not visible from Results, so the 2 unpublished changes are easy to miss.</p></div>
+</div>
+
+<!-- Option 2 -->
+<div class="option">
+  <h2>2 · Publish lives in "Edit"</h2>
+  <p>Build and Settings become one tab, Edit. Inside it, a small switch chooses Questions, Settings or Preview, and Publish closes that row as the last step. The main tabs are then Edit · Share · Results · Participants, all on the same level: the four things you do with a survey.</p>
+  <div class="states">
+    <div class="state"><div class="cap">Draft · Edit → Questions</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip">Draft · saved</span></div>
+        <div class="r"><span class="tab on">Edit</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab">Participants</span></div>
+        <div class="r tools"><span class="seg"><span class="on">Questions</span><span>Settings</span><span>Preview</span></span><span class="grow"></span><span class="b p">Publish →</span></div>
+        <div class="body"><div>Outline</div><div>Canvas</div><div>Inspector</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Published v3, 2 changes · Results</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip">Published v3</span></div>
+        <div class="r"><span class="tab">Edit <span class="chip warn">2</span></span><span class="tab">Share</span><span class="tab on">Results</span><span class="tab">Participants</span></div>
+        <div class="r tools"><span class="b">Filter ▾</span><span class="grow"></span><span class="b">Export…</span></div>
+        <div class="body results"><div>Summary</div><div>Charts</div><div>Responses</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Phone · Edit</div>
+      <div class="phone"><div class="app">
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span><span class="chip">Draft</span></div>
+        <div class="r scroll"><span class="tab on">Edit</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab fade">Partic…</span></div>
+        <div class="r tools"><span class="seg"><span class="on">Qs</span><span>Settings</span><span>Preview</span></span><span class="grow"></span><span class="b p">Publish</span></div>
+        <div class="body"><div>Canvas</div></div>
+      </div></div></div>
+  </div>
+  <div class="notes"><p>+ Publish ends the row of the work it publishes: Questions → Settings → Preview → Publish reads as one flow.</p><p>– A tab disappears (Settings moves inside Edit), which changes the URLs and W17's tab row.</p><p>+ The badge on Edit ("2") shows unpublished changes from any tab.</p><p>– Two levels of tabs on Edit, though the inner one is a small switch.</p></div>
+</div>
+
+<!-- Option 3 -->
+<div class="option">
+  <h2>3 · One "next step" button that follows the survey's state</h2>
+  <p>The bar keeps today's tabs, but its button always shows the survey's next step, worded for the state it is in: a draft shows "Publish", a published survey with changes shows "Publish 2 changes", a published survey without changes shows "Copy link", and a closed survey shows "Reopen". Preview leaves the bar and becomes a mode of the canvas (Edit / Preview). The bar then holds identity plus exactly one action, and that action is never wrong for the tab you are on.</p>
+  <div class="states">
+    <div class="state"><div class="cap">Draft · Build</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip">Draft · saved</span><span class="grow"></span><span class="b p">Publish</span></div>
+        <div class="r"><span class="tab on">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab">Participants</span><span class="grow"></span><span class="seg"><span class="on">Edit</span><span>Preview</span></span></div>
+        <div class="body"><div>Outline</div><div>Canvas</div><div>Inspector</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Published v3, 2 changes · Results</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip warn">v3 · 2 changes not published</span><span class="grow"></span><span class="b p">Publish 2 changes</span></div>
+        <div class="r"><span class="tab">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab on">Results</span><span class="tab">Participants</span><span class="grow"></span><span class="b q">Filter ▾</span><span class="b q">Export…</span></div>
+        <div class="body results"><div>Summary</div><div>Charts</div><div>Responses</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Phone · Build</div>
+      <div class="phone"><div class="app">
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span><span class="grow"></span><span class="b p">Publish</span></div>
+        <div class="r scroll"><span class="tab on">Build</span><span class="tab">Settings</span><span class="tab">Share</span><span class="tab fade">Results…</span></div>
+        <div class="r tools"><span class="chip">Draft · saved</span><span class="grow"></span><span class="seg"><span class="on">Edit</span><span>Preview</span></span></div>
+        <div class="body"><div>Canvas</div></div>
+      </div></div></div>
+  </div>
+  <div class="notes"><p>+ The top button is about the whole survey, so it belongs above the tabs. Its words always make sense, whatever tab you are on.</p><p>– Preview's other ways (new tab, PDF) move into the Preview mode's own row.</p><p>+ The tab rows stay as W17 built them; it is the smallest change of the three.</p><p>– One button that changes its words needs good tests and clear labels.</p></div>
+</div>
+
+<!-- Option 4 -->
+<div class="option">
+  <h2>4 · Two and three together <span class="tag">recommended</span></h2>
+  <p>Option 2's tabs with option 3's button. The main tabs are Edit · Share · Results · Participants. Inside Edit, a switch chooses Questions, Settings or Preview. The bar's single button shows the next step for the survey's state (Publish, Publish 2 changes, Copy link, Reopen), and the status chip beside it says why. The bar reads top to bottom: the survey and its next step, then the four places, then (only in Edit) the three views of the work.</p>
+  <div class="states">
+    <div class="state"><div class="cap">Draft · Edit → Questions</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip">Draft · saved</span><span class="grow"></span><span class="b p">Publish</span></div>
+        <div class="r"><span class="tab on">Edit</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab">Participants</span><span class="grow"></span><span class="seg"><span class="on">Questions</span><span>Settings</span><span>Preview</span></span></div>
+        <div class="body"><div>Outline</div><div>Canvas</div><div>Inspector</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Published v3, 2 changes · Results</div>
+      <div class="app">
+        <div class="appbar"><span><b>Askwerk</b> · Acme</span><span>Anna ▾</span></div>
+        <div class="r"><span class="back">← Surveys</span><span class="name">Pulse Q4 ▾</span><span class="chip warn">v3 · 2 changes not published</span><span class="grow"></span><span class="b p">Publish 2 changes</span></div>
+        <div class="r"><span class="tab">Edit</span><span class="tab">Share</span><span class="tab on">Results</span><span class="tab">Participants</span><span class="grow"></span><span class="b q">Filter ▾</span><span class="b q">Export…</span></div>
+        <div class="body results"><div>Summary</div><div>Charts</div><div>Responses</div></div>
+      </div></div>
+    <div class="state"><div class="cap">Phone · Edit</div>
+      <div class="phone"><div class="app">
+        <div class="r"><span class="back">←</span><span class="name">Pulse Q4 ▾</span><span class="grow"></span><span class="b p">Publish</span></div>
+        <div class="r scroll"><span class="tab on">Edit</span><span class="tab">Share</span><span class="tab">Results</span><span class="tab fade">Partic…</span></div>
+        <div class="r tools"><span class="seg"><span class="on">Questions</span><span>Settings</span><span>Preview</span></span></div>
+        <div class="body"><div>Canvas</div></div>
+      </div></div></div>
+  </div>
+  <div class="notes"><p>+ Every row has one job: the survey and its next step; the places; the views of the work.</p><p>+ Nothing disappears. Preview's new tab and PDF sit in the Preview view; Settings is a click inside Edit.</p><p>+ Analysts and viewers see Results, Participants and Preview only, and no button.</p><p>– It changes W17's tabs (Build and Settings become Edit); /surveys/{id}/settings opens Edit → Settings, so links keep working.</p></div>
+</div>
+
+<div class="principle">
+  <p class="open">Recommendation: 4.</p>
+  <p>States of the button: Draft → "Publish". Published with changes → "Publish N changes". Published without changes → "Copy link" (quiet style). Closed → "Reopen". Approvals (AWK-28) show on the chip ("Approved by Anna").</p>
+  <p>DE/EN: Bearbeiten · Teilen · Ergebnisse · Teilnehmende; Fragen · Einstellungen · Vorschau; „Veröffentlichen“, „2 Änderungen veröffentlichen“, „Link kopieren“, „Wieder öffnen“. Embedded (W21): the same, without "← Surveys". Keyboard: the switch is a tab list. The button keeps one name per state for screen readers, and the chip is its description.</p>
+</div>
+</body></html>

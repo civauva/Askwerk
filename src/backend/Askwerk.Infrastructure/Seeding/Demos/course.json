@@ -1,0 +1,504 @@
+{
+  "order": 4,
+  "look": "blaupause",
+  "responses": 95,
+  "title": {
+    "de": "Demo: Lehrveranstaltungsevaluation",
+    "en": "Demo: Course evaluation"
+  },
+  "names": {
+    "de": "Lehrveranstaltungsevaluation",
+    "en": "Course evaluation"
+  },
+  "kind": {
+    "de": "Bildung",
+    "en": "Education"
+  },
+  "features": {
+    "de": [
+      "nummeriert",
+      "Matrix",
+      "Rangfolge",
+      "Regeln"
+    ],
+    "en": [
+      "numbered",
+      "matrix",
+      "ranking",
+      "rules"
+    ]
+  },
+  "texts": {
+    "best": {
+      "de": [
+        "Die Praxisbeispiele",
+        "Gute Folien",
+        "Mehr Übungen bitte",
+        "Klausur war fair"
+      ],
+      "en": [
+        "The practical examples",
+        "Good slides",
+        "More exercises, please",
+        "The exam was fair"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Evaluation: Statistik I, Wintersemester",
+        "en": "Evaluation: Statistics I, winter term"
+      },
+      "text": {
+        "de": "Anonym. Die Ergebnisse sehen die Lehrenden erst nach den Noten.",
+        "en": "Anonymous. Teachers see the results only after the grades."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke für Ihre Rückmeldung!",
+        "en": "Thank you for your feedback!"
+      }
+    },
+    "pages": [
+      {
+        "id": "you",
+        "title": {
+          "de": "Zu Ihnen",
+          "en": "About you"
+        },
+        "questions": [
+          {
+            "id": "programme",
+            "variable": "PROGRAMME",
+            "type": "single",
+            "text": {
+              "de": "Ihr Studiengang",
+              "en": "Your programme"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Psychologie",
+                  "en": "Psychology"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Soziologie",
+                  "en": "Sociology"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Wirtschaft",
+                  "en": "Business"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Informatik",
+                  "en": "Computer science"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "PROGRAMME_OTHER"
+            }
+          },
+          {
+            "id": "semester",
+            "variable": "SEMESTER",
+            "type": "number",
+            "text": {
+              "de": "Im wievielten Semester sind Sie?",
+              "en": "Which semester are you in?"
+            },
+            "required": true
+          },
+          {
+            "id": "attended",
+            "variable": "ATTENDED",
+            "type": "slider",
+            "text": {
+              "de": "Wie viele Vorlesungen haben Sie besucht (Prozent)?",
+              "en": "How many lectures did you attend (percent)?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 100,
+              "step": 10,
+              "showValue": true
+            }
+          }
+        ]
+      },
+      {
+        "id": "teaching",
+        "title": {
+          "de": "Lehre",
+          "en": "Teaching"
+        },
+        "questions": [
+          {
+            "id": "teaching",
+            "variable": "TEACHING",
+            "type": "matrix",
+            "text": {
+              "de": "Die Lehrperson …",
+              "en": "The teacher …"
+            },
+            "required": true,
+            "rows": [
+              {
+                "code": "prepared",
+                "label": {
+                  "de": "… war gut vorbereitet.",
+                  "en": "… was well prepared."
+                }
+              },
+              {
+                "code": "clear",
+                "label": {
+                  "de": "… erklärte verständlich.",
+                  "en": "… explained clearly."
+                }
+              },
+              {
+                "code": "engaging",
+                "label": {
+                  "de": "… weckte Interesse.",
+                  "en": "… sparked interest."
+                }
+              },
+              {
+                "code": "questions",
+                "label": {
+                  "de": "… ging auf Fragen ein.",
+                  "en": "… answered questions."
+                }
+              },
+              {
+                "code": "pace",
+                "label": {
+                  "de": "… wählte ein gutes Tempo.",
+                  "en": "… chose a good pace."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Stimme nicht zu",
+                  "en": "Disagree"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Eher nicht",
+                  "en": "Rather not"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Teils",
+                  "en": "Partly"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Eher ja",
+                  "en": "Rather agree"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Stimme zu",
+                  "en": "Agree"
+                }
+              }
+            ]
+          },
+          {
+            "id": "materials",
+            "variable": "MATERIALS",
+            "type": "matrix",
+            "text": {
+              "de": "Wie bewerten Sie die Materialien?",
+              "en": "How do you rate the materials?"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "slides",
+                "label": {
+                  "de": "Folien",
+                  "en": "Slides"
+                }
+              },
+              {
+                "code": "exercises",
+                "label": {
+                  "de": "Übungsblätter",
+                  "en": "Exercise sheets"
+                }
+              },
+              {
+                "code": "videos",
+                "label": {
+                  "de": "Aufzeichnungen",
+                  "en": "Recordings"
+                }
+              },
+              {
+                "code": "forum",
+                "label": {
+                  "de": "Forum",
+                  "en": "Forum"
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Schlecht",
+                  "en": "Poor"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Mittel",
+                  "en": "Fair"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Gut",
+                  "en": "Good"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Sehr gut",
+                  "en": "Very good"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "workload",
+        "title": {
+          "de": "Aufwand",
+          "en": "Workload"
+        },
+        "questions": [
+          {
+            "id": "hours",
+            "variable": "HOURS",
+            "type": "slider",
+            "text": {
+              "de": "Stunden pro Woche außerhalb der Vorlesung",
+              "en": "Hours a week outside lectures"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 20,
+              "step": 1,
+              "showValue": true
+            }
+          },
+          {
+            "id": "level",
+            "variable": "LEVEL",
+            "type": "rating",
+            "text": {
+              "de": "Der Schwierigkeitsgrad war …",
+              "en": "The difficulty was …"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 5,
+              "minLabel": {
+                "de": "viel zu leicht",
+                "en": "far too easy"
+              },
+              "maxLabel": {
+                "de": "viel zu schwer",
+                "en": "far too hard"
+              }
+            }
+          },
+          {
+            "id": "help",
+            "variable": "HELP",
+            "type": "ranking",
+            "text": {
+              "de": "Was hat Ihnen beim Lernen am meisten geholfen?",
+              "en": "What helped you learn most?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Vorlesung",
+                  "en": "Lectures"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Übungen",
+                  "en": "Exercises"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Lerngruppe",
+                  "en": "Study group"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Tutorium",
+                  "en": "Tutorial"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Bücher",
+                  "en": "Books"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "overall",
+        "title": {
+          "de": "Gesamt",
+          "en": "Overall"
+        },
+        "questions": [
+          {
+            "id": "grade",
+            "variable": "GRADE",
+            "type": "single",
+            "text": {
+              "de": "Welche Gesamtnote geben Sie?",
+              "en": "Which overall grade do you give?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Sehr gut",
+                  "en": "Excellent"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Gut",
+                  "en": "Good"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Befriedigend",
+                  "en": "Satisfactory"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Genügend",
+                  "en": "Sufficient"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Nicht genügend",
+                  "en": "Insufficient"
+                }
+              }
+            ]
+          },
+          {
+            "id": "why",
+            "variable": "WHY_LOW",
+            "type": "long-text",
+            "text": {
+              "de": "Was müsste sich ändern?",
+              "en": "What would need to change?"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "grade",
+                  "op": "is-one-of",
+                  "values": [
+                    "4",
+                    "5"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "best",
+            "variable": "BEST",
+            "type": "long-text",
+            "text": {
+              "de": "Was war gut?",
+              "en": "What was good?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

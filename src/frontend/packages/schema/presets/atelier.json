@@ -1,0 +1,61 @@
+{
+  "id": "atelier",
+  "name": {
+    "de": "Atelier",
+    "en": "Atelier"
+  },
+  "description": {
+    "de": "Landschaft im Kopf, weiße Karte.",
+    "en": "Landscape header, white card."
+  },
+  "tags": [
+    "pictures",
+    "calm"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#2f6f4f",
+      "onAccent": "#ffffff",
+      "background": "#eef1ee",
+      "surface": "#ffffff",
+      "text": "#1f2a24",
+      "muted": "#5b675f",
+      "line": "#d6ddd8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Serif"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "steps",
+    "layout": "header-image",
+    "decoration": {
+      "pattern": "hills"
+    },
+    "components": {
+      "question": {
+        "font": "heading"
+      }
+    },
+    "pages": {
+      "welcome": {
+        "layout": "centre"
+      },
+      "end": {
+        "layout": "centre"
+      }
+    },
+    "email": {
+      "header": "band"
+    }
+  }
+}

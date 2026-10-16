@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>C14 SQL Server sync</title><link rel="stylesheet" href="../sketch.css"></head>
+<body>
+<h1>C14 · SQL Server sync example: nightly job and long-format tables · AWK-14 · 2026-10-15</h1>
+<p class="lead">An example to copy and adapt, in docs/integrations/sql-server-sync (Apache-2.0, outside the product). A small .NET console job pulls responses changed since its last run from the Public API with a key and upserts them into SQL Server in long format. Askwerk never connects to SQL Server.</p>
+<div class="grid3">
+<div class="box">
+  <h2><span class="num">1</span>What the Public API needs first</h2>
+  <p>Responses are not public yet. Two read endpoints (scope responses:read):</p>
+<pre>GET /api/v1/surveys/{id}/responses?since=0&amp;limit=200
+200 { "items": [ {
+    "id": "…", "status": "complete", "version": 3,
+    "language": "de", "participant": { "email": "…", "externalId": null },
+    "startedAt": "…", "completedAt": "…", "changeSequence": 81234,
+    "answers": [ { "variable": "SAT", "value": "4", "label": "Zufrieden" },
+                 { "variable": "SOURCE", "value": "2", "label": "Werbung" },
+                 { "variable": "SOURCE", "value": "OTHER", "label": "Messe" } ] } ],
+  "nextSince": 81240 }</pre>
+<pre>GET /api/v1/surveys/{id}/codebook?language=de
+200 { "variables": [ { "variable": "SAT", "question": "Wie zufrieden…",
+       "type": "rating", "values": [ { "code": "1", "label": "…" } ] } ] }</pre>
+  <p class="muted">changeSequence is a number that grows with every change to a response (new answers, completion), across the organisation, so “since” never misses one. Matrix rows become variable_row (SAT_SERVICE); multiple choice gives one row per chosen code.</p>
+</div>
+<div class="box">
+  <h2><span class="num">2</span>Tables (create-tables.sql)</h2>
+  <table>
+    <tr><th>askwerk_response</th><th>askwerk_answer</th></tr>
+    <tr><td>response_id PK<br>survey_id<br>version<br>status<br>language<br>participant_email<br>external_id (host user id)<br>started_at, completed_at<br>change_sequence</td>
+        <td>response_id FK<br>variable<br>ordinal<br>value (nvarchar)<br>value_number (decimal, when numeric)<br>label<br>PK (response_id, variable, ordinal)</td></tr>
+    <tr><th>askwerk_variable</th><th>askwerk_value_label</th></tr>
+    <tr><td>survey_id, version, variable PK<br>question, type, language</td><td>survey_id, variable, code, language PK<br>label</td></tr>
+    <tr><th colspan="2">askwerk_sync_state</th></tr>
+    <tr><td colspan="2">survey_id PK · last_sequence · last_run_at · last_error</td></tr>
+  </table>
+  <p class="muted">Long format: one row per response, variable and chosen value. Reports join askwerk_answer to askwerk_value_label; nothing changes shape when a survey gets a new question.</p>
+</div>
+<div class="box">
+  <h2><span class="num">3</span>The job</h2>
+<pre>appsettings.json
+{ "Askwerk": { "BaseUrl": "https://surveys.acme.at",
+               "ApiKey": "awk_…", "Language": "de",
+               "Surveys": [] },          // empty = all published
+  "SqlServer": { "ConnectionString": "…" } }</pre>
+  <ol>
+    <li>For each survey: read last_sequence from askwerk_sync_state.</li>
+    <li>Refresh the codebook (upsert variables and labels).</li>
+    <li>Page through responses since last_sequence; per page, in one transaction: MERGE responses, delete and insert their answers, store nextSince.</li>
+    <li>Log a line per survey; exit code 0, or 1 with the error stored in last_error.</li>
+  </ol>
+  <ul>
+    <li>Restart-safe and idempotent: a crash repeats at most one page; rerunning changes nothing.</li>
+    <li>Runs from Task Scheduler, cron or a container (Dockerfile included); nightly or every 15 minutes.</li>
+    <li>Tested against SQL Server 2022 in a container (Developer edition, only in the example's tests) and a real Askwerk.</li>
+  </ul>
+</div>
+</div>
+<div class="notes">
+  <p>DE/EN: the job logs in English; labels come in the language chosen in appsettings.json. Email and PDF: not involved.</p>
+  <p class="open">Open for Dražan: (a) make the two read endpoints public in v1 (recommended; they are needed for this and for the SDKs anyway); (b) the example uses Microsoft.Data.SqlClient (MIT, Microsoft) — a dependency of the example only, never of Askwerk (recommended); (c) external_id stays empty until host users exist (AWK-12).</p>
+</div>
+</body></html>

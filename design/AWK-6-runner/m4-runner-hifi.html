@@ -1,0 +1,259 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- M4 · AWK-6 hi-fi mockups of the runner from the approved wireframe W8 rev. 2: A classic (desktop, EN), B missing answers (phone, DE), D one at a time (desktop, EN, light and dark). -->
+<title>Askwerk Runner Hi-Fi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --page: #e9e7e2; --page-ink: #1a1917; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; }
+body { background: var(--page); color: var(--page-ink); font: 14px/1.5 "IBM Plex Sans", system-ui, sans-serif; padding-inline: 16px; padding-block: 24px 64px; margin: 0; }
+main { display: grid; gap: 40px; justify-items: start; }
+.label { font: 600 13px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 10px; }
+.wrap { overflow-x: auto; max-width: 100%; }
+
+.t-light { --paper:#f6f5f2; --surface:#ffffff; --ink:#1a1917; --graphite:#4a4640; --muted:#6e6962; --line:#e3dfd8; --line-strong:#c8c2b8;
+  --signal:#d2440f; --signal-soft:#fbe6da; --signal-ink:#8f2c06; --on-signal:#ffffff; --error:#b42318; --error-soft:#fbe4e1; color-scheme: light; }
+.t-dark { --paper:#141311; --surface:#1c1a18; --ink:#f2efea; --graphite:#c9c3ba; --muted:#9c958b; --line:#2f2b27; --line-strong:#48423b;
+  --signal:#ff7a3d; --signal-soft:#3a2014; --signal-ink:#ffb48f; --on-signal:#1a0a03; --error:#f2877b; --error-soft:#331a17; color-scheme: dark; }
+
+.screen { width: 1440px; height: 900px; position: relative; overflow: hidden; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); display: flex; flex-direction: column; }
+.screen.phone { width: 390px; height: 844px; }
+.screen.tall { height: 1080px; }
+.screen * { box-sizing: border-box; }
+
+/* Header: the organisation, the language switch */
+.head { height: 64px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.phone .head { height: 56px; padding: 0 16px; }
+.org { display: flex; align-items: center; gap: 10px; font: 600 15px/1 "IBM Plex Sans", sans-serif; }
+.org i { width: 28px; height: 28px; border-radius: 4px; background: var(--ink); display: grid; place-items: center; color: var(--paper); font: 700 13px/1 "IBM Plex Sans Condensed", sans-serif; font-style: normal; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 2px; font: 600 12px/1 "IBM Plex Mono", monospace; }
+.seg span { padding: 7px 11px; }
+.seg .on { background: var(--ink); color: var(--paper); }
+
+.body { flex: 1; overflow: hidden; display: flex; justify-content: center; }
+.col { width: 640px; padding: 40px 0 0; display: grid; gap: 40px; align-content: start; }
+.phone .col { width: 100%; padding: 22px 18px 0; gap: 30px; }
+
+/* Progress: the Werkstatt ruler */
+.progress { display: grid; gap: 8px; }
+.progress .meta { display: flex; justify-content: space-between; font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.ruler { position: relative; height: 12px; border-bottom: 2px solid var(--ink); background-image: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 20px); background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; }
+.ruler i { position: absolute; left: 0; bottom: -2px; height: 6px; background: var(--signal); }
+
+/* Questions */
+.q { display: grid; gap: 14px; position: relative; }
+.q h2 { margin: 0; font: 600 21px/1.3 "IBM Plex Sans", sans-serif; letter-spacing: -.005em; }
+.phone .q h2 { font-size: 19px; }
+.q h2 .req { color: var(--signal); margin-left: 4px; }
+.q .help { margin: -8px 0 0; color: var(--graphite); font-size: 16px; }
+.q.bad::before { content: ""; position: absolute; left: -18px; top: 2px; bottom: 2px; width: 3px; background: var(--error); }
+.phone .q.bad::before { left: -12px; }
+.q .err { margin: -6px 0 0; color: var(--error); font: 600 15px/1.35 "IBM Plex Sans", sans-serif; display: flex; gap: 8px; align-items: baseline; }
+
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.scale span { height: 56px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); display: grid; place-items: center; font: 600 18px/1 "IBM Plex Mono", monospace; }
+.scale span.on { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.bad .scale span { border-color: var(--error); }
+.ends { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--muted); margin-top: -6px; }
+
+.opts { display: grid; gap: 8px; }
+.opt { min-height: 54px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); display: flex; align-items: center; gap: 14px; padding: 0 16px; font-size: 18px; }
+.phone .opt { font-size: 17px; }
+.opt.on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.box { width: 20px; height: 20px; border: 2px solid var(--line-strong); border-radius: 2px; flex: none; display: grid; place-items: center; }
+.on .box { background: var(--ink); border-color: var(--ink); }
+.on .box::after { content: ""; width: 10px; height: 5px; border-left: 2.5px solid var(--paper); border-bottom: 2.5px solid var(--paper); transform: rotate(-45deg) translate(1px, -1px); }
+.opt .other { flex: 1; height: 36px; border: 1px solid var(--line-strong); border-radius: 2px; display: flex; align-items: center; padding: 0 12px; font-size: 16px; background: var(--paper); }
+.opt .other.focus { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); background: var(--surface); }
+
+.text { min-height: 120px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); padding: 14px 16px; font-size: 17px; color: var(--muted); }
+.count { justify-self: end; font: 400 12px/1 "IBM Plex Mono", monospace; color: var(--muted); margin-top: -6px; }
+.input { height: 52px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); padding: 0 16px; display: flex; align-items: center; font-size: 17px; color: var(--muted); }
+
+.btn { height: 52px; border-radius: 2px; border: 1px solid var(--ink); background: var(--surface); color: var(--ink); font: 600 16px/1 "IBM Plex Sans", sans-serif; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 24px; white-space: nowrap; }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn kbd { font: 500 12px/1 "IBM Plex Mono", monospace; border: 1px solid currentColor; border-radius: 2px; padding: 3px 6px; opacity: .7; }
+.nav { display: flex; justify-content: space-between; align-items: center; }
+.saved { font-size: 13.5px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.saved::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #2e7d4f; }
+.foot { font: 400 12.5px/1 "IBM Plex Sans", sans-serif; color: var(--muted); display: flex; gap: 14px; padding-bottom: 32px; }
+
+/* Error summary (B) */
+.summary { border: 2px solid var(--error); border-left-width: 6px; border-radius: 2px; background: var(--error-soft); padding: 14px 16px; display: grid; gap: 8px; }
+.summary b { font: 700 17px/1.2 "IBM Plex Sans", sans-serif; color: var(--error); }
+.summary a { color: var(--ink); font-size: 15.5px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
+.focusring { outline: 3px solid var(--signal); outline-offset: 3px; }
+.bar { flex: none; display: grid; grid-template-columns: 1fr 2fr; gap: 10px; padding: 12px 18px 22px; background: var(--surface); border-top: 1px solid var(--line); }
+.bar .btn { height: 52px; }
+.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.yn span { height: 58px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); display: flex; align-items: center; justify-content: center; gap: 10px; font: 600 18px/1 "IBM Plex Sans", sans-serif; }
+.bad .yn span { border-color: var(--error); }
+.yn kbd { font: 500 11.5px/1 "IBM Plex Mono", monospace; color: var(--muted); border: 1px solid var(--line-strong); border-radius: 2px; padding: 3px 6px; }
+
+/* One at a time (D) */
+.one .col { padding-top: 64px; gap: 44px; }
+.one .q h2 { font: 700 44px/1.08 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.015em; }
+.one .q .help { font-size: 18px; margin: -2px 0 0; }
+.one .yn { grid-template-columns: 220px 220px; gap: 14px; }
+.one .yn span { height: 72px; font-size: 22px; justify-content: space-between; padding: 0 22px; }
+.one .yn span.on { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.one .yn span.on kbd { color: var(--on-signal); border-color: currentColor; }
+.qnum { font: 600 12px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--signal-ink); }
+.one .nav { justify-content: flex-start; gap: 18px; }
+.hintline { font-size: 14px; color: var(--muted); }
+.hintline kbd { font: 500 12px/1 "IBM Plex Mono", monospace; border: 1px solid var(--line-strong); border-radius: 2px; padding: 2px 5px; color: var(--graphite); }
+.back { position: absolute; left: 32px; bottom: 28px; display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--graphite); }
+.keys { position: absolute; right: 32px; bottom: 28px; display: flex; gap: 16px; font-size: 13px; color: var(--muted); }
+.keys kbd { font: 500 11.5px/1 "IBM Plex Mono", monospace; border: 1px solid var(--line-strong); border-radius: 2px; padding: 2px 5px; color: var(--graphite); }
+</style>
+<main>
+
+  <section>
+    <p class="label">A · Classic layout · desktop · EN · light</p>
+    <div class="wrap">
+      <div class="screen tall t-light">
+        <div class="head">
+          <span class="org"><i>A</i>Acme GmbH</span>
+          <span class="seg"><span>DE</span><span class="on">EN</span></span>
+        </div>
+        <div class="body">
+          <div class="col">
+            <div class="progress">
+              <div class="meta"><span>Page 2 of 3 · Your visit</span><span>50%</span></div>
+              <div class="ruler"><i style="width:50%"></i></div>
+            </div>
+            <div class="q">
+              <h2>How satisfied are you with our service?<span class="req">*</span></h2>
+              <p class="help">Please think about your last visit.</p>
+              <div class="scale"><span>1</span><span>2</span><span>3</span><span class="on">4</span><span>5</span></div>
+              <div class="ends"><span>Very unsatisfied</span><span>Very satisfied</span></div>
+            </div>
+            <div class="q">
+              <h2>How did you hear about us?</h2>
+              <p class="help">Choose all that apply.</p>
+              <div class="opts">
+                <div class="opt on"><span class="box"></span>Search engine</div>
+                <div class="opt"><span class="box"></span>Recommendation</div>
+                <div class="opt on"><span class="box"></span>Other, please specify: <span class="other focus">trade fair in Linz</span></div>
+              </div>
+            </div>
+            <div class="q">
+              <h2>What could we improve?</h2>
+              <div class="text">Your answer</div>
+              <span class="count">0 / 2000</span>
+            </div>
+            <div class="nav">
+              <span class="btn">Back</span>
+              <span class="saved">Saved with every Next</span>
+              <span class="btn primary">Next</span>
+            </div>
+            <div class="foot"><span>Askwerk</span><span>Privacy</span><span>Imprint</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">B · Classic · missing answers · phone · DE · light</p>
+    <div class="screen phone t-light">
+      <div class="head">
+        <span class="org"><i>A</i>Acme GmbH</span>
+        <span class="seg"><span class="on">DE</span><span>EN</span></span>
+      </div>
+      <div class="body">
+        <div class="col">
+          <div class="progress">
+            <div class="meta"><span>Seite 2 von 3</span><span>50 %</span></div>
+            <div class="ruler"><i style="width:50%"></i></div>
+          </div>
+          <div class="summary focusring" role="alert">
+            <b>2 Antworten fehlen noch</b>
+            <a>Zufriedenheit mit dem Service</a>
+            <a>Waren Sie schon einmal hier?</a>
+          </div>
+          <div class="q bad">
+            <h2>Wie zufrieden sind Sie mit unserem Service?<span class="req">*</span></h2>
+            <p class="err">Bitte wählen Sie einen Wert von 1 bis 5.</p>
+            <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+            <div class="ends"><span>Sehr unzufrieden</span><span>Sehr zufrieden</span></div>
+          </div>
+          <div class="q bad">
+            <h2>Waren Sie schon einmal hier?<span class="req">*</span></h2>
+            <p class="err">Bitte wählen Sie Ja oder Nein.</p>
+            <div class="yn"><span>Ja <kbd>J</kbd></span><span>Nein <kbd>N</kbd></span></div>
+          </div>
+          <div class="q">
+            <h2>Ihre E-Mail-Adresse</h2>
+            <div class="input">name@firma.at</div>
+          </div>
+        </div>
+      </div>
+      <div class="bar"><span class="btn">Zurück</span><span class="btn primary">Weiter</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">D · One at a time · desktop · EN · light</p>
+    <div class="wrap">
+      <div class="screen one t-light">
+        <div class="head">
+          <span class="org"><i>A</i>Acme GmbH</span>
+          <span class="seg"><span>DE</span><span class="on">EN</span></span>
+        </div>
+        <div class="body">
+          <div class="col">
+            <div class="progress">
+              <div class="meta"><span>Question 4 of 9</span><span>44%</span></div>
+              <div class="ruler"><i style="width:44%"></i></div>
+            </div>
+            <div class="q">
+              <span class="qnum">Q4</span>
+              <h2>Have you been here before?<span class="req">*</span></h2>
+              <p class="help">Tap an answer or press its key.</p>
+              <div class="yn"><span class="on">Yes <kbd>Y</kbd></span><span>No <kbd>N</kbd></span></div>
+            </div>
+            <div class="nav">
+              <span class="btn primary">OK <kbd>↵</kbd></span>
+              <span class="hintline">Moves on by itself in a moment</span>
+            </div>
+          </div>
+        </div>
+        <span class="back">↑ Previous question</span>
+        <span class="keys"><span><kbd>Shift</kbd>+<kbd>↵</kbd> back</span><span><kbd>↵</kbd> next</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">D · One at a time · desktop · EN · dark</p>
+    <div class="wrap">
+      <div class="screen one t-dark">
+        <div class="head">
+          <span class="org"><i>A</i>Acme GmbH</span>
+          <span class="seg"><span>DE</span><span class="on">EN</span></span>
+        </div>
+        <div class="body">
+          <div class="col">
+            <div class="progress">
+              <div class="meta"><span>Question 4 of 9</span><span>44%</span></div>
+              <div class="ruler"><i style="width:44%"></i></div>
+            </div>
+            <div class="q">
+              <span class="qnum">Q4</span>
+              <h2>Have you been here before?<span class="req">*</span></h2>
+              <p class="help">Tap an answer or press its key.</p>
+              <div class="yn"><span>Yes <kbd>Y</kbd></span><span>No <kbd>N</kbd></span></div>
+            </div>
+            <div class="nav">
+              <span class="btn primary">OK <kbd>↵</kbd></span>
+            </div>
+          </div>
+        </div>
+        <span class="back">↑ Previous question</span>
+        <span class="keys"><span><kbd>Shift</kbd>+<kbd>↵</kbd> back</span><span><kbd>↵</kbd> next</span></span>
+      </div>
+    </div>
+  </section>
+
+</main>

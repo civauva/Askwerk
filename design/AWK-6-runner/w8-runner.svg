@@ -1,0 +1,305 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 2350" width="1500" height="2350" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W8 AWK-6 runner: classic and one-at-a-time layouts, errors, states, W7 types -->
+  <rect x="0" y="0" width="1500" height="2350" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W8 rev. 2 · Runner (respondent app) · AWK-6 · 2026-10-14 · welcome page, J/N</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">One column, max 640 px, large type (18 px desktop, 17 px phone). Layout per survey: classic (a page of questions) or one at a time. Grayscale; the survey theme comes with AWK-17.</text>
+  <text x="40" y="80" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Classic layout · desktop · EN</text>
+  <rect x="40" y="90" width="720" height="900" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="90" width="720" height="52" rx="0" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="56" y="104" width="24" height="24" rx="3" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="88" y="122" font-size="14" font-weight="600" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="744" y="122" font-size="12.5" font-weight="600" fill="#444" text-anchor="end">DE | EN</text>
+  <text x="100" y="180" font-size="12" font-weight="600" fill="#555" text-anchor="start">Page 2 of 3 · Your visit</text>
+  <rect x="100" y="188" width="600" height="6" rx="3" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="100" y="188" width="300.0" height="6" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="100" y="240" font-size="18" font-weight="700" fill="#111" text-anchor="start">How satisfied are you with our service? *</text>
+  <text x="100" y="262" font-size="14" font-weight="400" fill="#555" text-anchor="start">Please think about your last visit.</text>
+  <rect x="100" y="276" width="110" height="46" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="155" y="305" font-size="16" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="220" y="276" width="110" height="46" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="275" y="305" font-size="16" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="340" y="276" width="110" height="46" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="395" y="305" font-size="16" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="460" y="276" width="110" height="46" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="515" y="305" font-size="16" font-weight="600" fill="#fff" text-anchor="middle">4</text>
+  <rect x="580" y="276" width="110" height="46" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="635" y="305" font-size="16" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="100" y="342" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Very unsatisfied</text>
+  <text x="690" y="342" font-size="12.5" font-weight="400" fill="#555" text-anchor="end">Very satisfied</text>
+  <text x="100" y="390" font-size="18" font-weight="700" fill="#111" text-anchor="start">How did you hear about us?</text>
+  <text x="100" y="410" font-size="14" font-weight="400" fill="#555" text-anchor="start">Choose all that apply.</text>
+  <rect x="100" y="424" width="600" height="40" rx="4" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <rect x="114" y="436" width="16" height="16" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="140" y="449" font-size="15" font-weight="400" fill="#111" text-anchor="start">Search engine</text>
+  <rect x="100" y="472" width="600" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="114" y="484" width="16" height="16" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="140" y="497" font-size="15" font-weight="400" fill="#111" text-anchor="start">Recommendation</text>
+  <rect x="100" y="520" width="600" height="40" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <rect x="114" y="532" width="16" height="16" rx="2" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="140" y="545" font-size="15" font-weight="400" fill="#111" text-anchor="start">Advertising</text>
+  <rect x="100" y="568" width="600" height="40" rx="4" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <rect x="114" y="580" width="16" height="16" rx="2" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="140" y="593" font-size="15" font-weight="400" fill="#111" text-anchor="start">Other, please specify:</text>
+  <rect x="320" y="574" width="368" height="28" rx="3" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="330" y="593" font-size="14" font-weight="400" fill="#111" text-anchor="start">trade fair in Linz</text>
+  <text x="100" y="656" font-size="18" font-weight="700" fill="#111" text-anchor="start">What could we improve?</text>
+  <rect x="100" y="670" width="600" height="110" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="112" y="694" font-size="14" font-weight="400" fill="#888" text-anchor="start">Your answer</text>
+  <text x="700" y="798" font-size="11.5" font-weight="400" fill="#888" text-anchor="end">0 / 2000</text>
+  <rect x="100" y="840" width="120" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="160.0" y="865.0" font-size="14" font-weight="600" fill="#111" text-anchor="middle">Back</text>
+  <rect x="580" y="840" width="120" height="40" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="640.0" y="865.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Next</text>
+  <text x="100" y="920" font-size="12" font-weight="400" fill="#555" text-anchor="start">Answers are saved with every Next; you can close the page and continue later.</text>
+  <text x="100" y="950" font-size="11.5" font-weight="400" fill="#888" text-anchor="start">Askwerk · Privacy · Imprint</text>
+  <circle cx="70" cy="240" r="10" fill="#444"/>
+  <text x="70" y="244" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="800" y="80" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Classic · missing answers · phone · DE</text>
+  <rect x="800" y="90" width="360" height="900" rx="18" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="800" y="110" width="360" height="52" rx="0" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="816" y="124" width="24" height="24" rx="3" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="848" y="142" font-size="14" font-weight="600" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="1144" y="142" font-size="12.5" font-weight="600" fill="#444" text-anchor="end">DE | EN</text>
+  <text x="818" y="190" font-size="12" font-weight="600" fill="#555" text-anchor="start">Seite 2 von 3</text>
+  <rect x="818" y="198" width="324" height="6" rx="3" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="818" y="198" width="162.0" height="6" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <rect x="818" y="216" width="324" height="88" rx="4" fill="#fff" stroke="#b42318" stroke-width="2"/>
+  <text x="830" y="240" font-size="15" font-weight="700" fill="#b42318" text-anchor="start">2 Antworten fehlen noch</text>
+  <text x="830" y="264" font-size="13" font-weight="600" fill="#111" text-anchor="start">• Zufriedenheit mit dem Service</text>
+  <text x="830" y="286" font-size="13" font-weight="600" fill="#111" text-anchor="start">• Waren Sie schon einmal hier?</text>
+  <circle cx="1140" cy="230" r="10" fill="#444"/>
+  <text x="1140" y="234" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="818" y="342" font-size="17" font-weight="700" fill="#111" text-anchor="start">Wie zufrieden sind Sie mit</text>
+  <text x="818" y="364" font-size="17" font-weight="700" fill="#111" text-anchor="start">unserem Service? *</text>
+  <text x="818" y="386" font-size="13" font-weight="600" fill="#b42318" text-anchor="start">Bitte wählen Sie einen Wert.</text>
+  <rect x="812" y="320" width="3" height="140" rx="0" fill="#b42318" stroke="none" stroke-width="1.2"/>
+  <rect x="818" y="398" width="60" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="848" y="428" font-size="16" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="884" y="398" width="60" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="914" y="428" font-size="16" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="950" y="398" width="60" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="980" y="428" font-size="16" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="1016" y="398" width="60" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1046" y="428" font-size="16" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="1082" y="398" width="60" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1112" y="428" font-size="16" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="818" y="464" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Sehr unzufrieden</text>
+  <text x="1142" y="464" font-size="11.5" font-weight="400" fill="#555" text-anchor="end">Sehr zufrieden</text>
+  <text x="818" y="516" font-size="17" font-weight="700" fill="#111" text-anchor="start">Waren Sie schon einmal hier? *</text>
+  <text x="818" y="538" font-size="13" font-weight="600" fill="#b42318" text-anchor="start">Bitte wählen Sie Ja oder Nein.</text>
+  <rect x="818" y="552" width="156" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="896.0" y="581.0" font-size="16" font-weight="600" fill="#111" text-anchor="middle">Ja   J</text>
+  <rect x="986" y="552" width="156" height="48" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1064.0" y="581.0" font-size="16" font-weight="600" fill="#111" text-anchor="middle">Nein   N</text>
+  <rect x="812" y="494" width="3" height="110" rx="0" fill="#b42318" stroke="none" stroke-width="1.2"/>
+  <text x="818" y="656" font-size="17" font-weight="700" fill="#111" text-anchor="start">Ihre E-Mail-Adresse</text>
+  <rect x="818" y="670" width="324" height="46" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="830" y="699" font-size="15" font-weight="400" fill="#888" text-anchor="start">name@firma.at</text>
+  <rect x="800" y="910" width="360" height="70" rx="0" fill="#f8f8f8" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="818" y="926" width="110" height="44" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="873.0" y="953.0" font-size="14" font-weight="600" fill="#111" text-anchor="middle">Zurück</text>
+  <rect x="938" y="926" width="204" height="44" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1040.0" y="953.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">Weiter</text>
+  <text x="818" y="760" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Fehlerliste oben: Fokus springt dorthin;</text>
+  <text x="818" y="776" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">jeder Eintrag führt zur Frage. Fehler</text>
+  <text x="818" y="792" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">stehen auch direkt bei der Frage.</text>
+  <text x="818" y="820" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Untere Leiste bleibt sichtbar (Daumen).</text>
+  <text x="1200" y="80" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · One at a time · keys</text>
+  <rect x="1200" y="90" width="260" height="430" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1216" y="120" font-size="12" font-weight="700" fill="#111" text-anchor="start">Keyboard (both layouts):</text>
+  <text x="1216" y="146" font-size="12" font-weight="400" fill="#333" text-anchor="start">Tab / Shift+Tab  move</text>
+  <text x="1216" y="168" font-size="12" font-weight="400" fill="#333" text-anchor="start">Space  choose</text>
+  <text x="1216" y="190" font-size="12" font-weight="400" fill="#333" text-anchor="start">1–9  choose option n</text>
+  <text x="1216" y="212" font-size="12" font-weight="400" fill="#333" text-anchor="start">Y / N  yes, no (EN) · J / N (DE)</text>
+  <text x="1216" y="234" font-size="12" font-weight="400" fill="#333" text-anchor="start">← →  rating, slider</text>
+  <text x="1216" y="256" font-size="12" font-weight="400" fill="#333" text-anchor="start">Enter  Next (one at a time)</text>
+  <text x="1216" y="278" font-size="12" font-weight="400" fill="#333" text-anchor="start">Shift+Enter  Back</text>
+  <text x="1216" y="300" font-size="12" font-weight="400" fill="#333" text-anchor="start">Esc  close a list</text>
+  <text x="1216" y="340" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Screen readers: each question is a</text>
+  <text x="1216" y="356" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">group named by its text; required and</text>
+  <text x="1216" y="372" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">errors are announced; progress is a</text>
+  <text x="1216" y="388" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">status line, not only a bar.</text>
+  <text x="1216" y="416" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Targets ≥ 44 px on phones; focus</text>
+  <text x="1216" y="432" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">always visible; motion off when the</text>
+  <text x="1216" y="448" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">system asks for reduced motion.</text>
+  <circle cx="1440" cy="110" r="10" fill="#444"/>
+  <text x="1440" y="114" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="40" y="1010" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · One-at-a-time layout · desktop · EN</text>
+  <rect x="40" y="1020" width="720" height="560" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="1020" width="720" height="52" rx="0" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="56" y="1034" width="24" height="24" rx="3" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="88" y="1052" font-size="14" font-weight="600" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="744" y="1052" font-size="12.5" font-weight="600" fill="#444" text-anchor="end">DE | EN</text>
+  <text x="100" y="1110" font-size="12" font-weight="600" fill="#555" text-anchor="start">Question 4 of 9</text>
+  <rect x="100" y="1118" width="600" height="6" rx="3" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="100" y="1118" width="266.66666666666663" height="6" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="100" y="1200" font-size="26" font-weight="700" fill="#111" text-anchor="start">Have you been here before? *</text>
+  <rect x="100" y="1230" width="180" height="56" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="190.0" y="1263.0" font-size="17" font-weight="600" fill="#111" text-anchor="middle">Yes   Y</text>
+  <rect x="296" y="1230" width="180" height="56" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="386.0" y="1263.0" font-size="17" font-weight="600" fill="#111" text-anchor="middle">No   N</text>
+  <text x="100" y="1330" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Choosing an answer moves on after a short pause for single choice, yes/no and</text>
+  <text x="100" y="1348" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">rating; other types need OK. The pause is skipped with reduced motion.</text>
+  <rect x="100" y="1390" width="120" height="44" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="160.0" y="1417.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">OK  ↵</text>
+  <text x="100" y="1480" font-size="13" font-weight="600" fill="#555" text-anchor="start">↑ Previous question</text>
+  <text x="700" y="1480" font-size="12" font-weight="400" fill="#888" text-anchor="end">Shift+Enter · Enter</text>
+  <circle cx="70" cy="1200" r="10" fill="#444"/>
+  <text x="70" y="1204" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="800" y="1010" font-size="13" font-weight="600" fill="#444" text-anchor="start">E · One at a time · slider · phone · DE</text>
+  <rect x="800" y="1020" width="360" height="560" rx="18" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="800" y="1040" width="360" height="52" rx="0" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="816" y="1054" width="24" height="24" rx="3" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="848" y="1072" font-size="14" font-weight="600" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="1144" y="1072" font-size="12.5" font-weight="600" fill="#444" text-anchor="end">DE | EN</text>
+  <text x="818" y="1120" font-size="12" font-weight="600" fill="#555" text-anchor="start">Frage 5 von 9</text>
+  <rect x="818" y="1128" width="324" height="6" rx="3" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="818" y="1128" width="180.0" height="6" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="818" y="1190" font-size="21" font-weight="700" fill="#111" text-anchor="start">Wie wahrscheinlich kommen</text>
+  <text x="818" y="1216" font-size="21" font-weight="700" fill="#111" text-anchor="start">Sie wieder?</text>
+  <text x="980" y="1264" font-size="16" font-weight="700" fill="#111" text-anchor="middle">70</text>
+  <line x1="818" y1="1288" x2="1142" y2="1288" stroke="#bbb" stroke-width="6"/>
+  <line x1="818" y1="1288" x2="1045" y2="1288" stroke="#555" stroke-width="6"/>
+  <circle cx="1045" cy="1288" r="14" fill="#555"/>
+  <text x="818" y="1320" font-size="12" font-weight="400" fill="#555" text-anchor="start">0 · unwahrscheinlich</text>
+  <text x="1142" y="1320" font-size="12" font-weight="400" fill="#555" text-anchor="end">sehr wahrscheinlich · 100</text>
+  <text x="818" y="1360" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Vor dem ersten Tippen kein Griff und</text>
+  <text x="818" y="1376" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">„noch nicht beantwortet“ (W7).</text>
+  <rect x="800" y="1500" width="360" height="70" rx="0" fill="#f8f8f8" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="818" y="1514" width="110" height="44" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="873.0" y="1541.0" font-size="14" font-weight="600" fill="#111" text-anchor="middle">Zurück</text>
+  <rect x="938" y="1514" width="204" height="44" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1040.0" y="1541.0" font-size="14" font-weight="600" fill="#fff" text-anchor="middle">OK</text>
+  <text x="1200" y="540" font-size="13" font-weight="600" fill="#444" text-anchor="start">F · Other screens</text>
+  <rect x="1200" y="550" width="260" height="1020" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1212" y="564" width="236" height="90" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="588" font-size="14" font-weight="700" fill="#111" text-anchor="start">Thank you! (end page)</text>
+  <text x="1224" y="610" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">The end page text from the survey.</text>
+  <text x="1224" y="628" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Your answers are saved.</text>
+  <text x="1224" y="646" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">You can close this page.</text>
+  <rect x="1212" y="680" width="236" height="72" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="704" font-size="14" font-weight="700" fill="#111" text-anchor="start">This survey has closed</text>
+  <text x="1224" y="726" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Closed on 30 Nov 2026.</text>
+  <text x="1224" y="744" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Thank you for your interest.</text>
+  <rect x="1212" y="776" width="236" height="54" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="800" font-size="14" font-weight="700" fill="#111" text-anchor="start">Not open yet</text>
+  <text x="1224" y="822" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Opens on 1 Dec 2026, 09:00.</text>
+  <rect x="1212" y="854" width="236" height="72" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="878" font-size="14" font-weight="700" fill="#111" text-anchor="start">Already answered</text>
+  <text x="1224" y="900" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">This link has been used to answer.</text>
+  <text x="1224" y="918" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Each invitation answers once.</text>
+  <rect x="1212" y="968" width="236" height="108" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="992" font-size="14" font-weight="700" fill="#111" text-anchor="start">Welcome back</text>
+  <text x="1224" y="1014" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">You answered up to page 2.</text>
+  <text x="1224" y="1032" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Your answers are still here.</text>
+  <rect x="1224" y="1046" width="140" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1294.0" y="1067.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Continue</text>
+  <rect x="1212" y="1100" width="236" height="108" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="1124" font-size="14" font-weight="700" fill="#111" text-anchor="start">Something went wrong</text>
+  <text x="1224" y="1146" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Your answers so far are saved.</text>
+  <text x="1224" y="1164" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Reference 4bf92f35…</text>
+  <rect x="1224" y="1178" width="140" height="32" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1294.0" y="1199.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Try again</text>
+  <rect x="1212" y="1230" width="236" height="72" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1224" y="1254" font-size="14" font-weight="700" fill="#111" text-anchor="start">Not found</text>
+  <text x="1224" y="1276" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">Check the link, or ask the</text>
+  <text x="1224" y="1294" font-size="11.5" font-weight="400" fill="#444" text-anchor="start">person who sent it.</text>
+  <text x="1216" y="1340" font-size="11.5" font-weight="600" fill="#555" text-anchor="start">DE copy follows the same texts:</text>
+  <text x="1216" y="1358" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">„Danke!“, „Diese Umfrage ist</text>
+  <text x="1216" y="1374" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">geschlossen“, „Willkommen zurück“…</text>
+  <circle cx="1440" cy="570" r="10" fill="#444"/>
+  <text x="1440" y="574" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="1610" font-size="13" font-weight="600" fill="#444" text-anchor="start">G · The W7 types as respondents see them (classic, desktop, EN; one at a time shows each alone)</text>
+  <rect x="40" y="1620" width="1120" height="470" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <text x="70" y="1656" font-size="16" font-weight="700" fill="#111" text-anchor="start">Which branch did you visit? *</text>
+  <rect x="70" y="1668" width="320" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="82" y="1693" font-size="14" font-weight="400" fill="#888" text-anchor="start">Choose…</text>
+  <text x="376" y="1693" font-size="14" font-weight="600" fill="#111" text-anchor="end">▾</text>
+  <text x="70" y="1730" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Shared combo box; search from 10 options.</text>
+  <text x="70" y="1780" font-size="16" font-weight="700" fill="#111" text-anchor="start">How do you rate the event?</text>
+  <text x="84" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="114" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="144" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="174" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="204" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="234" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="264" y="1816" font-size="24" font-weight="400" fill="#555" text-anchor="middle">★</text>
+  <text x="294" y="1816" font-size="24" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="324" y="1816" font-size="24" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="354" y="1816" font-size="24" font-weight="400" fill="#999" text-anchor="middle">☆</text>
+  <text x="70" y="1846" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Stars, dots, faces: a radio group underneath.</text>
+  <text x="70" y="1896" font-size="16" font-weight="700" fill="#111" text-anchor="start">When did the problem start?</text>
+  <rect x="70" y="1908" width="170" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="82" y="1933" font-size="14" font-weight="400" fill="#111" text-anchor="start">14/10/2026</text>
+  <text x="228" y="1933" font-size="14" font-weight="400" fill="#111" text-anchor="end">▦</text>
+  <rect x="250" y="1908" width="110" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="262" y="1933" font-size="14" font-weight="400" fill="#111" text-anchor="start">09:30</text>
+  <text x="348" y="1933" font-size="14" font-weight="400" fill="#111" text-anchor="end">◷</text>
+  <text x="70" y="1970" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Shared date picker and time field (AWK-19);</text>
+  <text x="70" y="1986" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">earliest/latest enforced.</text>
+  <text x="460" y="1656" font-size="16" font-weight="700" fill="#111" text-anchor="start">Your email address *</text>
+  <rect x="460" y="1668" width="320" height="40" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="472" y="1693" font-size="14" font-weight="400" fill="#888" text-anchor="start">name@example.com</text>
+  <text x="460" y="1730" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Checked on leaving the field and on Next;</text>
+  <text x="460" y="1746" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">mobile keyboards: email, tel, url.</text>
+  <text x="460" y="1780" font-size="16" font-weight="700" fill="#111" text-anchor="start">Which product do you use most?</text>
+  <rect x="460" y="1792" width="320" height="38" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <circle cx="478" cy="1811" r="7" fill="#fff" stroke="#555"/>
+  <text x="494" y="1816" font-size="14" font-weight="400" fill="#111" text-anchor="start">Askwerk Cloud</text>
+  <rect x="460" y="1838" width="320" height="38" rx="4" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <circle cx="478" cy="1857" r="7" fill="#fff" stroke="#555"/>
+  <circle cx="478" cy="1857" r="3.5" fill="#555"/>
+  <text x="494" y="1862" font-size="14" font-weight="400" fill="#111" text-anchor="start">Other, please specify:</text>
+  <rect x="646" y="1844" width="126" height="26" rx="3" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="654" y="1862" font-size="13" font-weight="400" fill="#111" text-anchor="start">self-built</text>
+  <text x="460" y="1910" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Matrix (rows × options): a table on</text>
+  <text x="460" y="1926" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">desktop, one card per row on phones.</text>
+  <text x="840" y="1656" font-size="16" font-weight="700" fill="#111" text-anchor="start">Rank these (drag or ↑↓)</text>
+  <rect x="840" y="1668" width="280" height="38" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="852" y="1692" font-size="14" font-weight="400" fill="#111" text-anchor="start">⋮⋮  1  Price</text>
+  <rect x="840" y="1712" width="280" height="38" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="852" y="1736" font-size="14" font-weight="400" fill="#111" text-anchor="start">⋮⋮  2  Quality</text>
+  <rect x="840" y="1756" width="280" height="38" rx="4" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="852" y="1780" font-size="14" font-weight="400" fill="#111" text-anchor="start">⋮⋮  3  Service</text>
+  <text x="840" y="1820" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">Ranking works without dragging:</text>
+  <text x="840" y="1836" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">each item has Move up / Move down.</text>
+  <text x="840" y="1880" font-size="16" font-weight="700" fill="#111" text-anchor="start">Text block</text>
+  <text x="840" y="1904" font-size="13" font-weight="400" fill="#333" text-anchor="start">Read-only text between questions,</text>
+  <text x="840" y="1922" font-size="13" font-weight="400" fill="#333" text-anchor="start">e.g. a welcome or an explanation.</text>
+  <text x="840" y="1970" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">“Don't know” appears as the last option</text>
+  <text x="840" y="1986" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">where the question offers it.</text>
+  <circle cx="1140" cy="1640" r="10" fill="#444"/>
+  <text x="1140" y="1644" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="1200" y="1610" font-size="13" font-weight="600" fill="#444" text-anchor="start">H · Welcome page · phone · DE</text>
+  <rect x="1200" y="1620" width="260" height="470" rx="18" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="1200" y="1640" width="260" height="40" rx="0" fill="#f5f5f5" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="1212" y="1650" width="20" height="20" rx="3" fill="#bbb" stroke="none" stroke-width="1.2"/>
+  <text x="1240" y="1665" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">Acme GmbH</text>
+  <text x="1448" y="1665" font-size="11" font-weight="600" fill="#444" text-anchor="end">DE | EN</text>
+  <text x="1216" y="1720" font-size="20" font-weight="700" fill="#111" text-anchor="start">Kundenzufriedenheit</text>
+  <text x="1216" y="1744" font-size="20" font-weight="700" fill="#111" text-anchor="start">2026</text>
+  <text x="1216" y="1776" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Danke, dass Sie sich Zeit nehmen.</text>
+  <text x="1216" y="1794" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Ihre Meinung hilft uns, besser</text>
+  <text x="1216" y="1812" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">zu werden.</text>
+  <text x="1216" y="1846" font-size="12" font-weight="600" fill="#444" text-anchor="start">◷ etwa 3 Minuten · 9 Fragen</text>
+  <text x="1216" y="1868" font-size="12" font-weight="600" fill="#444" text-anchor="start">◎ anonym: kein Name, keine E-Mail</text>
+  <rect x="1216" y="1890" width="228" height="56" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1226" y="1910" font-size="11" font-weight="400" fill="#555" text-anchor="start">Datenschutz: Antworten werden</text>
+  <text x="1226" y="1926" font-size="11" font-weight="400" fill="#555" text-anchor="start">nur für diese Umfrage verwendet.</text>
+  <text x="1226" y="1940" font-size="11" font-weight="600" fill="#111" text-anchor="start">Mehr dazu ›</text>
+  <rect x="1216" y="1970" width="228" height="48" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1330.0" y="1999.0" font-size="15" font-weight="600" fill="#fff" text-anchor="middle">Umfrage starten</text>
+  <text x="1216" y="2042" font-size="11" font-weight="400" fill="#555" text-anchor="start">Text, Dauer und Datenschutzhinweis</text>
+  <text x="1216" y="2058" font-size="11" font-weight="400" fill="#555" text-anchor="start">kommen aus der Umfrage; Enter startet.</text>
+  <circle cx="1440" cy="1640" r="10" fill="#444"/>
+  <text x="1440" y="1644" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="40" y="2130" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">1 Classic: all questions of a page; Next saves the page (data-model.md: Answer rows, page by page) and checks required answers and formats on the server too. Back never loses answers.</text>
+  <text x="40" y="2154" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">2 Errors: a summary at the top takes the focus and links to each question; each question shows its error and gets a red edge; texts say what to do, not only that something is wrong.</text>
+  <text x="40" y="2178" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">3 Keyboard and screen readers in both layouts; WCAG 2.2 AA; Lighthouse ≥ 95 on the runner (ui-design-system.md, Quality gates).</text>
+  <text x="40" y="2202" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">4 One at a time: big type, one question, progress as “Question 4 of 9”; auto-advance only where one tap answers it (with a short pause), never for multiple choice or text.</text>
+  <text x="40" y="2226" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">5 States: end page, closed, not yet open, already answered (invitations), resume (“Welcome back”), error with reference, not found — each DE and EN, chosen by the survey's languages and the browser.</text>
+  <text x="40" y="2250" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">7 Welcome page (optional, on by default): title, intro text, estimated duration (from the number of questions), anonymity and privacy note, Start; respondents who come back skip it.</text>
+  <text x="40" y="2274" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">6 All W7 types and looks use the shared controls; logic (show/hide/skip), quotas and the respondent's language switch follow later work items; the switch here only shows when the survey has more than one language.</text>
+  <text x="40" y="2314" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Layout choice per survey: a setting in the designer (Survey settings), default classic. No account needed to answer; nothing is tracked beyond what the anonymity mode allows.</text>
+</svg>

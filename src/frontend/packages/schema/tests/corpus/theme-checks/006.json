@@ -1,0 +1,48 @@
+{
+  "name": "A thin overlay leaves text unreadable over a dark image",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#d2440f",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card",
+    "background": {
+      "kind": "image-overlay",
+      "image": {
+        "asset": "a1"
+      },
+      "fit": "cover",
+      "overlay": "#ffffff",
+      "overlayOpacity": 0.4
+    }
+  },
+  "expected": [
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "background/overlay",
+      "against": "colours/text",
+      "ratio": 3.06
+    }
+  ]
+}

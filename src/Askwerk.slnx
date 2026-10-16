@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/Askwerk.Api/Askwerk.Api.csproj" />
+    <Project Path="backend/Askwerk.Application/Askwerk.Application.csproj" />
+    <Project Path="backend/Askwerk.Domain/Askwerk.Domain.csproj" />
+    <Project Path="backend/Askwerk.HealthProbe/Askwerk.HealthProbe.csproj" />
+    <Project Path="backend/Askwerk.Infrastructure/Askwerk.Infrastructure.csproj" />
+    <Project Path="backend/Askwerk.Tests.Api/Askwerk.Tests.Api.csproj" />
+    <Project Path="backend/Askwerk.Tests.Application/Askwerk.Tests.Application.csproj" />
+    <Project Path="backend/Askwerk.Tests.Domain/Askwerk.Tests.Domain.csproj" />
+    <Project Path="backend/Askwerk.Tests.Integration/Askwerk.Tests.Integration.csproj" />
+  </Folder>
+  <Folder Name="/sdks/">
+    <Project Path="sdks/csharp/Askwerk.Sdk/Askwerk.Sdk.csproj" />
+  </Folder>
+</Solution>

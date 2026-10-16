@@ -1,0 +1,2574 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Askwerk Public API",
+    "description": "A stable subset of Askwerk for integrators. Authenticate with an API key from Settings \u2192 API as Authorization: Bearer \u003Ckey\u003E. Errors are RFC 7807 problem details; see docs/api/errors.md.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/oauth/token": {
+      "post": {
+        "tags": [
+          "OAuthToken"
+        ],
+        "summary": "Gives an access token for the client credentials grant.",
+        "description": "application/x-www-form-urlencoded: grant_type=client_credentials, the client\u0027s id and secret (in the body or as\r\nHTTP Basic), and optionally scope (space-separated, a subset of the client\u0027s). Errors follow RFC 6749.",
+        "responses": {
+          "200": {
+            "description": "The access token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "invalid_request, unsupported_grant_type or invalid_scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "invalid_client: unknown client, wrong secret, revoked or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": [
+          "PublicUsers"
+        ],
+        "summary": "Lists the provisioned users, oldest first.",
+        "description": "Scope users:manage. Pages on a cursor: pass nextCursor as cursor until it is null. Deactivated users are listed with active false.",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Where the page starts, from the previous page\u0027s nextCursor.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "At most 500; 100 when not given.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks users:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "provisioning-off.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{externalId}": {
+      "put": {
+        "tags": [
+          "PublicUsers"
+        ],
+        "summary": "Creates or changes a user by the host\u0027s id.",
+        "description": "Scope users:manage. Creates the user (without an Askwerk password) when the id is new, matching an existing\r\naccount by email once; otherwise updates email, name and role. active false deactivates, true activates again.\r\nOwners are never provisioned; an owner\u0027s role is never changed.",
+        "parameters": [
+          {
+            "name": "externalId",
+            "in": "path",
+            "description": "The host system\u0027s user id.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicUserRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicUserRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Changed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUser"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "user-invalid or owner-not-provisioned.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks users:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "provisioning-off.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PublicUsers"
+        ],
+        "summary": "Deactivates a user: out of the organisation, sessions ended; never deleted, their responses stay.",
+        "description": "Scope users:manage. PUT with active true lets them in again.",
+        "parameters": [
+          {
+            "name": "externalId",
+            "in": "path",
+            "description": "The host system\u0027s user id.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deactivated.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks users:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "user-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "provisioning-off.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks": {
+      "get": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Lists the organisation\u0027s webhooks.",
+        "description": "Scope webhooks:manage. Newest first, each with its last delivery; never with its secret.",
+        "responses": {
+          "200": {
+            "description": "The webhooks.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Creates a webhook.",
+        "description": "Scope webhooks:manage. The secret is in this answer only; keep it to check Askwerk-Signature. At most 20 webhooks per organisation.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "The webhook and its secret.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedWebhook"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "url-invalid or events-invalid.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "webhooks-too-many.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/{id}": {
+      "patch": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Changes a webhook\u0027s URL, events or state.",
+        "description": "Scope webhooks:manage. active false stops it; active true starts it again, also after it was paused for failing.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The webhook.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookChange"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "url-invalid or events-invalid.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "webhook-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Deletes a webhook and its deliveries log.",
+        "description": "Scope webhooks:manage.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The webhook.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "webhook-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/{id}/deliveries": {
+      "get": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Lists a webhook\u0027s deliveries, newest first.",
+        "description": "Scope webhooks:manage. Cursor-based: pass nextCursor as cursor for the next page.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The webhook.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "From the previous page.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "At most 100; 50 when not given.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of deliveries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "webhook-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/{id}/deliveries/{deliveryId}/replay": {
+      "post": {
+        "tags": [
+          "PublicWebhooks"
+        ],
+        "summary": "Sends a delivery\u0027s event again.",
+        "description": "Scope webhooks:manage. A new delivery with the same event id, so receivers that saw it already can skip it.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The webhook.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "deliveryId",
+            "in": "path",
+            "description": "The delivery.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Queued.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks webhooks:manage.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "webhook-not-found or delivery-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surveys": {
+      "get": {
+        "tags": [
+          "PublicSurveys"
+        ],
+        "summary": "Lists surveys, newest change first.",
+        "description": "Scope surveys:read. Pages on a cursor: pass nextCursor as cursor until it is null.",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "draft, published or closed; all when empty.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Surveys per page, at most 100; 50 when empty.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Where the page starts, from the previous page\u0027s nextCursor.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of surveys.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicSurveyPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks surveys:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "429": {
+            "description": "rate-limited: too many calls; see Retry-After.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/{surveyId}": {
+      "get": {
+        "tags": [
+          "PublicSurveys"
+        ],
+        "summary": "Reads one survey, with its published versions and links.",
+        "description": "Scope surveys:read.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The survey.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicSurvey"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks surveys:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found: no such survey in the key\u0027s organisation.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "429": {
+            "description": "rate-limited: too many calls; see Retry-After.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/{surveyId}/responses": {
+      "get": {
+        "tags": [
+          "PublicResponses"
+        ],
+        "summary": "Lists the survey\u0027s responses changed after a sequence, oldest change first.",
+        "description": "Scope responses:read. Every new answer, change and completion gives a response a higher changeSequence; pass\r\nnextSince as since to go on. Answers are in long format, one entry per variable of the codebook, with the value\r\nand its label in the chosen language; an option of multiple choice appears only when chosen.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "description": "The last changeSequence already stored; 0 for all.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int64"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "At most 500; 200 when not given.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Labels in this survey language; the default language when not given.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of responses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicResponsePage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks responses:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/{surveyId}/codebook": {
+      "get": {
+        "tags": [
+          "PublicResponses"
+        ],
+        "summary": "The codebook of the survey\u0027s latest published version: every variable with its label and values.",
+        "description": "Scope responses:read. The variables are those of the responses endpoint and of every export.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Labels in this survey language; the default language when not given.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The codebook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicCodebook"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks responses:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "not-published.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/surveys/{surveyId}/exports": {
+      "post": {
+        "tags": [
+          "PublicExports"
+        ],
+        "summary": "Starts an export of a survey\u0027s responses.",
+        "description": "Scope responses:read. Answers 202 with the export to poll (Location). With an Idempotency-Key header, the same\r\nkey within 24 hours gives the same export. At most three exports of an organisation run at the same time.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicExportRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "The export, queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicExport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unknown-format.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks responses:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "not-published: the survey has no published version.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "429": {
+            "description": "too-many-exports or rate-limited.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports/{exportId}": {
+      "get": {
+        "tags": [
+          "PublicExports"
+        ],
+        "summary": "Reads an export: its status, progress and, once ready, its file.",
+        "description": "Scope responses:read. Poll every few seconds until the status is ready, failed or expired.",
+        "parameters": [
+          {
+            "name": "exportId",
+            "in": "path",
+            "description": "The export.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The export.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicExport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks responses:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "export-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "429": {
+            "description": "rate-limited.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports/{exportId}/file": {
+      "get": {
+        "tags": [
+          "PublicExports"
+        ],
+        "summary": "Downloads an export\u0027s file.",
+        "description": "Scope responses:read. Every download is in the organisation\u0027s audit log with the key as actor.",
+        "parameters": [
+          {
+            "name": "exportId",
+            "in": "path",
+            "description": "The export.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file, as an attachment.",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stream"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: the key lacks responses:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "export-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "export-not-ready.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "410": {
+            "description": "export-expired: files are kept 7 days.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "429": {
+            "description": "rate-limited.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreatedWebhook": {
+        "required": [
+          "webhook",
+          "secret"
+        ],
+        "type": "object",
+        "properties": {
+          "webhook": {
+            "description": "The webhook.",
+            "$ref": "#/components/schemas/WebhookView"
+          },
+          "secret": {
+            "type": "string",
+            "description": "Signs every delivery (whsec_\u2026)."
+          }
+        },
+        "description": "A created webhook with its secret, shown only here."
+      },
+      "DeliveryPage": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliveryView"
+            },
+            "description": "Newest first."
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Pass as cursor for the next page; null at the end."
+          }
+        },
+        "description": "A page of deliveries."
+      },
+      "DeliveryView": {
+        "required": [
+          "id",
+          "event",
+          "eventId",
+          "status",
+          "attempts",
+          "responseStatus",
+          "error",
+          "createdAt",
+          "deliveredAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Its id; replay with it.",
+            "format": "uuid"
+          },
+          "event": {
+            "type": "string",
+            "description": "The event type."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "The event\u0027s id (evt_\u2026)."
+          },
+          "status": {
+            "type": "string",
+            "description": "pending, delivered or failed."
+          },
+          "attempts": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Tries made.",
+            "format": "int32"
+          },
+          "responseStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "The last HTTP status answered.",
+            "format": "int32"
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Why the last try got no answer."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When the event was queued (UTC).",
+            "format": "date-time"
+          },
+          "deliveredAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When it was delivered.",
+            "format": "date-time"
+          }
+        },
+        "description": "One delivery in the log."
+      },
+      "LastDeliveryView": {
+        "required": [
+          "status",
+          "at",
+          "responseStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "pending, delivered or failed."
+          },
+          "at": {
+            "type": "string",
+            "description": "When.",
+            "format": "date-time"
+          },
+          "responseStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "The last HTTP status answered.",
+            "format": "int32"
+          }
+        },
+        "description": "The last delivery of a webhook."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PublicAnswer": {
+        "required": [
+          "variable",
+          "value",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "variable": {
+            "type": "string",
+            "description": "As in the codebook, e.g. SAT or SOURCE_2."
+          },
+          "value": {
+            "type": "string",
+            "description": "The code or number; text for open questions."
+          },
+          "label": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The value\u0027s label in the chosen language."
+          }
+        },
+        "description": "One variable\u0027s answer."
+      },
+      "PublicCodebook": {
+        "required": [
+          "version",
+          "language",
+          "variables"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The published version it describes.",
+            "format": "int32"
+          },
+          "language": {
+            "type": "string",
+            "description": "The labels\u0027 language."
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicVariable"
+            },
+            "description": "Every variable in order."
+          }
+        },
+        "description": "A codebook."
+      },
+      "PublicExport": {
+        "required": [
+          "id",
+          "surveyId",
+          "status",
+          "format",
+          "progress",
+          "file",
+          "error",
+          "createdAt",
+          "finishedAt",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The export\u0027s id.",
+            "format": "uuid"
+          },
+          "surveyId": {
+            "type": "string",
+            "description": "The survey.",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "description": "queued, running, ready, failed or expired."
+          },
+          "format": {
+            "type": "string",
+            "description": "excel, csv, spss, stata or json."
+          },
+          "progress": {
+            "description": "Responses written of all to write.",
+            "$ref": "#/components/schemas/PublicExportProgress"
+          },
+          "file": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The file, once ready.",
+                "$ref": "#/components/schemas/PublicExportFile"
+              }
+            ]
+          },
+          "error": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Why it failed, as a problem; null otherwise.",
+                "$ref": "#/components/schemas/ProblemDetails"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Started (UTC).",
+            "format": "date-time"
+          },
+          "finishedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Ready or failed (UTC).",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When the file is deleted (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "An export."
+      },
+      "PublicExportFile": {
+        "required": [
+          "name",
+          "contentType",
+          "size",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The file name."
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Its media type."
+          },
+          "size": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Its size in bytes.",
+            "format": "int64"
+          },
+          "url": {
+            "type": "string",
+            "description": "Where to download it."
+          }
+        },
+        "description": "An export\u0027s file."
+      },
+      "PublicExportFilter": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "complete or partial."
+          },
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Started at or after (UTC).",
+            "format": "date-time"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Started before (UTC).",
+            "format": "date-time"
+          },
+          "version": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Only this published version.",
+            "format": "int32"
+          }
+        },
+        "description": "Which responses an export holds; all when empty."
+      },
+      "PublicExportProgress": {
+        "required": [
+          "done",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "done": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Responses written.",
+            "format": "int32"
+          },
+          "total": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Responses to write.",
+            "format": "int32"
+          }
+        },
+        "description": "How far an export is."
+      },
+      "PublicExportRequest": {
+        "required": [
+          "format"
+        ],
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "excel, csv, spss, stata or json."
+          },
+          "layout": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "csv and excel: wide (one row per response, the default) or long (one row per answer)."
+          },
+          "values": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "csv and excel: labels (the default), codes or both."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The language of labels; the survey\u0027s default when empty."
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Which responses.",
+                "$ref": "#/components/schemas/PublicExportFilter"
+              }
+            ]
+          }
+        },
+        "description": "An export to start."
+      },
+      "PublicParticipant": {
+        "required": [
+          "email",
+          "externalId"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The invited address; null for an anonymous link."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The host system\u0027s user id, when a host product named the respondent (AWK-13)."
+          }
+        },
+        "description": "Who answered."
+      },
+      "PublicResponse": {
+        "required": [
+          "id",
+          "status",
+          "version",
+          "language",
+          "participant",
+          "startedAt",
+          "completedAt",
+          "changeSequence",
+          "answers"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The response.",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "description": "partial or complete."
+          },
+          "version": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "The survey version answered.",
+            "format": "int32"
+          },
+          "language": {
+            "type": "string",
+            "description": "The language answered in."
+          },
+          "participant": {
+            "description": "Who answered, when invited personally.",
+            "$ref": "#/components/schemas/PublicParticipant"
+          },
+          "startedAt": {
+            "type": "string",
+            "description": "When it started (UTC).",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When it was sent (UTC).",
+            "format": "date-time"
+          },
+          "changeSequence": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Grows with every change; nextSince is the last of a page.",
+            "format": "int64"
+          },
+          "answers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicAnswer"
+            },
+            "description": "One entry per variable with an answer."
+          }
+        },
+        "description": "A response in long format."
+      },
+      "PublicResponsePage": {
+        "required": [
+          "items",
+          "nextSince"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicResponse"
+            },
+            "description": "Oldest change first."
+          },
+          "nextSince": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Pass as since next time; the same as since when nothing changed.",
+            "format": "int64"
+          }
+        },
+        "description": "A page of responses."
+      },
+      "PublicSurvey": {
+        "required": [
+          "id",
+          "code",
+          "title",
+          "status",
+          "publishedVersion",
+          "languages",
+          "responses",
+          "updatedAt",
+          "defaultLanguage",
+          "versions",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The survey\u0027s id.",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "description": "The short code of its link."
+          },
+          "title": {
+            "type": "string",
+            "description": "Its internal title."
+          },
+          "status": {
+            "type": "string",
+            "description": "draft, published or closed."
+          },
+          "publishedVersion": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "The latest published version.",
+            "format": "int32"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Its languages."
+          },
+          "responses": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Responses so far.",
+            "format": "int32"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last change (UTC).",
+            "format": "date-time"
+          },
+          "defaultLanguage": {
+            "type": "string",
+            "description": "The language a respondent starts in."
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicSurveyVersion"
+            },
+            "description": "The published versions, oldest first."
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Where respondents open it, primary first; empty before publishing."
+          }
+        },
+        "description": "One survey."
+      },
+      "PublicSurveyItem": {
+        "required": [
+          "id",
+          "code",
+          "title",
+          "status",
+          "publishedVersion",
+          "languages",
+          "responses",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The survey\u0027s id.",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "description": "The short code of its link (/s/{code})."
+          },
+          "title": {
+            "type": "string",
+            "description": "Its internal title."
+          },
+          "status": {
+            "type": "string",
+            "description": "draft, published or closed."
+          },
+          "publishedVersion": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "The latest published version; null before publishing.",
+            "format": "int32"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Its languages, e.g. de and en."
+          },
+          "responses": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Responses so far, complete and partial.",
+            "format": "int32"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last change (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "A survey in the list."
+      },
+      "PublicSurveyPage": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicSurveyItem"
+            },
+            "description": "Newest change first."
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The cursor of the next page; null on the last."
+          }
+        },
+        "description": "One page of surveys."
+      },
+      "PublicSurveyVersion": {
+        "required": [
+          "number",
+          "publishedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "number": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "1, 2, 3 \u2026",
+            "format": "int32"
+          },
+          "publishedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Published (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "A published version."
+      },
+      "PublicUser": {
+        "required": [
+          "externalId",
+          "email",
+          "name",
+          "role",
+          "active",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "description": "The host system\u0027s id."
+          },
+          "email": {
+            "type": "string",
+            "description": "Their email address."
+          },
+          "name": {
+            "type": "string",
+            "description": "Their name."
+          },
+          "role": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their role; null while deactivated."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether they may sign in."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When provisioned (UTC).",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When last changed (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "A provisioned user."
+      },
+      "PublicUserPage": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicUser"
+            },
+            "description": "Oldest first."
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The cursor of the next page; null on the last."
+          }
+        },
+        "description": "A page of users."
+      },
+      "PublicUserRequest": {
+        "required": [
+          "email",
+          "name",
+          "role",
+          "active"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their email address."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their name."
+          },
+          "role": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "admin, editor, analyst or viewer."
+          },
+          "active": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "false deactivates; true or empty keeps them in."
+          }
+        },
+        "description": "A user to create or change."
+      },
+      "PublicValue": {
+        "required": [
+          "code",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The code."
+          },
+          "label": {
+            "type": "string",
+            "description": "The label."
+          }
+        },
+        "description": "A code and its label."
+      },
+      "PublicVariable": {
+        "required": [
+          "variable",
+          "label",
+          "numeric",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "variable": {
+            "type": "string",
+            "description": "Its name."
+          },
+          "label": {
+            "type": "string",
+            "description": "The question (and option or row) it stands for."
+          },
+          "numeric": {
+            "type": "boolean",
+            "description": "Whether its values are numbers."
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicValue"
+            },
+            "description": "Its codes with labels."
+          }
+        },
+        "description": "A variable."
+      },
+      "Stream": {
+        "type": "string",
+        "format": "binary"
+      },
+      "TokenError": {
+        "required": [
+          "error",
+          "error_description"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "invalid_request, invalid_client, unsupported_grant_type or invalid_scope."
+          },
+          "error_description": {
+            "type": "string",
+            "description": "What to do."
+          }
+        },
+        "description": "A token error (RFC 6749, section 5.2)."
+      },
+      "TokenResponse": {
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in",
+          "scope"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "The token (awt_\u2026); send it as Authorization: Bearer."
+          },
+          "token_type": {
+            "type": "string",
+            "description": "Always Bearer."
+          },
+          "expires_in": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Seconds it works: 900.",
+            "format": "int32"
+          },
+          "scope": {
+            "type": "string",
+            "description": "Its scopes, space-separated."
+          }
+        },
+        "description": "An access token (RFC 6749, section 5.1)."
+      },
+      "WebhookChange": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "A new https URL."
+          },
+          "events": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "New events."
+          },
+          "active": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "false stops it; true starts it again, also after a pause."
+          }
+        },
+        "description": "A change to a webhook; what is left out stays."
+      },
+      "WebhookList": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookView"
+            },
+            "description": "Newest first."
+          }
+        },
+        "description": "The webhooks of the organisation."
+      },
+      "WebhookRequest": {
+        "required": [
+          "url",
+          "events"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "An https URL."
+          },
+          "events": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "export.completed, response.completed, survey.published, survey.closed."
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "What it is for."
+          }
+        },
+        "description": "A new webhook."
+      },
+      "WebhookView": {
+        "required": [
+          "id",
+          "url",
+          "events",
+          "description",
+          "active",
+          "paused",
+          "createdAt",
+          "lastDelivery"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Its id.",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "description": "Where events go."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Subscribed events."
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "What it is for."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether events are sent."
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "Paused for failing 3 days; active true resumes it."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When it was created (UTC).",
+            "format": "date-time"
+          },
+          "lastDelivery": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The last delivery, if any.",
+                "$ref": "#/components/schemas/LastDeliveryView"
+              }
+            ]
+          }
+        },
+        "description": "A webhook as the API shows it; never with its secret."
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "http",
+        "description": "An API key from Settings \u2192 API.",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuthToken"
+    },
+    {
+      "name": "PublicUsers"
+    },
+    {
+      "name": "PublicWebhooks"
+    },
+    {
+      "name": "PublicSurveys"
+    },
+    {
+      "name": "PublicResponses"
+    },
+    {
+      "name": "PublicExports"
+    }
+  ]
+}

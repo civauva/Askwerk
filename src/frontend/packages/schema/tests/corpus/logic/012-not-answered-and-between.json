@@ -1,0 +1,82 @@
+{
+  "name": "Not answered and between",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "en"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT",
+            "type": "rating",
+            "text": {
+              "en": "Sat"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "q8",
+            "variable": "A",
+            "type": "short-text",
+            "text": {
+              "en": "A"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "q1",
+                  "op": "not-answered"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q9",
+            "variable": "B",
+            "type": "short-text",
+            "text": {
+              "en": "B"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "q1",
+                  "op": "between",
+                  "number": 2,
+                  "to": 4
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answers": {
+    "q1": {
+      "number": 3
+    }
+  },
+  "expected": [
+    {
+      "page": "p1",
+      "questions": [
+        "q1",
+        "q9"
+      ]
+    }
+  ]
+}

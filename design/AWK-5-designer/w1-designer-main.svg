@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1140" width="1600" height="1140" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W1 AWK-5 designer main screen, grayscale wireframe -->
+  <rect x="0" y="0" width="1600" height="1140" rx="0" fill="#fafafa" stroke="none" stroke-width="1.2"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W1 · AWK-5 Designer — main screen (EN) · 2026-10-13</text>
+  <text x="24" y="58" font-size="12" font-weight="400" fill="#555" text-anchor="start">Three regions only: outline · canvas (the survey as respondents see it, edited inline) · inspector. Source design/AWK-5-designer/w1-designer-main.svg</text>
+  <rect x="24" y="76" width="1552" height="940" rx="6" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <rect x="24" y="76" width="1552" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="40" y="107" font-size="14" font-weight="600" fill="#111" text-anchor="start">Askwerk</text>
+  <text x="114" y="107" font-size="14" font-weight="500" fill="#111" text-anchor="start">›  Customer satisfaction 2026</text>
+  <text x="336.4" y="107" font-size="12" font-weight="400" fill="#555" text-anchor="start">Draft · Saved 2 s ago</text>
+  <rect x="840.0" y="87" width="150" height="30" rx="6" fill="#fff" stroke="#888" stroke-width="1.2"/>
+  <rect x="915.0" y="87" width="75" height="30" rx="6" fill="#d6d6d6" stroke="#888" stroke-width="1.2"/>
+  <text x="877.0" y="107" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">DE</text>
+  <text x="952.0" y="107" font-size="12.5" font-weight="600" fill="#111" text-anchor="middle">EN</text>
+  <text x="1000.0" y="107" font-size="11.5" font-weight="400" fill="#555" text-anchor="start">DE: 3 missing</text>
+  <text x="1308" y="107" font-size="11.5" font-weight="400" fill="#666" text-anchor="start" font-family="Consolas, monospace">Ctrl K</text>
+  <rect x="1362" y="87" width="86" height="30" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="1405.0" y="107" font-size="13" font-weight="500" fill="#111" text-anchor="middle">Preview</text>
+  <rect x="1458" y="87" width="100" height="30" rx="6" fill="#222" stroke="#222" stroke-width="1.2"/>
+  <text x="1508.0" y="107" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Publish</text>
+  <rect x="24" y="128" width="280" height="888" rx="0" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="36" y="140" width="256" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="48" y="160" font-size="12.5" font-weight="400" fill="#888" text-anchor="start">Search questions</text>
+  <text x="40" y="194" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">1 · Welcome</text>
+  <text x="42" y="218" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="218" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Welcome text</text>
+  <text x="286" y="218" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">INTRO</text>
+  <text x="40" y="246" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">2 · Your visit</text>
+  <rect x="32" y="254" width="264" height="26" rx="4" fill="#e4e4e4" stroke="#555" stroke-width="1.2"/>
+  <text x="42" y="270" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="270" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">How satisfied are you…</text>
+  <text x="286" y="270" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">SAT_1</text>
+  <text x="42" y="298" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="298" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">What could we improve?</text>
+  <text x="286" y="298" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">IMPROVE</text>
+  <text x="42" y="326" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="326" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Would you recommend us?</text>
+  <text x="286" y="326" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">NPS</text>
+  <text x="40" y="354" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">3 · About you</text>
+  <text x="42" y="378" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="378" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Which branch did you visit?</text>
+  <text x="286" y="378" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">BRANCH</text>
+  <text x="42" y="406" font-size="12" font-weight="400" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="60" y="406" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Age group</text>
+  <text x="286" y="406" font-size="11" font-weight="400" fill="#666" text-anchor="end" font-family="Consolas, monospace">AGE</text>
+  <text x="40" y="440" font-size="12.5" font-weight="500" fill="#333" text-anchor="start">+ Add page</text>
+  <line x1="24" y1="956" x2="304" y2="956" stroke="#ddd" stroke-width="1"/>
+  <text x="40" y="980" font-size="12" font-weight="400" fill="#555" text-anchor="start">Logic: 2 rules</text>
+  <text x="40" y="1000" font-size="12" font-weight="400" fill="#555" text-anchor="start">Ending: thank-you page</text>
+  <rect x="304" y="128" width="872" height="888" rx="0" fill="#f3f3f3" stroke="#ccc" stroke-width="1.2"/>
+  <text x="420.0" y="172" font-size="12" font-weight="500" fill="#666" text-anchor="start">Page 2 of 3 · Your visit</text>
+  <rect x="420.0" y="182" width="640" height="6" rx="3" fill="#ddd" stroke="none" stroke-width="1.2"/>
+  <rect x="420.0" y="182" width="320" height="6" rx="3" fill="#888" stroke="none" stroke-width="1.2"/>
+  <rect x="420.0" y="206" width="640" height="200" rx="8" fill="#fff" stroke="#222" stroke-width="2"/>
+  <text x="440.0" y="236" font-size="17" font-weight="600" fill="#111" text-anchor="start">How satisfied are you with our service? *</text>
+  <rect x="438.0" y="242" width="2" height="18" rx="0" fill="#222" stroke="none" stroke-width="1.2"/>
+  <text x="440.0" y="262" font-size="13" font-weight="400" fill="#555" text-anchor="start">Please think about your last visit.</text>
+  <rect x="440.0" y="282" width="104" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="492.0" y="309" font-size="15" font-weight="600" fill="#111" text-anchor="middle">1</text>
+  <rect x="560.0" y="282" width="104" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="612.0" y="309" font-size="15" font-weight="600" fill="#111" text-anchor="middle">2</text>
+  <rect x="680.0" y="282" width="104" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="732.0" y="309" font-size="15" font-weight="600" fill="#111" text-anchor="middle">3</text>
+  <rect x="800.0" y="282" width="104" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="852.0" y="309" font-size="15" font-weight="600" fill="#111" text-anchor="middle">4</text>
+  <rect x="920.0" y="282" width="104" height="44" rx="6" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="972.0" y="309" font-size="15" font-weight="600" fill="#111" text-anchor="middle">5</text>
+  <text x="440.0" y="346" font-size="11.5" font-weight="400" fill="#666" text-anchor="start">Very unsatisfied</text>
+  <text x="1040.0" y="346" font-size="11.5" font-weight="400" fill="#666" text-anchor="end">Very satisfied</text>
+  <text x="440.0" y="388" font-size="11" font-weight="400" fill="#777" text-anchor="start" font-family="Consolas, monospace">Rating scale · SAT_1 · required</text>
+  <text x="1040.0" y="388" font-size="11.5" font-weight="500" fill="#444" text-anchor="end">Duplicate   Move   Delete</text>
+  <line x1="420.0" y1="426" x2="1060.0" y2="426" stroke="#bbb" stroke-width="1"/>
+  <rect x="725.0" y="414" width="30" height="24" rx="12" fill="#fff" stroke="#888" stroke-width="1.2"/>
+  <text x="740.0" y="431" font-size="15" font-weight="600" fill="#111" text-anchor="middle">+</text>
+  <rect x="420.0" y="450" width="640" height="150" rx="8" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="440.0" y="480" font-size="17" font-weight="600" fill="#111" text-anchor="start">What could we improve?</text>
+  <rect x="440.0" y="496" width="600" height="70" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="452.0" y="520" font-size="13" font-weight="400" fill="#999" text-anchor="start">Your answer</text>
+  <text x="440.0" y="586" font-size="11" font-weight="400" fill="#777" text-anchor="start" font-family="Consolas, monospace">Long text · IMPROVE · optional</text>
+  <rect x="420.0" y="624" width="140" height="30" rx="6" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="490.0" y="644" font-size="13" font-weight="500" fill="#111" text-anchor="middle">+ Add question</text>
+  <rect x="420.0" y="662" width="300" height="270" rx="8" fill="#fff" stroke="#333" stroke-width="1.2"/>
+  <text x="434.0" y="684" font-size="12" font-weight="600" fill="#555" text-anchor="start">Question type</text>
+  <text x="434.0" y="712" font-size="13" font-weight="400" fill="#111" text-anchor="start">Single choice</text>
+  <text x="579.0" y="712" font-size="13" font-weight="400" fill="#111" text-anchor="start">Multiple choice</text>
+  <text x="434.0" y="748" font-size="13" font-weight="400" fill="#111" text-anchor="start">Rating scale</text>
+  <text x="579.0" y="748" font-size="13" font-weight="400" fill="#111" text-anchor="start">Net Promoter Score</text>
+  <text x="434.0" y="784" font-size="13" font-weight="400" fill="#111" text-anchor="start">Short text</text>
+  <text x="579.0" y="784" font-size="13" font-weight="400" fill="#111" text-anchor="start">Long text</text>
+  <text x="434.0" y="820" font-size="13" font-weight="400" fill="#111" text-anchor="start">Number</text>
+  <text x="579.0" y="820" font-size="13" font-weight="400" fill="#111" text-anchor="start">Date</text>
+  <text x="434.0" y="856" font-size="13" font-weight="400" fill="#111" text-anchor="start">Matrix</text>
+  <text x="579.0" y="856" font-size="13" font-weight="400" fill="#111" text-anchor="start">Ranking</text>
+  <text x="434.0" y="892" font-size="13" font-weight="400" fill="#111" text-anchor="start">File upload</text>
+  <text x="434.0" y="922" font-size="11" font-weight="400" fill="#777" text-anchor="start">Type to filter · Enter to insert</text>
+  <rect x="1176" y="128" width="400" height="888" rx="0" fill="#fff" stroke="#ccc" stroke-width="1.2"/>
+  <text x="1192" y="160" font-size="13" font-weight="600" fill="#111" text-anchor="start">Question</text>
+  <text x="1312" y="160" font-size="13" font-weight="400" fill="#666" text-anchor="start">Logic</text>
+  <text x="1432" y="160" font-size="13" font-weight="400" fill="#666" text-anchor="start">Translations</text>
+  <line x1="1192" y1="170" x2="1288" y2="170" stroke="#222" stroke-width="2"/>
+  <text x="1192" y="200" font-size="12" font-weight="600" fill="#444" text-anchor="start">Type</text>
+  <rect x="1192" y="208" width="368" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1204" y="228" font-size="13" font-weight="400" fill="#222" text-anchor="start">Rating scale ▾</text>
+  <text x="1192" y="262" font-size="12" font-weight="600" fill="#444" text-anchor="start">Variable name</text>
+  <rect x="1192" y="270" width="368" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1204" y="290" font-size="13" font-weight="400" fill="#222" text-anchor="start" font-family="Consolas, monospace">SAT_1</text>
+  <text x="1192" y="324" font-size="12" font-weight="600" fill="#444" text-anchor="start">Scale</text>
+  <rect x="1192" y="332" width="368" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1204" y="352" font-size="13" font-weight="400" fill="#222" text-anchor="start">1 to 5</text>
+  <text x="1192" y="386" font-size="12" font-weight="600" fill="#444" text-anchor="start">Label at 1</text>
+  <rect x="1192" y="394" width="368" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1204" y="414" font-size="13" font-weight="400" fill="#222" text-anchor="start">Very unsatisfied</text>
+  <text x="1192" y="448" font-size="12" font-weight="600" fill="#444" text-anchor="start">Label at 5</text>
+  <rect x="1192" y="456" width="368" height="30" rx="6" fill="#fff" stroke="#aaa" stroke-width="1.2"/>
+  <text x="1204" y="476" font-size="13" font-weight="400" fill="#222" text-anchor="start">Very satisfied</text>
+  <text x="1192" y="504" font-size="11" font-weight="400" fill="#777" text-anchor="start">Renaming keeps a mapping, so exports stay stable.</text>
+  <rect x="1192" y="519" width="34" height="18" rx="9" fill="#444" stroke="#888" stroke-width="1.2"/>
+  <circle cx="1217" cy="528" r="7" fill="#fff"/>
+  <text x="1236" y="532" font-size="13" font-weight="400" fill="#111" text-anchor="start">Required</text>
+  <rect x="1192" y="551" width="34" height="18" rx="9" fill="#ddd" stroke="#888" stroke-width="1.2"/>
+  <circle cx="1201" cy="560" r="7" fill="#fff"/>
+  <text x="1236" y="564" font-size="13" font-weight="400" fill="#111" text-anchor="start">Randomise options</text>
+  <rect x="1192" y="583" width="34" height="18" rx="9" fill="#ddd" stroke="#888" stroke-width="1.2"/>
+  <circle cx="1201" cy="592" r="7" fill="#fff"/>
+  <text x="1236" y="596" font-size="13" font-weight="400" fill="#111" text-anchor="start">Show “Don&#x27;t know”</text>
+  <text x="1192" y="638" font-size="12" font-weight="600" fill="#444" text-anchor="start">Shown when</text>
+  <rect x="1192" y="646" width="368" height="44" rx="6" fill="#f4f4f4" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1204" y="673" font-size="13" font-weight="400" fill="#333" text-anchor="start">Always · Add a condition</text>
+  <text x="1192" y="724" font-size="12.5" font-weight="500" fill="#333" text-anchor="start">Translations: DE ✓  EN ✓</text>
+  <circle cx="112" cy="80" r="10" fill="#444"/>
+  <text x="112" y="84" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <circle cx="915.0" cy="80" r="10" fill="#444"/>
+  <text x="915.0" y="84" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <circle cx="1516" cy="80" r="10" fill="#444"/>
+  <text x="1516" y="84" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <circle cx="292" cy="142" r="10" fill="#444"/>
+  <text x="292" y="146" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <circle cx="402.0" cy="236" r="10" fill="#444"/>
+  <text x="402.0" y="240" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <circle cx="740.0" cy="412" r="10" fill="#444"/>
+  <text x="740.0" y="416" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <circle cx="720.0" cy="676" r="10" fill="#444"/>
+  <text x="720.0" y="680" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <circle cx="1556" cy="152" r="10" fill="#444"/>
+  <text x="1556" y="156" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <circle cx="34" cy="1032" r="10" fill="#444"/>
+  <text x="34" y="1036" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="52" y="1036" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Survey name edits in place; status shows Draft/Published and save state (autosave, optimistic).</text>
+  <circle cx="814" cy="1032" r="10" fill="#444"/>
+  <text x="814" y="1036" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="832" y="1036" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Language switch: the canvas shows that language; missing texts are counted and marked.</text>
+  <circle cx="34" cy="1056" r="10" fill="#444"/>
+  <text x="34" y="1060" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="52" y="1060" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Preview opens the real runner in a side frame; Publish starts the check (W3). Ctrl K: command palette for everything.</text>
+  <circle cx="814" cy="1056" r="10" fill="#444"/>
+  <text x="814" y="1060" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <text x="832" y="1060" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Outline: pages and questions with variable names; drag to reorder, click to select, search.</text>
+  <circle cx="34" cy="1080" r="10" fill="#444"/>
+  <text x="34" y="1084" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="52" y="1084" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Selected question: edit title and text directly on the canvas; the canvas looks like the runner.</text>
+  <circle cx="814" cy="1080" r="10" fill="#444"/>
+  <text x="814" y="1084" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="832" y="1084" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Hover between questions to insert one exactly there.</text>
+  <circle cx="34" cy="1104" r="10" fill="#444"/>
+  <text x="34" y="1108" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="52" y="1108" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Question types; filtered by typing, inserted with Enter (keyboard-first).</text>
+  <circle cx="814" cy="1104" r="10" fill="#444"/>
+  <text x="814" y="1108" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="832" y="1108" font-size="12.5" font-weight="400" fill="#222" text-anchor="start">Inspector shows only the selected thing: question settings, logic, translations.</text>
+</svg>

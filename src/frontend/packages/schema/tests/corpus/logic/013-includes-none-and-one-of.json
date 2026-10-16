@@ -1,0 +1,118 @@
+{
+  "name": "Includes none of, and is one of",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "en"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q4",
+            "variable": "TOPICS",
+            "type": "multiple",
+            "text": {
+              "en": "Topics"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "food",
+                "label": {
+                  "en": "food"
+                }
+              },
+              {
+                "code": "price",
+                "label": {
+                  "en": "price"
+                }
+              },
+              {
+                "code": "staff",
+                "label": {
+                  "en": "staff"
+                }
+              }
+            ]
+          },
+          {
+            "id": "q3",
+            "variable": "ROLE",
+            "type": "single",
+            "text": {
+              "en": "Role"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "staff",
+                "label": {
+                  "en": "staff"
+                }
+              },
+              {
+                "code": "guest",
+                "label": {
+                  "en": "guest"
+                }
+              }
+            ]
+          },
+          {
+            "id": "q8",
+            "variable": "A",
+            "type": "short-text",
+            "text": {
+              "en": "A"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "q4",
+                  "op": "includes-none",
+                  "values": [
+                    "price"
+                  ]
+                },
+                {
+                  "question": "q3",
+                  "op": "is-one-of",
+                  "values": [
+                    "guest",
+                    "staff"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answers": {
+    "q4": {
+      "options": [
+        "food"
+      ]
+    },
+    "q3": {
+      "option": "guest"
+    }
+  },
+  "expected": [
+    {
+      "page": "p1",
+      "questions": [
+        "q4",
+        "q3",
+        "q8"
+      ]
+    }
+  ]
+}

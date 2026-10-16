@@ -1,0 +1,193 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W1 · AWK-3 brand directions, applied hi-fi to the AWK-5 designer main screen (W4), light and dark. -->
+<title>Askwerk Brand Directions</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Page chrome (the review page itself); the mockups below carry their own tokens per direction. */
+:root { --page-bg: #f4f4f2; --page-fg: #1b1b19; --page-muted: #5c5c57; --page-line: #d7d7d1; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page-bg: #141413; --page-fg: #ececea; --page-muted: #a2a29c; --page-line: #383834; color-scheme: dark; } }
+:root[data-theme="dark"] { --page-bg: #141413; --page-fg: #ececea; --page-muted: #a2a29c; --page-line: #383834; color-scheme: dark; }
+body { background: var(--page-bg); color: var(--page-fg); font: 15px/1.55 "IBM Plex Sans", system-ui, sans-serif; padding-inline: 16px; padding-block: 24px 64px; }
+main { max-width: 1320px; margin: 0 auto; display: grid; gap: 48px; }
+.page-head h1 { font-size: 1.7rem; line-height: 1.2; margin: 0; text-wrap: balance; }
+.page-head p { max-width: 72ch; color: var(--page-muted); margin: 8px 0 0; }
+.direction { display: grid; gap: 16px; }
+.direction > header { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline; }
+.direction h2 { font-size: 1.3rem; margin: 0; }
+.direction .why { color: var(--page-muted); margin: 0; max-width: 80ch; min-width: 0; }
+.scroll { overflow-x: auto; border-radius: 10px; }
+.pair { display: grid; gap: 16px; min-width: 1200px; }
+
+/* ---------- Mockup tokens: set per direction and theme on .mock ---------- */
+.mock { --font: system-ui; --mono: ui-monospace; font-family: var(--font); color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; width: 1200px; font-size: 14px; line-height: 1.5; }
+.mock * { box-sizing: border-box; }
+.mock .bar { display: flex; align-items: center; gap: 16px; height: 52px; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.mock .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+.mock .crumb { font-weight: 500; }
+.mock .status { color: var(--muted); font-size: 12.5px; }
+.mock .spacer { flex: 1; }
+.mock .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; font-size: 12.5px; font-weight: 600; }
+.mock .seg span { padding: 4px 14px; }
+.mock .seg .on { background: var(--accent-soft); color: var(--accent-ink); }
+.mock .hint { color: var(--muted); font-size: 12px; }
+.mock .kbd { font-family: var(--mono); font-size: 11.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+.mock .btn { font: 600 13px/1 var(--font); padding: 9px 14px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); }
+.mock .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.mock .body { display: grid; grid-template-columns: 260px 1fr 300px; height: 620px; }
+.mock .outline { background: var(--surface); border-right: 1px solid var(--line); padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.mock .search { border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; color: var(--muted); font-size: 13px; margin-bottom: 8px; background: var(--bg); }
+.mock .pg { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 10px 4px 2px; }
+.mock .q { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; border-radius: 6px; font-size: 13px; }
+.mock .q code { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.mock .q.sel { background: var(--accent-soft); color: var(--accent-ink); box-shadow: inset 2px 0 0 var(--accent); }
+.mock .q.sel code { color: var(--accent-ink); }
+.mock .canvas { background: var(--canvas); overflow: hidden; padding: 28px 0; }
+.mock .page { width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+.mock .progress { font-size: 12px; color: var(--muted); }
+.mock .track { height: 6px; border-radius: 3px; background: var(--line); margin-top: 6px; }
+.mock .track i { display: block; width: 50%; height: 100%; border-radius: 3px; background: var(--accent); }
+.mock .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; }
+.mock .card.sel { border: 2px solid var(--accent); box-shadow: 0 6px 20px var(--shadow); }
+.mock .card h3 { margin: 0 0 4px; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+.mock .card p { margin: 0 0 14px; color: var(--muted); font-size: 13.5px; }
+.mock .scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.mock .scale span { border: 1px solid var(--line-strong); border-radius: 6px; padding: 10px 0; text-align: center; font-weight: 600; background: var(--surface); }
+.mock .scale span.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.mock .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.mock .meta { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11.5px; color: var(--muted); }
+.mock .meta code { font-family: var(--mono); }
+.mock .area { border: 1px solid var(--line-strong); border-radius: 6px; height: 64px; padding: 8px 10px; color: var(--muted); font-size: 13px; }
+.mock .inspector { background: var(--surface); border-left: 1px solid var(--line); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.mock .tabs { display: flex; gap: 18px; font-size: 13px; border-bottom: 1px solid var(--line); }
+.mock .tabs span { padding-bottom: 8px; color: var(--muted); }
+.mock .tabs .on { color: var(--fg); font-weight: 600; box-shadow: inset 0 -2px 0 var(--accent); }
+.mock label { font-size: 12px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
+.mock .field { border: 1px solid var(--line-strong); border-radius: 6px; padding: 7px 10px; font-size: 13px; background: var(--bg); }
+.mock .field.mono { font-family: var(--mono); font-size: 12.5px; }
+.mock .toggle { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.mock .toggle b { width: 32px; height: 18px; border-radius: 9px; background: var(--line-strong); position: relative; }
+.mock .toggle b::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); }
+.mock .toggle b.on { background: var(--accent); }
+.mock .toggle b.on::after { left: 16px; }
+.mock .warn { border: 1px solid var(--warn); background: var(--warn-soft); color: var(--fg); border-radius: 6px; padding: 8px 10px; font-size: 12.5px; }
+.specimen { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.specimen > div { border: 1px solid var(--page-line); border-radius: 10px; padding: 16px; min-width: 0; }
+.swatches { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin-top: 8px; }
+.swatches i { aspect-ratio: 1; border-radius: 4px; max-width: 100%; }
+.small { font-size: 12.5px; color: var(--page-muted); }
+.ov-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .ov-grid { grid-template-columns: 1fr; } }
+.ov-col { display: grid; gap: 8px; min-width: 0; }
+.ov-col h3 { margin: 0; font-size: 1.05rem; }
+.ov-frame { width: 100%; aspect-ratio: 1200 / 672; overflow: hidden; border-radius: 8px; position: relative; max-width: 100%; }
+.ov-frame > .mock { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+</style>
+
+<main>
+  <header class="page-head">
+    <p class="small">AWK-3 · W1 · brand directions · applied to the approved designer wireframe (AWK-5 W4) · 2026-10-13</p>
+    <h1>Askwerk brand: three directions</h1>
+    <p>Each direction is one typeface, one accent colour and one mark, applied to the same designer screen in light and dark. Neutrals stay quiet in all three; the accent marks only what is selected, active or primary. Pick one, or combine (for example A's mark with B's colour).</p>
+  </header>
+  <section class="overview" aria-label="All three directions side by side">
+    <h2 style="font-size:1.3rem;margin:0 0 12px">At a glance</h2>
+    <div class="ov-grid" id="overview"></div>
+  </section>
+  <div id="directions"></div>
+</main>
+
+<script>
+const directions = [
+  {
+    id: "a", name: "A · Werkstatt", font: "'IBM Plex Sans', system-ui, sans-serif", mono: "'IBM Plex Mono', ui-monospace, monospace",
+    why: "IBM Plex Sans with a signal orange: a workshop and measuring-tool feel that matches “Werk”. Precise, engineered, unmistakable next to the many blue SaaS tools.",
+    hue: 22, chroma: 0.17,
+    light: { bg: "#fbfaf8", surface: "#ffffff", canvas: "#f2f0ec", fg: "#1d1b18", muted: "#6b6660", line: "#e4e0d9", lineStrong: "#c9c3ba", accent: "#c4410c", accentSoft: "#fbe7dc", accentInk: "#8f2f08", onAccent: "#ffffff", warn: "#b7791f", warnSoft: "#fdf3e1", shadow: "rgba(60,40,20,0.10)" },
+    dark: { bg: "#171513", surface: "#1f1c19", canvas: "#121110", fg: "#f1ede8", muted: "#a49d94", line: "#332f2a", lineStrong: "#4a443d", accent: "#f0763b", accentSoft: "#3a2418", accentInk: "#ffb38d", onAccent: "#1a0d06", warn: "#e0a23c", warnSoft: "#2f2516", shadow: "rgba(0,0,0,0.5)" },
+    mark: (c) => `<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="5" fill="${c}"/><path d="M8 8.2a3 3 0 1 1 4.2 2.7c-.8.4-1.2 1-1.2 1.8v.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="11" cy="16.2" r="1.2" fill="#fff"/></svg>`,
+  },
+  {
+    id: "b", name: "B · Petrol", font: "Inter, system-ui, sans-serif", mono: "ui-monospace, 'Cascadia Mono', monospace",
+    why: "Inter with a deep petrol green: calm and trustworthy for research and HR surveys, reads well in dense screens. The mark is a speech bubble with a tick, from asking to answered.",
+    light: { bg: "#f8faf9", surface: "#ffffff", canvas: "#eef3f2", fg: "#14201f", muted: "#5d6b69", line: "#dde5e3", lineStrong: "#bfcecb", accent: "#0f6b66", accentSoft: "#dcefed", accentInk: "#0a4f4b", onAccent: "#ffffff", warn: "#a86b12", warnSoft: "#fbf1de", shadow: "rgba(10,60,55,0.10)" },
+    dark: { bg: "#111716", surface: "#18201f", canvas: "#0d1211", fg: "#e6efed", muted: "#93a5a2", line: "#26312f", lineStrong: "#3a4846", accent: "#3fb8ae", accentSoft: "#143532", accentInk: "#8fe0d8", onAccent: "#04201e", warn: "#e0a23c", warnSoft: "#2c2416", shadow: "rgba(0,0,0,0.5)" },
+    mark: (c) => `<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M3 4.5A2.5 2.5 0 0 1 5.5 2h11A2.5 2.5 0 0 1 19 4.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-4.2 3.6c-.5.4-1.3.1-1.3-.6V15A2.5 2.5 0 0 1 3 12.5z" fill="${c}"/><path d="M7.3 8.6l2.4 2.4 4.8-4.8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  },
+  {
+    id: "c", name: "C · Tinte", font: "Geist, system-ui, sans-serif", mono: "'Geist Mono', ui-monospace, monospace",
+    why: "Geist with a deep ink blue and a typographic mark: the a of askwerk set in a circle. Modern and neutral; the most restrained of the three, closest to a developer-tool look.",
+    light: { bg: "#f9f9fb", surface: "#ffffff", canvas: "#f0f1f5", fg: "#15161c", muted: "#5f6170", line: "#e1e2e9", lineStrong: "#c5c7d3", accent: "#2b3fb8", accentSoft: "#e3e6f8", accentInk: "#1f2f8c", onAccent: "#ffffff", warn: "#a86b12", warnSoft: "#fbf1de", shadow: "rgba(20,25,60,0.10)" },
+    dark: { bg: "#121318", surface: "#1a1b22", canvas: "#0e0f13", fg: "#e9eaf1", muted: "#9799a8", line: "#2a2c36", lineStrong: "#3e4150", accent: "#7c8cff", accentSoft: "#1f2547", accentInk: "#b9c2ff", onAccent: "#0b0e25", warn: "#e0a23c", warnSoft: "#2c2416", shadow: "rgba(0,0,0,0.5)" },
+    mark: (c) => `<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="10" fill="${c}"/><text x="11" y="15.3" text-anchor="middle" font-size="13" font-weight="600" fill="#fff" font-family="Geist, system-ui, sans-serif">a</text></svg>`,
+  },
+];
+
+function vars(t, d) {
+  return `--font:${d.font};--mono:${d.mono};--bg:${t.bg};--surface:${t.surface};--canvas:${t.canvas};--fg:${t.fg};--muted:${t.muted};--line:${t.line};--line-strong:${t.lineStrong};--accent:${t.accent};--accent-soft:${t.accentSoft};--accent-ink:${t.accentInk};--on-accent:${t.onAccent};--warn:${t.warn};--warn-soft:${t.warnSoft};--shadow:${t.shadow}`;
+}
+
+function mock(d, theme) {
+  const t = d[theme];
+  const de = theme === "dark";
+  const L = de
+    ? { crumb: "Kundenzufriedenheit 2026", status: "Entwurf · vor 2 s gespeichert", missing: "DE: 3 fehlen", preview: "Vorschau ▾", publish: "Veröffentlichen", search: "Fragen suchen", p1: "1 · Willkommen", p2: "2 · Ihr Besuch", p3: "3 · Über Sie",
+        qs: [["Begrüßung", "INTRO"], ["Wie zufrieden sind Sie…", "SAT_1"], ["Was können wir verbessern?", "IMPROVE"], ["Würden Sie uns empfehlen?", "NPS"], ["Welche Filiale?", "BRANCH"]],
+        page: "Seite 2 von 3 · Ihr Besuch", h: "Wie zufrieden sind Sie mit unserem Service?", sub: "Bitte denken Sie an Ihren letzten Besuch.", lo: "Sehr unzufrieden", hi: "Sehr zufrieden",
+        h2: "Was können wir verbessern?", ans: "Ihre Antwort", tabs: ["Frage", "Logik", "Übersetzungen"], type: "Bewertungsskala", vname: "Variablenname", req: "Pflichtfrage", rnd: "Optionen mischen",
+        warn: "3 Texte fehlen auf Deutsch.", typeL: "Typ", scale: "Skala", scaleV: "1 bis 5", meta: "Bewertungsskala · SAT_1 · Pflicht", act: "Duplizieren · Verschieben · Löschen" }
+    : { crumb: "Customer satisfaction 2026", status: "Draft · Saved 2 s ago", missing: "DE: 3 missing", preview: "Preview ▾", publish: "Publish", search: "Search questions", p1: "1 · Welcome", p2: "2 · Your visit", p3: "3 · About you",
+        qs: [["Welcome text", "INTRO"], ["How satisfied are you…", "SAT_1"], ["What could we improve?", "IMPROVE"], ["Would you recommend us?", "NPS"], ["Which branch?", "BRANCH"]],
+        page: "Page 2 of 3 · Your visit", h: "How satisfied are you with our service?", sub: "Please think about your last visit.", lo: "Very unsatisfied", hi: "Very satisfied",
+        h2: "What could we improve?", ans: "Your answer", tabs: ["Question", "Logic", "Translations"], type: "Rating scale", vname: "Variable name", req: "Required", rnd: "Randomise options",
+        warn: "3 texts are missing in German.", typeL: "Type", scale: "Scale", scaleV: "1 to 5", meta: "Rating scale · SAT_1 · required", act: "Duplicate · Move · Delete" };
+  const q = (i, sel) => `<div class="q${sel ? " sel" : ""}"><span>${L.qs[i][0]}</span><code>${L.qs[i][1]}</code></div>`;
+  return `<div class="mock" style="${vars(t, d)}">
+    <div class="bar"><span class="brand">${d.mark(t.accent)}askwerk</span><span class="crumb">› ${L.crumb}</span><span class="status">${L.status}</span>
+      <span class="spacer"></span><span class="seg"><span class="${de ? "on" : ""}">DE</span><span class="${de ? "" : "on"}">EN</span></span><span class="hint">${L.missing}</span>
+      <span class="spacer"></span><span class="kbd">Ctrl K</span><span class="btn">${L.preview}</span><span class="btn primary">${L.publish}</span></div>
+    <div class="body">
+      <div class="outline"><div class="search">${L.search}</div><div class="pg">${L.p1}</div>${q(0)}<div class="pg">${L.p2}</div>${q(1, true)}${q(2)}${q(3)}<div class="pg">${L.p3}</div>${q(4)}</div>
+      <div class="canvas"><div class="page">
+        <div class="progress">${L.page}<div class="track"><i></i></div></div>
+        <div class="card sel"><h3>${L.h} *</h3><p>${L.sub}</p><div class="scale"><span>1</span><span>2</span><span>3</span><span class="on">4</span><span>5</span></div>
+          <div class="ends"><span>${L.lo}</span><span>${L.hi}</span></div><div class="meta"><code>${L.meta}</code><span>${L.act}</span></div></div>
+        <div class="card"><h3>${L.h2}</h3><div class="area">${L.ans}</div></div>
+      </div></div>
+      <div class="inspector"><div class="tabs"><span class="on">${L.tabs[0]}</span><span>${L.tabs[1]}</span><span>${L.tabs[2]}</span></div>
+        <div><label>${L.typeL}</label><div class="field">${L.type} ▾</div></div>
+        <div><label>${L.vname}</label><div class="field mono">SAT_1</div></div>
+        <div><label>${L.scale}</label><div class="field">${L.scaleV}</div></div>
+        <div class="toggle"><b class="on"></b>${L.req}</div><div class="toggle"><b></b>${L.rnd}</div>
+        <div class="warn">${L.warn}</div></div>
+    </div></div>`;
+}
+
+function scale(t) {
+  // 12 steps from the light canvas to near-black through the accent, for the token file.
+  const mix = (a, b, p) => { const h = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16)); const x = h(a), y = h(b); return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * p)).join(",")})`; };
+  return Array.from({ length: 12 }, (_, i) => i < 6 ? mix("#ffffff", t.accent, (i + 1) / 6) : mix(t.accent, "#0c0c0c", (i - 5) / 7));
+}
+
+document.getElementById("overview").innerHTML = directions.map((d) => `
+  <div class="ov-col"><h3>${d.name}</h3><div class="ov-frame">${mock(d, "light")}</div><div class="ov-frame">${mock(d, "dark")}</div>
+  <p class="small" style="margin:0">${d.font.split(",")[0].replaceAll("'", "")} · accent ${d.light.accent}</p></div>`).join("");
+function fitOverview() {
+  document.querySelectorAll(".ov-frame").forEach((f) => { const m = f.firstElementChild; m.style.transform = `scale(${f.clientWidth / 1200})`; });
+}
+addEventListener("resize", fitOverview);
+
+document.getElementById("directions").innerHTML = directions.map((d) => `
+  <section class="direction" id="direction-${d.id}">
+    <header><h2>${d.name}</h2><p class="why">${d.why}</p></header>
+    <div class="specimen">
+      <div><div style="font-family:${d.font};font-size:30px;font-weight:600;letter-spacing:-0.02em;display:flex;align-items:center;gap:10px">${d.mark(d.light.accent).replace('width="22" height="22"', 'width="34" height="34"')}askwerk</div>
+        <div class="small" style="margin-top:6px">Wordmark in lowercase, mark in the accent colour</div></div>
+      <div style="font-family:${d.font}"><div style="font-size:24px;font-weight:600;line-height:1.2">Wie zufrieden sind Sie?</div><div style="font-size:14px">How satisfied are you with our service? 0123456789 · 18 px runner body</div>
+        <div class="small" style="margin-top:6px">${d.font.split(",")[0].replaceAll("'", "")} · 400 / 500 / 600</div></div>
+      <div><div class="small">Accent scale (12 steps) · light ${d.light.accent} · dark ${d.dark.accent}</div><div class="swatches">${scale(d.light).map((c) => `<i style="background:${c}"></i>`).join("")}</div></div>
+    </div>
+    <div class="scroll"><div class="pair">${mock(d, "light")}${mock(d, "dark")}</div></div>
+  </section>`).join("");
+fitOverview();
+</script>

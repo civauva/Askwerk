@@ -1,0 +1,90 @@
+{
+  "name": "A jump skips the pages in between",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "en"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q3",
+            "variable": "ROLE",
+            "type": "single",
+            "text": {
+              "en": "Role"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "staff",
+                "label": {
+                  "en": "staff"
+                }
+              },
+              {
+                "code": "guest",
+                "label": {
+                  "en": "guest"
+                }
+              }
+            ]
+          }
+        ],
+        "after": {
+          "goTo": "p3"
+        }
+      },
+      {
+        "id": "p2",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT",
+            "type": "rating",
+            "text": {
+              "en": "Sat"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "p3",
+        "questions": [
+          {
+            "id": "q2",
+            "variable": "BEFORE",
+            "type": "yes-no",
+            "text": {
+              "en": "Before"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "answers": {},
+  "expected": [
+    {
+      "page": "p1",
+      "questions": [
+        "q3"
+      ]
+    },
+    {
+      "page": "p3",
+      "questions": [
+        "q2"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "White button text on a light accent is too weak, and the accent is too weak against cards",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#f2a65a",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card"
+  },
+  "expected": [
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "colours/onAccent",
+      "against": "colours/accent",
+      "ratio": 2.02
+    },
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "colours/accent",
+      "against": "colours/surface",
+      "ratio": 2.02
+    }
+  ]
+}

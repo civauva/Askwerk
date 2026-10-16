@@ -1,0 +1,422 @@
+{
+  "order": 5,
+  "look": "graphit",
+  "responses": 210,
+  "title": {
+    "de": "Demo: Digitales Banking",
+    "en": "Demo: Digital banking"
+  },
+  "names": {
+    "de": "Digitales Banking",
+    "en": "Digital banking"
+  },
+  "kind": {
+    "de": "Finanzdienstleistung",
+    "en": "Financial services"
+  },
+  "features": {
+    "de": [
+      "Kundenaufwand",
+      "Matrix",
+      "NPS",
+      "Sprung"
+    ],
+    "en": [
+      "customer effort",
+      "matrix",
+      "NPS",
+      "jump"
+    ]
+  },
+  "texts": {
+    "wish": {
+      "de": [
+        "Echtzeit-Überweisungen",
+        "Bessere Kategorien im Haushaltsbuch",
+        "Dunkelmodus in der App",
+        "Kürzere Wartezeit im Chat"
+      ],
+      "en": [
+        "Instant transfers",
+        "Better categories in the budget view",
+        "Dark mode in the app",
+        "Shorter waits in chat"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Wie gut funktioniert Ihr Online-Banking?",
+        "en": "How well does your online banking work?"
+      },
+      "text": {
+        "de": "Fünf Minuten über App, Web und Beratung. Wir fragen nie nach Zugangsdaten.",
+        "en": "Five minutes about the app, the web and advice. We never ask for login details."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Ihre Antworten fließen in das nächste App-Update ein.",
+        "en": "Thank you! Your answers shape the next app update."
+      }
+    },
+    "pages": [
+      {
+        "id": "use",
+        "title": {
+          "de": "Nutzung",
+          "en": "Use"
+        },
+        "questions": [
+          {
+            "id": "channel",
+            "variable": "CHANNEL",
+            "type": "multiple",
+            "text": {
+              "de": "Wie erledigen Sie Ihre Bankgeschäfte?",
+              "en": "How do you do your banking?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "App",
+                  "en": "App"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Web",
+                  "en": "Web"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Filiale",
+                  "en": "Branch"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Telefon",
+                  "en": "Phone"
+                }
+              }
+            ]
+          },
+          {
+            "id": "often",
+            "variable": "OFTEN",
+            "type": "single",
+            "text": {
+              "de": "Wie oft öffnen Sie die App?",
+              "en": "How often do you open the app?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Täglich",
+                  "en": "Daily"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Wöchentlich",
+                  "en": "Weekly"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Monatlich",
+                  "en": "Monthly"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Seltener",
+                  "en": "Less often"
+                }
+              }
+            ]
+          },
+          {
+            "id": "since",
+            "variable": "CUSTOMER_SINCE",
+            "type": "date",
+            "text": {
+              "de": "Seit wann sind Sie Kundin oder Kunde?",
+              "en": "Since when have you been a customer?"
+            },
+            "required": false,
+            "mode": "date",
+            "latest": "today"
+          }
+        ]
+      },
+      {
+        "id": "app",
+        "title": {
+          "de": "Die App",
+          "en": "The app"
+        },
+        "questions": [
+          {
+            "id": "tasks",
+            "variable": "TASKS",
+            "type": "matrix",
+            "text": {
+              "de": "Wie einfach sind diese Aufgaben?",
+              "en": "How easy are these tasks?"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "transfer",
+                "label": {
+                  "de": "Überweisen",
+                  "en": "Making a transfer"
+                }
+              },
+              {
+                "code": "card",
+                "label": {
+                  "de": "Karte sperren",
+                  "en": "Blocking a card"
+                }
+              },
+              {
+                "code": "standing",
+                "label": {
+                  "de": "Dauerauftrag anlegen",
+                  "en": "Setting up a standing order"
+                }
+              },
+              {
+                "code": "statement",
+                "label": {
+                  "de": "Kontoauszug finden",
+                  "en": "Finding a statement"
+                }
+              },
+              {
+                "code": "invest",
+                "label": {
+                  "de": "Wertpapiere kaufen",
+                  "en": "Buying securities"
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Sehr schwer",
+                  "en": "Very hard"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Schwer",
+                  "en": "Hard"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Geht so",
+                  "en": "So-so"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Leicht",
+                  "en": "Easy"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Sehr leicht",
+                  "en": "Very easy"
+                }
+              }
+            ]
+          },
+          {
+            "id": "effort",
+            "variable": "EFFORT",
+            "type": "rating",
+            "text": {
+              "de": "Wie viel Aufwand war Ihr letztes Anliegen?",
+              "en": "How much effort was your last request?"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 7,
+              "minLabel": {
+                "de": "Sehr wenig",
+                "en": "Very little"
+              },
+              "maxLabel": {
+                "de": "Sehr viel",
+                "en": "A great deal"
+              }
+            }
+          },
+          {
+            "id": "security",
+            "variable": "SECURE",
+            "type": "rating",
+            "text": {
+              "de": "Wie sicher fühlen Sie sich beim Online-Banking?",
+              "en": "How safe do you feel banking online?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          }
+        ]
+      },
+      {
+        "id": "advice",
+        "title": {
+          "de": "Beratung",
+          "en": "Advice"
+        },
+        "questions": [
+          {
+            "id": "advised",
+            "variable": "ADVISED",
+            "type": "yes-no",
+            "text": {
+              "de": "Hatten Sie im letzten Jahr ein Beratungsgespräch?",
+              "en": "Did you have an advice meeting in the last year?"
+            },
+            "required": true
+          },
+          {
+            "id": "advice",
+            "variable": "ADVICE",
+            "type": "rating",
+            "text": {
+              "de": "Wie zufrieden waren Sie mit der Beratung?",
+              "en": "How satisfied were you with the advice?"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 5
+            },
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "advised",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "topics",
+            "variable": "TOPICS",
+            "type": "ranking",
+            "text": {
+              "de": "Worüber möchten Sie mehr erfahren?",
+              "en": "What would you like to know more about?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Sparen",
+                  "en": "Saving"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Vorsorge",
+                  "en": "Pensions"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Wohnen",
+                  "en": "Home loans"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Investieren",
+                  "en": "Investing"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "overall",
+        "title": {
+          "de": "Gesamt",
+          "en": "Overall"
+        },
+        "questions": [
+          {
+            "id": "nps",
+            "variable": "NPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns weiter?",
+              "en": "How likely are you to recommend us?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          },
+          {
+            "id": "wish",
+            "variable": "WISH",
+            "type": "long-text",
+            "text": {
+              "de": "Welche Funktion fehlt Ihnen?",
+              "en": "Which feature do you miss?"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+}

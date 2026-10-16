@@ -1,0 +1,380 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The app's frame (AWK-38, W29 round 6): a white sidebar, soft grey for the place you are in, the organisation box. */
+.shell {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--aw-paper);
+}
+
+.shell-side {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--aw-surface);
+  border-right: 1px solid var(--aw-line);
+  font-family: var(--aw-font);
+}
+
+.shell-logo {
+  display: inline-block;
+  padding: 18px 20px 12px;
+  color: var(--aw-ink);
+  font: 700 19px/1 var(--aw-font-display);
+  text-decoration: none;
+}
+
+.shell-logo span {
+  color: var(--aw-signal);
+}
+
+.shell-side .aw-menu-anchor {
+  display: block;
+  margin: 0 14px 8px;
+}
+
+.shell-org {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 8px;
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  font: 600 14px/1.2 var(--aw-font);
+  text-align: left;
+  cursor: pointer;
+}
+
+.shell-org:hover {
+  border-color: var(--aw-graphite);
+}
+
+.shell-org__mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--aw-steel, #3e4a56);
+  color: #fff;
+  font: 600 10.5px/1 var(--aw-font-mono);
+}
+
+.shell-org__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shell-org__caret,
+.shell-icon,
+.shell-top__menu svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shell-org__caret {
+  color: var(--aw-muted);
+}
+
+.shell-menu__head {
+  padding: 8px 10px 4px;
+  font: 500 10.5px/1 var(--aw-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.shell-menu__org {
+  display: grid;
+}
+
+.shell-menu__role {
+  font: 500 10.5px/1.4 var(--aw-font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.shell-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 10px 12px;
+}
+
+.shell-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--aw-graphite);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.shell-item .shell-icon {
+  color: var(--aw-muted);
+}
+
+.shell-item:hover {
+  background: color-mix(in srgb, var(--aw-ink) 5%, var(--aw-surface));
+  color: var(--aw-ink);
+}
+
+.shell-item[aria-current="page"] {
+  background: color-mix(in srgb, var(--aw-ink) 7%, var(--aw-surface));
+  color: var(--aw-ink);
+  font-weight: 600;
+}
+
+.shell-item .shell-count {
+  margin-left: auto;
+  font: 500 11px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+}
+
+.shell-group {
+  margin: 18px 10px 6px;
+  font: 500 10.5px/1 var(--aw-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.shell-group--sub {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 10px;
+}
+
+.shell-group--sub::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--aw-line);
+}
+
+/* Inside a survey (drill-in): the way back is an ordinary row, the survey below a hairline. */
+.shell-back {
+  margin-top: 2px;
+}
+
+.shell-me {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 20px;
+  border: 0;
+  border-top: 1px solid var(--aw-line);
+  background: transparent;
+  color: var(--aw-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.shell-side > .aw-menu-anchor:last-child {
+  margin: 0;
+}
+
+.shell-me__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--aw-steel, #3e4a56);
+  color: #fff;
+  font: 600 11px/1 var(--aw-font-mono);
+}
+
+.shell-me__who {
+  display: grid;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.shell-me__who b {
+  font-weight: 500;
+}
+
+.shell-me__who span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--aw-muted);
+  font-size: 12px;
+}
+
+.shell-main {
+  min-width: 0;
+}
+
+/* Inside the shell a survey's bar is one row and its places are in the sidebar. */
+.shell-main .survey-frame,
+.shell-main .designer {
+  min-height: 100vh;
+}
+
+.shell-top,
+.shell-scrim {
+  display: none;
+}
+
+/* Phones: the sidebar is a drawer behind a menu button. */
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .shell-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 52px;
+    padding: 0 12px;
+    background: var(--aw-surface);
+    border-bottom: 1px solid var(--aw-line);
+  }
+
+  .shell-top .shell-logo {
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .shell-top__menu {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    color: var(--aw-ink);
+  }
+
+  .shell-top__menu svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .shell-top__org {
+    margin-left: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--aw-graphite);
+    font-size: 13px;
+  }
+
+  .shell-side {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 40;
+    width: min(300px, 86vw);
+    transform: translateX(-100%);
+    transition: transform 200ms ease-out;
+  }
+
+  .shell--open .shell-side {
+    transform: none;
+  }
+
+  .shell-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border: 0;
+    background: color-mix(in srgb, var(--aw-ink) 35%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-side {
+    transition: none;
+  }
+}
+
+/* The open survey in the sidebar (W29 drill-in) and the one-row bar beside it. */
+.survey-places__head {
+  margin: 6px 0 2px;
+  padding: 14px 10px 6px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.survey-places__name {
+  font: 700 18px/1.2 var(--aw-font-display);
+  color: var(--aw-ink);
+  overflow-wrap: anywhere;
+}
+
+.survey-places__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.survey-places__fact {
+  padding: 3px 7px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 999px;
+  color: var(--aw-graphite);
+  font: 500 10.5px/1 var(--aw-font-mono);
+  white-space: nowrap;
+}
+
+.survey-places__fact--draft {
+  border-color: color-mix(in srgb, var(--aw-warning, #a86a12) 45%, var(--aw-surface));
+  background: color-mix(in srgb, var(--aw-warning, #a86a12) 10%, var(--aw-surface));
+  color: var(--aw-ink);
+}
+
+.survey-places__end {
+  margin-top: 10px;
+  padding-top: 6px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.shell-item svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  color: var(--aw-muted);
+}
+
+.survey-bar__place {
+  margin: 0;
+  font: 700 20px/1 var(--aw-font-display);
+  color: var(--aw-ink);
+}
+
+/* The account menu sits at the sidebar's foot, so it opens upward. */
+.shell-me-menu.aw-menu {
+  top: auto;
+  bottom: calc(100% + 6px);
+}

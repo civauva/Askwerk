@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" width="1400" height="760" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W2 · AWK-11 placeholder page served at / · four states, DE and EN · grayscale wireframe -->
+  <defs>
+    <style>
+      .frame { fill: #fff; stroke: #333; stroke-width: 1.5; }
+      .bar { fill: #e6e6e6; }
+      .sk { fill: #e0e0e0; }
+      .h { font-size: 20px; font-weight: 600; fill: #111; }
+      .title { font-size: 22px; font-weight: 600; fill: #111; }
+      .t { font-size: 14px; fill: #222; }
+      .s { font-size: 12.5px; fill: #555; }
+      .mono { font-size: 12.5px; fill: #555; font-family: Consolas, monospace; }
+      .lbl { font-size: 13px; font-weight: 600; fill: #111; }
+      .pill { fill: #fff; stroke: #333; stroke-width: 1.2; }
+      .pillDark { fill: #333; }
+      .btn { fill: #fff; stroke: #333; stroke-width: 1.2; }
+    </style>
+  </defs>
+  <rect width="1400" height="760" fill="#fafafa"/>
+  <text x="40" y="44" class="h">W2 · AWK-11 placeholder page at "/" — four states, German / English</text>
+  <text x="40" y="68" class="s">Grayscale wireframe · 2026-10-13 · source design/AWK-11-runnable-skeleton/w2-placeholder-page.svg · language follows the browser, switch top right</text>
+
+  <!-- State 1: loading -->
+  <text x="40" y="110" class="lbl">1 · Loading (skeleton, no spinner)</text>
+  <rect x="40" y="122" width="310" height="300" class="frame"/>
+  <rect x="40" y="122" width="310" height="40" class="bar"/>
+  <text x="56" y="148" class="t">Askwerk</text>
+  <text x="290" y="148" class="s">DE | EN</text>
+  <rect x="60" y="190" width="200" height="20" class="sk"/>
+  <rect x="60" y="226" width="260" height="12" class="sk"/>
+  <rect x="60" y="248" width="230" height="12" class="sk"/>
+  <rect x="60" y="290" width="120" height="26" class="sk" rx="13"/>
+  <rect x="60" y="340" width="250" height="12" class="sk"/>
+
+  <!-- State 2: running -->
+  <text x="370" y="110" class="lbl">2 · Running</text>
+  <rect x="370" y="122" width="310" height="300" class="frame"/>
+  <rect x="370" y="122" width="310" height="40" class="bar"/>
+  <text x="386" y="148" class="t">Askwerk</text>
+  <text x="620" y="148" class="s">DE | EN</text>
+  <text x="390" y="200" class="title">Askwerk läuft</text>
+  <text x="390" y="226" class="t">Die Einrichtung folgt in einem</text>
+  <text x="390" y="246" class="t">späteren Schritt.</text>
+  <rect x="390" y="270" width="150" height="26" class="pill" rx="13"/>
+  <text x="404" y="288" class="s">● Datenbank bereit</text>
+  <text x="390" y="330" class="mono">Version 0.0.0-dev · 3c4a89a</text>
+  <text x="390" y="350" class="mono">Gestartet vor 2 Min.</text>
+  <text x="390" y="400" class="s">EN: "Askwerk is running" · "Setup follows in a</text>
+  <text x="390" y="414" class="s">later step." · "Database ready" · "Started 2 min ago"</text>
+
+  <!-- State 3: degraded -->
+  <text x="700" y="110" class="lbl">3 · Degraded (database not ready)</text>
+  <rect x="700" y="122" width="310" height="300" class="frame"/>
+  <rect x="700" y="122" width="310" height="40" class="bar"/>
+  <text x="716" y="148" class="t">Askwerk</text>
+  <text x="950" y="148" class="s">DE | EN</text>
+  <text x="720" y="200" class="title">Askwerk is starting</text>
+  <text x="720" y="226" class="t">The database is not reachable yet.</text>
+  <text x="720" y="246" class="t">This page retries every 5 seconds.</text>
+  <rect x="720" y="270" width="170" height="26" class="pill" rx="13"/>
+  <text x="734" y="288" class="s">○ Database not ready</text>
+  <text x="720" y="330" class="mono">Reference: 4bf92f3577b34da6</text>
+  <text x="720" y="400" class="s">DE: "Askwerk startet" · "Die Datenbank ist noch</text>
+  <text x="720" y="414" class="s">nicht erreichbar." · "Nächster Versuch in 5 s"</text>
+
+  <!-- State 4: error -->
+  <text x="1030" y="110" class="lbl">4 · Error (API not reachable)</text>
+  <rect x="1030" y="122" width="330" height="300" class="frame"/>
+  <rect x="1030" y="122" width="330" height="40" class="bar"/>
+  <text x="1046" y="148" class="t">Askwerk</text>
+  <text x="1300" y="148" class="s">DE | EN</text>
+  <text x="1050" y="200" class="title">Something went wrong</text>
+  <text x="1050" y="226" class="t">Askwerk did not answer. Check that</text>
+  <text x="1050" y="246" class="t">the container is running.</text>
+  <rect x="1050" y="270" width="110" height="30" class="btn" rx="6"/>
+  <text x="1070" y="290" class="t">Try again</text>
+  <text x="1050" y="330" class="mono">Reference: a3ce929d0e0e4736</text>
+  <text x="1050" y="400" class="s">DE: "Etwas ist schiefgelaufen" · "Askwerk hat</text>
+  <text x="1050" y="414" class="s">nicht geantwortet." · "Erneut versuchen"</text>
+
+  <!-- Notes -->
+  <text x="40" y="480" class="h">Notes</text>
+  <text x="40" y="510" class="t">• Purpose: prove the whole chain works (static hosting → App API → database → telemetry), nothing more. It is replaced by the setup wizard later.</text>
+  <text x="40" y="536" class="t">• Data: GET /api/app/status → { version, commit, startedAt, database: ready | notReady }. Errors show the trace id as "Reference" so a report can be traced.</text>
+  <text x="40" y="562" class="t">• Every state is a test first: Vitest + Testing Library for the component (4 states × 2 languages), Playwright against the real image for state 2, axe in both.</text>
+  <text x="40" y="588" class="t">• Telemetry: Web Vitals and the API call timing are sent to /api/app/telemetry; state 4 also sends the error. No ids, no cookies.</text>
+  <text x="40" y="614" class="t">• Phone: the same single column, full width with 16 px margins. Dark mode: neutral tokens inverted; no brand colour until AWK-3.</text>
+  <text x="40" y="640" class="t">• Keyboard: language switch and "Try again" are focusable with a visible focus ring; the status pill has a text label, not only a dot.</text>
+</svg>

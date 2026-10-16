@@ -1,0 +1,265 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- M1–M3 · AWK-16 hi-fi mockups of sign-in, first-run setup and the screens after sign-in, from the approved wireframes W1–W3. -->
+<title>Askwerk Sign-in Hi-Fi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --page: #e9e7e2; --page-ink: #1a1917; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; } }
+:root[data-theme="dark"] { --page: #0d0c0b; --page-ink: #f2efea; color-scheme: dark; }
+body { background: var(--page); color: var(--page-ink); font: 14px/1.5 "IBM Plex Sans", system-ui, sans-serif; padding-inline: 16px; padding-block: 24px 64px; }
+main { display: grid; gap: 40px; justify-items: start; }
+.label { font: 600 13px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 10px; }
+.wrap { overflow-x: auto; max-width: 100%; }
+.pair { display: flex; gap: 40px; align-items: start; flex-wrap: wrap; }
+
+.t-light { --paper:#f6f5f2; --surface:#ffffff; --ink:#1a1917; --graphite:#4a4640; --muted:#6e6962; --line:#e3dfd8; --line-strong:#c8c2b8;
+  --signal:#d2440f; --signal-soft:#fbe6da; --signal-ink:#8f2c06; --on-signal:#ffffff; --steel:#3e4a56; --ok:#2e7d4f; --ok-soft:#e3f1e8; --warn:#a86a12; --warn-soft:#fbf1de; --error:#b42318; --error-soft:#fbe4e1; --shadow:0 8px 24px rgba(26,25,23,.12); color-scheme: light; }
+.t-dark { --paper:#141311; --surface:#1c1a18; --ink:#f2efea; --graphite:#c9c3ba; --muted:#9c958b; --line:#2f2b27; --line-strong:#48423b;
+  --signal:#ff7a3d; --signal-soft:#3a2014; --signal-ink:#ffb48f; --on-signal:#1a0a03; --steel:#9fb0c0; --ok:#6cc28f; --ok-soft:#18281e; --warn:#e3a948; --warn-soft:#2f2516; --error:#f2877b; --error-soft:#331a17; --shadow:0 8px 24px rgba(0,0,0,.5); color-scheme: dark; }
+
+.screen { width: 1440px; height: 900px; position: relative; overflow: hidden; background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); }
+.screen.phone { width: 390px; height: 844px; }
+.screen * { box-sizing: border-box; }
+
+/* Split layout: form on paper, the workshop panel on the right */
+.split { display: grid; grid-template-columns: 1fr 560px; height: 100%; }
+.side { background: #1a1917; color: #f2efea; position: relative; padding: 56px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; overflow: hidden; }
+.t-dark .side { background: #0d0c0b; border-left: 1px solid var(--line); }
+.side h2 { margin: 0; font: 700 56px/0.98 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.02em; }
+.side h2 b { color: #ff7a3d; font-weight: 700; }
+.side p { margin: 0; color: #c9c3ba; max-width: 380px; font-size: 15px; }
+.side .meta { font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: #9c958b; }
+.siderule { position: absolute; left: 56px; right: 56px; top: 64px; height: 18px; border-bottom: 2px solid #f2efea;
+  background-image: repeating-linear-gradient(90deg, #6e6962 0 1px, transparent 1px 24px); background-size: 100% 9px; background-repeat: no-repeat; background-position: bottom; }
+.siderule i { position: absolute; left: 0; bottom: -2px; height: 6px; width: 38%; background: #ff7a3d; }
+.siderule span { position: absolute; top: -6px; font: 500 10.5px/1 "IBM Plex Mono", monospace; color: #9c958b; }
+
+.formside { display: flex; flex-direction: column; padding: 32px 56px; }
+.top { display: flex; align-items: center; justify-content: space-between; }
+.logo { display: inline-flex; align-items: center; gap: 8px; }
+.logo .word { font: 700 21px/1 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.01em; }
+.logo .word b { color: var(--signal); }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 2px; font: 600 12px/1 "IBM Plex Mono", monospace; }
+.seg span { padding: 7px 12px; }
+.seg .on { background: var(--ink); color: var(--paper); }
+.center { flex: 1; display: flex; align-items: center; }
+.form { width: 400px; display: grid; gap: 18px; }
+.form h1 { margin: 0; font: 700 40px/1.02 "IBM Plex Sans Condensed", sans-serif; letter-spacing: -.015em; }
+.form .lead { margin: -8px 0 0; color: var(--graphite); font-size: 15px; }
+.kicker { font: 500 11.5px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.field { display: grid; gap: 6px; }
+.lab { display: flex; justify-content: space-between; font: 500 11px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.lab a { font: 500 13px/1 "IBM Plex Sans", sans-serif; letter-spacing: 0; text-transform: none; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
+.input { height: 44px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); padding: 0 14px; display: flex; align-items: center; font-size: 15px; justify-content: space-between; }
+.input.ph { color: var(--muted); }
+.input.focus { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
+.input.bad { border: 2px solid var(--error); }
+.err { color: var(--error); font-size: 13px; font-weight: 500; }
+.hint { color: var(--muted); font-size: 12.5px; }
+.btn { height: 44px; border-radius: 2px; border: 1px solid var(--ink); background: var(--surface); color: var(--ink); font: 600 14.5px/1 "IBM Plex Sans", sans-serif; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 0 18px; white-space: nowrap; }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn.quiet { border-color: var(--line-strong); }
+.or { display: flex; align-items: center; gap: 12px; color: var(--muted); font: 500 11px/1 "IBM Plex Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
+.or::before, .or::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.link { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); font-weight: 500; }
+.small { font-size: 13px; color: var(--muted); }
+.foot { display: flex; gap: 16px; font: 400 12px/1 "IBM Plex Mono", monospace; color: var(--muted); }
+.alert { border: 1px solid var(--error); border-left: 4px solid var(--error); background: var(--error-soft); border-radius: 2px; padding: 12px 14px; display: grid; gap: 2px; }
+.alert b { font-weight: 600; }
+.alert.ok { border-color: var(--ok); background: var(--ok-soft); }
+.alert.warn { border-color: var(--warn); background: var(--warn-soft); }
+.code { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.code span { height: 56px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--surface); display: grid; place-items: center; font: 600 24px/1 "IBM Plex Mono", monospace; }
+.code span.cur { border-color: var(--signal); box-shadow: 0 0 0 3px var(--signal-soft); }
+.check { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.check i { width: 18px; height: 18px; border: 1.5px solid var(--line-strong); border-radius: 2px; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 700; }
+.check i.on { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.clock { font: 600 30px/1 "IBM Plex Mono", monospace; }
+.ruler { position: relative; height: 12px; border-bottom: 2px solid var(--ink); background-image: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 20px); background-size: 100% 6px; background-repeat: no-repeat; background-position: bottom; }
+.ruler i { position: absolute; left: 0; bottom: -2px; height: 6px; background: var(--signal); }
+.meter { display: flex; gap: 4px; }
+.meter i { flex: 1; height: 4px; background: var(--line); }
+.meter i.on { background: var(--ok); }
+
+/* Setup wizard */
+.wizard { display: grid; grid-template-rows: 64px 1fr; height: 100%; }
+.wtop { display: flex; align-items: center; gap: 16px; padding: 0 32px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.wtop .kicker { margin-left: 4px; }
+.grow { flex: 1; }
+.wbody { display: grid; grid-template-columns: 300px 1fr; }
+.steps { border-right: 1px solid var(--line); padding: 40px 32px; display: grid; align-content: start; gap: 4px; }
+.step { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center; padding: 10px 0; color: var(--muted); }
+.step b { width: 28px; height: 28px; border: 1.5px solid var(--line-strong); border-radius: 2px; display: grid; place-items: center; font: 600 12px/1 "IBM Plex Mono", monospace; }
+.step.done { color: var(--ink); }
+.step.done b { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.step.cur { color: var(--ink); font-weight: 600; }
+.step.cur b { border-color: var(--signal); color: var(--signal); }
+.step small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+.wmain { padding: 48px 72px; display: grid; align-content: start; gap: 22px; max-width: 760px; }
+.wmain h1 { margin: 0; font: 700 40px/1.02 "IBM Plex Sans Condensed", sans-serif; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.row3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.actions .right { display: flex; gap: 14px; align-items: center; }
+
+/* After sign-in */
+.bar { height: 56px; display: flex; align-items: center; gap: 14px; padding: 0 20px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.sep { width: 1px; height: 20px; background: var(--line-strong); }
+.org { font: 600 15px/1 "IBM Plex Sans", sans-serif; display: flex; gap: 8px; align-items: center; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--steel); color: var(--paper); display: grid; place-items: center; font: 600 12px/1 "IBM Plex Mono", monospace; }
+.menu { position: absolute; background: var(--surface); border: 1px solid var(--ink); border-radius: 4px; box-shadow: var(--shadow); padding: 6px; display: grid; }
+.menu .item { padding: 9px 12px; border-radius: 2px; display: flex; justify-content: space-between; gap: 24px; font-size: 14px; }
+.menu .item.on { background: var(--signal-soft); color: var(--signal-ink); }
+.menu hr { border: 0; border-top: 1px solid var(--line); margin: 6px 0; width: 100%; }
+.menu .who { padding: 10px 12px 6px; }
+.menu .who b { display: block; font-size: 15px; }
+.menu .who span { color: var(--muted); font-size: 13px; }
+.orgs { display: grid; gap: 10px; }
+.orgcard { border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface); padding: 16px 18px; display: grid; grid-template-columns: 40px 1fr auto; gap: 14px; align-items: center; }
+.orgcard.on { border: 2px solid var(--signal); }
+.orgcard .mark { width: 40px; height: 40px; border-radius: 2px; background: var(--paper); border: 1px solid var(--line-strong); display: grid; place-items: center; font: 700 15px/1 "IBM Plex Sans Condensed", sans-serif; }
+.orgcard b { display: block; font-size: 16px; }
+.orgcard span { color: var(--muted); font-size: 13px; }
+.chip { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; padding: 5px 7px; border-radius: 2px; border: 1px solid var(--line-strong); color: var(--graphite); }
+.qr { width: 168px; height: 168px; background: #fff; border: 1px solid var(--line-strong); padding: 10px; }
+.secret { font: 500 14px/1.4 "IBM Plex Mono", monospace; letter-spacing: .08em; }
+
+/* Phone */
+.phone .formside { padding: 20px; }
+.phone .form { width: 100%; }
+.phone .form h1 { font-size: 34px; }
+.phone .btn, .phone .input { height: 48px; }
+.phone .ruler { margin-top: 8px; }
+</style>
+
+<main id="screens"></main>
+
+<script>
+const logo = (signal = "var(--signal)", on = "var(--on-signal)") =>
+  `<span class="logo"><svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="3" fill="${signal}"/><path d="M10 11V8h12v8h-6v4" fill="none" stroke="${on}" stroke-width="3.6" stroke-linecap="square"/><rect x="14.2" y="22.6" width="3.6" height="3.6" fill="${on}"/></svg><span class="word">ask<b>werk</b></span></span>`;
+const seg = (lang) => `<span class="seg"><span class="${lang === "de" ? "on" : ""}">DE</span><span class="${lang === "en" ? "on" : ""}">EN</span></span>`;
+const passkey = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="4"/><path d="M2 21v-2a5 5 0 0 1 5-5h2"/><circle cx="17" cy="15" r="2.5"/><path d="M17 17.5V22l1.5-1.5"/></svg>`;
+const side = (lang) => lang === "de"
+  ? `<div class="side"><div class="siderule"><i></i><span style="left:0">0</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="right:0">100</span></div><span class="meta">Askwerk · Umfragen, gut gebaut</span><h2>Fragen stellen.<br>Antworten <b>messen</b>.</h2><p>Open Source, auf Ihrem Server. Ihre Daten bleiben bei Ihnen.</p></div>`
+  : `<div class="side"><div class="siderule"><i></i><span style="left:0">0</span><span style="left:25%">25</span><span style="left:50%">50</span><span style="left:75%">75</span><span style="right:0">100</span></div><span class="meta">Askwerk · Surveys, well built</span><h2>Ask questions.<br><b>Measure</b> answers.</h2><p>Open source, on your server. Your data stays with you.</p></div>`;
+const foot = (lang) => `<div class="foot"><span>Askwerk 0.1</span><span>${lang === "de" ? "Impressum" : "Imprint"}</span><span>${lang === "de" ? "Datenschutz" : "Privacy"}</span></div>`;
+const signin = (lang, form) => `<div class="split"><div class="formside"><div class="top">${logo()}${seg(lang)}</div><div class="center"><div class="form">${form}</div></div>${foot(lang)}</div>${side(lang)}</div>`;
+const screen = (id, theme, title, inner, cls = "") => `<section><p class="label">${title}</p><div class="wrap"><div class="screen t-${theme} ${cls}" id="${id}">${inner}</div></div></section>`;
+
+const out = [];
+
+// M1 · Sign-in
+out.push(screen("m1-default-de", "light", "M1 · Sign-in · light · DE", signin("de", `
+  <span class="kicker">Acme Surveys</span><h1>Anmelden</h1>
+  <div class="field"><span class="lab">E-Mail</span><div class="input ph focus">name@firma.at</div></div>
+  <div class="field"><span class="lab">Passwort <a>Passwort vergessen?</a></span><div class="input ph">••••••••••••</div></div>
+  <div class="btn primary">Anmelden</div>
+  <div class="or">oder</div>
+  <div class="btn">${passkey} Mit Passkey anmelden</div>`)));
+out.push(screen("m1-wrong-en-dark", "dark", "M1 · Wrong password · dark · EN", signin("en", `
+  <span class="kicker">Acme Surveys</span><h1>Sign in</h1>
+  <div class="alert"><b>Email or password is wrong.</b><span class="small">4 tries left before a 15-minute pause.</span></div>
+  <div class="field"><span class="lab">Email</span><div class="input">anna@acme.at</div></div>
+  <div class="field"><span class="lab">Password <a>Forgot password?</a></span><div class="input bad focus">••••••••</div></div>
+  <div class="btn primary">Sign in</div>
+  <div class="or">or</div>
+  <div class="btn">${passkey} Sign in with a passkey</div>`)));
+out.push(screen("m1-twofactor-en", "light", "M1 · Two-factor code · light · EN", signin("en", `
+  <span class="kicker">Step 2 of 2 · anna@acme.at</span><h1>Enter your code</h1>
+  <p class="lead">From the authenticator app on your phone.</p>
+  <div class="code"><span>4</span><span>8</span><span>2</span><span class="cur"></span><span></span><span></span></div>
+  <label class="check"><i></i>Trust this browser for 30 days</label>
+  <div class="btn primary">Confirm</div>
+  <span class="small"><span class="link">Use a recovery code</span> · <span class="link">Back to sign-in</span></span>`)));
+out.push(screen("m1-locked-de", "light", "M1 · Locked for 15 minutes · light · DE", signin("de", `
+  <span class="kicker">anna@acme.at</span><h1>Anmeldung pausiert</h1>
+  <p class="lead">Nach 5 falschen Versuchen ist dieses Konto für 15 Minuten gesperrt. Wir haben Sie per E-Mail informiert.</p>
+  <div class="field"><span class="lab">Wieder möglich um</span><span class="clock">21:47</span><div class="ruler"><i style="width:40%"></i></div><span class="hint">noch 9 Minuten</span></div>
+  <div class="btn">Passwort zurücksetzen</div>
+  <span class="small mono" style="font-family:'IBM Plex Mono',monospace">Referenz 7c1e2a90b4d34f6e</span>`)));
+out.push(screen("m1-reset-en", "light", "M1 · Reset password, link sent · light · EN", signin("en", `
+  <span class="kicker">Account</span><h1>Reset password</h1>
+  <p class="lead">We send a link to your email. It works once, for 30 minutes.</p>
+  <div class="field"><span class="lab">Email</span><div class="input">anna@acme.at</div></div>
+  <div class="btn primary">Send link</div>
+  <div class="alert ok"><b>If an account exists for this address, the link is on its way.</b><span class="small">Check your spam folder, too.</span></div>
+  <span class="small"><span class="link">Back to sign-in</span></span>`)));
+const phone = (lang, theme) => `<div class="formside" style="height:100%"><div class="top">${logo()}${seg(lang)}</div><div class="ruler"><i style="width:38%"></i></div><div class="center"><div class="form">
+  <span class="kicker">Acme Surveys</span><h1>${lang === "de" ? "Anmelden" : "Sign in"}</h1>
+  <div class="field"><span class="lab">${lang === "de" ? "E-Mail" : "Email"}</span><div class="input ph">name@firma.at</div></div>
+  <div class="field"><span class="lab">${lang === "de" ? "Passwort" : "Password"}</span><div class="input ph">••••••••••••</div></div>
+  <div class="btn primary">${lang === "de" ? "Anmelden" : "Sign in"}</div>
+  <div class="btn">${passkey} ${lang === "de" ? "Mit Passkey anmelden" : "Sign in with a passkey"}</div>
+  <span class="small"><span class="link">${lang === "de" ? "Passwort vergessen?" : "Forgot password?"}</span></span></div></div>${foot(lang)}</div>`;
+out.push(`<div class="pair">${screen("m1-phone-de", "light", "M1 · Phone · light · DE", phone("de"), "phone")}${screen("m1-phone-de-dark", "dark", "M1 · Phone · dark · DE", phone("de"), "phone")}</div>`);
+
+// M2 · First-run setup
+const steps = (lang, current) => {
+  const names = lang === "de"
+    ? [["Ihr Konto", "Eigentümerin"], ["Installation", "Name, Adresse"], ["Organisation", "Erste Organisation"], ["E-Mail", "Optional"]]
+    : [["Your account", "Owner"], ["Instance", "Name, address"], ["Organisation", "First organisation"], ["Email", "Optional"]];
+  return `<div class="steps">${names.map(([n, s], i) => `<div class="step ${i < current ? "done" : i === current ? "cur" : ""}"><b>${i < current ? "✓" : i + 1}</b><span>${n}<small>${s}</small></span></div>`).join("")}</div>`;
+};
+const wizard = (lang, current, body) => `<div class="wizard"><div class="wtop">${logo()}<span class="kicker">${lang === "de" ? "Einrichtung" : "Setup"}</span><span class="grow"></span>${seg(lang)}</div><div class="wbody">${steps(lang, current)}<div class="wmain">${body}</div></div></div>`;
+out.push(screen("m2-account-de", "light", "M2 · Setup step 1 · Account · light · DE", wizard("de", 0, `
+  <span class="kicker">Schritt 1 von 4</span><h1>Ihr Konto</h1><p class="lead" style="margin:0;color:var(--graphite)">Sie werden Eigentümerin dieser Installation. Eigentümer und Admins melden sich mit Zwei-Faktor an.</p>
+  <div class="row2"><div class="field"><span class="lab">Name</span><div class="input">Anna Berger</div></div><div class="field"><span class="lab">E-Mail</span><div class="input">anna@acme.at</div></div></div>
+  <div class="field"><span class="lab">Passwort</span><div class="input focus">••••••••••••••</div><div class="meter"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><span class="hint">Mindestens 12 Zeichen · Stärke: gut</span></div>
+  <div class="field"><span class="lab">Passwort wiederholen</span><div class="input">••••••••••••••</div></div>
+  <div class="alert warn"><b>Zwei-Faktor ist für Eigentümer Pflicht.</b><span class="small">Sie richten ihn gleich nach diesem Schritt ein: App scannen, Code eingeben.</span></div>
+  <div class="actions"><span></span><div class="btn primary">Weiter</div></div>`)));
+out.push(screen("m2-org-de-dark", "dark", "M2 · Setup step 3 · Organisation, name taken · dark · DE", wizard("de", 2, `
+  <span class="kicker">Schritt 3 von 4</span><h1>Erste Organisation</h1><p class="lead" style="margin:0;color:var(--graphite)">Umfragen, Kontakte und Ergebnisse gehören zu einer Organisation. Weitere legen Sie später an.</p>
+  <div class="field"><span class="lab">Name</span><div class="input">Acme GmbH</div></div>
+  <div class="field"><span class="lab">Kurzname · in Adressen</span><div class="input bad focus">acme<span class="hint">acme.askwerk.app</span></div><span class="err">„acme“ ist schon vergeben.</span><span class="small">Vorschlag: <span class="link">acme-gmbh</span></span></div>
+  <div class="actions"><div class="btn quiet">Zurück</div><div class="btn primary">Weiter</div></div>`)));
+out.push(screen("m2-email-en", "light", "M2 · Setup step 4 · Email, optional · light · EN", wizard("en", 3, `
+  <span class="kicker">Step 4 of 4 · optional</span><h1>Email</h1><p class="lead" style="margin:0;color:var(--graphite)">Needed for invitations and password reset. You can add it later in Settings.</p>
+  <div class="row3"><div class="field"><span class="lab">SMTP server</span><div class="input">smtp.acme.at</div></div><div class="field"><span class="lab">Port</span><div class="input">587</div></div></div>
+  <div class="row2"><div class="field"><span class="lab">User</span><div class="input">surveys@acme.at</div></div><div class="field"><span class="lab">Password</span><div class="input">••••••••</div></div></div>
+  <div class="field"><span class="lab">Sender</span><div class="input">Acme Surveys &lt;surveys@acme.at&gt;</div></div>
+  <div style="display:flex;gap:14px;align-items:center"><div class="btn quiet">Send test email</div><span style="color:var(--ok);font-weight:600">✓ Sent to anna@acme.at</span></div>
+  <div class="actions"><div class="btn quiet">Back</div><div class="right"><span class="link">Skip for now</span><div class="btn primary">Finish setup</div></div></div>`)));
+
+// M3 · After sign-in
+out.push(screen("m3-choose-de", "light", "M3 · Choose organisation · light · DE", signin("de", `
+  <span class="kicker">anna@acme.at · 3 Organisationen</span><h1>Organisation wählen</h1>
+  <div class="orgs">
+    <div class="orgcard on"><span class="mark">A</span><span><b>Acme GmbH</b><span>Eigentümerin · 14 Umfragen</span></span><span class="chip">Zuletzt</span></div>
+    <div class="orgcard"><span class="mark">AS</span><span><b>Acme Schweiz AG</b><span>Redakteurin · 3 Umfragen</span></span><span>›</span></div>
+    <div class="orgcard"><span class="mark">VL</span><span><b>Verein Lesefreunde</b><span>Analystin · 1 Umfrage</span></span><span>›</span></div>
+  </div>
+  <label class="check"><i class="on">✓</i>Beim nächsten Mal direkt öffnen</label>
+  <span class="small"><span class="link">Abmelden</span></span>`)));
+out.push(screen("m3-setup-2fa-de", "light", "M3 · Two-factor required for owners and admins · light · DE", signin("de", `
+  <span class="kicker">Pflicht für Eigentümer und Admins</span><h1>Zwei-Faktor einrichten</h1>
+  <p class="lead">Scannen Sie den Code mit einer Authenticator-App und geben Sie den angezeigten Code ein.</p>
+  <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center"><svg class="qr" id="qr" viewBox="0 0 29 29"></svg>
+    <div style="display:grid;gap:8px"><span class="lab">Oder Schlüssel eingeben</span><span class="secret">JBSW Y3DP EHPK 3PXP</span><span class="small">Zum Beispiel mit Aegis, 2FAS oder Microsoft Authenticator.</span></div></div>
+  <div class="field"><span class="lab">Code aus der App</span><div class="code"><span>9</span><span>1</span><span class="cur"></span><span></span><span></span><span></span></div></div>
+  <div class="btn primary">Bestätigen und weiter</div>
+  <span class="small">Danach erhalten Sie 10 Wiederherstellungscodes zum Aufbewahren.</span>`)));
+out.push(screen("m3-menu-en-dark", "dark", "M3 · Account and organisation menu · dark · EN", `
+  <div class="bar">${logo()}<span class="sep"></span><span class="org">Acme GmbH <span style="color:var(--muted)">▾</span></span><span class="grow"></span><span class="avatar">AB</span></div>
+  <div class="menu" style="left:118px;top:52px;width:280px"><div class="item on"><span>Acme GmbH</span><span>✓</span></div><div class="item"><span>Acme Schweiz AG</span><span class="chip">Editor</span></div><div class="item"><span>Verein Lesefreunde</span><span class="chip">Analyst</span></div></div>
+  <div class="menu" style="right:16px;top:52px;width:300px"><div class="who"><b>Anna Berger</b><span>anna@acme.at · Owner</span></div><hr>
+    <div class="item"><span>Account and security</span></div><div class="item"><span>Two-factor</span><span style="color:var(--ok)">On ✓</span></div><div class="item"><span>Passkeys</span><span style="color:var(--muted)">1</span></div>
+    <div class="item"><span>Language</span><span style="color:var(--muted)">English ›</span></div><div class="item"><span>Theme</span><span style="color:var(--muted)">System ›</span></div><hr>
+    <div class="item"><span style="font-weight:600">Sign out</span></div></div>`));
+out.push(screen("m3-noaccess-en", "light", "M3 · Signed in, no organisation · light · EN", signin("en", `
+  <span class="kicker">anna@acme.at</span><h1>No access yet</h1>
+  <p class="lead">Your account works, but no organisation has added you yet. Ask an admin to invite anna@acme.at.</p>
+  <div class="btn quiet" style="justify-self:start">Sign out</div>`)));
+
+document.getElementById("screens").innerHTML = out.join("");
+const qr = document.getElementById("qr");
+if (qr) {
+  let cells = "";
+  for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) {
+    const f = (x < 7 && y < 7) || (x > 21 && y < 7) || (x < 7 && y > 21);
+    const ring = f && ((x % 22 === 0 || x % 22 === 6 || y % 22 === 0 || y % 22 === 6) || (x % 22 >= 2 && x % 22 <= 4 && y % 22 >= 2 && y % 22 <= 4));
+    if ((f && ring) || (!f && (x * 7 + y * 13 + x * y) % 5 === 0)) cells += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  }
+  qr.innerHTML = `<g fill="#1a1917">${cells}</g>`;
+}
+</script>

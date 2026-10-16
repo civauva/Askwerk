@@ -1,0 +1,50 @@
+{
+  "name": "Dark or auto needs dark colours; the error colour is text on the surface (W26)",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#d2440f",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#1a1917",
+      "muted": "#6e6962",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card",
+    "mode": "auto",
+    "components": {
+      "messages": {
+        "error": "#ff8080"
+      }
+    }
+  },
+  "expected": [
+    {
+      "code": "dark-colours-missing",
+      "severity": "error",
+      "path": "darkColours"
+    },
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "components/messages/error",
+      "against": "colours/surface",
+      "ratio": 2.43
+    }
+  ]
+}

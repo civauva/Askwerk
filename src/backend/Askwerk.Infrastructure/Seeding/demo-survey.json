@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "languages": [
+    "de",
+    "en"
+  ],
+  "defaultLanguage": "de",
+  "layout": "classic",
+  "welcome": {
+    "title": {
+      "de": "Kundenzufriedenheit 2026",
+      "en": "Customer satisfaction 2026"
+    },
+    "text": {
+      "de": "Danke, dass Sie mitmachen. Ihre Meinung hilft uns, besser zu werden. Diese Demo-Umfrage zeigt jede Frageart von Askwerk.",
+      "en": "Thank you for taking part. Your opinion helps us get better. This demo survey shows every question type of Askwerk."
+    }
+  },
+  "endPage": {
+    "text": {
+      "de": "Danke! Ihre Antworten sind gespeichert.",
+      "en": "Thank you! Your answers are saved."
+    }
+  },
+  "pages": [
+    {
+      "id": "visit",
+      "title": {
+        "de": "Ihr Besuch",
+        "en": "Your visit"
+      },
+      "questions": [
+        {
+          "id": "intro",
+          "variable": "INTRO",
+          "type": "text-block",
+          "text": {
+            "de": "Zuerst ein paar Fragen zu Ihrem letzten Besuch bei uns.",
+            "en": "First, a few questions about your last visit."
+          },
+          "required": false
+        },
+        {
+          "id": "shop-image",
+          "variable": "IMG_SHOP",
+          "type": "image",
+          "text": {
+            "de": "Unsere Filialen sind von 7 bis 20 Uhr für Sie da.",
+            "en": "Our branches are open for you from 7 am to 8 pm."
+          },
+          "required": false,
+          "image": {
+            "asset": "{demo-image}",
+            "alt": {
+              "de": "Farbverlauf in Orange, das Askwerk-Demobild",
+              "en": "An orange gradient, the Askwerk demo picture"
+            },
+            "size": "wide",
+            "align": "centre"
+          }
+        },
+        {
+          "id": "visit-date",
+          "variable": "VISIT_DATE",
+          "type": "date",
+          "mode": "date",
+          "latest": "today",
+          "text": {
+            "de": "Wann waren Sie zuletzt bei uns?",
+            "en": "When did you last visit us?"
+          },
+          "required": true
+        },
+        {
+          "id": "visit-time",
+          "variable": "VISIT_TIME",
+          "type": "date",
+          "mode": "time",
+          "earliest": "07:00",
+          "latest": "20:00",
+          "minuteStep": 15,
+          "text": {
+            "de": "Ungefähr um welche Uhrzeit?",
+            "en": "At about what time?"
+          },
+          "help": {
+            "de": "Unsere Öffnungszeiten sind 7 bis 20 Uhr.",
+            "en": "We are open from 7 am to 8 pm."
+          },
+          "required": false
+        },
+        {
+          "id": "branch",
+          "variable": "BRANCH",
+          "type": "dropdown",
+          "order": "alphabetical",
+          "text": {
+            "de": "Welche Filiale haben Sie besucht?",
+            "en": "Which branch did you visit?"
+          },
+          "required": true,
+          "options": [
+            {
+              "code": "1",
+              "label": {
+                "de": "Wien",
+                "en": "Vienna"
+              }
+            },
+            {
+              "code": "2",
+              "label": {
+                "de": "Graz",
+                "en": "Graz"
+              }
+            },
+            {
+              "code": "3",
+              "label": {
+                "de": "Linz",
+                "en": "Linz"
+              }
+            },
+            {
+              "code": "4",
+              "label": {
+                "de": "Salzburg",
+                "en": "Salzburg"
+              }
+            },
+            {
+              "code": "5",
+              "label": {
+                "de": "Innsbruck",
+                "en": "Innsbruck"
+              }
+            }
+          ],
+          "other": {
+            "code": "99",
+            "label": {
+              "de": "Andere, bitte angeben:",
+              "en": "Other, please specify:"
+            },
+            "variable": "BRANCH_OTHER"
+          }
+        },
+        {
+          "id": "sat",
+          "variable": "SAT",
+          "type": "rating",
+          "display": "numbers",
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "minLabel": {
+              "de": "Sehr unzufrieden",
+              "en": "Very unsatisfied"
+            },
+            "maxLabel": {
+              "de": "Sehr zufrieden",
+              "en": "Very satisfied"
+            }
+          },
+          "text": {
+            "de": "Wie zufrieden sind Sie mit unserem Service?",
+            "en": "How satisfied are you with our service?"
+          },
+          "help": {
+            "de": "Denken Sie an Ihren letzten Besuch.",
+            "en": "Please think about your last visit."
+          },
+          "required": true
+        },
+        {
+          "id": "staff",
+          "variable": "STAFF",
+          "type": "rating",
+          "display": "stars",
+          "scale": {
+            "min": 1,
+            "max": 5
+          },
+          "text": {
+            "de": "Wie freundlich waren unsere Mitarbeitenden?",
+            "en": "How friendly was our staff?"
+          },
+          "required": false,
+          "dontKnow": true
+        },
+        {
+          "id": "clean",
+          "variable": "CLEAN",
+          "type": "rating",
+          "display": "faces",
+          "scale": {
+            "min": 1,
+            "max": 5
+          },
+          "text": {
+            "de": "Wie sauber war die Filiale?",
+            "en": "How clean was the branch?"
+          },
+          "required": false
+        },
+        {
+          "id": "wait",
+          "variable": "WAIT",
+          "type": "slider",
+          "scale": {
+            "min": 0,
+            "max": 60,
+            "step": 5,
+            "showValue": true,
+            "minLabel": {
+              "de": "Keine Wartezeit",
+              "en": "No wait"
+            },
+            "maxLabel": {
+              "de": "Lange Wartezeit",
+              "en": "Long wait"
+            }
+          },
+          "text": {
+            "de": "Wie lange haben Sie ungefähr gewartet (in Minuten)?",
+            "en": "About how long did you wait (in minutes)?"
+          },
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "opinion",
+      "title": {
+        "de": "Ihre Meinung",
+        "en": "Your opinion"
+      },
+      "questions": [
+        {
+          "id": "nps",
+          "variable": "NPS",
+          "type": "nps",
+          "scale": {
+            "min": 0,
+            "max": 10,
+            "minLabel": {
+              "de": "Sehr unwahrscheinlich",
+              "en": "Very unlikely"
+            },
+            "maxLabel": {
+              "de": "Sehr wahrscheinlich",
+              "en": "Very likely"
+            }
+          },
+          "text": {
+            "de": "Wie wahrscheinlich ist es, dass Sie uns weiterempfehlen?",
+            "en": "How likely are you to recommend us?"
+          },
+          "required": true
+        },
+        {
+          "id": "reason",
+          "variable": "REASON",
+          "type": "single",
+          "text": {
+            "de": "Was war der Hauptgrund Ihres Besuchs?",
+            "en": "What was the main reason for your visit?"
+          },
+          "required": true,
+          "options": [
+            {
+              "code": "1",
+              "label": {
+                "de": "Einkauf",
+                "en": "Shopping"
+              }
+            },
+            {
+              "code": "2",
+              "label": {
+                "de": "Beratung",
+                "en": "Advice"
+              }
+            },
+            {
+              "code": "3",
+              "label": {
+                "de": "Reparatur oder Umtausch",
+                "en": "Repair or exchange"
+              }
+            }
+          ],
+          "other": {
+            "code": "99",
+            "label": {
+              "de": "Sonstiges, bitte angeben:",
+              "en": "Other, please specify:"
+            },
+            "variable": "REASON_OTHER"
+          }
+        },
+        {
+          "id": "source",
+          "variable": "SOURCE",
+          "type": "multiple",
+          "randomize": true,
+          "text": {
+            "de": "Wie haben Sie von uns erfahren?",
+            "en": "How did you hear about us?"
+          },
+          "help": {
+            "de": "Mehrere Antworten möglich.",
+            "en": "Choose all that apply."
+          },
+          "required": false,
+          "options": [
+            {
+              "code": "1",
+              "label": {
+                "de": "Suchmaschine",
+                "en": "Search engine"
+              }
+            },
+            {
+              "code": "2",
+              "label": {
+                "de": "Empfehlung",
+                "en": "Recommendation"
+              }
+            },
+            {
+              "code": "3",
+              "label": {
+                "de": "Soziale Medien",
+                "en": "Social media"
+              }
+            },
+            {
+              "code": "4",
+              "label": {
+                "de": "Werbung",
+                "en": "Advertising"
+              }
+            }
+          ],
+          "other": {
+            "code": "99",
+            "label": {
+              "de": "Sonstiges, bitte angeben:",
+              "en": "Other, please specify:"
+            },
+            "variable": "SOURCE_OTHER"
+          }
+        },
+        {
+          "id": "aspects",
+          "variable": "ASPECTS",
+          "type": "matrix",
+          "text": {
+            "de": "Wie bewerten Sie diese Punkte?",
+            "en": "How do you rate these points?"
+          },
+          "required": true,
+          "rows": [
+            {
+              "code": "price",
+              "label": {
+                "de": "Preise",
+                "en": "Prices"
+              }
+            },
+            {
+              "code": "choice",
+              "label": {
+                "de": "Auswahl",
+                "en": "Choice"
+              }
+            },
+            {
+              "code": "advice",
+              "label": {
+                "de": "Beratung",
+                "en": "Advice"
+              }
+            },
+            {
+              "code": "hours",
+              "label": {
+                "de": "Öffnungszeiten",
+                "en": "Opening hours"
+              }
+            }
+          ],
+          "options": [
+            {
+              "code": "1",
+              "label": {
+                "de": "Schlecht",
+                "en": "Poor"
+              }
+            },
+            {
+              "code": "2",
+              "label": {
+                "de": "Mittel",
+                "en": "Fair"
+              }
+            },
+            {
+              "code": "3",
+              "label": {
+                "de": "Gut",
+                "en": "Good"
+              }
+            },
+            {
+              "code": "4",
+              "label": {
+                "de": "Sehr gut",
+                "en": "Very good"
+              }
+            }
+          ],
+          "dontKnow": true
+        },
+        {
+          "id": "priority",
+          "variable": "PRIORITY",
+          "type": "ranking",
+          "text": {
+            "de": "Was ist Ihnen am wichtigsten? Bringen Sie es in eine Reihenfolge.",
+            "en": "What matters most to you? Put it in order."
+          },
+          "required": false,
+          "options": [
+            {
+              "code": "1",
+              "label": {
+                "de": "Niedrige Preise",
+                "en": "Low prices"
+              }
+            },
+            {
+              "code": "2",
+              "label": {
+                "de": "Kurze Wartezeit",
+                "en": "Short waiting time"
+              }
+            },
+            {
+              "code": "3",
+              "label": {
+                "de": "Gute Beratung",
+                "en": "Good advice"
+              }
+            },
+            {
+              "code": "4",
+              "label": {
+                "de": "Große Auswahl",
+                "en": "Wide choice"
+              }
+            }
+          ]
+        },
+        {
+          "id": "again",
+          "variable": "AGAIN",
+          "type": "yes-no",
+          "text": {
+            "de": "Werden Sie wieder zu uns kommen?",
+            "en": "Will you come back to us?"
+          },
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "title": {
+        "de": "Über Sie",
+        "en": "About you"
+      },
+      "questions": [
+        {
+          "id": "spend",
+          "variable": "SPEND",
+          "type": "number",
+          "text": {
+            "de": "Wie viel haben Sie ungefähr ausgegeben (in Euro)?",
+            "en": "About how much did you spend (in euros)?"
+          },
+          "required": false
+        },
+        {
+          "id": "improve",
+          "variable": "IMPROVE",
+          "type": "long-text",
+          "text": {
+            "de": "Was können wir besser machen?",
+            "en": "What could we improve?"
+          },
+          "required": false
+        },
+        {
+          "id": "email",
+          "variable": "EMAIL",
+          "type": "short-text",
+          "format": "email",
+          "placeholder": {
+            "de": "name@beispiel.at",
+            "en": "name@example.com"
+          },
+          "text": {
+            "de": "Ihre E-Mail-Adresse, falls wir Sie kontaktieren dürfen",
+            "en": "Your email address, if we may contact you"
+          },
+          "required": false
+        },
+        {
+          "id": "phone",
+          "variable": "PHONE",
+          "type": "short-text",
+          "format": "phone",
+          "text": {
+            "de": "Ihre Telefonnummer (optional)",
+            "en": "Your phone number (optional)"
+          },
+          "required": false
+        },
+        {
+          "id": "website",
+          "variable": "WEBSITE",
+          "type": "short-text",
+          "format": "url",
+          "text": {
+            "de": "Website Ihres Unternehmens (optional)",
+            "en": "Your company's website (optional)"
+          },
+          "required": false
+        },
+        {
+          "id": "callback",
+          "variable": "CALLBACK",
+          "type": "date",
+          "mode": "date-time",
+          "minuteStep": 30,
+          "text": {
+            "de": "Wann dürfen wir Sie zurückrufen?",
+            "en": "When may we call you back?"
+          },
+          "required": false
+        }
+      ]
+    }
+  ]
+}

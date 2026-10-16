@@ -1,0 +1,72 @@
+{
+  "name": "A published variable name cannot be given to another question, or exports would mix answers",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT_2",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q1"
+            },
+            "required": false
+          },
+          {
+            "id": "q2",
+            "variable": "SAT_1",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q2"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "previous": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT_1",
+            "type": "short-text",
+            "text": {
+              "de": "Frage q1"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "variable-reused",
+      "severity": "error",
+      "path": "pages/0/questions/1/variable"
+    }
+  ],
+  "expectedRenames": [
+    {
+      "questionId": "q1",
+      "from": "SAT_1",
+      "to": "SAT_2"
+    }
+  ]
+}

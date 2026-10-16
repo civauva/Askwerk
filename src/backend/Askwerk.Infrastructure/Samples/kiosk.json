@@ -1,0 +1,123 @@
+{
+  "order": 6,
+  "look": "kiosk",
+  "responses": 210,
+  "names": {
+    "de": "Check-out am Terminal",
+    "en": "Check-out kiosk"
+  },
+  "kind": {
+    "de": "Kiosk und Touch",
+    "en": "Kiosk & touch"
+  },
+  "features": {
+    "de": [
+      "eine Frage pro Bildschirm",
+      "große Flächen",
+      "ohne Tastatur"
+    ],
+    "en": [
+      "one question per screen",
+      "big buttons",
+      "no keyboard"
+    ]
+  },
+  "texts": {},
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "one-at-a-time",
+    "welcome": {
+      "title": {
+        "de": "Wie war Ihr Aufenthalt?",
+        "en": "How was your stay?"
+      },
+      "text": {
+        "de": "Tippen Sie einfach auf eine Antwort.",
+        "en": "Just tap an answer."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke und gute Reise!",
+        "en": "Thank you and safe travels!"
+      }
+    },
+    "pages": [
+      {
+        "id": "stay",
+        "questions": [
+          {
+            "id": "stay",
+            "variable": "STAY",
+            "type": "rating",
+            "text": {
+              "de": "Wie war Ihr Aufenthalt?",
+              "en": "How was your stay?"
+            },
+            "required": true,
+            "display": "faces",
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "liked",
+            "variable": "LIKED",
+            "type": "single",
+            "text": {
+              "de": "Was hat Ihnen am besten gefallen?",
+              "en": "What did you like most?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Zimmer",
+                  "en": "Room"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Frühstück",
+                  "en": "Breakfast"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Personal",
+                  "en": "Staff"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Lage",
+                  "en": "Location"
+                }
+              }
+            ]
+          },
+          {
+            "id": "recommend",
+            "variable": "RECOMMEND",
+            "type": "yes-no",
+            "text": {
+              "de": "Würden Sie uns empfehlen?",
+              "en": "Would you recommend us?"
+            },
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}

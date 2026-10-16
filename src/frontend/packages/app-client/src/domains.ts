@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+import { createRequest, type AppClientOptions } from "./client";
+
+export type DomainStatus = "pending" | "verified" | "failed";
+
+/** An organisation's own domain (AWK-7): the two DNS records to set, and what the last check found. */
+export interface DomainItem {
+  readonly id: string;
+  readonly hostname: string;
+  readonly status: DomainStatus;
+  readonly isPrimary: boolean;
+  readonly cnameTarget: string;
+  readonly txtName: string;
+  readonly txtValue: string;
+  readonly cnameFound: boolean;
+  readonly txtFound: boolean;
+  readonly createdAt: string;
+  readonly checkedAt: string | null;
+  readonly verifiedAt: string | null;
+}
+
+export interface DomainList {
+  /** The instance's own address; primary while no domain is. */
+  readonly system: { readonly hostname: string; readonly isPrimary: boolean };
+  readonly items: readonly DomainItem[];
+}
+
+/** Settings → Domains (AWK-7, W12 A). */
+export interface DomainsClient {
+  list(): Promise<DomainList>;
+  /** 400 with errors.hostname, or 409 domain-taken. */
+  add(hostname: string): Promise<DomainItem>;
+  verify(id: string): Promise<DomainItem>;
+  /** A verified domain, or null for the system address. */
+  setPrimary(id: string | null): Promise<void>;
+  remove(id: string): Promise<void>;
+  /** The websites that may show the surveys in a frame; none switches embedding off. */
+  embedding(): Promise<string[]>;
+  /** 400 with errors.origins: origin-invalid or too-many-origins. */
+  setEmbedding(origins: readonly string[]): Promise<void>;
+  /** The websites that may show the designer and Results (AWK-13); none switches it off. */
+  designerEmbedding(): Promise<string[]>;
+  setDesignerEmbedding(origins: readonly string[]): Promise<void>;
+  /** A survey's own websites, some of the organisation's; none uses them all (W21 3). */
+  surveyEmbedding(surveyId: string): Promise<SurveyEmbedding>;
+  setSurveyEmbedding(surveyId: string, origins: readonly string[]): Promise<void>;
+}
+
+export function createDomainsClient(options: AppClientOptions): DomainsClient {
+  const request = createRequest(options);
+  const at = (id: string) => `/api/app/domains/${encodeURIComponent(id)}`;
+
+  return {
+    list: () => request<DomainList>("GET", "/api/app/domains"),
+    add: (hostname) => request<DomainItem>("POST", "/api/app/domains", { hostname }),
+    verify: (id) => request<DomainItem>("POST", `${at(id)}/verify`),
+    setPrimary: (id) => request("PUT", "/api/app/domains/primary", { domainId: id }),
+    remove: (id) => request("DELETE", at(id)),
+    embedding: () => request<{ origins: string[] }>("GET", "/api/app/embedding").then((answer) => answer.origins),
+    setEmbedding: (origins) => request("PUT", "/api/app/embedding", { origins }),
+    designerEmbedding: () => request<{ designerOrigins: string[] }>("GET", "/api/app/embedding").then((answer) => answer.designerOrigins),
+    setDesignerEmbedding: (origins) => request("PUT", "/api/app/embedding", { designerOrigins: origins }),
+    surveyEmbedding: (surveyId) => request<SurveyEmbedding>("GET", `/api/app/surveys/${encodeURIComponent(surveyId)}/embed-origins`),
+    setSurveyEmbedding: (surveyId, origins) => request("PUT", `/api/app/surveys/${encodeURIComponent(surveyId)}/embed-origins`, { origins }),
+  };
+}
+
+/** A survey's websites and the organisation's to choose from. */
+export interface SurveyEmbedding {
+  readonly origins: string[];
+  readonly organisation: string[];
+}
+
+/** An embedded session of the designer or Results (AWK-13): its bearer token stays in memory. */
+export interface EmbedSession {
+  readonly token: string;
+  readonly expiresAt: string;
+  readonly endsAt: string;
+  readonly surveyId: string;
+  readonly view: "designer" | "results";
+  readonly language: string | null;
+}
+
+/** Starts an embedded session from the host's token; failures are ApiError with code token-invalid, embedding-off, no-access or survey-not-found. */
+export function startEmbedSession(options: AppClientOptions, token: string, view: "designer" | "results"): Promise<EmbedSession> {
+  return createRequest(options)<EmbedSession>("POST", "/api/app/embed/session", { token, view });
+}
+
+/** Renews an embedded session's token for another hour, never past its end. */
+export function renewEmbedSession(options: AppClientOptions): Promise<{ expiresAt: string; endsAt: string }> {
+  return createRequest(options)<{ expiresAt: string; endsAt: string }>("POST", "/api/app/embed/session/renew");
+}

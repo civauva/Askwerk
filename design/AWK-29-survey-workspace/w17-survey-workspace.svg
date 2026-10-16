@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1760" width="1500" height="1760" font-family="Segoe UI, Arial, sans-serif">
+  <!-- SPDX-License-Identifier: AGPL-3.0-only -->
+  <!-- W17 AWK-29 survey workspace -->
+  <rect x="0" y="0" width="1500" height="1760" fill="#fafafa"/>
+  <text x="24" y="36" font-size="20" font-weight="600" fill="#111" text-anchor="start">W17 · Survey workspace: one bar, tabs for the survey's parts, and editing pages · AWK-29 · 2026-10-15</text>
+  <text x="24" y="60" font-size="12.5" font-weight="400" fill="#444" text-anchor="start">Every screen of a survey shares one bar and one row of tabs; each tab keeps its own tools inside it. Builds on W4, W9, W11, W12, W15 rev. 2.</text>
+  <text x="40" y="84" font-size="13" font-weight="600" fill="#444" text-anchor="start">Today: two bars with different buttons, settings in the outline, sharing in a dialog, Participants inside Results</text>
+  <rect x="40" y="94" width="1420" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="54" y="119" font-size="12" font-weight="400" fill="#666" text-anchor="start">askwerk | Customer satisfaction 2026   Draft · saved   [Edit|Results]   DE EN · DE: 3 missing   Ctrl K   Preview ▾   Publish</text>
+  <rect x="40" y="138" width="1420" height="40" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <text x="54" y="163" font-size="12" font-weight="400" fill="#666" text-anchor="start">askwerk | Customer satisfaction 2026   [Edit|Results]   DE|EN   Preview ▾   Download PDF   Export        tabs below: Overview · Responses · Participants</text>
+  <text x="40" y="200" font-size="13" font-weight="600" fill="#444" text-anchor="start">A · Build (the editor), a page selected · EN · desktop</text>
+  <rect x="40" y="210" width="1420" height="640" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="210" width="1420" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="226" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="84" y="242" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Surveys  ›</text>
+  <text x="156" y="242" font-size="13.5" font-weight="600" fill="#111" text-anchor="start">Customer satisfaction 2026  ▾</text>
+  <rect x="367.20000000000005" y="228" width="103.8" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="419.1" y="242" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Draft · saved</text>
+  <rect x="1326" y="221" width="120" height="30" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1386.0" y="241.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Publish</text>
+  <rect x="1206" y="221" width="110" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1261.0" y="241.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="1120" y="221" width="76" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1158" y="241" font-size="12" font-weight="600" fill="#333" text-anchor="middle">DE | EN</text>
+  <rect x="970" y="221" width="140" height="30" rx="2" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="980" y="241" font-size="12" font-weight="400" fill="#888" text-anchor="start">Search…  Ctrl K</text>
+  <circle cx="180" cy="274" r="10" fill="#444"/>
+  <text x="180" y="278" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <rect x="40" y="262" width="1420" height="40" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="64" y="288" font-size="13" font-weight="600" fill="#111" text-anchor="start">Build</text>
+  <line x1="62" y1="300" x2="101.0" y2="300" stroke="#111" stroke-width="3"/>
+  <text x="137.0" y="288" font-size="13" font-weight="400" fill="#555" text-anchor="start">Settings</text>
+  <text x="232.2" y="288" font-size="13" font-weight="400" fill="#555" text-anchor="start">Share</text>
+  <text x="305.2" y="288" font-size="13" font-weight="400" fill="#555" text-anchor="start">Results 248</text>
+  <text x="422.6" y="288" font-size="13" font-weight="400" fill="#555" text-anchor="start">Participants 640</text>
+  <circle cx="600" cy="282" r="10" fill="#444"/>
+  <text x="600" y="286" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <rect x="54" y="314" width="260" height="520" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="68" y="344" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">01 · Welcome</text>
+  <text x="284" y="344" font-size="12" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <rect x="60" y="360" width="248" height="28" rx="3" fill="#e4e4e4" stroke="none" stroke-width="1.2"/>
+  <text x="68" y="378" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">02 · Your visit</text>
+  <text x="284" y="378" font-size="12" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="268" y="378" font-size="14" font-weight="700" fill="#333" text-anchor="start">⋯</text>
+  <text x="84" y="412" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">SAT_1  How satisfied…</text>
+  <text x="84" y="446" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">IMPROVE  What could we…</text>
+  <text x="84" y="480" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">NPS  Would you recommend…</text>
+  <text x="68" y="514" font-size="12.5" font-weight="600" fill="#111" text-anchor="start">03 · About you</text>
+  <text x="284" y="514" font-size="12" font-weight="700" fill="#999" text-anchor="start">⋮⋮</text>
+  <text x="84" y="548" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">BRANCH  Which branch…</text>
+  <text x="68" y="584" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">+ Add page</text>
+  <circle cx="314" cy="364" r="10" fill="#444"/>
+  <text x="314" y="368" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <rect x="194" y="384" width="180" height="150" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="208" y="410" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Rename</text>
+  <text x="208" y="438" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Move up</text>
+  <text x="208" y="466" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Move down</text>
+  <text x="208" y="494" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Duplicate</text>
+  <text x="208" y="522" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Delete page…</text>
+  <rect x="330" y="314" width="760" height="520" rx="4" fill="#fafafa" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="370" y="334" width="680" height="52" rx="4" fill="#fff" stroke="#555" stroke-width="2"/>
+  <text x="386" y="356" font-size="11" font-weight="600" fill="#666" text-anchor="start" font-family="Consolas, monospace">PAGE 2 / 3</text>
+  <text x="386" y="376" font-size="16" font-weight="600" fill="#111" text-anchor="start">Your visit|</text>
+  <text x="930" y="366" font-size="11" font-weight="400" fill="#888" text-anchor="start">click to rename</text>
+  <circle cx="1060" cy="354" r="10" fill="#444"/>
+  <text x="1060" y="358" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+  <rect x="370" y="406" width="680" height="116" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="390" y="436" font-size="14" font-weight="600" fill="#111" text-anchor="start">How satisfied are you with our service? *</text>
+  <rect x="370" y="536" width="680" height="116" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="390" y="566" font-size="14" font-weight="600" fill="#111" text-anchor="start">What could we improve?</text>
+  <rect x="370" y="666" width="680" height="116" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="390" y="696" font-size="14" font-weight="600" fill="#111" text-anchor="start">Would you recommend us?</text>
+  <rect x="1104" y="314" width="342" height="520" rx="4" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1120" y="342" font-size="13" font-weight="600" fill="#111" text-anchor="start">Page 2 of 3</text>
+  <text x="1120" y="378" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">TITLE</text>
+  <text x="1120" y="398" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">Your visit · edited on the canvas</text>
+  <text x="1120" y="434" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">TRANSLATIONS</text>
+  <text x="1120" y="454" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">DE ✓ Ihr Besuch · EN ✓</text>
+  <text x="1120" y="510" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">QUESTIONS</text>
+  <text x="1120" y="530" font-size="12.5" font-weight="400" fill="#111" text-anchor="start">3 on this page</text>
+  <text x="1120" y="566" font-size="10.5" font-weight="700" fill="#666" text-anchor="start">SHOWN</text>
+  <text x="1120" y="586" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Always · conditions come with logic</text>
+  <rect x="1120" y="614" width="150" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1195.0" y="634.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Move up</text>
+  <rect x="1280" y="614" width="150" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1355.0" y="634.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Move down</text>
+  <text x="1120" y="674" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Delete page…</text>
+  <circle cx="1446" cy="354" r="10" fill="#444"/>
+  <text x="1446" y="358" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+  <text x="40" y="870" font-size="13" font-weight="600" fill="#444" text-anchor="start">B · Results: the same bar; the tab's own tools in the tab's row (filters, Export) · EN</text>
+  <rect x="40" y="880" width="1420" height="230" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="880" width="1420" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="896" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="84" y="912" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Surveys  ›</text>
+  <text x="156" y="912" font-size="13.5" font-weight="600" fill="#111" text-anchor="start">Customer satisfaction 2026  ▾</text>
+  <rect x="367.20000000000005" y="898" width="97.19999999999999" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="415.80000000000007" y="912" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Published v3</text>
+  <rect x="1326" y="891" width="120" height="30" rx="4" fill="#555" stroke="#555" stroke-width="1.2"/>
+  <text x="1386.0" y="911.0" font-size="12.5" font-weight="600" fill="#fff" text-anchor="middle">Share</text>
+  <rect x="1206" y="891" width="110" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1261.0" y="911.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="1120" y="891" width="76" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1158" y="911" font-size="12" font-weight="600" fill="#333" text-anchor="middle">DE | EN</text>
+  <rect x="970" y="891" width="140" height="30" rx="2" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="980" y="911" font-size="12" font-weight="400" fill="#888" text-anchor="start">Search…  Ctrl K</text>
+  <rect x="40" y="932" width="1420" height="40" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="64" y="958" font-size="13" font-weight="400" fill="#555" text-anchor="start">Build</text>
+  <text x="137.0" y="958" font-size="13" font-weight="400" fill="#555" text-anchor="start">Settings</text>
+  <text x="232.2" y="958" font-size="13" font-weight="400" fill="#555" text-anchor="start">Share</text>
+  <text x="305.2" y="958" font-size="13" font-weight="600" fill="#111" text-anchor="start">Results 248</text>
+  <line x1="303.2" y1="970" x2="386.6" y2="970" stroke="#111" stroke-width="3"/>
+  <text x="422.6" y="958" font-size="13" font-weight="400" fill="#555" text-anchor="start">Participants 640</text>
+  <rect x="40" y="972" width="1420" height="44" rx="0" fill="#fff" stroke="#ddd" stroke-width="1.2"/>
+  <rect x="64" y="981" width="90.0" height="26" rx="13" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="109.0" y="999" font-size="11.5" font-weight="600" fill="#333" text-anchor="middle">Complete ▾</text>
+  <rect x="162.0" y="981" width="90.0" height="26" rx="13" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="207.0" y="999" font-size="11.5" font-weight="600" fill="#333" text-anchor="middle">All time ▾</text>
+  <rect x="260.0" y="981" width="116.39999999999999" height="26" rx="13" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="318.2" y="999" font-size="11.5" font-weight="600" fill="#333" text-anchor="middle">All versions ▾</text>
+  <text x="1240" y="999" font-size="12.5" font-weight="600" fill="#444" text-anchor="end">Overview · Responses</text>
+  <rect x="1330" y="978" width="110" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1385.0" y="998.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Export</text>
+  <text x="64" y="1046" font-size="14" font-weight="600" fill="#888" text-anchor="start">248 responses …  (W11 unchanged below)</text>
+  <circle cx="1450" cy="994" r="10" fill="#444"/>
+  <text x="1450" y="998" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+  <text x="40" y="1130" font-size="13" font-weight="600" fill="#444" text-anchor="start">C · Analyst or viewer: the same bar without Build, Settings, Share and the primary action · DE</text>
+  <rect x="40" y="1140" width="1420" height="110" rx="0" fill="#f0f0f0" stroke="#bbb" stroke-width="1.2"/>
+  <rect x="40" y="1140" width="1420" height="52" rx="0" fill="#eee" stroke="#ccc" stroke-width="1.2"/>
+  <rect x="54" y="1156" width="20" height="20" rx="3" fill="#555" stroke="none" stroke-width="1.2"/>
+  <text x="84" y="1172" font-size="12.5" font-weight="400" fill="#555" text-anchor="start">Surveys  ›</text>
+  <text x="156" y="1172" font-size="13.5" font-weight="600" fill="#111" text-anchor="start">Kundenzufriedenheit 2026  ▾</text>
+  <rect x="352.8" y="1158" width="130.2" height="19" rx="10" fill="#eee" stroke="#999" stroke-width="1.2"/>
+  <text x="417.9" y="1172" font-size="10.5" font-weight="700" fill="#333" text-anchor="middle">Veröffentlicht v3</text>
+  <rect x="1326" y="1151" width="110" height="30" rx="4" fill="#fff" stroke="#555" stroke-width="1.2"/>
+  <text x="1381.0" y="1171.0" font-size="12" font-weight="600" fill="#111" text-anchor="middle">Preview ▾</text>
+  <rect x="1240" y="1151" width="76" height="30" rx="2" fill="#fff" stroke="#999" stroke-width="1.2"/>
+  <text x="1278" y="1171" font-size="12" font-weight="600" fill="#333" text-anchor="middle">DE | EN</text>
+  <rect x="1090" y="1151" width="140" height="30" rx="2" fill="#fff" stroke="#bbb" stroke-width="1.2"/>
+  <text x="1100" y="1171" font-size="12" font-weight="400" fill="#888" text-anchor="start">Search…  Ctrl K</text>
+  <rect x="40" y="1192" width="1420" height="40" rx="0" fill="#fafafa" stroke="#ccc" stroke-width="1.2"/>
+  <text x="64" y="1218" font-size="13" font-weight="600" fill="#111" text-anchor="start">Ergebnisse 248</text>
+  <line x1="62" y1="1230" x2="167.60000000000002" y2="1230" stroke="#111" stroke-width="3"/>
+  <text x="203.60000000000002" y="1218" font-size="13" font-weight="400" fill="#555" text-anchor="start">Teilnehmende 640</text>
+  <circle cx="1450" cy="1166" r="10" fill="#444"/>
+  <text x="1450" y="1170" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+  <text x="40" y="1270" font-size="13" font-weight="600" fill="#444" text-anchor="start">D · The survey's menu on its name (▾)</text>
+  <rect x="40" y="1280" width="300" height="210" rx="4" fill="#fff" stroke="#555" stroke-width="1.5"/>
+  <text x="56" y="1308" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Rename</text>
+  <text x="56" y="1338" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Duplicate</text>
+  <text x="56" y="1368" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Save as template</text>
+  <text x="56" y="1398" font-size="12.5" font-weight="400" fill="#333" text-anchor="start">Download PDF</text>
+  <text x="56" y="1428" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Close for responses…</text>
+  <text x="56" y="1458" font-size="12.5" font-weight="600" fill="#333" text-anchor="start">Archive…</text>
+  <circle cx="350" cy="1300" r="10" fill="#444"/>
+  <text x="350" y="1304" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+  <text x="40" y="1520" font-size="12" font-weight="400" fill="#333" text-anchor="start">1 One bar on every survey screen: Surveys › name ▾ (back, and the survey's menu), the status, search (Ctrl K), language, Preview ▾, and one primary action: Publish, Publish changes, or Share once published.</text>
+  <text x="40" y="1542" font-size="12" font-weight="400" fill="#333" text-anchor="start">2 Tabs for the survey's parts, always in this order: Build · Settings · Share · Results · Participants, with counts. Settings (W9) and Share (links, QR, embed, invite; W12) become tabs instead of an outline entry and a dialog.</text>
+  <text x="40" y="1564" font-size="12" font-weight="400" fill="#333" text-anchor="start">3 Pages in the outline: drag ⋮⋮ to reorder; ⋯ on a page: Rename, Move up, Move down, Duplicate, Delete page (asks; says how many questions go with it).</text>
+  <text x="40" y="1586" font-size="12" font-weight="400" fill="#333" text-anchor="start">4 Click a page's header on the canvas to select the page; its title is edited in place, per language, like question texts.</text>
+  <text x="40" y="1608" font-size="12" font-weight="400" fill="#333" text-anchor="start">5 The inspector shows the page: its title and translations (edited on the canvas, as W9), how many questions, move, delete. Showing a page only under a condition comes with the logic editor.</text>
+  <text x="40" y="1630" font-size="12" font-weight="400" fill="#333" text-anchor="start">6 Each tab keeps its tools inside its own row: Results has its filters, views and Export there; Download PDF moves into Preview ▾ and the survey's menu.</text>
+  <text x="40" y="1652" font-size="12" font-weight="400" fill="#333" text-anchor="start">7 Analysts and viewers (W15 rev. 2) get the same bar and only the Results and Participants tabs; no primary action.</text>
+  <text x="40" y="1674" font-size="12" font-weight="400" fill="#333" text-anchor="start">8 The survey's menu holds what is rare: rename, duplicate, save as template, PDF, close, archive.</text>
+  <text x="40" y="1696" font-size="12" font-weight="400" fill="#333" text-anchor="start">Email and PDF: unchanged.</text>
+  <text x="40" y="1718" font-size="12" font-weight="600" fill="#333" text-anchor="start">Open for Dražan: (a) Settings and Share as tabs (recommended) or left where they are; (b) Participants as its own tab (recommended) or inside Results; (c) Share as the primary action once published (recommended).</text>
+</svg>

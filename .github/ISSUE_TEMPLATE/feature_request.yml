@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Feature request
+description: A problem Askwerk should solve for you.
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem first, not only the solution. Askwerk integrates through import/export,
+        the Public API and webhooks; it has no plugin system (see agents/extensibility.md).
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The situation and the goal, from your point of view.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What happens today?
+      description: How you work around it now, if at all.
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Your idea (optional)
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributing
+      options:
+        - label: I would like to build this myself, starting with a wireframe or API sketch for approval.

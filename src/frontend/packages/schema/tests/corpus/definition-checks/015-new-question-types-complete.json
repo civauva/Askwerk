@@ -1,0 +1,231 @@
+{
+  "name": "A survey with every new question type, fully set up in both languages, has no issues",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "dropdown",
+            "text": {
+              "de": "Frage 1",
+              "en": "Question 1"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Option 1",
+                  "en": "Option 1"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Option 2",
+                  "en": "Option 2"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Option 3",
+                  "en": "Option 3"
+                }
+              }
+            ],
+            "order": "alphabetical",
+            "other": {
+              "code": "OTHER",
+              "label": {
+                "de": "Andere:",
+                "en": "Other:"
+              },
+              "variable": "Q1_OTHER"
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "Q2",
+            "type": "multiple",
+            "text": {
+              "de": "Frage 2",
+              "en": "Question 2"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Option 1",
+                  "en": "Option 1"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Option 2",
+                  "en": "Option 2"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges:",
+                "en": "Other:"
+              },
+              "variable": "Q2_OTHER"
+            }
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "yes-no",
+            "text": {
+              "de": "Frage 3",
+              "en": "Question 3"
+            },
+            "required": false,
+            "yes": {
+              "code": "1",
+              "label": {
+                "de": "Ja",
+                "en": "Yes"
+              }
+            },
+            "no": {
+              "code": "0",
+              "label": {
+                "de": "Nein",
+                "en": "No"
+              }
+            }
+          },
+          {
+            "id": "q4",
+            "variable": "Q4",
+            "type": "slider",
+            "text": {
+              "de": "Frage 4",
+              "en": "Question 4"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 100,
+              "step": 5,
+              "minLabel": {
+                "de": "nie",
+                "en": "never"
+              },
+              "maxLabel": {
+                "de": "immer",
+                "en": "always"
+              },
+              "showValue": true
+            }
+          },
+          {
+            "id": "q5",
+            "variable": "Q5",
+            "type": "short-text",
+            "text": {
+              "de": "Frage 5",
+              "en": "Question 5"
+            },
+            "required": false,
+            "format": "email",
+            "placeholder": {
+              "de": "name@firma.at",
+              "en": "name@example.com"
+            }
+          },
+          {
+            "id": "q6",
+            "variable": "Q6",
+            "type": "date",
+            "text": {
+              "de": "Frage 6",
+              "en": "Question 6"
+            },
+            "required": false,
+            "mode": "date-time",
+            "earliest": "2026-01-01T00:00",
+            "latest": "2026-12-31T23:59",
+            "minuteStep": 15
+          },
+          {
+            "id": "q7",
+            "variable": "Q7",
+            "type": "date",
+            "text": {
+              "de": "Frage 7",
+              "en": "Question 7"
+            },
+            "required": false,
+            "mode": "time",
+            "earliest": "08:00",
+            "latest": "18:00",
+            "minuteStep": 30
+          },
+          {
+            "id": "q8",
+            "variable": "Q8",
+            "type": "rating",
+            "text": {
+              "de": "Frage 8",
+              "en": "Question 8"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 10
+            },
+            "display": "stars"
+          },
+          {
+            "id": "q9",
+            "variable": "Q9",
+            "type": "rating",
+            "text": {
+              "de": "Frage 9",
+              "en": "Question 9"
+            },
+            "required": false,
+            "scale": {
+              "min": -3,
+              "max": 3
+            },
+            "display": "dots"
+          },
+          {
+            "id": "q10",
+            "variable": "Q10",
+            "type": "rating",
+            "text": {
+              "de": "Frage 10",
+              "en": "Question 10"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            },
+            "display": "faces"
+          }
+        ]
+      }
+    ]
+  },
+  "expected": []
+}

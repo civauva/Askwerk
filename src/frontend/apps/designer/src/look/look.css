@@ -1,0 +1,496 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* Organisation → Look of surveys (AWK-17, W10 A) in the Werkstatt look; the preview uses the theme's own tokens. */
+.look {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  display: grid;
+  gap: 16px;
+  color: var(--aw-ink);
+  font: 400 15px/1.5 var(--aw-font);
+}
+
+:where(.look) button,
+:where(.look) input {
+  font: inherit;
+  color: inherit;
+}
+
+.look :focus-visible {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.look h1 {
+  margin: 0;
+  font: 700 32px/1.1 var(--aw-font-display);
+}
+
+.look-lead {
+  margin: -8px 0 8px;
+  color: var(--aw-graphite);
+}
+
+.look-work {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .look-work {
+    grid-template-columns: 1fr;
+  }
+}
+
+.look-list {
+  display: grid;
+  gap: 8px;
+}
+
+.look-list__theme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  background: var(--aw-surface);
+  text-align: left;
+  cursor: pointer;
+}
+
+.look-list__theme[aria-current="true"] {
+  border: 2px solid var(--aw-signal);
+  padding: 9px 11px;
+}
+
+.look-list__theme span:nth-of-type(1) {
+  flex: 1;
+  font-weight: 600;
+}
+
+.look-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  border: 1px solid var(--aw-line-strong);
+  flex: none;
+}
+
+.look-badge {
+  font: 600 11px/1 var(--aw-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aw-signal-ink);
+  background: var(--aw-signal-soft);
+  padding: 4px 6px;
+  border-radius: 2px;
+}
+
+.look-list__new {
+  padding: 10px 12px;
+  border: 1px dashed var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.look-editor,
+.look-presets {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+}
+
+.look-presets h2 {
+  margin: 0;
+  font: 700 20px/1.2 var(--aw-font-display);
+}
+
+.look-empty {
+  margin: 0;
+  font-weight: 600;
+}
+
+.look-presets__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.look-presets__card {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+  background: var(--aw-surface);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.look-presets__card:hover {
+  border-color: var(--aw-ink);
+}
+
+.look-field {
+  display: grid;
+  gap: 6px;
+}
+
+.look-field > label,
+.look-label,
+.look-group legend {
+  font: 600 11.5px/1 var(--aw-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aw-graphite);
+}
+
+.look-input {
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  padding: 8px 10px;
+}
+
+.look-input--hex {
+  width: 9ch;
+  font-family: var(--aw-font-mono);
+}
+
+.look-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.look-colour input[type="color"] {
+  width: 40px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+}
+
+.look-logo {
+  max-height: 40px;
+  max-width: 120px;
+}
+
+.look-note {
+  margin: 0;
+  color: var(--aw-muted);
+  font-size: 13px;
+}
+
+.look-error {
+  padding: 10px 12px;
+  border-left: 3px solid var(--aw-error);
+  background: color-mix(in srgb, var(--aw-error) 8%, var(--aw-surface));
+}
+
+.look-error p {
+  margin: 0;
+}
+
+.look-more {
+  justify-self: start;
+  border: 0;
+  background: transparent;
+  padding: 4px 0;
+  font-weight: 600;
+  color: var(--aw-steel);
+  cursor: pointer;
+}
+
+.look-more-panel {
+  display: grid;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.look-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.look-group legend {
+  margin-bottom: 8px;
+}
+
+.look-choice__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.look-choice__option {
+  position: relative;
+}
+
+.look-choice__option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.look-choice__option span {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  font-size: 13.5px;
+}
+
+.look-choice__option input:checked + span {
+  background: var(--aw-ink);
+  border-color: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.look-choice__option input:focus-visible + span {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: 2px;
+}
+
+.look-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.look-status {
+  flex: 1;
+  font: 500 12px/1 var(--aw-font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.look-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--aw-paper);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-card);
+}
+
+.look-confirm p {
+  margin: 0;
+  flex-basis: 100%;
+}
+
+.look-button {
+  padding: 8px 14px;
+  border: 1px solid var(--aw-ink);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.look-button--primary {
+  background: var(--aw-signal);
+  border-color: var(--aw-signal);
+  color: var(--aw-on-signal);
+}
+
+.look-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--aw-error);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.look-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The preview: only the theme's tokens, so it shows what respondents get. */
+.look-preview-region {
+  position: sticky;
+  top: 16px;
+}
+
+.look-preview {
+  --look-radius: 0px;
+  --look-gap: 14px;
+  --look-size: 15px;
+  background: var(--look-background);
+  color: var(--look-text);
+  font: 400 var(--look-size) / 1.5 var(--look-body-font);
+  border: 1px solid var(--aw-line-strong);
+  overflow: hidden;
+}
+
+.look-preview[data-corners="rounded"] {
+  --look-radius: 8px;
+}
+
+.look-preview[data-corners="pill"] {
+  --look-radius: 999px;
+}
+
+.look-preview[data-spacing="compact"] {
+  --look-gap: 8px;
+}
+
+.look-preview[data-spacing="airy"] {
+  --look-gap: 20px;
+}
+
+.look-preview[data-scale="s"] {
+  --look-size: 14px;
+}
+
+.look-preview[data-scale="l"] {
+  --look-size: 17px;
+}
+
+.look-preview__header {
+  height: 90px;
+  background: var(--look-line) center / cover;
+}
+
+.look-preview__card {
+  display: grid;
+  gap: var(--look-gap);
+  margin: 16px;
+  padding: 20px;
+  background: var(--look-surface);
+  border: 1px solid var(--look-line);
+  border-radius: min(var(--look-radius), 12px);
+}
+
+.look-preview[data-layout="minimal"] .look-preview__card {
+  background: transparent;
+  border-color: transparent;
+}
+
+.look-preview__org img {
+  max-height: 32px;
+  max-width: 140px;
+}
+
+.look-preview__org i {
+  font-style: normal;
+  font-size: 12px;
+  color: var(--look-muted);
+}
+
+.look-preview__title {
+  margin: 0;
+  font: 700 calc(var(--look-size) * 1.6) / 1.15 var(--look-heading-font);
+}
+
+.look-preview p {
+  margin: 0;
+}
+
+.look-preview__question {
+  font-family: var(--look-heading-font);
+  font-weight: 600;
+}
+
+.look-preview__scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.look-preview__step {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border: 1px solid var(--look-line);
+  border-radius: min(var(--look-radius), 18px);
+  background: var(--look-surface);
+  font-weight: 600;
+}
+
+.look-preview[data-controls="underline"] .look-preview__step {
+  border-width: 0 0 2px;
+  border-radius: 0;
+}
+
+.look-preview__step--on {
+  background: var(--look-accent);
+  border-color: var(--look-accent);
+  color: var(--look-on-accent);
+}
+
+.look-preview__button {
+  justify-self: start;
+  padding: 10px 18px;
+  border: 2px solid var(--look-accent);
+  border-radius: var(--look-radius);
+  background: var(--look-accent);
+  color: var(--look-on-accent);
+  font-weight: 600;
+}
+
+.look-preview[data-buttons="outline"] .look-preview__button {
+  background: transparent;
+  color: var(--look-accent);
+}
+
+.look-preview--small {
+  border: 0;
+  font-size: 11px;
+}
+
+.look-preview--small .look-preview__card {
+  margin: 6px;
+  padding: 10px;
+  gap: 6px;
+}
+
+.look-preview--small .look-preview__title {
+  font-size: 13px;
+}
+
+.look-preview--small .look-preview__step {
+  height: 18px;
+}
+
+.look-preview--small .look-preview__button {
+  padding: 4px 8px;
+}
+
+/* Colour fields side by side; buttons inside groups keep their own width. */
+.look-more-panel .look-group:first-child {
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+}
+
+.look-group > .look-button {
+  justify-self: start;
+}

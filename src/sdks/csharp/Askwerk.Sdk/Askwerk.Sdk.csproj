@@ -1,0 +1,16 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- The oldest supported .NET; no packages. -->
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Askwerk.Sdk</PackageId>
+    <Version>1.0.0</Version>
+    <Description>The Askwerk Public API for .NET, with no dependencies.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>

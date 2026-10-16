@@ -1,0 +1,125 @@
+{
+  "name": "“Other, please specify” needs its own code and its own variable, a label, and a choice question",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "single",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Option 1"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Option 2"
+                }
+              }
+            ],
+            "other": {
+              "code": "2",
+              "label": {
+                "de": "Andere:"
+              },
+              "variable": "Q2"
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "Q2",
+            "type": "multiple",
+            "text": {
+              "de": "Frage 2"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Option 1"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Option 2"
+                }
+              }
+            ],
+            "other": {
+              "code": "OTHER",
+              "label": {
+                "de": ""
+              },
+              "variable": "bad name"
+            }
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "rating",
+            "text": {
+              "de": "Frage 3"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            },
+            "other": {
+              "code": "OTHER",
+              "label": {
+                "de": "Andere:"
+              },
+              "variable": "Q3_OTHER"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "other-code-taken",
+      "severity": "error",
+      "path": "pages/0/questions/0/other/code"
+    },
+    {
+      "code": "other-variable-taken",
+      "severity": "error",
+      "path": "pages/0/questions/0/other/variable"
+    },
+    {
+      "code": "variable-invalid",
+      "severity": "error",
+      "path": "pages/0/questions/1/other/variable"
+    },
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "pages/0/questions/1/other/label",
+      "language": "de"
+    },
+    {
+      "code": "other-not-allowed",
+      "severity": "error",
+      "path": "pages/0/questions/2/other"
+    }
+  ]
+}

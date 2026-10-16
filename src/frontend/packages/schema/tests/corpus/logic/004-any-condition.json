@@ -1,0 +1,104 @@
+{
+  "name": "Any of the conditions is enough",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "en"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT",
+            "type": "rating",
+            "text": {
+              "en": "Sat"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "q4",
+            "variable": "TOPICS",
+            "type": "multiple",
+            "text": {
+              "en": "Topics"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "food",
+                "label": {
+                  "en": "food"
+                }
+              },
+              {
+                "code": "price",
+                "label": {
+                  "en": "price"
+                }
+              },
+              {
+                "code": "staff",
+                "label": {
+                  "en": "staff"
+                }
+              }
+            ]
+          },
+          {
+            "id": "q6",
+            "variable": "PRAISE",
+            "type": "long-text",
+            "text": {
+              "en": "Praise"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "any",
+              "conditions": [
+                {
+                  "question": "q1",
+                  "op": "at-least",
+                  "number": 4
+                },
+                {
+                  "question": "q4",
+                  "op": "includes",
+                  "value": "staff"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answers": {
+    "q1": {
+      "number": 1
+    },
+    "q4": {
+      "options": [
+        "price",
+        "staff"
+      ]
+    }
+  },
+  "expected": [
+    {
+      "page": "p1",
+      "questions": [
+        "q1",
+        "q4",
+        "q6"
+      ]
+    }
+  ]
+}

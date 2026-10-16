@@ -1,0 +1,10 @@
+{
+  "name": "A survey without questions cannot be published",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": ["de"],
+    "defaultLanguage": "de",
+    "pages": [{ "id": "p1", "questions": [] }]
+  },
+  "expected": [{ "code": "survey-empty", "severity": "error", "path": "pages" }]
+}

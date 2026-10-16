@@ -1,0 +1,14 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Askwerk.Domain/Askwerk.Domain.csproj" />
+  </ItemGroup>
+
+  <!-- The golden corpus shared with packages/schema (agents/testing.md): both implementations must agree. -->
+  <ItemGroup>
+    <None Include="../../frontend/packages/schema/tests/corpus/definition-checks/*.json" LinkBase="corpus/definition-checks" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../frontend/packages/schema/tests/corpus/theme-checks/*.json" LinkBase="corpus/theme-checks" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../frontend/packages/schema/tests/corpus/logic/*.json" LinkBase="corpus/logic" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../frontend/packages/schema/presets/*.json" LinkBase="presets" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

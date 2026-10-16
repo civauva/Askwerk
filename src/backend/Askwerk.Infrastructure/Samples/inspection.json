@@ -1,0 +1,285 @@
+{
+  "order": 5,
+  "look": "papier",
+  "responses": 18,
+  "names": {
+    "de": "Begehung vor Ort",
+    "en": "Site inspection"
+  },
+  "kind": {
+    "de": "Druckfertig",
+    "en": "PDF-ready"
+  },
+  "features": {
+    "de": [
+      "nummeriert",
+      "druckt auf A4",
+      "Datum und Zahl",
+      "Folgefrage bei Bedarf"
+    ],
+    "en": [
+      "numbered",
+      "prints on A4",
+      "date and number",
+      "follow-up when needed"
+    ]
+  },
+  "texts": {
+    "findings": {
+      "de": [
+        "Fluchtweg im 2. Stock verstellt",
+        "Alles in Ordnung",
+        "Erste-Hilfe-Kasten nachfüllen"
+      ],
+      "en": [
+        "Escape route on 2nd floor blocked",
+        "All in order",
+        "Refill the first-aid kit"
+      ]
+    },
+    "site": {
+      "de": [
+        "Werk Nord",
+        "Lager Süd",
+        "Büro Mitte"
+      ],
+      "en": [
+        "North plant",
+        "South warehouse",
+        "Central office"
+      ]
+    },
+    "followup": {
+      "de": [
+        "Bis Freitag freiräumen",
+        "Neuen Kasten bestellen"
+      ],
+      "en": [
+        "Clear it by Friday",
+        "Order a new kit"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Sicherheitsbegehung",
+        "en": "Safety inspection"
+      },
+      "text": {
+        "de": "Füllen Sie das Formular vor Ort aus oder drucken Sie es als PDF.",
+        "en": "Fill in the form on site or print it as PDF."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke. Die Begehung ist gespeichert.",
+        "en": "Thank you. The inspection is saved."
+      }
+    },
+    "pages": [
+      {
+        "id": "site",
+        "questions": [
+          {
+            "id": "site",
+            "variable": "SITE",
+            "type": "short-text",
+            "text": {
+              "de": "Standort",
+              "en": "Site"
+            },
+            "required": true
+          },
+          {
+            "id": "date",
+            "variable": "DATE",
+            "type": "date",
+            "text": {
+              "de": "Datum der Begehung",
+              "en": "Date of inspection"
+            },
+            "required": true,
+            "mode": "date",
+            "latest": "today"
+          },
+          {
+            "id": "people",
+            "variable": "PEOPLE",
+            "type": "number",
+            "text": {
+              "de": "Personen vor Ort",
+              "en": "People on site"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Ort und Datum",
+          "en": "Site and date"
+        }
+      },
+      {
+        "id": "checks",
+        "questions": [
+          {
+            "id": "fire",
+            "variable": "FIRE",
+            "type": "matrix",
+            "text": {
+              "de": "Brandschutz",
+              "en": "Fire safety"
+            },
+            "required": true,
+            "rows": [
+              {
+                "code": "exits",
+                "label": {
+                  "de": "Fluchtwege sind frei und markiert.",
+                  "en": "Fire exits are clear and marked."
+                }
+              },
+              {
+                "code": "extinguish",
+                "label": {
+                  "de": "Feuerlöscher sind geprüft.",
+                  "en": "Extinguishers are checked."
+                }
+              },
+              {
+                "code": "doors",
+                "label": {
+                  "de": "Brandschutztüren schließen.",
+                  "en": "Fire doors close."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Ja",
+                  "en": "Yes"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Nein",
+                  "en": "No"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Entfällt",
+                  "en": "Not applicable"
+                }
+              }
+            ]
+          },
+          {
+            "id": "first",
+            "variable": "FIRST_AID",
+            "type": "matrix",
+            "text": {
+              "de": "Erste Hilfe",
+              "en": "First aid"
+            },
+            "required": true,
+            "rows": [
+              {
+                "code": "kit",
+                "label": {
+                  "de": "Erste-Hilfe-Kasten ist vollständig.",
+                  "en": "First-aid kit is complete."
+                }
+              },
+              {
+                "code": "people",
+                "label": {
+                  "de": "Ersthelfer sind benannt.",
+                  "en": "First aiders are named."
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Ja",
+                  "en": "Yes"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Nein",
+                  "en": "No"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Entfällt",
+                  "en": "Not applicable"
+                }
+              }
+            ]
+          },
+          {
+            "id": "findings",
+            "variable": "FINDINGS",
+            "type": "long-text",
+            "text": {
+              "de": "Feststellungen",
+              "en": "Findings"
+            },
+            "required": false
+          },
+          {
+            "id": "needed",
+            "variable": "NEEDED",
+            "type": "yes-no",
+            "text": {
+              "de": "Sind Maßnahmen nötig?",
+              "en": "Is follow-up needed?"
+            },
+            "required": true
+          },
+          {
+            "id": "followup",
+            "variable": "FOLLOWUP",
+            "type": "long-text",
+            "text": {
+              "de": "Welche Maßnahmen, bis wann?",
+              "en": "Which follow-up, by when?"
+            },
+            "required": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "needed",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ],
+        "title": {
+          "de": "Prüfpunkte",
+          "en": "Checks"
+        }
+      }
+    ]
+  }
+}

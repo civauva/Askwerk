@@ -1,0 +1,35 @@
+{
+  "name": "A welcome page that is switched off is not shown, so its texts need no translation",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "welcome": {
+      "enabled": false,
+      "title": {
+        "de": "Willkommen"
+      }
+    },
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "long-text",
+            "text": {
+              "de": "Frage",
+              "en": "Question"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": []
+}

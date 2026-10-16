@@ -1,0 +1,49 @@
+{
+  "id": "warm",
+  "name": {
+    "de": "Warm",
+    "en": "Warm"
+  },
+  "description": {
+    "de": "Sanftes Creme, freundliche Serifen.",
+    "en": "Soft cream, friendly serif."
+  },
+  "tags": [
+    "calm"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#a34a1f",
+      "onAccent": "#ffffff",
+      "background": "#fbf5ec",
+      "surface": "#fffdf9",
+      "text": "#3a2a1c",
+      "muted": "#76604d",
+      "line": "#eadccb"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Serif"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "rounded",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "steps",
+    "layout": "card",
+    "pages": {
+      "welcome": {
+        "layout": "centre"
+      },
+      "end": {
+        "layout": "centre"
+      }
+    }
+  }
+}

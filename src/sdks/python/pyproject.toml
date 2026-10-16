@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "askwerk"
+version = "1.0.0"
+description = "The Askwerk Public API for Python, with no dependencies."
+readme = "../README.md"  # releases are built by build_wheel.py, which reads it from there
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.setuptools]
+packages = ["askwerk"]
+
+[tool.setuptools.package-data]
+askwerk = ["py.typed"]

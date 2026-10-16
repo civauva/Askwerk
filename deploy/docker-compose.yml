@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# The whole install: Askwerk + PostgreSQL, Caddy optional (agents/architecture.md).
+#   docker compose up -d                    Askwerk on http://localhost:${ASKWERK_HTTP_PORT}
+#   docker compose --profile caddy up -d    plus automatic HTTPS, including customer domains
+#   docker compose up -d --build            build the image locally, no registry needed
+
+name: askwerk
+
+services:
+  askwerk:
+    image: ${ASKWERK_IMAGE:-ghcr.io/civauva/askwerk:latest}
+    build:
+      context: ..
+      dockerfile: src/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASKWERK_DB: Host=postgres;Database=askwerk;Username=askwerk;Password=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      ASKWERK_DATA_KEY: ${ASKWERK_DATA_KEY:-}
+      ASKWERK_BASE_URL: ${ASKWERK_BASE_URL:-http://localhost:8080}
+      ASKWERK_NAME: ${ASKWERK_NAME:-}
+      ASKWERK_LANGUAGE: ${ASKWERK_LANGUAGE:-}
+      ASKWERK_TIME_ZONE: ${ASKWERK_TIME_ZONE:-}
+      ASKWERK_SMTP_HOST: ${ASKWERK_SMTP_HOST:-}
+      ASKWERK_SMTP_PORT: ${ASKWERK_SMTP_PORT:-}
+      ASKWERK_SMTP_USER: ${ASKWERK_SMTP_USER:-}
+      ASKWERK_SMTP_PASSWORD: ${ASKWERK_SMTP_PASSWORD:-}
+      ASKWERK_SMTP_SENDER: ${ASKWERK_SMTP_SENDER:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+    ports:
+      - "${ASKWERK_HTTP_PORT:-8080}:8080"
+    volumes:
+      - askwerk-files:/var/lib/askwerk/files
+    healthcheck:
+      # The image ships a small health probe so no curl/wget is needed in the runtime image (AWK-11).
+      test: ["CMD", "/app/askwerk-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 30
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: askwerk
+      POSTGRES_USER: askwerk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U askwerk -d askwerk"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  caddy:
+    image: ${ASKWERK_PROXY_IMAGE:-caddy:2}
+    profiles: ["caddy"]
+    restart: unless-stopped
+    depends_on:
+      - askwerk
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+
+volumes:
+  askwerk-files:
+  postgres-data:
+  caddy-data:

@@ -1,0 +1,68 @@
+{
+  "id": "konfetti",
+  "name": {
+    "de": "Konfetti",
+    "en": "Konfetti"
+  },
+  "description": {
+    "de": "Bunt, verspielt, runde Knöpfe.",
+    "en": "Bright, playful, pill buttons."
+  },
+  "tags": [
+    "colourful"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#c2391a",
+      "onAccent": "#ffffff",
+      "background": "#fff4e0",
+      "surface": "#ffffff",
+      "text": "#2a1b3d",
+      "muted": "#6a5880",
+      "line": "#f0d9c0"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "airy",
+    "corners": "pill",
+    "buttons": "filled",
+    "controls": "pills",
+    "progress": "steps",
+    "layout": "card",
+    "decoration": {
+      "pattern": "confetti"
+    },
+    "components": {
+      "question": {
+        "size": "l",
+        "font": "heading"
+      },
+      "choices": {
+        "columns": "two",
+        "selected": "fill"
+      },
+      "buttons": {
+        "width": "wide"
+      }
+    },
+    "pages": {
+      "welcome": {
+        "layout": "band"
+      },
+      "end": {
+        "layout": "band"
+      }
+    },
+    "email": {
+      "header": "band"
+    }
+  }
+}

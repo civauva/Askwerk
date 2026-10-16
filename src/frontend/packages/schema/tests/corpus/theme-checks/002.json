@@ -1,0 +1,53 @@
+{
+  "name": "Light grey text is too weak on cards and on the background",
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#d2440f",
+      "onAccent": "#ffffff",
+      "background": "#f6f5f2",
+      "surface": "#ffffff",
+      "text": "#9a948c",
+      "muted": "#b5afa6",
+      "line": "#c8c2b8"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Sans Condensed"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "card"
+  },
+  "expected": [
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "colours/text",
+      "against": "colours/surface",
+      "ratio": 3.0
+    },
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "colours/text",
+      "against": "colours/background",
+      "ratio": 2.76
+    },
+    {
+      "code": "contrast-too-low",
+      "severity": "error",
+      "path": "colours/muted",
+      "against": "colours/surface",
+      "ratio": 2.18
+    }
+  ]
+}

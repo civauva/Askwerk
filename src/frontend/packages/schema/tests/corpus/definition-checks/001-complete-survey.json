@@ -1,0 +1,36 @@
+{
+  "name": "A complete survey in both languages has no issues",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": ["de", "en"],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "title": { "de": "Ihr Besuch", "en": "Your visit" },
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT_1",
+            "type": "rating",
+            "text": { "de": "Wie zufrieden sind Sie?", "en": "How satisfied are you?" },
+            "required": true,
+            "scale": { "min": 1, "max": 5 }
+          },
+          {
+            "id": "q2",
+            "variable": "BRANCH",
+            "type": "single",
+            "text": { "de": "Welche Filiale?", "en": "Which branch?" },
+            "required": false,
+            "options": [
+              { "code": "1", "label": { "de": "Wien", "en": "Vienna" } },
+              { "code": "2", "label": { "de": "Graz", "en": "Graz" } }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "expected": []
+}

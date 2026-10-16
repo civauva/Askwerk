@@ -1,0 +1,564 @@
+{
+  "order": 7,
+  "look": "werkstatt",
+  "responses": 120,
+  "names": {
+    "de": "Mitarbeitendenbefragung",
+    "en": "Employee survey"
+  },
+  "kind": {
+    "de": "Alles in einer Umfrage",
+    "en": "Full tour"
+  },
+  "features": {
+    "de": [
+      "alle Fragearten",
+      "Regeln und Sprünge",
+      "DE · EN",
+      "Bildblock"
+    ],
+    "en": [
+      "all question types",
+      "rules and jumps",
+      "DE · EN",
+      "image block"
+    ]
+  },
+  "texts": {
+    "change": {
+      "de": [
+        "Mehr Homeoffice",
+        "Klarere Ziele",
+        "Bessere Kaffeemaschine",
+        "Weniger E-Mails"
+      ],
+      "en": [
+        "More remote work",
+        "Clearer goals",
+        "A better coffee machine",
+        "Fewer emails"
+      ]
+    },
+    "role": {
+      "de": [
+        "Entwicklung",
+        "Vertrieb",
+        "Buchhaltung"
+      ],
+      "en": [
+        "Development",
+        "Sales",
+        "Accounting"
+      ]
+    }
+  },
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "layout": "classic",
+    "welcome": {
+      "title": {
+        "de": "Mitarbeitendenbefragung 2026",
+        "en": "Employee survey 2026"
+      },
+      "text": {
+        "de": "Anonym, etwa zehn Minuten. Sie können jederzeit pausieren.",
+        "en": "Anonymous, about ten minutes. You can pause at any time."
+      }
+    },
+    "endPage": {
+      "text": {
+        "de": "Danke! Die Ergebnisse teilen wir im Dezember.",
+        "en": "Thank you! We share the results in December."
+      }
+    },
+    "pages": [
+      {
+        "id": "work",
+        "questions": [
+          {
+            "id": "intro",
+            "variable": "INTRO",
+            "type": "text-block",
+            "text": {
+              "de": "Zuerst geht es um Ihre tägliche Arbeit.",
+              "en": "First, about your daily work."
+            },
+            "required": false
+          },
+          {
+            "id": "team-picture",
+            "variable": "IMG_TEAM",
+            "type": "image",
+            "text": {
+              "de": "Das sind wir.",
+              "en": "This is us."
+            },
+            "required": false,
+            "image": {
+              "asset": "{picture:team}",
+              "alt": {
+                "de": "Gezeichnete Gruppe von Menschen",
+                "en": "A drawn group of people"
+              },
+              "size": "half",
+              "align": "centre"
+            }
+          },
+          {
+            "id": "satisfied",
+            "variable": "SATISFIED",
+            "type": "rating",
+            "text": {
+              "de": "Wie zufrieden sind Sie mit Ihrer Arbeit?",
+              "en": "How satisfied are you with your work?"
+            },
+            "required": true,
+            "scale": {
+              "min": 1,
+              "max": 7,
+              "minLabel": {
+                "de": "Gar nicht",
+                "en": "Not at all"
+              },
+              "maxLabel": {
+                "de": "Sehr",
+                "en": "Very"
+              }
+            }
+          },
+          {
+            "id": "aspects",
+            "variable": "ASPECTS",
+            "type": "matrix",
+            "text": {
+              "de": "Wie bewerten Sie …",
+              "en": "How do you rate …"
+            },
+            "required": true,
+            "dontKnow": true,
+            "rows": [
+              {
+                "code": "tools",
+                "label": {
+                  "de": "Werkzeuge",
+                  "en": "Tools"
+                }
+              },
+              {
+                "code": "workload",
+                "label": {
+                  "de": "Arbeitsmenge",
+                  "en": "Workload"
+                }
+              },
+              {
+                "code": "pay",
+                "label": {
+                  "de": "Bezahlung",
+                  "en": "Pay"
+                }
+              },
+              {
+                "code": "growth",
+                "label": {
+                  "de": "Entwicklung",
+                  "en": "Growth"
+                }
+              }
+            ],
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Schlecht",
+                  "en": "Poor"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Mittel",
+                  "en": "Fair"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Gut",
+                  "en": "Good"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Sehr gut",
+                  "en": "Very good"
+                }
+              }
+            ]
+          },
+          {
+            "id": "remote",
+            "variable": "REMOTE",
+            "type": "single",
+            "text": {
+              "de": "Wie oft arbeiten Sie von zu Hause?",
+              "en": "How often do you work from home?"
+            },
+            "required": true,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Nie",
+                  "en": "Never"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Manchmal",
+                  "en": "Sometimes"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Oft",
+                  "en": "Often"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Immer",
+                  "en": "Always"
+                }
+              }
+            ]
+          },
+          {
+            "id": "remote-days",
+            "variable": "REMOTE_DAYS",
+            "type": "slider",
+            "text": {
+              "de": "Wie viele Tage pro Woche wären ideal?",
+              "en": "How many days a week would be ideal?"
+            },
+            "required": false,
+            "scale": {
+              "min": 0,
+              "max": 5,
+              "step": 1,
+              "showValue": true
+            },
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "remote",
+                  "op": "is-not",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ],
+        "title": {
+          "de": "Ihre Arbeit",
+          "en": "Your work"
+        }
+      },
+      {
+        "id": "team",
+        "questions": [
+          {
+            "id": "lead",
+            "variable": "HAS_LEAD",
+            "type": "yes-no",
+            "text": {
+              "de": "Haben Sie eine direkte Führungskraft?",
+              "en": "Do you have a direct manager?"
+            },
+            "required": true
+          },
+          {
+            "id": "lead-rating",
+            "variable": "LEAD",
+            "type": "rating",
+            "text": {
+              "de": "Wie unterstützt Sie Ihre Führungskraft?",
+              "en": "How well does your manager support you?"
+            },
+            "required": true,
+            "display": "stars",
+            "scale": {
+              "min": 1,
+              "max": 5
+            },
+            "dontKnow": true,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "lead",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "values",
+            "variable": "VALUES",
+            "type": "ranking",
+            "text": {
+              "de": "Was ist Ihnen am wichtigsten?",
+              "en": "What matters most to you?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Sicherheit",
+                  "en": "Security"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Flexibilität",
+                  "en": "Flexibility"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Gehalt",
+                  "en": "Pay"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Sinn",
+                  "en": "Purpose"
+                }
+              }
+            ]
+          },
+          {
+            "id": "learn",
+            "variable": "LEARN",
+            "type": "multiple",
+            "text": {
+              "de": "Was möchten Sie lernen?",
+              "en": "What would you like to learn?"
+            },
+            "required": false,
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Führung",
+                  "en": "Leadership"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Sprachen",
+                  "en": "Languages"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Daten",
+                  "en": "Data"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Präsentieren",
+                  "en": "Presenting"
+                }
+              }
+            ],
+            "other": {
+              "code": "99",
+              "label": {
+                "de": "Sonstiges, bitte angeben:",
+                "en": "Other, please specify:"
+              },
+              "variable": "LEARN_OTHER"
+            }
+          },
+          {
+            "id": "nps",
+            "variable": "ENPS",
+            "type": "nps",
+            "text": {
+              "de": "Wie wahrscheinlich empfehlen Sie uns als Arbeitgeber?",
+              "en": "How likely are you to recommend us as an employer?"
+            },
+            "required": true,
+            "scale": {
+              "min": 0,
+              "max": 10
+            }
+          }
+        ],
+        "title": {
+          "de": "Ihr Team",
+          "en": "Your team"
+        },
+        "after": {
+          "when": {
+            "match": "all",
+            "conditions": [
+              {
+                "question": "nps",
+                "op": "at-most",
+                "number": 6
+              }
+            ]
+          },
+          "goTo": "about"
+        }
+      },
+      {
+        "id": "praise",
+        "questions": [
+          {
+            "id": "proud",
+            "variable": "PROUD",
+            "type": "yes-no",
+            "text": {
+              "de": "Sind Sie stolz, hier zu arbeiten?",
+              "en": "Are you proud to work here?"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Was gut läuft",
+          "en": "What works"
+        }
+      },
+      {
+        "id": "about",
+        "questions": [
+          {
+            "id": "department",
+            "variable": "DEPARTMENT",
+            "type": "dropdown",
+            "text": {
+              "de": "Abteilung",
+              "en": "Department"
+            },
+            "required": true,
+            "order": "alphabetical",
+            "options": [
+              {
+                "code": "1",
+                "label": {
+                  "de": "Einkauf",
+                  "en": "Purchasing"
+                }
+              },
+              {
+                "code": "2",
+                "label": {
+                  "de": "Entwicklung",
+                  "en": "Development"
+                }
+              },
+              {
+                "code": "3",
+                "label": {
+                  "de": "Finanzen",
+                  "en": "Finance"
+                }
+              },
+              {
+                "code": "4",
+                "label": {
+                  "de": "Marketing",
+                  "en": "Marketing"
+                }
+              },
+              {
+                "code": "5",
+                "label": {
+                  "de": "Personal",
+                  "en": "People"
+                }
+              },
+              {
+                "code": "6",
+                "label": {
+                  "de": "Vertrieb",
+                  "en": "Sales"
+                }
+              }
+            ]
+          },
+          {
+            "id": "role",
+            "variable": "ROLE",
+            "type": "short-text",
+            "text": {
+              "de": "Ihre Rolle in einem Wort",
+              "en": "Your role in one word"
+            },
+            "required": false
+          },
+          {
+            "id": "years",
+            "variable": "YEARS",
+            "type": "number",
+            "text": {
+              "de": "Wie viele Jahre sind Sie schon hier?",
+              "en": "How many years have you been here?"
+            },
+            "required": false
+          },
+          {
+            "id": "start",
+            "variable": "START",
+            "type": "date",
+            "text": {
+              "de": "Seit wann sind Sie im Unternehmen?",
+              "en": "When did you join?"
+            },
+            "required": false,
+            "mode": "date",
+            "latest": "today"
+          },
+          {
+            "id": "change",
+            "variable": "CHANGE",
+            "type": "long-text",
+            "text": {
+              "de": "Was sollten wir als Erstes ändern?",
+              "en": "What should we change first?"
+            },
+            "required": false
+          }
+        ],
+        "title": {
+          "de": "Über Sie",
+          "en": "About you"
+        }
+      }
+    ]
+  }
+}

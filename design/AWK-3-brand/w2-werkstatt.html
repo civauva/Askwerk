@@ -1,0 +1,360 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W3 · AWK-3 brand "Werkstatt" (supersedes W2): logo aligned on the text baseline in app headers. -->
+<title>Askwerk Werkstatt Brand</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a brand board. One reading column of labelled sections; applications in wrapping rows.
+   The board itself follows the Werkstatt tokens it presents (light by default, dark with the viewer). */
+:root {
+  --paper: #f6f5f2; --surface: #ffffff; --ink: #1a1917; --graphite: #4a4640; --muted: #6e6962; --line: #e3dfd8; --line-strong: #c8c2b8;
+  --signal: #d2440f; --signal-hover: #b8390a; --signal-soft: #fbe6da; --signal-ink: #8f2c06; --on-signal: #ffffff;
+  --steel: #3e4a56; --ok: #2e7d4f; --warn: #a86a12; --error: #b42318; --grid: rgba(26,25,23,0.045);
+  --display: "IBM Plex Sans Condensed", "IBM Plex Sans", "Arial Narrow", sans-serif;
+  --text: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --r-control: 2px; --r-card: 4px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #141311; --surface: #1c1a18; --ink: #f2efea; --graphite: #c9c3ba; --muted: #9c958b; --line: #2f2b27; --line-strong: #48423b;
+  --signal: #ff7a3d; --signal-hover: #ff8f5c; --signal-soft: #3a2014; --signal-ink: #ffb48f; --on-signal: #1a0a03;
+  --steel: #9fb0c0; --ok: #6cc28f; --warn: #e3a948; --error: #f2877b; --grid: rgba(242,239,234,0.05); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #141311; --surface: #1c1a18; --ink: #f2efea; --graphite: #c9c3ba; --muted: #9c958b; --line: #2f2b27; --line-strong: #48423b;
+  --signal: #ff7a3d; --signal-hover: #ff8f5c; --signal-soft: #3a2014; --signal-ink: #ffb48f; --on-signal: #1a0a03;
+  --steel: #9fb0c0; --ok: #6cc28f; --warn: #e3a948; --error: #f2877b; --grid: rgba(242,239,234,0.05); color-scheme: dark; }
+
+/* Explicit light and dark samples, independent of the viewer's theme. */
+.t-light { --paper: #f6f5f2; --surface: #ffffff; --ink: #1a1917; --graphite: #4a4640; --muted: #6e6962; --line: #e3dfd8; --line-strong: #c8c2b8;
+  --signal: #d2440f; --signal-soft: #fbe6da; --signal-ink: #8f2c06; --on-signal: #ffffff; --steel: #3e4a56; --ok: #2e7d4f; --grid: rgba(26,25,23,0.045); color-scheme: light; }
+.t-dark { --paper: #141311; --surface: #1c1a18; --ink: #f2efea; --graphite: #c9c3ba; --muted: #9c958b; --line: #2f2b27; --line-strong: #48423b;
+  --signal: #ff7a3d; --signal-soft: #3a2014; --signal-ink: #ffb48f; --on-signal: #1a0a03; --steel: #9fb0c0; --ok: #6cc28f; --grid: rgba(242,239,234,0.05); color-scheme: dark; }
+
+body { background: var(--paper); color: var(--ink); font: 15px/1.55 var(--text); padding-inline: 16px; padding-block: 0 72px; }
+main { max-width: 1240px; margin: 0 auto; display: grid; gap: 56px; }
+* { box-sizing: border-box; }
+.grid-bg { background-color: var(--paper); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 24px 24px; }
+
+/* Board header */
+.masthead { padding-block: 40px 8px; display: grid; gap: 12px; border-bottom: 2px solid var(--ink); }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.masthead h1 { font: 700 clamp(40px, 7vw, 76px)/0.95 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.masthead h1 em { font-style: normal; color: var(--signal); }
+.masthead p { max-width: 68ch; margin: 0 0 20px; color: var(--graphite); }
+section > h2 { font: 600 13px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 16px; display: flex; gap: 12px; align-items: center; }
+section > h2::after { content: ""; flex: 1; border-top: 1px solid var(--line-strong); }
+.lead { max-width: 70ch; color: var(--graphite); margin: -4px 0 20px; }
+.row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); padding: 20px; min-width: 0; }
+.caption { font: 400 12px/1.4 var(--mono); color: var(--muted); margin-top: 8px; }
+
+/* Logo */
+.logo { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); }
+.logo .word { font: 700 30px/1 var(--display); letter-spacing: -0.015em; }
+.logo .word b { font-weight: 700; color: var(--signal); }
+.logo.lg .word { font-size: 56px; }
+.tile { display: inline-grid; place-items: center; }
+.logos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.logos .panel { display: grid; gap: 16px; place-items: start; }
+.logo-on-signal { background: var(--signal); }
+.logo-on-signal .logo, .logo-on-signal .logo .word b { color: var(--on-signal); }
+.sizes { display: flex; gap: 18px; align-items: end; }
+
+/* Type */
+.type { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.spec-display { font: 700 44px/1 var(--display); letter-spacing: -0.02em; }
+.spec-text { font: 400 18px/1.5 var(--text); }
+.spec-mono { font: 500 16px/1.5 var(--mono); }
+.scale-list { display: grid; gap: 6px; margin-top: 12px; }
+.scale-list div { display: flex; align-items: baseline; gap: 14px; border-top: 1px solid var(--line); padding-top: 6px; }
+.scale-list code { font: 400 11.5px var(--mono); color: var(--muted); width: 74px; flex: none; }
+
+/* Colour */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.sw { border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+.sw i { display: block; height: 64px; }
+.sw div { padding: 8px 10px; font-size: 13px; }
+.sw code { display: block; font: 400 11.5px var(--mono); color: var(--muted); }
+.ramp { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); margin-top: 16px; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+.ramp i { height: 40px; }
+.ramp-labels { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); font: 400 10.5px var(--mono); color: var(--muted); text-align: center; margin-top: 4px; }
+
+/* Shape language */
+.shapes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.btn { font: 600 14px/1 var(--text); padding: 11px 16px; border-radius: var(--r-control); border: 1px solid var(--ink); background: var(--surface); color: var(--ink); display: inline-flex; gap: 8px; align-items: center; }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--on-signal); }
+.btn.focus { outline: 2px solid var(--signal); outline-offset: 2px; }
+.input { border: 1px solid var(--line-strong); border-radius: var(--r-control); padding: 9px 12px; background: var(--surface); font-size: 14px; color: var(--muted); }
+.chip { font: 500 11.5px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; padding: 5px 8px; border: 1px solid var(--line-strong); border-radius: var(--r-control); color: var(--graphite); }
+.chip.signal { border-color: var(--signal); color: var(--signal-ink); background: var(--signal-soft); }
+
+/* Ruler: the signature detail (progress and scales read like a measuring rule) */
+.ruler { position: relative; height: 18px; border-bottom: 2px solid var(--ink); background-image: repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 10%); background-size: 100% 8px; background-repeat: no-repeat; background-position: bottom; }
+.ruler i { position: absolute; left: 0; bottom: -2px; height: 6px; background: var(--signal); }
+
+/* Phone */
+.phone { width: 360px; max-width: 100%; border: 1px solid var(--line-strong); border-radius: 18px; overflow: hidden; background: var(--paper); color: var(--ink); flex: none; }
+.phone .status-bar { height: 26px; display: flex; justify-content: space-between; padding: 6px 18px 0; font: 600 11px var(--text); color: var(--ink); }
+.phone .head { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 18px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.phone .head .logo .word { font-size: 18px; line-height: 1; }
+.phone .head .logo svg { width: 18px; height: 18px; }
+.phone .count { font: 500 12px var(--mono); color: var(--muted); }
+.phone .content { padding: 20px 18px 24px; display: grid; gap: 18px; min-height: 520px; align-content: start; }
+.phone .qno { font: 600 12px var(--mono); color: var(--signal-ink); letter-spacing: 0.06em; }
+.phone h3 { font: 600 24px/1.2 var(--display); letter-spacing: -0.01em; margin: 0; }
+.phone .help { color: var(--muted); font-size: 15px; margin: 0; }
+.nps { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); border: 1px solid var(--line-strong); border-radius: var(--r-control); overflow: hidden; }
+.nps span { text-align: center; padding: 12px 0; font: 500 15px var(--mono); border-left: 1px solid var(--line); background: var(--surface); }
+.nps span:first-child { border-left: none; }
+.nps span.on { background: var(--signal); color: var(--on-signal); }
+.ends { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+.phone .next { margin-top: 8px; width: 100%; justify-content: center; padding: 15px; font-size: 16px; }
+.phone .back { font-size: 14px; color: var(--graphite); text-align: center; }
+.done-mark { width: 56px; height: 56px; border: 2px solid var(--signal); border-radius: var(--r-card); display: grid; place-items: center; color: var(--signal); font: 700 28px var(--display); }
+.receipt { border-top: 1px dashed var(--line-strong); border-bottom: 1px dashed var(--line-strong); padding: 12px 0; font: 400 13px/1.7 var(--mono); color: var(--graphite); }
+
+/* E-mail */
+.mail { width: 560px; max-width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; flex: none; }
+.mail .meta { padding: 10px 16px; font: 400 12px/1.6 var(--mono); color: var(--muted); border-bottom: 1px solid var(--line); background: var(--paper); }
+.mail .body { padding: 28px 32px; display: grid; gap: 16px; }
+.mail .body h3 { font: 700 30px/1.05 var(--display); letter-spacing: -0.015em; margin: 0; }
+.mail .facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 14px; border-left: 2px solid var(--signal); padding-left: 12px; }
+.mail .facts dt { font: 500 12px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; padding-top: 2px; }
+.mail .facts dd { margin: 0; }
+.mail .foot { padding: 14px 32px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+/* Publish card */
+.publish { width: 520px; max-width: 100%; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-card); padding: 22px; display: grid; gap: 16px; flex: none; }
+.publish h3 { font: 700 26px/1 var(--display); margin: 0; display: flex; gap: 10px; align-items: center; }
+.linkrow { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line-strong); border-radius: var(--r-control); padding: 8px 10px; min-width: 0; }
+.linkrow code { font: 400 13px var(--mono); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qr-wrap { display: flex; gap: 16px; align-items: start; }
+.qr { width: 132px; height: 132px; flex: none; border: 1px solid var(--line-strong); border-radius: var(--r-control); padding: 8px; background: #fff; }
+
+/* Designer strip */
+.designer { width: 100%; border: 1px solid var(--line-strong); border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+.designer .bar { display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 16px; border-bottom: 1px solid var(--line); flex-wrap: nowrap; overflow: hidden; }
+.designer .bar .logo .word { font-size: 18px; }
+.designer .bar .logo svg { width: 18px; height: 18px; }
+/* Logo, breadcrumb and status share one text baseline; the tile is centred on the wordmark. */
+.brandline { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.brandline .logo, .phone .head .logo { align-items: baseline; }
+.brandline .logo svg, .phone .head .logo svg { align-self: center; }
+.brandline .sep { width: 1px; height: 18px; background: var(--line-strong); align-self: center; }
+.designer .crumb { font: 600 15px/1 var(--text); white-space: nowrap; }
+.designer .bar .logo .word { line-height: 1; }
+.designer .stat { font: 400 12px var(--mono); color: var(--muted); white-space: nowrap; }
+.designer .grow { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: var(--r-control); font: 600 12px var(--mono); }
+.seg span { padding: 5px 12px; }
+.seg .on { background: var(--ink); color: var(--paper); }
+.designer .work { display: grid; grid-template-columns: 220px minmax(0, 1fr) 240px; min-height: 300px; }
+.designer .outline { border-right: 1px solid var(--line); padding: 12px; display: grid; gap: 4px; align-content: start; font-size: 13px; }
+.designer .outline .pg { font: 600 11px var(--mono); color: var(--muted); letter-spacing: 0.06em; margin-top: 8px; }
+.designer .outline .q { display: flex; justify-content: space-between; padding: 6px 8px; border-radius: var(--r-control); }
+.designer .outline .q code { font: 400 11px var(--mono); color: var(--muted); }
+.designer .outline .q.sel { background: var(--signal-soft); box-shadow: inset 2px 0 0 var(--signal); color: var(--signal-ink); }
+.designer .canvas { padding: 22px; }
+.designer .card { border: 2px solid var(--signal); border-radius: var(--r-card); padding: 16px 18px; background: var(--surface); max-width: 520px; margin: 0 auto; }
+.designer .card h4 { font: 600 19px/1.2 var(--display); margin: 0 0 10px; }
+.designer .insp { border-left: 1px solid var(--line); padding: 14px; display: grid; gap: 10px; align-content: start; font-size: 13px; }
+.designer .insp label { font: 500 11px var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+.voice { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.voice table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.voice td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
+.voice td:first-child { font: 500 11.5px var(--mono); color: var(--muted); width: 32%; text-transform: uppercase; letter-spacing: 0.04em; }
+.do { color: var(--ok); font-weight: 600; } .dont { color: var(--error); font-weight: 600; text-decoration: line-through; }
+@media (max-width: 720px) { .designer .work { grid-template-columns: 1fr; } .designer .outline, .designer .insp { display: none; } }
+</style>
+
+<main>
+  <header class="masthead">
+    <span class="eyebrow">AWK-3 · W3 · Werkstatt, tuned · 2026-10-13</span>
+    <h1>askw<em>erk</em> · Werkstatt</h1>
+    <p>Engineered, exact, a little industrial. Surveys as instruments: everything measured, labelled and in its place. Sharp corners, visible structure, monospaced figures, one signal colour that only marks what matters.</p>
+  </header>
+
+  <section>
+    <h2>01 · Logo</h2>
+    <p class="lead">A square tile with an angular question mark built from straight strokes, like a mark punched into sheet metal. The wordmark is set in condensed type; “werk” carries the signal colour. The tile alone is the favicon and app icon.</p>
+    <div class="logos">
+      <div class="panel t-light"><span class="logo lg" data-logo></span><span class="caption">Primary · on light</span></div>
+      <div class="panel t-dark" style="background:var(--surface)"><span class="logo lg" data-logo></span><span class="caption">Primary · on dark</span></div>
+      <div class="panel logo-on-signal"><span class="logo lg" data-logo data-mono></span><span class="caption" style="color:var(--on-signal)">Reversed · on signal orange</span></div>
+      <div class="panel"><div class="sizes"><span data-tile="64"></span><span data-tile="32"></span><span data-tile="16"></span></div><span class="caption">Tile · 64 / 32 / 16 px (favicon)</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>02 · Type</h2>
+    <p class="lead">Three cuts of one family, so everything belongs together: Plex Sans Condensed for headlines and questions, Plex Sans for reading, Plex Mono for numbers, codes and labels. All open source (OFL), served from <code>packages/ui</code>.</p>
+    <div class="type">
+      <div class="panel"><div class="spec-display">Wie zufrieden sind Sie?</div><div class="caption">Display · IBM Plex Sans Condensed 700 / 600</div></div>
+      <div class="panel"><div class="spec-text">How satisfied are you with our service? Bitte denken Sie an Ihren letzten Besuch.</div><div class="caption">Text · IBM Plex Sans 400 / 500 / 600</div></div>
+      <div class="panel"><div class="spec-mono">SAT_1 · Q3/12 · 0123456789 · 4bf92f35</div><div class="caption">Mono · IBM Plex Mono 400 / 500</div></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <div class="scale-list">
+        <div><code>32 · display</code><span style="font:700 32px/1.1 var(--display)">Veröffentlicht</span></div>
+        <div><code>24 · display</code><span style="font:600 24px/1.2 var(--display)">Was können wir verbessern?</span></div>
+        <div><code>18 · runner</code><span style="font-size:18px">Body text for respondents on desktop (17 on phone)</span></div>
+        <div><code>14 · ui</code><span style="font-size:14px">Body text in the designer and settings</span></div>
+        <div><code>12 · mono</code><span style="font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase">Labels and codes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>03 · Colour</h2>
+    <p class="lead">Warm paper and graphite carry the interface; signal orange is used sparingly, for the one action or state that matters on a screen. Steel blue for links and information keeps orange free for emphasis. Light and dark values are tuned separately, not inverted.</p>
+    <div class="swatches" id="swatches"></div>
+    <div class="ramp" id="ramp"></div>
+    <div class="ramp-labels" id="ramp-labels"></div>
+  </section>
+
+  <section>
+    <h2>04 · Shape and structure</h2>
+    <p class="lead">Corners 2 px on controls and 4 px on cards; borders instead of shadows; a faint 24 px grid behind canvases. The signature detail is the measuring rule: progress and rating scales read like a ruler with ticks.</p>
+    <div class="shapes">
+      <div class="panel" style="display:grid;gap:12px;justify-items:start"><span class="btn primary">Veröffentlichen</span><span class="btn">Vorschau ▾</span><span class="btn focus">Fokus sichtbar</span><div class="caption">Buttons · 2 px radius · focus ring in signal</div></div>
+      <div class="panel" style="display:grid;gap:12px"><div class="input">surveys.acme.at</div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">Entwurf</span><span class="chip signal">Live · v3</span><span class="chip">SAT_1</span></div><div class="caption">Inputs and status chips · mono labels</div></div>
+      <div class="panel grid-bg" style="display:grid;gap:14px"><div class="ruler"><i style="width:58%"></i></div><div style="display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--muted)"><span>Q7</span><span>7 / 12</span></div><div class="caption">Progress as a measuring rule · grid background</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>05 · Respondents (runner, phone)</h2>
+    <p class="lead">Where the brand is seen most. One question in focus, large type, the rule as progress. An organisation can replace the logo and accent with its own; the structure stays.</p>
+    <div class="row">
+      <div class="phone t-light" data-phone="de"></div>
+      <div class="phone t-dark" data-phone="en"></div>
+      <div class="phone t-light" data-done></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>06 · Invitation e-mail and publish card</h2>
+    <div class="row">
+      <div class="mail">
+        <div class="meta">From: ACME Kundenservice via Askwerk &lt;no-reply@surveys.acme.at&gt;<br>Subject: 3 minutes for your opinion: customer satisfaction 2026</div>
+        <div class="body">
+          <span class="logo" data-logo style="--signal:#d2440f"></span>
+          <h3>Three minutes. Twelve questions.</h3>
+          <p style="margin:0">You visited our Vienna branch on 9 October. Tell us how it went: your answers go straight to the team that serves you.</p>
+          <dl class="facts"><dt>Time</dt><dd>about 3 minutes</dd><dt>Open until</dt><dd>31 October 2026</dd><dt>Anonymous</dt><dd>yes, no name is stored</dd></dl>
+          <span class="btn primary" style="justify-self:start;padding:14px 22px;font-size:15px">Start the survey</span>
+          <p style="margin:0;font-size:13px;color:var(--muted)">Or open: <code style="font-family:var(--mono)">surveys.acme.at/s/kz26</code></p>
+        </div>
+        <div class="foot">You receive this because you are a customer of ACME. Unsubscribe · Privacy</div>
+      </div>
+      <div class="publish">
+        <h3><span data-check></span>Veröffentlicht · v3</h3>
+        <div class="linkrow"><span class="chip signal">Primär</span><code>https://surveys.acme.at/s/kz26</code><span class="btn" style="padding:6px 10px;font-size:12.5px">Kopieren</span></div>
+        <div class="linkrow"><span class="chip">System</span><code>https://acme.askwerk.app/s/kz26</code><span class="btn" style="padding:6px 10px;font-size:12.5px">Kopieren</span></div>
+        <div class="qr-wrap"><svg class="qr" id="qr" viewBox="0 0 29 29" aria-label="QR code (illustration)"></svg>
+          <div style="display:grid;gap:8px;font-size:14px"><span>QR-Code für Aushänge und Flyer.</span><span class="btn" style="justify-self:start">PNG</span><span class="btn" style="justify-self:start">SVG</span></div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><span class="btn">Einbetten</span><span class="btn">PDF</span><span class="btn primary">Teilnehmende einladen</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>07 · Designer</h2>
+    <p class="lead">The same language in the authoring tool: graphite structure, orange only on the selected question, the primary action and live states.</p>
+    <div class="designer">
+      <div class="bar"><span class="brandline"><span class="logo" data-logo></span><span class="sep"></span><span class="crumb">Kundenzufriedenheit 2026</span><span class="stat">ENTWURF · GESPEICHERT</span></span><span class="grow"></span>
+        <span class="seg"><span class="on">DE</span><span>EN</span></span><span class="stat">3 FEHLEN</span><span class="grow"></span><span class="btn" style="padding:8px 12px">Vorschau ▾</span><span class="btn primary" style="padding:8px 12px">Veröffentlichen</span></div>
+      <div class="work">
+        <div class="outline"><div class="pg">01 · WILLKOMMEN</div><div class="q"><span>Begrüßung</span><code>INTRO</code></div><div class="pg">02 · IHR BESUCH</div><div class="q sel"><span>Wie zufrieden…</span><code>SAT_1</code></div><div class="q"><span>Was verbessern?</span><code>IMPROVE</code></div><div class="q"><span>Empfehlung</span><code>NPS</code></div></div>
+        <div class="canvas grid-bg"><div class="card"><div style="font:600 12px var(--mono);color:var(--signal-ink);letter-spacing:.06em">Q2 · SAT_1 · PFLICHT</div><h4>Wie zufrieden sind Sie mit unserem Service?</h4><div class="nps" style="grid-template-columns:repeat(5,1fr)"><span>1</span><span>2</span><span>3</span><span class="on">4</span><span>5</span></div></div></div>
+        <div class="insp"><div><label>Typ</label><div class="input" style="color:var(--ink)">Bewertungsskala ▾</div></div><div><label>Variablenname</label><div class="input" style="color:var(--ink);font-family:var(--mono)">SAT_1</div></div><div><label>Skala</label><div class="input" style="color:var(--ink)">1 bis 5</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>08 · Voice</h2>
+    <p class="lead">Short, factual, specific. Say what happened and what to do next. Numbers instead of adjectives. No exclamation marks, no filler.</p>
+    <div class="voice">
+      <div class="panel"><table>
+        <tr><td>Saved</td><td><span class="do">Gespeichert.</span> · Saved.</td></tr>
+        <tr><td>Error</td><td><span class="do">Nicht gespeichert. Askwerk versucht es in 8 s erneut.</span></td></tr>
+        <tr><td>Avoid</td><td><span class="dont">Hoppla! Da ist etwas schiefgelaufen 😕</span></td></tr>
+      </table></div>
+      <div class="panel"><table>
+        <tr><td>Thank you</td><td><span class="do">Fertig. Ihre 12 Antworten sind gespeichert.</span></td></tr>
+        <tr><td>Invitation</td><td><span class="do">Three minutes. Twelve questions.</span></td></tr>
+        <tr><td>Avoid</td><td><span class="dont">We'd absolutely love to hear your amazing feedback!</span></td></tr>
+      </table></div>
+    </div>
+  </section>
+</main>
+
+<script>
+// The mark: a 2 px-radius tile with an angular question mark of straight strokes.
+function tile(size, bg, fg) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 32 32" aria-hidden="true"><rect x="0" y="0" width="32" height="32" rx="3" fill="${bg}"/>` +
+    `<path d="M10 11V8h12v8h-6v4" fill="none" stroke="${fg}" stroke-width="3.6" stroke-linecap="square" stroke-linejoin="miter"/>` +
+    `<rect x="14.2" y="22.6" width="3.6" height="3.6" fill="${fg}"/></svg>`;
+}
+const css = (name, el = document.documentElement) => getComputedStyle(el).getPropertyValue(name).trim();
+
+document.querySelectorAll("[data-logo]").forEach((el) => {
+  const mono = el.hasAttribute("data-mono");
+  const bg = mono ? css("--on-signal", el) : css("--signal", el);
+  const fg = mono ? css("--signal", el) : css("--on-signal", el);
+  const size = el.classList.contains("lg") ? 52 : 28;
+  el.innerHTML = `${tile(size, bg, fg)}<span class="word">ask<b>werk</b></span>`;
+});
+document.querySelectorAll("[data-tile]").forEach((el) => { el.innerHTML = tile(+el.dataset.tile, css("--signal"), css("--on-signal")); });
+document.querySelectorAll("[data-check]").forEach((el) => {
+  el.innerHTML = `<svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="2" fill="${css("--signal")}"/><path d="M7 13.5l4 4 8-9" fill="none" stroke="${css("--on-signal")}" stroke-width="2.6" stroke-linecap="square"/></svg>`;
+});
+
+// Colour swatches (light values; dark values in the caption).
+const swatches = [
+  ["Paper", "#f6f5f2", "#141311"], ["Surface", "#ffffff", "#1c1a18"], ["Ink", "#1a1917", "#f2efea"], ["Graphite", "#4a4640", "#c9c3ba"],
+  ["Line", "#e3dfd8", "#2f2b27"], ["Signal", "#d2440f", "#ff7a3d"], ["Steel", "#3e4a56", "#9fb0c0"], ["Success", "#2e7d4f", "#6cc28f"],
+  ["Warning", "#a86a12", "#e3a948"], ["Error", "#b42318", "#f2877b"],
+];
+document.getElementById("swatches").innerHTML = swatches.map(([n, l, d]) =>
+  `<div class="sw"><i style="background:linear-gradient(90deg,${l} 50%,${d} 50%)"></i><div>${n}<code>${l} · ${d}</code></div></div>`).join("");
+
+// Signal ramp, 12 steps for the token file (1 = lightest tint, 12 = darkest shade).
+const hex = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16));
+const mix = (a, b, p) => `rgb(${hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * p)).join(",")})`;
+const ramp = Array.from({ length: 12 }, (_, i) => (i < 6 ? mix("#fffaf6", "#d2440f", (i + 1) / 6) : mix("#d2440f", "#1f0a02", (i - 5) / 7)));
+document.getElementById("ramp").innerHTML = ramp.map((c) => `<i style="background:${c}"></i>`).join("");
+document.getElementById("ramp-labels").innerHTML = ramp.map((_, i) => `<span>${i + 1}</span>`).join("");
+
+// Phones: question (DE light, EN dark) and the thank-you page.
+const runner = {
+  de: { org: "ACME", count: "07 / 12", no: "FRAGE 7", q: "Wie wahrscheinlich ist es, dass Sie uns weiterempfehlen?", help: "0 = gar nicht wahrscheinlich, 10 = sehr wahrscheinlich", lo: "Gar nicht", hi: "Sehr", next: "Weiter", back: "Zurück" },
+  en: { org: "ACME", count: "07 / 12", no: "QUESTION 7", q: "How likely are you to recommend us?", help: "0 = not at all likely, 10 = extremely likely", lo: "Not at all", hi: "Extremely", next: "Next", back: "Back" },
+};
+document.querySelectorAll("[data-phone]").forEach((el) => {
+  const t = runner[el.dataset.phone];
+  el.innerHTML = `<div class="status-bar"><span>9:41</span><span>5G ▮▮▮</span></div>
+    <div class="head"><span class="logo" data-l></span><span class="count">${t.count}</span></div>
+    <div class="content"><div class="ruler"><i style="width:58%"></i></div><span class="qno">${t.no}</span><h3>${t.q}</h3><p class="help">${t.help}</p>
+      <div><div class="nps">${Array.from({ length: 11 }, (_, i) => `<span class="${i === 8 ? "on" : ""}">${i}</span>`).join("")}</div><div class="ends"><span>${t.lo}</span><span>${t.hi}</span></div></div>
+      <span class="btn primary next">${t.next}</span><span class="back">${t.back}</span></div>`;
+});
+document.querySelectorAll("[data-done]").forEach((el) => {
+  el.innerHTML = `<div class="status-bar"><span>9:44</span><span>5G ▮▮▮</span></div>
+    <div class="head"><span class="logo" data-l></span><span class="count">12 / 12</span></div>
+    <div class="content"><div class="ruler"><i style="width:100%"></i></div><div class="done-mark">✓</div><h3>Fertig. Ihre 12 Antworten sind gespeichert.</h3>
+      <p class="help">Danke für Ihre Zeit. Das Team in der Filiale Wien sieht die Ergebnisse ab morgen.</p>
+      <div class="receipt">UMFRAGE&nbsp;&nbsp;Kundenzufriedenheit 2026<br>DAUER&nbsp;&nbsp;&nbsp;&nbsp;2 min 48 s<br>REFERENZ&nbsp;KZ26-7Q4M</div>
+      <span class="btn" style="justify-content:center">Fenster schließen</span></div>`;
+});
+document.querySelectorAll("[data-l]").forEach((el) => { el.innerHTML = `${tile(18, css("--signal", el), css("--on-signal", el))}<span class="word">ask<b>werk</b></span>`; });
+
+// Illustrative QR pattern (not a real code).
+const qr = document.getElementById("qr");
+let cells = "";
+for (let y = 0; y < 29; y++) for (let x = 0; x < 29; x++) {
+  const finder = (x < 7 && y < 7) || (x > 21 && y < 7) || (x < 7 && y > 21);
+  const ring = finder && ((x % 22 === 0 || x % 22 === 6 || y % 22 === 0 || y % 22 === 6) || (x % 22 >= 2 && x % 22 <= 4 && y % 22 >= 2 && y % 22 <= 4));
+  if ((finder && ring) || (!finder && ((x * 7 + y * 13 + x * y) % 5 === 0))) cells += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+}
+qr.innerHTML = `<g fill="#1a1917">${cells}</g>`;
+</script>

@@ -1,0 +1,45 @@
+{
+  "name": "Yes and no need different codes",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "Q1",
+            "type": "yes-no",
+            "text": {
+              "de": "Frage 1"
+            },
+            "required": false,
+            "yes": {
+              "code": "J",
+              "label": {
+                "de": "Ja"
+              }
+            },
+            "no": {
+              "code": "J",
+              "label": {
+                "de": "Nein"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "yes-no-codes-equal",
+      "severity": "error",
+      "path": "pages/0/questions/0/no/code"
+    }
+  ]
+}

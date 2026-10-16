@@ -1,0 +1,101 @@
+{
+  "name": "An answer to a hidden question does not steer the way",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "en"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "SAT",
+            "type": "rating",
+            "text": {
+              "en": "Sat"
+            },
+            "required": false,
+            "scale": {
+              "min": 1,
+              "max": 5
+            }
+          },
+          {
+            "id": "q2",
+            "variable": "BEFORE",
+            "type": "yes-no",
+            "text": {
+              "en": "Before"
+            },
+            "required": false
+          },
+          {
+            "id": "q5",
+            "variable": "IMPROVE",
+            "type": "long-text",
+            "text": {
+              "en": "Improve"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "q1",
+                  "op": "at-most",
+                  "number": 2
+                },
+                {
+                  "question": "q2",
+                  "op": "is",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "q7",
+            "variable": "MORE",
+            "type": "short-text",
+            "text": {
+              "en": "More"
+            },
+            "required": false,
+            "showWhen": {
+              "match": "all",
+              "conditions": [
+                {
+                  "question": "q5",
+                  "op": "answered"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answers": {
+    "q1": {
+      "number": 5
+    },
+    "q2": {
+      "option": "1"
+    },
+    "q5": {
+      "text": "old answer"
+    }
+  },
+  "expected": [
+    {
+      "page": "p1",
+      "questions": [
+        "q1",
+        "q2"
+      ]
+    }
+  ]
+}

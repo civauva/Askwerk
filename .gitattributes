@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Everything is stored and checked out with LF, on every platform.
+* text=auto eol=lf
+
+*.sh   text eol=lf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+*.png  binary
+*.jpg  binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.pdf  binary
+*.xlsx binary
+*.sav  binary
+
+# Export golden files are compared byte for byte; CSV keeps its CRLF line ends (RFC 4180).
+src/backend/Askwerk.Tests.Application/golden/** -text

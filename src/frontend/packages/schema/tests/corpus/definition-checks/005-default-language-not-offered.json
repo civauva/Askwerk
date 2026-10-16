@@ -1,0 +1,39 @@
+{
+  "name": "The default language must be one of the survey languages",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de"
+    ],
+    "defaultLanguage": "en",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "AGE",
+            "type": "short-text",
+            "text": {
+              "de": "Alter"
+            },
+            "required": false
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "default-language-missing",
+      "severity": "error",
+      "path": "defaultLanguage"
+    },
+    {
+      "code": "text-missing",
+      "severity": "error",
+      "path": "pages/0/questions/0/text",
+      "language": "en"
+    }
+  ]
+}

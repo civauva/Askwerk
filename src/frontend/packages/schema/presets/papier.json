@@ -1,0 +1,69 @@
+{
+  "id": "papier",
+  "name": {
+    "de": "Papier",
+    "en": "Papier"
+  },
+  "description": {
+    "de": "Für Druck und PDF gemacht.",
+    "en": "Made for print and PDF."
+  },
+  "tags": [
+    "print",
+    "monochrome"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#111111",
+      "onAccent": "#ffffff",
+      "background": "#ffffff",
+      "surface": "#ffffff",
+      "text": "#111111",
+      "muted": "#555555",
+      "line": "#999999"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Serif"
+      },
+      "body": {
+        "family": "IBM Plex Serif"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "none",
+    "layout": "minimal",
+    "components": {
+      "question": {
+        "numbered": true,
+        "font": "heading"
+      },
+      "textFields": {
+        "style": "underline"
+      },
+      "matrix": {
+        "stripes": true
+      },
+      "progress": {
+        "label": true
+      }
+    },
+    "pages": {
+      "header": {
+        "organisation": true
+      }
+    },
+    "email": {
+      "header": "plain"
+    },
+    "pdf": {
+      "header": "plain",
+      "numbered": true
+    }
+  }
+}

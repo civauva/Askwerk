@@ -1,0 +1,57 @@
+{
+  "name": "A text block is read, not answered, so it cannot be required",
+  "definition": {
+    "schemaVersion": 1,
+    "languages": [
+      "de",
+      "en"
+    ],
+    "defaultLanguage": "de",
+    "pages": [
+      {
+        "id": "p1",
+        "questions": [
+          {
+            "id": "q1",
+            "variable": "INTRO",
+            "type": "text-block",
+            "text": {
+              "de": "Willkommen zu unserer Umfrage.",
+              "en": "Welcome to our survey."
+            },
+            "required": false
+          },
+          {
+            "id": "q2",
+            "variable": "NOTE",
+            "type": "text-block",
+            "text": {
+              "de": "Hinweis",
+              "en": "Note"
+            },
+            "required": true
+          },
+          {
+            "id": "q3",
+            "variable": "Q3",
+            "type": "short-text",
+            "text": {
+              "de": "Name",
+              "en": "Name"
+            },
+            "required": false,
+            "randomize": false,
+            "dontKnow": true
+          }
+        ]
+      }
+    ]
+  },
+  "expected": [
+    {
+      "code": "required-not-allowed",
+      "severity": "error",
+      "path": "pages/0/questions/1/required"
+    }
+  ]
+}

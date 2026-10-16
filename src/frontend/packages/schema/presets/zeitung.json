@@ -1,0 +1,56 @@
+{
+  "id": "zeitung",
+  "name": {
+    "de": "Zeitung",
+    "en": "Zeitung"
+  },
+  "description": {
+    "de": "Redaktionell, Serifen-Überschriften.",
+    "en": "Editorial, serif headlines."
+  },
+  "tags": [
+    "calm"
+  ],
+  "tokens": {
+    "schemaVersion": 1,
+    "colours": {
+      "accent": "#b3261e",
+      "onAccent": "#ffffff",
+      "background": "#f6f2ea",
+      "surface": "#f6f2ea",
+      "text": "#1b1b1b",
+      "muted": "#5e584f",
+      "line": "#1b1b1b"
+    },
+    "fonts": {
+      "heading": {
+        "family": "IBM Plex Serif"
+      },
+      "body": {
+        "family": "IBM Plex Sans"
+      }
+    },
+    "scale": "m",
+    "spacing": "normal",
+    "corners": "sharp",
+    "buttons": "filled",
+    "controls": "boxes",
+    "progress": "ruler",
+    "layout": "minimal",
+    "components": {
+      "question": {
+        "size": "l",
+        "font": "heading"
+      },
+      "choices": {
+        "selected": "text"
+      },
+      "textFields": {
+        "style": "underline"
+      },
+      "matrix": {
+        "stripes": true
+      }
+    }
+  }
+}

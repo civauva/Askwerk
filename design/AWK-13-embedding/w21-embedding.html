@@ -1,0 +1,67 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en"><head><meta charset="utf-8"><title>W21 Embedding</title><link rel="stylesheet" href="../sketch.css"></head>
+<body>
+<h1>W21 · Embedding the designer and the runner in a host product · AWK-13 · 2026-10-15</h1>
+<p class="lead">Already built: surveys embed with a script or an iframe on the allowed websites (Organisation → Domains), with started, page, completed and resize events. New: the designer and Results inside a host product, signed in by the host's hand-over token (AWK-12) instead of a cookie, narrowed per survey, and the error states.</p>
+<div class="grid2">
+<div class="box">
+  <h2><span class="num">1</span>Host page with the embedded designer · desktop · EN</h2>
+  <div class="host">
+    <b>HR Suite</b> · Employee surveys › Pulse Q4
+    <div class="frame" style="margin-top:6px">
+      <div style="display:flex;justify-content:space-between"><span>Pulse Q4 ▾ <span class="pill">Draft · saved</span></span><span><span class="btn">Preview ▾</span> <span class="btn primary">Publish</span></span></div>
+      <div style="margin:6px 0;border-bottom:1px solid #ccc">Build · Settings · Share · Results · Participants</div>
+      <div style="height:90px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:6px"><div class="wire">Outline</div><div class="wire">Canvas</div><div class="wire">Inspector</div></div>
+    </div>
+  </div>
+  <ul>
+    <li>No Askwerk logo, survey list or account menu inside the frame: the host owns the navigation. “Surveys” in the bar sends <code>askwerk:navigate {to: "list"}</code> to the host instead.</li>
+    <li>Events to the host: <code>askwerk:ready</code>, <code>askwerk:saved</code>, <code>askwerk:published {version}</code>, <code>askwerk:resize</code>, <code>askwerk:session-ending</code>.</li>
+    <li>The host's language is passed in (<code>?lang=de</code> or the token's locale) and wins over the browser's.</li>
+  </ul>
+</div>
+<div class="box">
+  <h2><span class="num">2</span>How it starts</h2>
+  <div class="seq">
+    <b>Host server</b><span>signs a hand-over token for the user (AWK-12): issuer, audience, user, role, survey or “designer”, 2 minutes, one-time jti.</span>
+    <b>Host page</b><span><code>&lt;iframe src="https://surveys.acme.at/embed/designer?survey=…&amp;token=…"&gt;</code> or the embed script with <code>data-token</code>.</span>
+    <b>Askwerk</b><span>checks the token and that the host's origin is allowed, starts an embedded session (a short-lived bearer kept in the frame's memory, refreshed while it is open, 8 hours at most), never a third-party cookie.</span>
+    <b>Frame</b><span>shows the designer or Results for that survey only; a link elsewhere asks the host via <code>askwerk:navigate</code>.</span>
+  </div>
+  <h3>Settings → Embedding (owners and admins) · DE</h3>
+  <div class="wire">
+    <div class="label">Einbettung des Designers</div>
+    <div>◉ Aus (Standard) &nbsp; ○ Auf diesen Websites erlauben</div>
+    <div class="field">https://hr.acme.at</div>
+    <div class="muted">Umfragen selbst lassen sich schon unter Domains einbetten.</div>
+  </div>
+</div>
+<div class="box">
+  <h2><span class="num">3</span>Runner per survey · phone · DE</h2>
+  <div class="host" style="width:280px">
+    <b>HR Suite</b>
+    <div class="frame">Puls Q4 · Seite 1 von 3<br><br>Wie zufrieden sind Sie?<br>1 2 3 4 5<br><br><span class="btn primary">Weiter</span></div>
+  </div>
+  <ul>
+    <li>Narrowing per survey: Share tab → Embed → “Only on these sites” (empty = the organisation's list).</li>
+    <li>Identified respondents: the host's token names the person, so answers belong to them without a link per person.</li>
+  </ul>
+</div>
+<div class="box">
+  <h2><span class="num">4</span>Error states (inside the frame)</h2>
+  <table>
+    <tr><th>State</th><th>EN</th><th>DE</th></tr>
+    <tr><td>Origin not allowed</td><td>This page may not show Askwerk. An administrator can allow it under Embedding.</td><td>Diese Seite darf Askwerk nicht anzeigen. Eine Administration kann sie unter Einbettung erlauben.</td></tr>
+    <tr><td>Token expired or used</td><td>The sign-in link has expired. Reload the page.</td><td>Die Anmeldung ist abgelaufen. Laden Sie die Seite neu.</td></tr>
+    <tr><td>Embedding off</td><td>Embedding is switched off for this organisation.</td><td>Die Einbettung ist für diese Organisation ausgeschaltet.</td></tr>
+    <tr><td>Session ending</td><td>Your session ends in 2 minutes. Saved changes are kept.</td><td>Ihre Sitzung endet in 2 Minuten. Gespeichertes bleibt.</td></tr>
+  </table>
+  <p class="muted">Each error also goes to the host as <code>askwerk:error {code}</code>. Accessibility and speed budgets are the same inside the frame.</p>
+</div>
+</div>
+<div class="notes">
+  <p>Depends on the hand-over token of AWK-12; recommended order: AWK-12 first, then this.</p>
+  <p class="open">Open for Dražan: (a) embedded sessions as in-memory bearer tokens (recommended; no third-party cookies); (b) the designer's survey list stays out of the frame (recommended) or can be embedded too; (c) per-survey narrowing of the runner's sites (recommended) or the organisation's list only.</p>
+</div>
+</body></html>
