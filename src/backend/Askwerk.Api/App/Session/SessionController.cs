@@ -67,7 +67,8 @@ public sealed class SessionController(
             return Refused(StatusCodes.Status401Unauthorized, "invalid-credentials", triesLeft, lockedUntil: null);
         }
 
-        if (user.TwoFactorEnabled)
+        // A browser trusted for 30 days skips the code; Identity's PasswordSignInAsync would sign in with its default claims instead.
+        if (user.TwoFactorEnabled && !await signIn.IsTwoFactorClientRememberedAsync(user))
         {
             // Sets Identity's short-lived two-factor cookie; the session itself starts after the code.
             await signIn.PasswordSignInAsync(user, request.Password, isPersistent: false, lockoutOnFailure: false);

@@ -153,6 +153,25 @@ public sealed class SessionApiTests(PostgresServer server)
     }
 
     [Fact]
+    public async Task SignIn_InATrustedBrowser_SkipsTheCodeAndOpensTheOrganisation()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var client = await factory.CreateReadyClientAsync();
+        await SetUpOwnerAsync(client);
+        var (key, _) = await EnableTwoFactorAsync(client);
+        await client.DeleteAsync(Url("/api/app/session"), Cancel);
+        await SignInAsync(client);
+        await client.PostAsJsonAsync(Url("/api/app/session/two-factor"), new { code = Totp.Code(key, DateTimeOffset.UtcNow), rememberBrowser = true }, Cancel);
+        await client.DeleteAsync(Url("/api/app/session"), Cancel);
+
+        var password = await SignInAsync(client);
+        var me = await client.GetFromJsonAsync<JsonElement>(Url("/api/app/me"), Cancel);
+
+        Assert.Equal("signed-in", (await JsonAsync(password)).GetProperty("state").GetString());
+        Assert.Equal(JsonValueKind.String, me.GetProperty("currentOrganisationId").ValueKind);
+    }
+
+    [Fact]
     public async Task SignIn_RecoveryCode_WorksOnce()
     {
         await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
