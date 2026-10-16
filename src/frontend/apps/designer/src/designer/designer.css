@@ -1891,3 +1891,88 @@ button.designer-page__progress:hover {
 .designer-inspector img {
   max-width: 100%;
 }
+
+/* Share in order (W34): the link with its QR code, then email, website and paper as equal cards. */
+.designer-share {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 18px 20px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+}
+
+.designer-share--link {
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.designer-share__main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.designer-share__title {
+  margin: 0;
+  font: 600 15.5px/1.3 var(--aw-font);
+}
+
+.designer-share__lang {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--aw-graphite);
+}
+
+.designer-share__ways {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 760px) {
+  .designer-share--link {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dragging in the page list (W34): the dragged item fades to an outline, an accent line with a dot shows where it lands. */
+.designer-outline__page[data-lifted],
+.designer-outline__question[data-lifted] {
+  opacity: 0.4;
+  outline: 1px dashed var(--aw-line-strong);
+}
+
+.designer-outline__page[data-drop],
+.designer-outline__question[data-drop] {
+  position: relative;
+}
+
+.designer-outline__page[data-drop]::after,
+.designer-outline__question[data-drop]::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--aw-signal);
+  box-shadow: -4px 0 0 1px var(--aw-signal);
+  pointer-events: none;
+}
+
+.designer-outline__page[data-drop="before"]::after,
+.designer-outline__question[data-drop="before"]::after {
+  top: -3px;
+}
+
+.designer-outline__page[data-drop="after"]::after,
+.designer-outline__question[data-drop="after"]::after {
+  bottom: -3px;
+}

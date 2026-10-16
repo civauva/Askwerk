@@ -41,7 +41,7 @@ describe("Published (AWK-7, W12 B): link, QR code, embed and PDF follow one addr
     expect(dialog.getByRole("img", { name: "QR code for https://surveys.acme.at/s/kz26b7mq" })).toBeTruthy();
     expect(dialog.getByRole("link", { name: "Download PDF (with QR code)" }).getAttribute("href")).toBe("/api/app/surveys/s1/pdf?language=en&host=surveys.acme.at");
     expect((dialog.getByRole("textbox", { name: "Embed code" }) as HTMLTextAreaElement).value).toBe(
-      '<script src="https://surveys.acme.at/s/embed.js" data-survey="kz26b7mq" data-lang="en" async></script>',
+      '<script src="https://surveys.acme.at/s/embed.js" data-survey="kz26b7mq" async></script>',
     );
     expect(dialog.getByText("Only on websites listed under Organisation → Domains.")).toBeTruthy();
     await expectNoAxeViolations(container);
@@ -59,6 +59,19 @@ describe("Published (AWK-7, W12 B): link, QR code, embed and PDF follow one addr
     expect((dialog.getByRole("textbox", { name: "Embed code" }) as HTMLTextAreaElement).value).toContain('src="https://acme.askwerk.app/s/embed.js"');
   });
 
+  it("opens in the respondent's language, or in a set one for link, QR code, embed code and PDF (W34)", async () => {
+    const { dialog } = await published();
+    const opensIn = within(dialog.getByRole("group", { name: "Opens in" }));
+
+    expect(opensIn.getByRole("button", { name: "Respondent's language" }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(opensIn.getByRole("button", { name: "DE" }));
+
+    expect(dialog.getByText("https://surveys.acme.at/s/kz26b7mq?lang=de")).toBeTruthy();
+    expect(dialog.getByRole("img", { name: "QR code for https://surveys.acme.at/s/kz26b7mq?lang=de" })).toBeTruthy();
+    expect((dialog.getByRole("textbox", { name: "Embed code" }) as HTMLTextAreaElement).value).toContain('data-lang="de"');
+    expect(dialog.getByRole("link", { name: "Download PDF (with QR code)" }).getAttribute("href")).toBe("/api/app/surveys/s1/pdf?language=de&host=surveys.acme.at");
+  });
+
   it("offers the embed code as an iframe too, and copies it", async () => {
     const { dialog, copied } = await published();
 
@@ -66,7 +79,7 @@ describe("Published (AWK-7, W12 B): link, QR code, embed and PDF follow one addr
     fireEvent.click(dialog.getByRole("button", { name: "Copy embed code" }));
 
     expect(copied).toEqual([
-      '<iframe src="https://surveys.acme.at/s/kz26b7mq?embed&lang=en" title="Customer satisfaction 2026" style="width:100%;height:720px;border:0" loading="lazy"></iframe>',
+      '<iframe src="https://surveys.acme.at/s/kz26b7mq?embed" title="Customer satisfaction 2026" style="width:100%;height:720px;border:0" loading="lazy"></iframe>',
     ]);
   });
 

@@ -159,21 +159,13 @@ export function SharePage({ participants, preview, writeClipboard = (text) => na
               <p className="survey-page__empty">{t("shareFirst")}</p>
             ) : (
               <>
-                {summary.languages.length > 1 && (
-                  <span className="designer-segment" role="group" aria-label={t("language")}>
-                    {summary.languages.map((each) => (
-                      <button key={each} type="button" aria-pressed={shown === each} onClick={() => setLanguage(each)}>
-                        {each.toUpperCase()}
-                      </button>
-                    ))}
-                  </span>
-                )}
                 {links !== null && (
                   <Published
                     t={designerText}
                     surveyId={surveyId}
                     title={summary.title}
                     language={shown}
+                    languages={summary.languages}
                     links={links}
                     writeClipboard={writeClipboard}
                     saveFile={saveFile}

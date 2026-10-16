@@ -102,6 +102,7 @@ export function PublishDialog({ t, api, draft, definition, writeClipboard, saveF
             surveyId={draft.surveyId}
             title={draft.title}
             language={language}
+            languages={definition.languages}
             links={step.result.links}
             writeClipboard={writeClipboard}
             saveFile={saveFile}

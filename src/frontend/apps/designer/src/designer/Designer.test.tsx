@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { expectNoAxeViolations } from "@askwerk/ui/testing";
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, createEvent, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { ApiError } from "@askwerk/app-client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Designer } from "./Designer";
@@ -643,6 +643,30 @@ describe("Outline search and moving questions (M1)", () => {
 
     expect(outlineQuestions()).toEqual(["INTRO", "AGE", "SAT_1", "IMPROVE", "NPS", "BRANCH"]);
     await waitFor(() => expect(api.saved.at(-1)?.pages[1]?.questions[0]?.variable).toBe("AGE"));
+  });
+
+  it("marks where a dragged question will land, before or after by the pointer, and drops it there (W34)", async () => {
+    await loaded();
+    const age = outline().getByRole("button", { name: "Age group AGE" });
+    const target = outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" });
+    target.getBoundingClientRect = () => ({ top: 100, height: 40, bottom: 140, left: 0, right: 200, width: 200, x: 0, y: 100, toJSON: () => ({}) });
+
+    fireEvent.dragStart(age);
+    expect(age.getAttribute("data-lifted")).toBe("true");
+    // jsdom's drag events leave clientY out, so it is set on the event.
+    const at = (kind: "dragOver" | "drop", y: number) => {
+      const event = createEvent[kind](target);
+      Object.defineProperty(event, "clientY", { value: y });
+      fireEvent(target, event);
+    };
+    at("dragOver", 110);
+    expect(target.getAttribute("data-drop")).toBe("before");
+    at("dragOver", 135);
+    expect(target.getAttribute("data-drop")).toBe("after");
+    at("drop", 135);
+
+    expect(outlineQuestions()).toEqual(["INTRO", "SAT_1", "AGE", "IMPROVE", "NPS", "BRANCH"]);
+    expect(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }).getAttribute("data-drop")).toBeNull();
   });
 
   it("moves the last question of a page to the start of the next page with Alt and the down arrow", async () => {
