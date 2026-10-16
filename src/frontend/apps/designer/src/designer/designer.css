@@ -1976,3 +1976,50 @@ button.designer-page__progress:hover {
 .designer-outline__question[data-drop="after"]::after {
   bottom: -3px;
 }
+
+/* Zoom in the Preview (W33): the frame is drawn at its real width and scaled; the zoom sits at the stage's corner. */
+.designer-preview__stage {
+  position: relative;
+}
+
+.designer-preview__zoomed {
+  height: 100%;
+  overflow: hidden;
+}
+
+.designer-preview__zoomed iframe {
+  transform-origin: 0 0;
+}
+
+.designer-preview__zoom {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  box-shadow: var(--designer-shadow);
+  font: 600 12.5px/1 var(--aw-font-mono);
+}
+
+.designer-preview__zoom button {
+  border: 0;
+  background: transparent;
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.designer-preview__zoom button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.designer-preview__zoom output {
+  min-width: 52px;
+  text-align: center;
+}

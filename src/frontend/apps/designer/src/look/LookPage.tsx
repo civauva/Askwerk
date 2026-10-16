@@ -4,6 +4,7 @@ import { ApiError, type StoredTheme, type ThemesClient } from "@askwerk/app-clie
 import { checkTheme, contrastRatio, createTranslator, themePresets, type Locale, type ThemeIssue, type ThemeTokens } from "@askwerk/schema";
 import { ComboBox } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
+import { ZoomBox } from "../designer/ZoomBox";
 import { lookMessages, type LookMessageKey } from "./messages";
 
 type T = (key: LookMessageKey, values?: Record<string, string | number>) => string;
@@ -296,7 +297,9 @@ function Editor({ t, locale, client, theme, saveDelayMs, onSaved, onMadeDefault,
         )}
       </section>
       <section className="look-preview-region" aria-label={t("preview")}>
-        <Preview t={t} tokens={tokens} logoUrl={logoUrl} headerUrl={tokens.headerImage?.asset !== undefined ? client.assetUrl(tokens.headerImage.asset) : undefined} />
+        <ZoomBox texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}>
+          <Preview t={t} tokens={tokens} logoUrl={logoUrl} headerUrl={tokens.headerImage?.asset !== undefined ? client.assetUrl(tokens.headerImage.asset) : undefined} />
+        </ZoomBox>
       </section>
     </>
   );

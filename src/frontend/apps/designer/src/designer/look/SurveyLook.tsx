@@ -2,7 +2,7 @@
 import type { SurveyLook as StoredLook } from "@askwerk/app-client";
 import { ApiError } from "@askwerk/app-client";
 import { checkTheme, contrastRatio, createTranslator, themePresets, type Locale, type SurveyDefinition, type ThemeIssue, type ThemeTag, type ThemeTokens } from "@askwerk/schema";
-import { Dialog, DialogActions, Menu, MenuItem, Switch } from "@askwerk/ui";
+import { Dialog, DialogActions, Menu, MenuItem, Switch, Tabs } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { ThemeChoice } from "../api";
 import { changesBetween, darkColoursFor, getAt, presetOf, resetPaths, setAt, type LookPath } from "./lookEditing";
@@ -204,8 +204,8 @@ export type SurveyLookProps = {
 };
 
 /**
- * Create → Look (W26): the survey's look definition. A gallery of looks to pick from, then "Make it yours" with every
- * setting in seven folded areas, beside the one Preview panel. Changes save at once, as the survey's own look.
+ * Create → Look (W26, W33): the survey's look definition. It opens on the editor with the survey's look, beside the one
+ * Preview at full height; the gallery opens on demand. Changes save at once, as the survey's own look.
  */
 export function SurveyLook({ api, surveyId, locale, definition, language, onLayout, onHeaderImage, onHeaderAlt, renderPreview }: SurveyLookProps) {
   const t: LookText = useMemo(() => createTranslator(lookMessages, locale), [locale]);
@@ -213,7 +213,7 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
   const [tokens, setTokens] = useState<ThemeTokens | null>(null);
   const [base, setBase] = useState<{ tokens: ThemeTokens; name: string; lookBase: string | null } | null>(null);
   const [dirty, setDirty] = useState(0);
-  const [mode, setMode] = useState<"gallery" | "editor">("gallery");
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "invalid" | "failed">("idle");
   const [saves, setSaves] = useState(0);
   const [themes, setThemes] = useState<readonly ThemeChoice[]>([]);
@@ -303,37 +303,27 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
     setTokens(preset.tokens);
     setStored((current) => (current === null ? current : { ...current, own: true, lookBase: `preset:${preset.id}`, tokens: preset.tokens }));
     setDirty((count) => count + 1);
-    setMode("editor");
+    setGalleryOpen(false);
   };
 
   const pickTheme = (themeId: string | null) => {
     void api.setTheme(surveyId, themeId).then(() => {
       setSaves((count) => count + 1);
       void load();
-      setMode("editor");
+      setGalleryOpen(false);
     });
   };
 
   const sample = firstChoiceQuestion(definition, language) ?? { question: t("look"), choices: [] };
 
-  if (mode === "gallery") {
-    return (
-      <Gallery
-        t={t}
-        locale={locale}
-        stored={stored}
-        themes={themes}
-        sample={sample}
-        onPick={pick}
-        onTheme={pickTheme}
-        onCustomise={() => setMode("editor")}
-      />
-    );
-  }
-
   return (
     <main className="sl sl--editor" aria-label={t("look")}>
-      <Areas
+      {galleryOpen && (
+        <Dialog title={t("chooseFromGallery")} onClose={() => setGalleryOpen(false)} className="sl-gallery-dialog">
+          <Gallery t={t} locale={locale} stored={stored} themes={themes} sample={sample} onPick={pick} onTheme={pickTheme} />
+        </Dialog>
+      )}
+      <LookSide
         t={t}
         tokens={tokens}
         base={base}
@@ -345,7 +335,9 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
         onHeaderImage={onHeaderImage}
         onHeaderAlt={onHeaderAlt}
         onGoto={(target) => post({ type: "askwerk:goto", target })}
-        onAllLooks={() => setMode("gallery")}
+        status={status}
+        notice={notice}
+        onGallery={() => setGalleryOpen(true)}
         onSaveForOrg={(name) =>
           api.saveTheme(name, tokens).then(
             () => {
@@ -356,7 +348,6 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
           )
         }
       />
-      <Quick t={t} tokens={tokens} status={status} notice={notice} onChange={change} />
       {renderPreview(frame, () => post({ type: "askwerk:look", tokens }), saves)}
     </main>
   );
@@ -378,7 +369,6 @@ function Gallery({
   sample,
   onPick,
   onTheme,
-  onCustomise,
 }: {
   t: LookText;
   locale: Locale;
@@ -387,7 +377,6 @@ function Gallery({
   sample: { question: string; choices: string[] };
   onPick: (presetId: string) => void;
   onTheme: (themeId: string | null) => void;
-  onCustomise: () => void;
 }) {
   const [filter, setFilter] = useState<ThemeTag | "all">("all");
   const shown = themePresets.filter((preset) => filter === "all" || preset.tags?.includes(filter));
@@ -396,12 +385,9 @@ function Gallery({
   const usedTheme = !stored.own ? (themes.find((theme) => theme.id === stored.themeId) ?? defaultTheme) : undefined;
 
   return (
-    <main className="sl sl--gallery" aria-label={t("look")}>
+    <div className="sl-gallery">
       <div className="sl-gallery__head">
-        <div>
-          <h2 className="sl-title">{t("look")}</h2>
-          <p className="sl-lead">{t("lookLead")}</p>
-        </div>
+        <p className="sl-lead">{t("lookLead")}</p>
         <span className="sl-grow" />
         <Menu
           label={t("orgLooks")}
@@ -418,9 +404,6 @@ function Gallery({
             </MenuItem>
           ))}
         </Menu>
-        <button type="button" className="designer-button" onClick={onCustomise}>
-          {t("customise")}
-        </button>
       </div>
       <div className="sl-filters" role="group" aria-label={t("filters")}>
         <button type="button" className="sl-chip" aria-pressed={filter === "all"} onClick={() => setFilter("all")}>
@@ -462,32 +445,45 @@ function Gallery({
           );
         })}
       </ul>
-    </main>
+    </div>
   );
 }
 
-type AreasProps = {
+type SideProps = {
   t: LookText;
   tokens: ThemeTokens;
   base: { tokens: ThemeTokens; name: string; lookBase: string | null };
   definition: SurveyDefinition;
   language: string;
   api: LookApi;
+  status: "idle" | "saving" | "saved" | "invalid" | "failed";
+  notice: string | null;
   onChange: (tokens: ThemeTokens) => void;
   onLayout: (layout: "classic" | "one-at-a-time") => void;
   onHeaderImage: (asset: string | null) => void;
   onHeaderAlt: (language: string, value: string) => void;
   onGoto: (target: string) => void;
-  onAllLooks: () => void;
+  onGallery: () => void;
   onSaveForOrg: (name: string) => Promise<void>;
 };
 
-function Areas({ t, tokens, base, definition, language, api, onChange, onLayout, onHeaderImage, onHeaderAlt, onGoto, onAllLooks, onSaveForOrg }: AreasProps) {
+type LookTab = "style" | "parts" | "pages" | "mail";
+
+/** The areas each tab holds (W33): Style is drawn on its own; the rest are folded areas as before. */
+const tabAreas: Record<Exclude<LookTab, "style">, readonly string[]> = { parts: ["type", "shape", "components"], pages: ["header", "pages"], mail: ["mail-pdf"] };
+
+/**
+ * The look's settings beside the preview (W33): what the look is and where it came from, the gallery and the rare
+ * actions, then four tabs. Style holds the choices most people make, as tiles; the other tabs hold every detail.
+ */
+function LookSide({ t, tokens, base, definition, language, api, status, notice, onChange, onLayout, onHeaderImage, onHeaderAlt, onGoto, onGallery, onSaveForOrg }: SideProps) {
+  const [tab, setTab] = useState<LookTab>("style");
   const [open, setOpen] = useState<string | null>(null);
   const [openPart, setOpenPart] = useState<string | null>(null);
   const [naming, setNaming] = useState(false);
   const changes = changesBetween(base.tokens, tokens);
   const id = useId();
+  const name = base.name || t("ownLook");
 
   const label = (field: Field) => {
     if (field.kind === "choice") {
@@ -500,11 +496,7 @@ function Areas({ t, tokens, base, definition, language, api, onChange, onLayout,
     return field.kind === "switch" ? `${t(field.label)} ${(getAt(tokens, field.path) as boolean | undefined) ?? field.fallback ? t("on") : t("off")}` : "";
   };
   const summary = (area: Area) =>
-    area.id === "colours"
-      ? `${t("cAccent")} ${tokens.colours.accent}`
-      : area.parts !== undefined
-        ? t("partsCount", { count: area.parts.length })
-        : (area.fields ?? []).filter((field) => field.kind === "choice").slice(0, 2).map(label).join(" · ");
+    area.parts !== undefined ? t("partsCount", { count: area.parts.length }) : (area.fields ?? []).filter((field) => field.kind === "choice").slice(0, 2).map(label).join(" · ");
 
   const fieldsOf = (fields: readonly Field[]) => (
     <div className="sl-fields">
@@ -514,99 +506,274 @@ function Areas({ t, tokens, base, definition, language, api, onChange, onLayout,
     </div>
   );
 
+  const folded = (area: Area) => {
+    const isOpen = open === area.id;
+
+    return (
+      <div key={area.id} className={isOpen ? "sl-area sl-area--open" : "sl-area"}>
+        <button
+          type="button"
+          className="sl-area__row"
+          aria-expanded={isOpen}
+          aria-controls={`${id}-${area.id}`}
+          onClick={() => {
+            setOpen(isOpen ? null : area.id);
+
+            if (!isOpen && area.goto !== undefined) {
+              onGoto(area.goto);
+            }
+          }}
+        >
+          <span className="sl-chev" aria-hidden="true">
+            {isOpen ? "▾" : "▸"}
+          </span>
+          <b>{t(area.label)}</b>
+          <span className="sl-area__sum">{summary(area)}</span>
+        </button>
+        {isOpen && (
+          <div id={`${id}-${area.id}`} className="sl-area__body">
+            {area.fields !== undefined && fieldsOf(area.fields)}
+            {area.parts?.map((part) => {
+              const partOpen = openPart === part.id;
+
+              return (
+                <div key={part.id} className="sl-part">
+                  <button
+                    type="button"
+                    className="sl-area__row sl-part__row"
+                    aria-expanded={partOpen}
+                    onClick={() => {
+                      setOpenPart(partOpen ? null : part.id);
+
+                      if (!partOpen && part.goto !== undefined) {
+                        onGoto(part.goto);
+                      }
+                    }}
+                  >
+                    <span className="sl-chev" aria-hidden="true">
+                      {partOpen ? "▾" : "▸"}
+                    </span>
+                    {t(part.label)}
+                    <span className="sl-area__sum">{part.fields.filter((field) => field.kind === "choice").slice(0, 1).map(label).join("")}</span>
+                  </button>
+                  {partOpen && (
+                    <>
+                      {fieldsOf(part.fields)}
+                      <button type="button" className="sl-link" onClick={() => onChange(resetPaths(tokens, base.tokens, pathsOf(part.fields)))}>
+                        {t("backTo", { name })}
+                      </button>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+            {area.parts === undefined && (
+              <button type="button" className="sl-link" onClick={() => onChange(resetPaths(tokens, base.tokens, areaPaths(area)))}>
+                {t("backTo", { name })}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <aside className="sl-side" aria-label={t("areas")}>
       <div className="sl-side__head">
-        <span className="sl-swatch" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${tokens.colours.accent} 0 40%, ${tokens.colours.background} 40% 70%, ${tokens.colours.text} 70%)` }} />
-        <div className="sl-side__name">
-          <b>{base.name || t("ownLook")}</b>
-          {changes > 0 && <span className="sl-note"> · {changes === 1 ? t("changedOne") : t("changed", { count: changes })}</span>}
-          <span className="sl-note sl-side__scope">
-            {t("forThisSurvey")} ·{" "}
-            <button type="button" className="sl-link" onClick={() => setNaming(true)}>
-              {t("saveForOrg")}
-            </button>
-          </span>
+        <div className="sl-side__current">
+          <span className="sl-swatch" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${tokens.colours.accent} 0 40%, ${tokens.colours.background} 40% 70%, ${tokens.colours.text} 70%)` }} />
+          <div className="sl-side__name">
+            <b>{name}</b>
+            <span className="sl-note">
+              {changes > 0 ? `${changes === 1 ? t("changedOne") : t("changed", { count: changes })} · ` : ""}
+              {t("forThisSurvey")}
+            </span>
+          </div>
         </div>
-        <button type="button" className="designer-button designer-button--quiet" onClick={onAllLooks}>
-          {t("allLooks")}
-        </button>
-      </div>
-      <div className="sl-areas">
-        {areas.map((area) => {
-          const isOpen = open === area.id;
-
-          return (
-            <div key={area.id} className={isOpen ? "sl-area sl-area--open" : "sl-area"}>
-              <button
-                type="button"
-                className="sl-area__row"
-                aria-expanded={isOpen}
-                aria-controls={`${id}-${area.id}`}
-                onClick={() => {
-                  setOpen(isOpen ? null : area.id);
-
-                  if (!isOpen && area.goto !== undefined) {
-                    onGoto(area.goto);
-                  }
-                }}
-              >
-                <span className="sl-chev" aria-hidden="true">
-                  {isOpen ? "▾" : "▸"}
-                </span>
-                <b>{t(area.label)}</b>
-                <span className="sl-area__sum">{summary(area)}</span>
+        <div className="sl-side__actions">
+          <button type="button" className="designer-button sl-side__gallery" onClick={onGallery}>
+            <span aria-hidden="true">▦ </span>
+            {t("chooseFromGallery")}
+          </button>
+          <Menu
+            label={t("moreActions")}
+            trigger={(props) => (
+              <button type="button" className="designer-button designer-button--quiet" aria-label={t("moreActions")} {...props}>
+                ⋯
               </button>
-              {isOpen && (
-                <div id={`${id}-${area.id}`} className="sl-area__body">
-                  {area.fields !== undefined && fieldsOf(area.fields)}
-                  {area.parts?.map((part) => {
-                    const partOpen = openPart === part.id;
-
-                    return (
-                      <div key={part.id} className="sl-part">
-                        <button
-                          type="button"
-                          className="sl-area__row sl-part__row"
-                          aria-expanded={partOpen}
-                          onClick={() => {
-                            setOpenPart(partOpen ? null : part.id);
-
-                            if (!partOpen && part.goto !== undefined) {
-                              onGoto(part.goto);
-                            }
-                          }}
-                        >
-                          <span className="sl-chev" aria-hidden="true">
-                            {partOpen ? "▾" : "▸"}
-                          </span>
-                          {t(part.label)}
-                          <span className="sl-area__sum">{part.fields.filter((field) => field.kind === "choice").slice(0, 1).map(label).join("")}</span>
-                        </button>
-                        {partOpen && (
-                          <>
-                            {fieldsOf(part.fields)}
-                            <button type="button" className="sl-link" onClick={() => onChange(resetPaths(tokens, base.tokens, pathsOf(part.fields)))}>
-                              {t("backTo", { name: base.name || t("ownLook") })}
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                  {area.parts === undefined && (
-                    <button type="button" className="sl-link" onClick={() => onChange(resetPaths(tokens, base.tokens, areaPaths(area)))}>
-                      {t("backTo", { name: base.name || t("ownLook") })}
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+            )}
+          >
+            <MenuItem onSelect={() => setNaming(true)}>{t("saveForOrg")}</MenuItem>
+            <MenuItem onSelect={() => onChange(base.tokens)}>{t("backTo", { name })}</MenuItem>
+          </Menu>
+        </div>
       </div>
-      {naming && <NameDialog t={t} initial={base.name} onCancel={() => setNaming(false)} onSave={(name) => onSaveForOrg(name).then(() => setNaming(false))} />}
+      <Tabs
+        label={t("areas")}
+        tabs={[
+          ["style", t("tabStyle")],
+          ["parts", t("tabParts")],
+          ["pages", t("tabPages")],
+          ["mail", t("areaMailPdf")],
+        ]}
+        value={tab}
+        onChange={(next) => setTab(next as LookTab)}
+      />
+      <div className="sl-areas">
+        {tab === "style" ? (
+          <StyleTab t={t} tokens={tokens} onChange={onChange} colours={fieldsOf(areas.find((area) => area.id === "colours")!.fields!)} />
+        ) : tab === "mail" ? (
+          <div className="sl-tab">{fieldsOf(areas.find((area) => area.id === "mail-pdf")!.fields!)}</div>
+        ) : (
+          areas.filter((area) => tabAreas[tab].includes(area.id)).map(folded)
+        )}
+      </div>
+      <Checks t={t} tokens={tokens} status={status} notice={notice} />
+      {naming && <NameDialog t={t} initial={base.name} onCancel={() => setNaming(false)} onSave={(newName) => onSaveForOrg(newName).then(() => setNaming(false))} />}
     </aside>
+  );
+}
+
+const accents = ["#d2440f", "#1f5f8b", "#2f6f4f", "#6a4ce0", "#b8860b", "#1a1a1a"];
+
+/** One visual choice among a few (W33): a picture of the option and its name. */
+function Tile({ on, label, picture, onClick }: { on: boolean; label: string; picture: ReactNode; onClick: () => void }) {
+  return (
+    <button type="button" className="sl-tile" aria-pressed={on} onClick={onClick}>
+      <span className="sl-tile__picture" aria-hidden="true">
+        {picture}
+      </span>
+      {label}
+    </button>
+  );
+}
+
+/** Style (W33): accent, type, shape, background, density and mode, as tiles; every colour folded below. */
+function StyleTab({ t, tokens, onChange, colours }: { t: LookText; tokens: ThemeTokens; onChange: (tokens: ThemeTokens) => void; colours: ReactNode }) {
+  const pattern = tokens.decoration?.pattern ?? "none";
+  const background = pattern === "none" ? "plain" : pattern === "mountains" ? "mountains" : "pattern";
+  const setPattern = (next: string) => onChange(setAt(tokens, ["decoration"], next === "none" ? undefined : { pattern: next }));
+
+  return (
+    <div className="sl-tab sl-style">
+      <div className="sl-style__group" role="group" aria-label={t("accent")}>
+        <span className="sl-style__label">{t("accent")}</span>
+        <span className="sl-swatches">
+          {[...new Set([tokens.colours.accent, ...accents])].slice(0, 6).map((colour) => (
+            <button
+              key={colour}
+              type="button"
+              className="sl-swatch-button"
+              aria-label={colour}
+              aria-pressed={colour.toLowerCase() === tokens.colours.accent.toLowerCase()}
+              style={{ background: colour }}
+              onClick={() => onChange(setAt(tokens, ["colours", "accent"], colour))}
+            />
+          ))}
+          <ColourField t={t} label={t("customColour")} value={tokens.colours.accent} onChange={(accent) => accent !== "" && onChange(setAt(tokens, ["colours", "accent"], accent))} />
+        </span>
+      </div>
+      <div className="sl-style__group" role="group" aria-label={t("fonts")}>
+        <span className="sl-style__label">{t("fonts")}</span>
+        <div className="sl-tiles">
+          {families.map(([family, key]) => (
+            <Tile key={family} on={tokens.fonts.heading.family === family} label={t(key)} picture={<span style={{ fontFamily: `"${family}"`, fontWeight: 600, fontSize: 18 }}>Aa</span>} onClick={() => onChange(setAt(tokens, ["fonts", "heading"], { family }))} />
+          ))}
+        </div>
+      </div>
+      <div className="sl-style__group" role="group" aria-label={t("corners")}>
+        <span className="sl-style__label">{t("corners")}</span>
+        <div className="sl-tiles">
+          {(["sharp", "rounded", "pill"] as const).map((corners) => (
+            <Tile
+              key={corners}
+              on={tokens.corners === corners}
+              label={t(corners === "sharp" ? "cornersSharp" : corners === "rounded" ? "cornersRounded" : "cornersPill")}
+              picture={<i className="sl-tile__shape" style={{ borderRadius: corners === "sharp" ? 2 : corners === "rounded" ? 8 : 999 }} />}
+              onClick={() => onChange(setAt(tokens, ["corners"], corners))}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="sl-style__group" role="group" aria-label={t("backgroundLabel")}>
+        <span className="sl-style__label">{t("backgroundLabel")}</span>
+        <div className="sl-tiles">
+          <Tile on={background === "plain"} label={t("bgPlain")} picture={<i className="sl-tile__fill" style={{ background: tokens.colours.background }} />} onClick={() => setPattern("none")} />
+          <Tile on={background === "pattern"} label={t("bgPattern")} picture={<i className="sl-tile__fill sl-tile__fill--pattern" />} onClick={() => background !== "pattern" && setPattern("confetti")} />
+          <Tile on={background === "mountains"} label={t("patternMountains")} picture={<i className="sl-tile__fill sl-tile__fill--mountains" />} onClick={() => setPattern("mountains")} />
+        </div>
+        {background === "pattern" && (
+          <Segment
+            label={t("pattern")}
+            value={pattern}
+            options={(["confetti", "dots", "grid", "waves", "hills", "stripes"] as const).map((each) => [each, t(`pattern${each[0]!.toUpperCase()}${each.slice(1)}` as LookMessageKey)] as const)}
+            onChange={setPattern}
+          />
+        )}
+      </div>
+      <Segment
+        label={t("density")}
+        value={tokens.spacing}
+        options={[
+          ["compact", t("spacingCompact")],
+          ["normal", t("spacingNormal")],
+          ["airy", t("spacingAiry")],
+        ]}
+        onChange={(spacing) => onChange(setAt(tokens, ["spacing"], spacing))}
+      />
+      <Segment
+        label={t("mode")}
+        value={tokens.mode ?? "light"}
+        options={[
+          ["light", t("modeLight")],
+          ["dark", t("modeDark")],
+          ["auto", t("modeAuto")],
+        ]}
+        onChange={(mode) => {
+          const withMode = setAt(tokens, ["mode"], mode === "light" ? undefined : mode);
+          onChange(mode !== "light" && withMode.darkColours === undefined ? setAt(withMode, ["darkColours"], darkColoursFor(tokens.colours)) : withMode);
+        }}
+      />
+      <details className="sl-more">
+        <summary>{t("allColours")}</summary>
+        {colours}
+      </details>
+    </div>
+  );
+}
+
+/** Readable or not, saved or not (W26), at the foot of the settings. */
+function Checks({ t, tokens, status, notice }: { t: LookText; tokens: ThemeTokens; status: "idle" | "saving" | "saved" | "invalid" | "failed"; notice: string | null }) {
+  const errors = checkTheme(tokens).filter((issue) => issue.severity === "error");
+  const hexRgb = (hex: string) => [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255) as unknown as [number, number, number];
+  const ratio = (a: string, b: string) => (Math.floor(contrastRatio(hexRgb(a), hexRgb(b)) * 10) / 10).toFixed(1);
+  const what = (path: string | undefined) => (path ?? "").split("/").at(-1) ?? "";
+
+  return (
+    <div className={errors.length === 0 ? "sl-checks" : "sl-checks sl-checks--bad"} role="status">
+      {errors.length === 0 ? (
+        <p>
+          <span className="sl-ok">✓</span> {t("checkReadable", { text: ratio(tokens.colours.text, tokens.colours.surface), buttons: ratio(tokens.colours.onAccent, tokens.colours.accent) })}
+        </p>
+      ) : (
+        errors.map((issue: ThemeIssue, index) => (
+          <p key={index} className="sl-bad">
+            !{" "}
+            {issue.code === "contrast-too-low"
+              ? t("checkContrast", { what: what(issue.path), against: what(issue.against), ratio: issue.ratio ?? 0 })
+              : issue.code === "dark-colours-missing"
+                ? t("checkDarkMissing")
+                : issue.code === "colour-invalid"
+                  ? t("checkInvalid", { what: what(issue.path) })
+                  : t("checkOther", { code: issue.code, what: issue.path })}
+          </p>
+        ))
+      )}
+      {!["none", "mountains"].includes(tokens.decoration?.pattern ?? "none") && <p className="sl-note">{t("pdfPattern")}</p>}
+      {status !== "idle" && <p className="sl-note">{status === "saving" ? t("saving") : status === "saved" ? t("saved") : status === "invalid" ? t("notSaved") : t("failed")}</p>}
+      {notice !== null && <p className="sl-note">{notice}</p>}
+    </div>
   );
 }
 
@@ -639,7 +806,7 @@ function NameDialog({ t, initial, onCancel, onSave }: { t: LookText; initial: st
   );
 }
 
-type FieldProps = Omit<AreasProps, "base" | "onGoto" | "onAllLooks" | "onSaveForOrg"> & { field: Field };
+type FieldProps = Omit<SideProps, "base" | "onGoto" | "onGallery" | "onSaveForOrg" | "status" | "notice"> & { field: Field };
 
 function FieldControl({ t, field, tokens, definition, language, api, onChange, onLayout, onHeaderImage, onHeaderAlt }: FieldProps) {
   const id = useId();
@@ -808,88 +975,5 @@ function ColourField({ t, label, value, onChange }: { t: LookText; label: string
         />
       </span>
     </div>
-  );
-}
-
-/** Quick changes and the checks (W26 B): accent, fonts, corners, density, mode; readable or not, saved or not. */
-function Quick({ t, tokens, status, notice, onChange }: { t: LookText; tokens: ThemeTokens; status: "idle" | "saving" | "saved" | "invalid" | "failed"; notice: string | null; onChange: (tokens: ThemeTokens) => void }) {
-  const issues = checkTheme(tokens);
-  const errors = issues.filter((issue) => issue.severity === "error");
-  const hexRgb = (hex: string) => [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255) as unknown as [number, number, number];
-  const ratio = (a: string, b: string) => (Math.floor(contrastRatio(hexRgb(a), hexRgb(b)) * 10) / 10).toFixed(1);
-  const what = (path: string | undefined) => (path ?? "").split("/").at(-1) ?? "";
-
-  return (
-    <section className="sl-main" aria-label={t("makeYours")}>
-      <h2 className="sl-title">{t("makeYours")}</h2>
-      <p className="sl-lead">{t("makeYoursLead")}</p>
-      <h3 className="sl-label">{t("quick")}</h3>
-      <div className="sl-fields">
-        <ColourField t={t} label={t("accent")} value={tokens.colours.accent} onChange={(accent) => accent !== "" && onChange(setAt(tokens, ["colours", "accent"], accent))} />
-        <Segment
-          label={t("fonts")}
-          value={tokens.fonts.heading.family}
-          options={families.map(([family, key]) => [family, t(key)] as const)}
-          onChange={(family) => onChange(setAt(tokens, ["fonts", "heading"], { family }))}
-        />
-        <Segment
-          label={t("corners")}
-          value={tokens.corners}
-          options={[
-            ["sharp", t("cornersSharp")],
-            ["rounded", t("cornersRounded")],
-            ["pill", t("cornersPill")],
-          ]}
-          onChange={(corners) => onChange(setAt(tokens, ["corners"], corners))}
-        />
-        <Segment
-          label={t("density")}
-          value={tokens.spacing}
-          options={[
-            ["compact", t("spacingCompact")],
-            ["normal", t("spacingNormal")],
-            ["airy", t("spacingAiry")],
-          ]}
-          onChange={(spacing) => onChange(setAt(tokens, ["spacing"], spacing))}
-        />
-        <Segment
-          label={t("mode")}
-          value={tokens.mode ?? "light"}
-          options={[
-            ["light", t("modeLight")],
-            ["dark", t("modeDark")],
-            ["auto", t("modeAuto")],
-          ]}
-          onChange={(mode) => {
-            const withMode = setAt(tokens, ["mode"], mode === "light" ? undefined : mode);
-            onChange(mode !== "light" && withMode.darkColours === undefined ? setAt(withMode, ["darkColours"], darkColoursFor(tokens.colours)) : withMode);
-          }}
-        />
-      </div>
-      <div className="sl-checks" role="status">
-        <h3 className="sl-label">{t("checks")}</h3>
-        {errors.length === 0 ? (
-          <p>
-            <span className="sl-ok">✓</span> {t("checkReadable", { text: ratio(tokens.colours.text, tokens.colours.surface), buttons: ratio(tokens.colours.onAccent, tokens.colours.accent) })}
-          </p>
-        ) : (
-          errors.map((issue: ThemeIssue, index) => (
-            <p key={index} className="sl-bad">
-              !{" "}
-              {issue.code === "contrast-too-low"
-                ? t("checkContrast", { what: what(issue.path), against: what(issue.against), ratio: issue.ratio ?? 0 })
-                : issue.code === "dark-colours-missing"
-                  ? t("checkDarkMissing")
-                  : issue.code === "colour-invalid"
-                    ? t("checkInvalid", { what: what(issue.path) })
-                    : t("checkOther", { code: issue.code, what: issue.path })}
-            </p>
-          ))
-        )}
-        {!["none", "mountains"].includes(tokens.decoration?.pattern ?? "none") && <p className="sl-note">{t("pdfPattern")}</p>}
-        <p className="sl-note">{status === "saving" ? t("saving") : status === "saved" ? t("saved") : status === "invalid" ? t("notSaved") : status === "failed" ? t("failed") : ""}</p>
-        {notice !== null && <p className="sl-note">{notice}</p>}
-      </div>
-    </section>
   );
 }

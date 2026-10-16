@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import "../look/look.css";
 import "./messages.css";
+import { ZoomBox } from "../designer/ZoomBox";
 import { ApiError, type EmailPreview, type MessageKind, type MessageText, type MessagesClient, type Texts } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox } from "@askwerk/ui";
@@ -246,7 +247,9 @@ function Preview({ t, client, kind, surveys, language, subject, body, answerInEm
             <>
               <p className="messages-subject">{email.subject}</p>
               {/* Sandboxed: the email's HTML never runs or reaches the app. */}
-              <iframe className="messages-frame" title={t("emailPreview")} sandbox="" srcDoc={email.html} />
+              <ZoomBox texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}>
+                <iframe className="messages-frame" title={t("emailPreview")} sandbox="" srcDoc={email.html} />
+              </ZoomBox>
             </>
           )}
           <button type="button" className="look-button" onClick={() => void sendTest()}>

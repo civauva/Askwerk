@@ -53,20 +53,23 @@ test("an editor sets up the welcome page and tries the draft in a side panel", a
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath("welcome.png") });
 
-  // Create → Look opens on the gallery of looks; picking one shows it in the one Preview, docked beside the settings (W26).
+  // Create → Look opens on the editor beside the one Preview; the gallery of looks opens from it (W26, W33).
   await page.getByRole("navigation", { name: "Survey" }).getByRole("link", { name: "Look" }).click();
+  const settings = page.getByRole("complementary", { name: "Look settings" });
+  await settings.getByRole("button", { name: "Choose from gallery" }).click();
   await expect(page.getByRole("button", { name: "Use the look Konfetti" })).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath("look-gallery.png") });
   await page.getByRole("button", { name: "Use the look Konfetti" }).click();
   await expect(page.frameLocator('iframe[title="Survey preview"]').getByRole("heading", { level: 1, name: "Customer satisfaction 2026" })).toBeVisible();
+  await settings.getByRole("tab", { name: "Parts" }).click();
   await page.getByRole("complementary", { name: "Look settings" }).getByRole("button", { name: /^Components/ }).click();
   await page.getByRole("complementary", { name: "Look settings" }).getByRole("button", { name: /^Choices/ }).click();
   await expect(page.frameLocator('iframe[title="Survey preview"]').locator(".run[data-pattern='confetti']")).toBeVisible();
   expect((await new AxeBuilder({ page }).exclude("iframe").analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath("look-editor.png") });
   // Panorama (W28): the mountains behind the page, the questions on a frosted panel, the title over the picture.
-  await page.getByRole("complementary", { name: "Look settings" }).getByRole("button", { name: "← All looks" }).click();
+  await settings.getByRole("button", { name: "Choose from gallery" }).click();
   await page.getByRole("button", { name: "Use the look Panorama" }).click();
   const panorama = page.frameLocator('iframe[title="Survey preview"]');
   await expect(panorama.locator(".run[data-pattern='mountains'][data-panel='frosted']")).toBeVisible();

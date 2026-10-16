@@ -11,6 +11,11 @@ export type PreviewKey =
   | "previewWidth"
   | "previewPhone"
   | "previewDesktop"
+  | "previewTablet"
+  | "previewZoom"
+  | "previewZoomIn"
+  | "previewZoomOut"
+  | "previewFit"
   | "previewRestart"
   | "previewClose"
   | "previewFrame"
@@ -82,7 +87,13 @@ export function PreviewPanel({
   onFrameLoad?: () => void;
   views?: PreviewViews;
 }) {
-  const [phone, setPhone] = useState(false);
+  const [device, setDevice] = useState<"phone" | "tablet" | "desktop">("desktop");
+  const phone = device === "phone";
+  // Zoom (W33): smaller to see a whole page, larger to check details; Fit returns to 100 %.
+  const [zoom, setZoom] = useState(1);
+  const zooms = [0.5, 0.67, 0.75, 0.9, 1, 1.25, 1.5];
+  const step = (direction: 1 | -1) => setZoom((current) => zooms[Math.max(0, Math.min(zooms.length - 1, zooms.indexOf(current) + direction))] ?? 1);
+  const width = device === "phone" ? 390 : device === "tablet" ? 768 : null;
   // A new key loads the runner again: Restart starts from the welcome page with the last saved draft.
   const [run, setRun] = useState(0);
   const [view, setView] = useState<"web" | "email" | "pdf">("web");
@@ -124,10 +135,13 @@ export function PreviewPanel({
           {view === "web" && (
             <>
               <span className="designer-segment" role="group" aria-label={t("previewWidth")}>
-                <button type="button" aria-pressed={phone} onClick={() => setPhone(true)}>
+                <button type="button" aria-pressed={phone} onClick={() => setDevice("phone")}>
                   {t("previewPhone")}
                 </button>
-                <button type="button" aria-pressed={!phone} onClick={() => setPhone(false)}>
+                <button type="button" aria-pressed={device === "tablet"} onClick={() => setDevice("tablet")}>
+                  {t("previewTablet")}
+                </button>
+                <button type="button" aria-pressed={device === "desktop"} onClick={() => setDevice("desktop")}>
                   {t("previewDesktop")}
                 </button>
               </span>
@@ -140,7 +154,32 @@ export function PreviewPanel({
         </span>
       </div>
       <div className="designer-preview__stage">
-        {view === "web" && <iframe ref={frameRef} key={run} title={t("previewFrame")} src={previewUrl(surveyId)} style={{ width: phone ? "390px" : "100%" }} onLoad={onFrameLoad} />}
+        {view === "web" && (
+          <div className="designer-preview__zoomed" style={{ width: width === null ? "100%" : `${width * zoom}px` }}>
+            <iframe
+              ref={frameRef}
+              key={run}
+              title={t("previewFrame")}
+              src={previewUrl(surveyId)}
+              style={{ width: width === null ? `${100 / zoom}%` : `${width}px`, height: `${100 / zoom}%`, transform: zoom === 1 ? undefined : `scale(${zoom})` }}
+              onLoad={onFrameLoad}
+            />
+          </div>
+        )}
+        {view === "web" && (
+          <span className="designer-preview__zoom" role="group" aria-label={t("previewZoom")}>
+            <button type="button" aria-label={t("previewZoomOut")} disabled={zoom === zooms[0]} onClick={() => step(-1)}>
+              −
+            </button>
+            <output aria-live="polite">{Math.round(zoom * 100)} %</output>
+            <button type="button" aria-label={t("previewZoomIn")} disabled={zoom === zooms.at(-1)} onClick={() => step(1)}>
+              +
+            </button>
+            <button type="button" onClick={() => setZoom(1)}>
+              {t("previewFit")}
+            </button>
+          </span>
+        )}
         {view === "email" && views !== undefined && <iframe key={`email-${views.saves}`} title={views.labels.emailFrame} sandbox="" srcDoc={email ?? ""} style={{ width: "100%" }} />}
         {view === "pdf" && views !== undefined && <iframe key={`pdf-${views.saves}`} title={views.labels.pdfFrame} src={views.pdf} style={{ width: "100%" }} />}
       </div>

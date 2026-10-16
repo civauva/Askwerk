@@ -34,7 +34,7 @@
 
 .look-work {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr) 360px;
+  grid-template-columns: 240px minmax(320px, 1fr) minmax(360px, 1.3fr);
   gap: 24px;
   align-items: start;
 }
@@ -337,9 +337,19 @@
 }
 
 /* The preview: only the theme's tokens, so it shows what respondents get. */
+/* The preview fills the page height beside the settings and zooms (W33). */
 .look-preview-region {
   position: sticky;
   top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: calc(100vh - 32px);
+  min-height: 480px;
+}
+
+.look-preview-region > .zoom-box {
+  flex: 1;
 }
 
 .look-preview {
@@ -494,4 +504,55 @@
 
 .look-group > .look-button {
   justify-self: start;
+}
+
+/* A preview that zooms (W33): the stage scrolls when zoomed in. */
+.zoom-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.zoom-box__stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid var(--aw-line);
+  background: var(--aw-paper, var(--aw-surface));
+}
+
+.zoom-box__content {
+  height: 100%;
+  transform-origin: 0 0;
+}
+
+.zoom-box__controls {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  font: 600 12.5px/1 var(--aw-font-mono);
+}
+
+.zoom-box__controls button {
+  border: 0;
+  background: transparent;
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.zoom-box__controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.zoom-box__controls output {
+  min-width: 48px;
+  text-align: center;
 }
