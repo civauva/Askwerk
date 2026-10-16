@@ -352,10 +352,10 @@ function SurveyCards({
                 </span>
                 {survey.publishedVersion !== null &&
                   (onOpenResults === undefined ? (
-                    <span>{t("responsesCount", { count: Number(survey.responses) })}</span>
+                    <span>{Number(survey.responses) === 1 ? t("responseOne") : t("responsesCount", { count: count.format(Number(survey.responses)) })}</span>
                   ) : (
                     <button type="button" className="surveys__count" onClick={() => onOpenResults(survey.id)}>
-                      {t("responsesCount", { count: count.format(Number(survey.responses)) })}
+                      {Number(survey.responses) === 1 ? t("responseOne") : t("responsesCount", { count: count.format(Number(survey.responses)) })}
                     </button>
                   ))}
                 <span className="grow" />

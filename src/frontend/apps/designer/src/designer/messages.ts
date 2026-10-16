@@ -4,6 +4,8 @@ import type { Catalogs, QuestionType } from "@askwerk/schema";
 const en = {
   loading: "Loading survey",
   statusSaved: "Draft · saved",
+  templateSaved: "Template · saved",
+  templateSaving: "Template · saving",
   statusPending: "Draft · saving",
   statusFailed: "Not saved · retrying in {seconds} s",
   surveyLanguage: "Survey language",
@@ -396,6 +398,8 @@ export const designerMessages: Catalogs<DesignerMessageKey> = {
   de: {
     loading: "Umfrage wird geladen",
     statusSaved: "Entwurf · gespeichert",
+    templateSaved: "Vorlage · gespeichert",
+    templateSaving: "Vorlage · wird gespeichert",
     statusPending: "Entwurf · wird gespeichert",
     statusFailed: "Nicht gespeichert · neuer Versuch in {seconds} s",
     surveyLanguage: "Sprache der Umfrage",

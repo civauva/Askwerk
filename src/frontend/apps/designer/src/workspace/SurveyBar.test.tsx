@@ -164,12 +164,13 @@ describe("A template in the designer (W32)", () => {
     const onTemplates = vi.fn();
     const onOpenSurvey = vi.fn();
     const { container } = render(
-      <SurveyBar t={workspaceText("en")} surveys={surveys} surveyId="s1" summary={template} canEdit onPreview={vi.fn()} onPrimary={vi.fn()} onBack={vi.fn()} onChanged={vi.fn()} place="Questions" onHome={vi.fn()} onTemplates={onTemplates} onOpenSurvey={onOpenSurvey} />,
+      <SurveyBar t={workspaceText("en")} surveys={surveys} surveyId="s1" summary={template} canEdit onPreview={vi.fn()} onPrimary={vi.fn()} onBack={vi.fn()} onChanged={vi.fn()} place="Questions" onHome={vi.fn()} onTemplates={onTemplates} onOpenSurvey={onOpenSurvey} approval={<span>Not approved</span>} />,
     );
     const crumbs = within(screen.getByRole("navigation", { name: "You are here" }));
 
     expect(screen.getByText("Template")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
+    expect(screen.queryByText("Not approved")).toBeNull();
     fireEvent.click(crumbs.getByRole("link", { name: "Templates" }));
     expect(onTemplates).toHaveBeenCalled();
     await expectNoAxeViolations(container);

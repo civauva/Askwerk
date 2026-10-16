@@ -33,7 +33,7 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   await page.getByRole("button", { name: "Copy NPS, short to our templates" }).click();
 
   const bar = page.getByRole("banner", { name: "Survey" });
-  await expect(bar.getByText("Template", { exact: true })).toBeVisible();
+  await expect(bar.getByText(/^Template ·/)).toBeVisible();
   await expect(bar.getByRole("button", { name: "Publish" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Share" })).toHaveCount(0);
   expect((await new AxeBuilder({ page }).exclude("iframe").analyze()).violations.map((violation) => violation.id)).toEqual([]);
@@ -41,5 +41,5 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
 
   await bar.getByRole("button", { name: "Use for a new survey" }).click();
   await expect(page.getByRole("banner", { name: "Survey" }).getByRole("button", { name: "Publish" })).toBeVisible();
-  await expect(page.getByRole("banner", { name: "Survey" }).getByText("Template", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("banner", { name: "Survey" }).getByText(/^Template ·/)).toHaveCount(0);
 });

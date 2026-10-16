@@ -471,6 +471,11 @@ function SaveTemplateDialog({ t, initialName, onCancel, onSave }: { t: (key: Des
 
 /** The editor's status: the save state while saving, and the survey's status once saved (W17). */
 function barStatus(t: Translate<DesignerMessageKey>, w: WorkspaceText, status: SaveStatus, summary: SurveySummary | null) {
+  // A template (W32) has no versions: only whether it is saved.
+  if (summary?.templateId != null && status.kind !== "failed") {
+    return status.kind === "pending" ? t("templateSaving") : t("templateSaved");
+  }
+
   switch (status.kind) {
     case "pending":
       return t("statusPending");

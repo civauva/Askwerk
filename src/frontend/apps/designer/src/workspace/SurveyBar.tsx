@@ -221,12 +221,14 @@ export function SurveyBar({
       </h1>
       </>
       )}
-      {templateId !== null && (
+      {/* A template (W32): one chip, with the editor's save state when it gives one. */}
+      {templateId !== null ? (
         <span className="survey-bar__template" title={t("templateHint")}>
-          {t("templateChip")}
+          {status ?? t("templateChip")}
         </span>
+      ) : (
+        (status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : statusText(t, summary))}</span>
       )}
-      {(status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : templateId !== null ? t("templateHint") : statusText(t, summary))}</span>}
       <span className="survey-bar__grow" />
       {onSearch !== undefined && (
         <button type="button" className="survey-bar__search" aria-label={t("search")} aria-keyshortcuts="Control+K" onClick={onSearch}>
@@ -246,7 +248,8 @@ export function SurveyBar({
       {languageNote}
       <PreviewMenu t={t} onSidePanel={() => onPreview("panel")} onNewTab={() => onPreview("tab")} onPdf={() => onPreview("pdf")} />
       {actions}
-      {approval}
+      {/* A template is never published, so it needs no approval (W32). */}
+      {templateId === null && approval}
       {action !== null && (
         <button type="button" className="designer-button designer-button--primary survey-bar__primary" onClick={() => onPrimary(action)}>
           {t(action)}
