@@ -34,8 +34,8 @@ An agent that cannot find an approved visual for what it is about to build must 
 - Because subjects start with `#`, git must not treat that line as a comment: set `git config core.commentChar ";"` in your clone (or commit with `--cleanup=whitespace`).
 - Commits carry no `Signed-off-by` trailer: do not use `git commit -s` (Dražan, 2026-10-13).
 - Commits and PRs carry no AI-tool attribution: no Co-Authored-By trailers for tools, no "generated with" footers, no session links. The human committer is the author.
-- One work item per PR. The PR description links the work item and the approved visual.
-- PRs are squash-merged. Until the merge, the PR branch keeps its own commit history, which shows red → green → refactor; do not squash or rebase it away before review.
+- Maintainer work, while Askwerk is a one-person project (Dražan, 2026-10-16): one work item per local feature branch. Its atomic commits stay local and show red → green → refactor. Nothing is pushed until the feature is finished and the full run (`bin/test-all.sh --full`) is green. Then the branch is squashed locally into one commit on `main` (`git merge --squash`, then one commit in the format above), `main` is pushed, the commit is linked on the work item, and the branch is deleted. No pull request. A feature that runs longer than a day or two may push its branch to the private backup repository, never to the public one. If `main` moved meanwhile, update the branch from it and run the full run again before squashing.
+- Outside contributors: one work item per PR. The PR description links the work item and the approved visual. PRs are squash-merged. Until the merge, the PR branch keeps its own commit history, which shows red → green → refactor; do not squash or rebase it away before review.
 - CI must be green: build, tests, lint, type-check, axe on every app, Lighthouse on PRs that touch the runner (full list in `testing.md`, CI gates). CI steps are scripts in `/bin`, so any CI system can run them and a contributor can run them locally.
 
 ## 5. Definition of done
