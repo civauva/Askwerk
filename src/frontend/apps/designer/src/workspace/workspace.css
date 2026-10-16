@@ -433,3 +433,12 @@
 .survey-settings__danger {
   color: var(--aw-signal-ink);
 }
+
+/* A template being edited (W32). */
+.survey-bar__template {
+  padding: 2px 9px;
+  border: 1px dashed var(--aw-line-strong);
+  border-radius: 999px;
+  font: 600 12px/1.4 var(--aw-font);
+  color: var(--aw-graphite);
+}

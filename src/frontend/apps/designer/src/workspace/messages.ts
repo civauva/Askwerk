@@ -3,6 +3,10 @@ import type { Catalogs } from "@askwerk/schema";
 
 const en = {
   surveys: "Surveys",
+  templates: "Templates",
+  templateChip: "Template",
+  templateHint: "Edits save by themselves · no publishing, no results",
+  useTemplate: "Use for a new survey",
   survey: "Survey",
   search: "Search",
   searchHint: "Search…",
@@ -118,6 +122,10 @@ export const workspaceMessages: Catalogs<WorkspaceMessageKey> = {
   en,
   de: {
     surveys: "Umfragen",
+    templates: "Vorlagen",
+    templateChip: "Vorlage",
+    templateHint: "Änderungen speichern sich selbst · kein Veröffentlichen, keine Ergebnisse",
+    useTemplate: "Für eine neue Umfrage verwenden",
     survey: "Umfrage",
     search: "Suchen",
     searchHint: "Suchen…",

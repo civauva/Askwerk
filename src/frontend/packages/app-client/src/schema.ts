@@ -642,6 +642,142 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/templates/{id}/edit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Opens one of the organisation's templates for editing (W32): the designer edits it in a survey of its own that is
+         *     never listed, published or answered. Made on the first edit; later edits find the same one.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The template. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateEditResponse"];
+                        "application/json": components["schemas"]["TemplateEditResponse"];
+                        "text/json": components["schemas"]["TemplateEditResponse"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/templates/{id}/copy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Copies one of Askwerk's templates to the organisation's (W32), ready to edit; Askwerk's stays as it is. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description "askwerk:…". */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody?: {
+                content: {
+                    "application/json": null | components["schemas"]["CopyTemplateRequest"];
+                    "text/json": null | components["schemas"]["CopyTemplateRequest"];
+                    "application/*+json": null | components["schemas"]["CopyTemplateRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateEditResponse"];
+                        "application/json": components["schemas"]["TemplateEditResponse"];
+                        "text/json": components["schemas"]["TemplateEditResponse"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/templates/{id}": {
         parameters: {
             query?: never;
@@ -952,6 +1088,8 @@ export interface paths {
                     offset?: number | string;
                     /** @description Rows per page, at most 100; 50 when empty. */
                     limit?: number | string;
+                    /** @description Also each survey's front page and look, for the Cards view (W32). */
+                    cards?: boolean;
                 };
                 header?: never;
                 path?: never;
@@ -8940,6 +9078,13 @@ export interface components {
             /** @description Password. */
             password: string;
         };
+        /** @description A copy of one of Askwerk's templates (W32). */
+        CopyTemplateRequest: {
+            /** @description The copy's name; the template's own when empty. */
+            name: null | string;
+            /** @description The language of the template's own name to take. */
+            language: null | string;
+        };
         /** @description A new key. */
         CreateApiKeyRequest: {
             /** @description What the organisation calls it. */
@@ -10851,6 +10996,15 @@ export interface components {
             /** @description The organisation's websites to choose from. */
             organisation: string[];
         };
+        /** @description The front page a card draws (W32). */
+        SurveyFront: {
+            title: null | components["schemas"]["TranslatedText"];
+            text: null | components["schemas"]["TranslatedText"];
+            /** @description The language to fall back to. */
+            defaultLanguage: string;
+            /** @description The look's tokens (packages/schema/src/theme.ts). */
+            look: components["schemas"]["JsonElement"];
+        };
         /** @description A link to the survey (AWK-7). */
         SurveyLinkResponse: {
             /** @description system (the instance's address) or domain (a verified domain of the organisation). */
@@ -10901,6 +11055,7 @@ export interface components {
              * @description Responses so far, complete and partial (AWK-24).
              */
             responses: number | string;
+            front?: null | components["schemas"]["SurveyFront"];
         };
         /** @description One page of the survey list. */
         SurveyListResponse: {
@@ -10969,6 +11124,8 @@ export interface components {
             timeZone: string;
             /** @description Whether a browser that finished may not answer again. */
             oneResponsePerPerson: boolean;
+            /** @description Set when this survey is where a template is edited (W32): no publishing, no results. */
+            templateId?: null | string;
         };
         /** @description The organisation to work in. */
         SwitchTenantRequest: {
@@ -11012,6 +11169,16 @@ export interface components {
             /** @description W3C trace id the browser used for the related API call, if any. */
             traceId?: null | string;
         };
+        /** @description A template to edit in the designer (W32). */
+        TemplateEditResponse: {
+            /** @description The template. */
+            id: string;
+            /**
+             * Format: uuid
+             * @description The survey to open.
+             */
+            surveyId: string;
+        };
         /** @description The templates to choose from. */
         TemplateListResponse: {
             /** @description Askwerk's first, then the organisation's. */
@@ -11033,6 +11200,12 @@ export interface components {
             questions: number | string;
             /** @description Its languages. */
             languages: string[];
+            /**
+             * Format: uuid
+             * @description The organisation's templates, once edited: the survey the designer edits it in (W32).
+             */
+            surveyId?: null | string;
+            front?: null | components["schemas"]["SurveyFront"];
         };
         /** @description The test email of step 4. */
         TestEmailRequest: {

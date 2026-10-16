@@ -41,6 +41,25 @@ public sealed class SurveyTemplate
     /// <summary>Gets when it was saved.</summary>
     public DateTimeOffset CreatedAt { get; private set; }
 
+    /// <summary>
+    /// Gets the survey the template is edited in (W32): the designer opens it like any survey, but it is never listed,
+    /// published or answered. Null until the template is first edited; then its draft and look are the template's.
+    /// </summary>
+    public Guid? SurveyId { get; private set; }
+
+    /// <summary>Edits the template in a survey from now on (W32).</summary>
+    /// <param name="surveyId">The survey holding the template's definition and look.</param>
+    public void EditIn(Guid surveyId) => SurveyId = surveyId;
+
+    /// <summary>Follows the editing survey's title (W32).</summary>
+    /// <param name="name">The new name.</param>
+    public void Rename(string name)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        var trimmed = name.Trim();
+        Name = trimmed[..Math.Min(trimmed.Length, 200)];
+    }
+
     /// <summary>A template from a survey's draft.</summary>
     /// <param name="id">New id.</param>
     /// <param name="tenantId">The organisation.</param>

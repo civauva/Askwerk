@@ -39,7 +39,14 @@ class FakeSurveys implements SurveysClient {
       return Promise.reject(new Error("offline"));
     }
 
-    return Promise.resolve(this.pages.length > 1 ? this.pages.shift()! : this.pages[0]!);
+    const answer = this.pages.length > 1 ? this.pages.shift()! : this.pages[0]!;
+
+    // With cards (W32) each survey brings its front page and look.
+    return Promise.resolve(
+      query.cards === true
+        ? { ...answer, items: answer.items.map((item) => ({ ...item, front: { title: { de: `${item.title} (DE)`, en: `Welcome to ${item.title}` }, text: { en: "Takes three minutes." }, defaultLanguage: "de", look: themePresets[0]!.tokens } })) }
+        : answer,
+    );
   };
 
   create = (survey: NewSurvey) => {
@@ -59,6 +66,8 @@ class FakeSurveys implements SurveysClient {
     ]);
   saveAsTemplate = () => Promise.reject(new Error("not used"));
   deleteTemplate = () => Promise.reject(new Error("not used"));
+  editTemplate = () => Promise.reject(new Error("not used"));
+  copyTemplate = () => Promise.reject(new Error("not used"));
   approvals = () => Promise.reject(new Error("not used"));
   approve = () => Promise.reject(new Error("not used"));
   withdrawApproval = () => Promise.reject(new Error("not used"));
@@ -404,5 +413,31 @@ describe("SurveyListPage (W6)", () => {
     await screen.findByText("Employee pulse Q4");
 
     await expectNoAxeViolations(container);
+  });
+});
+
+describe("Surveys as List or Cards (W32)", () => {
+  it("switches to Cards, drawing each survey's front page, and remembers the choice for the person", async () => {
+    const client = new FakeSurveys();
+    const storage = new MemoryStorage();
+    const { onOpen, container } = renderList({ client, storage });
+    await screen.findByRole("link", { name: "Customer satisfaction 2026" });
+
+    fireEvent.click(screen.getByRole("button", { name: "▦ Cards" }));
+
+    const cards = within(await screen.findByRole("list", { name: "Surveys" }));
+    expect(cards.getAllByRole("listitem")).toHaveLength(4);
+    expect(client.queries.at(-1)?.cards).toBe(true);
+    expect(cards.getByText("Welcome to Customer satisfaction 2026")).toBeTruthy();
+    expect(cards.getByText("Published · v3")).toBeTruthy();
+    expect(storage.values.get(`askwerk.view.surveys.${anna.id}`)).toBe("cards");
+    await expectNoAxeViolations(container);
+    fireEvent.click(cards.getByRole("button", { name: "Open Employee pulse Q4" }));
+    expect(onOpen).toHaveBeenCalledWith("s2");
+
+    cleanup();
+    renderList({ client, storage });
+    expect(await screen.findByRole("list", { name: "Surveys" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "▦ Cards" }).getAttribute("aria-pressed")).toBe("true");
   });
 });

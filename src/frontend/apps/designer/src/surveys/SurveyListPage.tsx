@@ -2,6 +2,7 @@
 import "./surveys.css";
 import { ApiError, type Me, type SampleSurvey, type SurveyList, type SurveyListItem, type SurveysClient, type SurveyStatus, type SurveyTemplate } from "@askwerk/app-client";
 import { createTranslator, themePresets, type Locale, type ThemeTokens, type Translate } from "@askwerk/schema";
+import { FrontCard } from "../designer/look/FrontCard";
 import { LookThumb } from "../designer/look/LookThumb";
 import { ComboBox, DataGrid, dataGridTexts, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridSort, Dialog } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
@@ -28,6 +29,9 @@ type SurveyListPageProps = {
 const defaultSort = "-changed";
 const defaultSize = 50;
 const sizeKey = "askwerk.grid.surveys.size";
+/** List or Cards (W32), remembered per person on this device. */
+export const viewKey = (userId: string, list: string) => `askwerk.view.${list}.${userId}`;
+export type ListView = "list" | "cards";
 
 /** Page, sort and size from the address; the size falls back to the one remembered on this device. */
 function readPlace(address: string, remembered: string | null) {
@@ -87,16 +91,21 @@ export function SurveyListPage({
   const [list, setList] = useState<SurveyList | null>(null);
   const [failed, setFailed] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [view, setView] = useState<ListView>(() => (storage.get(viewKey(me.id, "surveys")) === "cards" ? "cards" : "list"));
+  const changeView = (next: ListView) => {
+    setView(next);
+    storage.set(viewKey(me.id, "surveys"), next);
+  };
 
   const load = useCallback(async () => {
     setFailed(false);
 
     try {
-      setList(await client.list({ ...(filter !== "all" && { status: filter }), search, sort: sortToParam(sort), offset: (page - 1) * size, limit: size }));
+      setList(await client.list({ ...(filter !== "all" && { status: filter }), search, sort: sortToParam(sort), offset: (page - 1) * size, limit: size, ...(view === "cards" && { cards: true }) }));
     } catch {
       setFailed(true);
     }
-  }, [client, filter, search, sort, page, size]);
+  }, [client, filter, search, sort, page, size, view]);
 
   useEffect(() => {
     const timer = setTimeout(() => void load(), searchDelayMs);
@@ -258,14 +267,122 @@ export function SurveyListPage({
                 </button>
               ))}
             </span>
+            <span className="view-switch" role="group" aria-label={t("view")}>
+              <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>
+                {t("viewList")}
+              </button>
+              <button type="button" aria-pressed={view === "cards"} onClick={() => changeView("cards")}>
+                {t("viewCards")}
+              </button>
+            </span>
           </div>
-          {grid}
+          {view === "list" ? (
+            grid
+          ) : (
+            <SurveyCards t={t} locale={locale} list={list} organisation={organisation?.name ?? ""} count={count} page={page} size={size} onPage={setPage} onOpen={onOpen} onOpenResults={onOpenResults} />
+          )}
         </>
       )}
 
       {creating && <NewSurveyDialog client={client} locale={locale} onCancel={() => setCreating(false)} onCreated={onOpen} />}
     </main>
   );
+}
+
+/** Cards (W32): each survey's front page in its look, with its status, responses and languages below. */
+function SurveyCards({
+  t,
+  locale,
+  list,
+  organisation,
+  count,
+  page,
+  size,
+  onPage,
+  onOpen,
+  onOpenResults,
+}: {
+  t: Translate<SurveysMessageKey>;
+  locale: Locale;
+  list: SurveyList;
+  organisation: string;
+  count: Intl.NumberFormat;
+  page: number;
+  size: number;
+  onPage: (page: number) => void;
+  onOpen: (surveyId: string) => void;
+  onOpenResults: ((surveyId: string) => void) | undefined;
+}) {
+  const total = Number(list.total);
+  const from = (page - 1) * size + 1;
+
+  if (list.items.length === 0) {
+    return <p className="surveys__muted">{t("nothingFound")}</p>;
+  }
+
+  return (
+    <>
+      <ul className="front-cards" aria-label={t("surveys")}>
+        {list.items.map((survey) => (
+          <li key={survey.id} className="front-card">
+            <button type="button" className="front-card__picture" aria-label={t("openSurvey", { title: survey.title })} onClick={() => onOpen(survey.id)}>
+              {survey.front !== undefined && survey.front !== null && (
+                <FrontCard
+                  tokens={survey.front.look as ThemeTokens}
+                  title={frontText(survey.front.title, locale, survey.front.defaultLanguage) || survey.title}
+                  text={frontText(survey.front.text, locale, survey.front.defaultLanguage)}
+                  organisation={organisation}
+                  start={t("start")}
+                />
+              )}
+            </button>
+            <div className="front-card__meta">
+              <a
+                href={`/surveys/${survey.id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onOpen(survey.id);
+                }}
+              >
+                {survey.title}
+              </a>
+              <span className="front-card__row">
+                <span className="front-card__chip" data-draft={survey.status === "draft" || survey.hasChanges ? "" : undefined}>
+                  {statusText(t, survey)}
+                </span>
+                {survey.publishedVersion !== null &&
+                  (onOpenResults === undefined ? (
+                    <span>{t("responsesCount", { count: Number(survey.responses) })}</span>
+                  ) : (
+                    <button type="button" className="surveys__count" onClick={() => onOpenResults(survey.id)}>
+                      {t("responsesCount", { count: count.format(Number(survey.responses)) })}
+                    </button>
+                  ))}
+                <span className="grow" />
+                <span>{survey.languages.map((language) => language.toUpperCase()).join(" ")}</span>
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {total > size && (
+        <div className="front-pager">
+          <span>{t("pageOf", { from, to: Math.min(total, from + list.items.length - 1), total })}</span>
+          <button type="button" className="surveys__button" disabled={page === 1} onClick={() => onPage(page - 1)}>
+            {t("previous")}
+          </button>
+          <button type="button" className="surveys__button" disabled={page * size >= total} onClick={() => onPage(page + 1)}>
+            {t("next")}
+          </button>
+        </div>
+      )}
+    </>
+  );
+}
+
+/** A text of the front page in the reader's language, else the survey's default, else any. */
+export function frontText(text: Record<string, string> | null, locale: string, fallback: string): string {
+  return text === null ? "" : (text[locale] ?? text[fallback] ?? Object.values(text)[0] ?? "").trim();
 }
 
 function statusText(t: Translate<SurveysMessageKey>, survey: SurveyListItem): string {

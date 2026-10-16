@@ -43,17 +43,19 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
     /// <param name="offset">Rows to skip.</param>
     /// <param name="limit">Rows per page, at most 100; 50 when empty.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
+    /// <param name="cards">Also each survey's front page and look, for the Cards view (W32).</param>
     /// <returns>One page of surveys and the number of all that match.</returns>
     [HttpGet]
     [ProducesResponseType<SurveyListResponse>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<SurveyListResponse>> List(string? status, string? search, string? sort, int offset, int? limit, CancellationToken cancellationToken)
+    public async Task<ActionResult<SurveyListResponse>> List(string? status, string? search, string? sort, int offset, int? limit, CancellationToken cancellationToken, bool cards = false)
     {
         if (User.TenantId() is null)
         {
             return OrganisationNotChosen();
         }
 
-        var surveys = context.Surveys.Where(survey => survey.DeletedAt == null);
+        // A template's editing survey (W32) is not one of the organisation's surveys.
+        var surveys = context.Surveys.Where(survey => survey.DeletedAt == null && !context.SurveyTemplates.Any(template => template.SurveyId == survey.Id));
         var counts = await surveys.GroupBy(survey => survey.Status).Select(group => new { group.Key, Count = group.Count() }).ToListAsync(cancellationToken);
 
         // Archived surveys leave the list (AWK-29); asking for them by status still finds them.
@@ -80,8 +82,10 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                 HasChanges = survey.PublishedVersion != null && context.SurveyVersions.Any(draft =>
                     draft.SurveyId == survey.Id && draft.State == SurveyVersionState.Draft
                     && context.SurveyVersions.Any(published => published.SurveyId == survey.Id && published.Number == survey.PublishedVersion && published.Definition != draft.Definition)),
+                Draft = cards ? context.SurveyVersions.Where(draft => draft.SurveyId == survey.Id && draft.State == SurveyVersionState.Draft).Select(draft => draft.Definition).FirstOrDefault() : null,
             })
             .ToListAsync(cancellationToken);
+        var fronts = cards ? await SurveyFronts.LoadAsync(context, cancellationToken) : null;
 
         int Count(SurveyStatus key) => counts.Where(count => count.Key == key).Sum(count => count.Count);
 
@@ -95,7 +99,8 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                 row.survey.Languages,
                 row.CreatedBy ?? "",
                 row.survey.UpdatedAt,
-                row.Responses))],
+                row.Responses,
+                fronts?.Of(row.Draft is null ? null : JsonSerializer.Deserialize<SurveyDefinition>(row.Draft, SurveyDefinitionJson.Options), row.survey.Look, row.survey.ThemeId)))],
             new Dictionary<string, int>
             {
                 ["all"] = counts.Where(count => count.Key != SurveyStatus.Archived).Sum(count => count.Count),
@@ -144,10 +149,11 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
 
         // From a template: its definition is copied, and its languages win (AWK-17, W10 C).
         SurveyDefinition? template = null;
+        TemplateLook? templateLook = null;
 
         if (request.TemplateId is { Length: > 0 } templateId)
         {
-            template = await TemplatesController.DefinitionOfAsync(context, templateId, cancellationToken);
+            (template, templateLook) = await TemplatesController.SourceOfAsync(context, templateId, cancellationToken);
 
             if (template is null)
             {
@@ -170,6 +176,16 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
         {
             draft.ReplaceDefinition(template, now);
             survey.DraftSaved(template, now);
+
+            // A template edited in the designer brings its look (W32).
+            if (templateLook?.Tokens is { } tokens)
+            {
+                survey.UseLook(tokens, templateLook.LookBase, now);
+            }
+            else if (templateLook?.ThemeId is { } themeId)
+            {
+                survey.UseTheme(themeId, now);
+            }
         }
 
         context.Surveys.Add(survey);
@@ -197,6 +213,7 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                 survey,
                 Responses = context.Responses.Count(response => response.SurveyId == survey.Id),
                 Participants = context.Participants.Count(participant => participant.SurveyId == survey.Id),
+                TemplateId = context.SurveyTemplates.Where(template => template.SurveyId == survey.Id).Select(template => (Guid?)template.Id).FirstOrDefault(),
                 HasChanges = survey.PublishedVersion != null && context.SurveyVersions.Any(draft =>
                     draft.SurveyId == survey.Id && draft.State == SurveyVersionState.Draft
                     && context.SurveyVersions.Any(published => published.SurveyId == survey.Id && published.Number == survey.PublishedVersion && published.Definition != draft.Definition)),
@@ -221,7 +238,8 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
             row.Participants,
             survey.ClosesAt,
             (await settings.FindAsync(cancellationToken))?.TimeZone ?? "UTC",
-            survey.OneResponsePerPerson));
+            survey.OneResponsePerPerson,
+            row.TemplateId?.ToString()));
     }
 
     /// <summary>Gives the survey a new internal title (W17 D).</summary>
@@ -234,8 +252,16 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
     [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> Rename(Guid id, RenameSurveyRequest request, CancellationToken cancellationToken) =>
-        ChangeAsync(id, "survey.renamed", survey => survey.Rename(request?.Title ?? "", time.GetUtcNow()), cancellationToken);
+    public async Task<IActionResult> Rename(Guid id, RenameSurveyRequest request, CancellationToken cancellationToken)
+    {
+        // A template's editing survey (W32) renames its template too.
+        if (!string.IsNullOrWhiteSpace(request?.Title) && await context.SurveyTemplates.FirstOrDefaultAsync(template => template.SurveyId == id, cancellationToken) is { } template)
+        {
+            template.Rename(request.Title);
+        }
+
+        return await ChangeAsync(id, "survey.renamed", survey => survey.Rename(request?.Title ?? "", time.GetUtcNow()), cancellationToken);
+    }
 
     /// <summary>Copies the draft into a new survey, a draft with no responses (W17 D).</summary>
     /// <param name="id">The survey.</param>
@@ -778,6 +804,12 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
             return NotFound();
         }
 
+        // A template is used, never published (W32).
+        if (await context.SurveyTemplates.AnyAsync(template => template.SurveyId == id, cancellationToken))
+        {
+            return Conflict(new PublishProblem("template-not-publishable", [], System.Diagnostics.Activity.Current?.TraceId.ToHexString()));
+        }
+
         var draft = await DraftOfAsync(id, cancellationToken);
         var definition = draft.ReadDefinition();
         var previous = (await PublishedOfAsync(survey, cancellationToken))?.ReadDefinition();
@@ -948,7 +980,8 @@ public sealed record RenameSurveyRequest(string? Title);
 /// <param name="ClosesAt">The closing date (UTC), if any (W24).</param>
 /// <param name="TimeZone">The instance's time zone the closing date is entered and shown in.</param>
 /// <param name="OneResponsePerPerson">Whether a browser that finished may not answer again.</param>
-public sealed record SurveySummaryResponse(Guid Id, string Title, string Status, int? PublishedVersion, bool HasChanges, IReadOnlyList<string> Languages, int Responses, int Participants, DateTimeOffset? ClosesAt, string TimeZone, bool OneResponsePerPerson);
+/// <param name="TemplateId">Set when this survey is where a template is edited (W32): no publishing, no results.</param>
+public sealed record SurveySummaryResponse(Guid Id, string Title, string Status, int? PublishedVersion, bool HasChanges, IReadOnlyList<string> Languages, int Responses, int Participants, DateTimeOffset? ClosesAt, string TimeZone, bool OneResponsePerPerson, string? TemplateId = null);
 
 /// <summary>A survey's closing date (W24).</summary>
 /// <param name="ClosesAt">Local date and time in the instance's time zone, e.g. 2026-10-31T18:00; null for none.</param>
@@ -974,7 +1007,8 @@ public sealed record SurveyListResponse(IReadOnlyList<SurveyListItem> Items, IRe
 /// <param name="CreatedBy">Name of the person who created it.</param>
 /// <param name="UpdatedAt">Last change (UTC).</param>
 /// <param name="Responses">Responses so far, complete and partial (AWK-24).</param>
-public sealed record SurveyListItem(Guid Id, string Title, string Status, int? PublishedVersion, bool HasChanges, IReadOnlyList<string> Languages, string CreatedBy, DateTimeOffset UpdatedAt, int Responses);
+/// <param name="Front">With cards=true: the front page a card draws (W32).</param>
+public sealed record SurveyListItem(Guid Id, string Title, string Status, int? PublishedVersion, bool HasChanges, IReadOnlyList<string> Languages, string CreatedBy, DateTimeOffset UpdatedAt, int Responses, SurveyFront? Front = null);
 
 /// <summary>The draft the designer edits.</summary>
 /// <param name="SurveyId">The survey.</param>

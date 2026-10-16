@@ -1,0 +1,264 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- Feedback round 2026-10-16, batch 1 hi-fi. #lists: Surveys rich mode (W32); #templates: Templates rich + edit (W32);
+     #look: Look opens on the editor, gallery on demand, full-height zoomable preview (W33); #share: Share in order, drop marker (W34). -->
+<html lang="en"><head><meta charset="utf-8"><title>Feedback batch 1</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Serif"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-serif/files/ibm-plex-serif-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .view { display: none; } body.lists #lists, body.templates #templates, body.look #look, body.share #share { display: block; }
+  .note { position: absolute; z-index: 9; max-width: 280px; padding: 8px 11px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .note b { font-weight: 600; }
+  .mono { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-muted); }
+  .chip { display: inline-flex; align-items: center; padding: 3px 9px; border: 1px solid var(--aw-line-strong); border-radius: 999px; font: 500 11.5px/1.2 var(--aw-font-mono); color: var(--aw-graphite); background: var(--aw-surface); white-space: nowrap; }
+  .chip.draft { background: #fdf1dc; border-color: #e7c27c; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border: 1px solid var(--aw-line-strong); border-radius: var(--aw-radius-control); background: var(--aw-surface); font-weight: 600; font-size: 13.5px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; }
+  .btn.small { padding: 6px 10px; font-size: 12.5px; }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: var(--aw-radius-control); overflow: hidden; background: var(--aw-surface); } .seg span { padding: 7px 11px; font: 600 12px/1 var(--aw-font-mono); } .seg span.on { background: var(--aw-ink); color: var(--aw-paper); }
+  .grow { flex: 1; }
+  /* app frame */
+  .side { position: absolute; left: 0; top: 0; bottom: 0; width: 232px; background: var(--aw-surface); border-right: 1px solid var(--aw-line); padding: 18px 12px; }
+  .logo { font: 700 21px/1 var(--aw-font-display); margin: 2px 8px 16px; } .logo span { color: var(--aw-signal); }
+  .org { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 1px solid var(--aw-line-strong); border-radius: 8px; font-weight: 600; font-size: 13.5px; }
+  .org i { width: 24px; height: 24px; border-radius: 6px; background: var(--aw-ink); color: #fff; display: grid; place-items: center; font: 600 9.5px/1 var(--aw-font-mono); font-style: normal; }
+  .grp { margin: 18px 8px 6px; }
+  .nav { display: flex; justify-content: space-between; padding: 8px 10px; border-radius: 6px; font-size: 14px; color: var(--aw-graphite); } .nav.on { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .head { position: absolute; left: 232px; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 32px; border-bottom: 1px solid var(--aw-line); background: var(--aw-surface); }
+  .crumb { font: 400 20px/1.2 var(--aw-font-display); color: var(--aw-graphite); } .sep { color: var(--aw-muted); font-size: 20px; } .place { font: 700 20px/1.2 var(--aw-font-display); }
+  .main { position: absolute; left: 232px; right: 0; top: 56px; bottom: 0; padding: 28px 32px; overflow: hidden; }
+  .h1 { margin: 0; font: 700 26px/1.2 var(--aw-font-display); }
+  .bar { display: flex; align-items: center; gap: 10px; margin: 16px 0 18px; }
+  .search { width: 280px; height: 36px; border: 1px solid var(--aw-line-strong); border-radius: 6px; background: var(--aw-surface); padding: 0 12px; display: flex; align-items: center; color: var(--aw-muted); }
+  /* rich cards */
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; max-width: 1200px; }
+  .card { border: 1px solid var(--aw-line); border-radius: 10px; background: var(--aw-surface); overflow: hidden; }
+  .shot { height: 168px; position: relative; overflow: hidden; border-bottom: 1px solid var(--aw-line); }
+  .shot .title { position: absolute; left: 18px; right: 18px; top: 40px; font: 600 17px/1.15 var(--f, var(--aw-font-display)); color: var(--tc, #1a1917); }
+  .shot .lead { position: absolute; left: 18px; right: 30px; top: 92px; font-size: 10.5px; color: var(--mc, #555); }
+  .shot .go { position: absolute; left: 18px; bottom: 16px; padding: 5px 12px; border-radius: var(--r, 3px); background: var(--ac, #d2440f); color: #fff; font: 600 10px/1 var(--aw-font); }
+  .shot .org2 { position: absolute; left: 18px; top: 14px; font: 600 8.5px/1 var(--aw-font); color: var(--oc, #1a1917); }
+  .meta { padding: 10px 12px 12px; }
+  .meta b { display: block; font-size: 14px; margin-bottom: 6px; }
+  .meta .row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--aw-graphite); }
+  /* simple table */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; } th { text-align: left; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--aw-muted); padding: 10px 8px; border-bottom: 1px solid var(--aw-line); } td { padding: 11px 8px; border-bottom: 1px solid var(--aw-line); }
+  .mini { position: absolute; width: 520px; padding: 12px 14px; background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+  /* look editor */
+  .lk { position: absolute; left: 232px; right: 0; top: 56px; bottom: 0; display: grid; grid-template-columns: 340px minmax(0, 1fr); }
+  .lk-side { border-right: 1px solid var(--aw-line); background: var(--aw-surface); display: flex; flex-direction: column; min-height: 0; }
+  .lk-current { padding: 16px; border-bottom: 1px solid var(--aw-line); }
+  .lk-current .name { display: flex; align-items: center; gap: 10px; }
+  .sw { width: 44px; height: 32px; border-radius: 6px; border: 1px solid var(--aw-line-strong); background: linear-gradient(135deg,#c2391a 0 40%,#fff4e0 40% 70%,#2a1b3d 70%); }
+  .tabs { display: flex; gap: 4px; padding: 10px 12px 0; border-bottom: 1px solid var(--aw-line); }
+  .tabs span { padding: 8px 10px; font-size: 13px; color: var(--aw-graphite); border-bottom: 2px solid transparent; } .tabs span.on { color: var(--aw-ink); font-weight: 600; border-bottom-color: var(--aw-ink); }
+  .fields { padding: 14px 16px; display: grid; gap: 16px; overflow: hidden; }
+  .f .lbl { display: block; font-size: 12.5px; color: var(--aw-graphite); margin-bottom: 6px; }
+  .opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .opt { border: 1px solid var(--aw-line-strong); border-radius: 8px; padding: 8px; font-size: 12px; text-align: center; background: var(--aw-surface); }
+  .opt.on { border: 2px solid var(--aw-ink); padding: 7px; font-weight: 600; }
+  .opt i { display: block; height: 26px; margin-bottom: 6px; border-radius: 4px; background: #eee; }
+  .colours { display: flex; gap: 8px; } .colours i { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--aw-line-strong); }
+  .colours i.on { box-shadow: 0 0 0 2px var(--aw-ink); }
+  .stage { position: relative; background: repeating-conic-gradient(#eeece8 0 25%, #f5f3ef 0 50%) 0 0 / 22px 22px; display: flex; flex-direction: column; min-height: 0; }
+  .stage-bar { height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: var(--aw-surface); border-bottom: 1px solid var(--aw-line); }
+  .canvas { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 24px; overflow: hidden; }
+  .phone-frame { width: 860px; height: 760px; background: #fff4e0; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.12); position: relative; overflow: hidden; }
+  .conf { height: 70px; background-image: radial-gradient(circle at 8% 55%,#ffc93c 0 14px,transparent 15px),radial-gradient(circle at 26% 30%,#2fb3a5 0 9px,transparent 10px),radial-gradient(circle at 44% 70%,#c2391a 0 11px,transparent 12px),radial-gradient(circle at 63% 35%,#7b5cff 0 8px,transparent 9px),radial-gradient(circle at 81% 65%,#ff8fb1 0 13px,transparent 14px); }
+  .pv-card { margin: 10px 80px; padding: 26px 32px; background: #fff; border-radius: 22px; box-shadow: 0 6px 0 #2a1b3d; }
+  .pv-steps { display: flex; gap: 6px; margin-bottom: 18px; } .pv-steps i { flex: 1; height: 6px; border-radius: 6px; background: #f0d9c0; } .pv-steps i.on { background: #c2391a; }
+  .pv-q { font: 700 26px/1.2 var(--aw-font-display); color: #2a1b3d; margin: 0 0 16px; }
+  .pv-ch { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .pv-ch span { height: 50px; border: 1.5px solid #f0d9c0; border-radius: 999px; display: flex; align-items: center; padding: 0 18px; font-size: 15px; } .pv-ch span.on { background: #c2391a; border-color: #c2391a; color: #fff; }
+  .pv-go { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; color: #6a5880; } .pv-go b { padding: 13px 40px; border-radius: 999px; background: #c2391a; color: #fff; }
+  .zoom { position: absolute; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 2px; background: var(--aw-surface); border: 1px solid var(--aw-line-strong); border-radius: 8px; padding: 3px; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .zoom span { padding: 6px 10px; font: 600 12.5px/1 var(--aw-font-mono); }
+  .gal { position: absolute; left: 380px; top: 120px; width: 1000px; height: 690px; background: var(--aw-surface); border-radius: 12px; box-shadow: 0 24px 60px rgba(0,0,0,.25); padding: 20px 24px; z-index: 5; }
+  .scrim { position: absolute; inset: 0; background: rgba(20,24,28,.35); z-index: 4; }
+  .gthumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+  .gthumbs div { height: 128px; border-radius: 8px; border: 1px solid var(--aw-line); }
+  /* share */
+  .sec { max-width: 1200px; background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+  .sec h3 { margin: 0 0 2px; font-size: 15.5px; } .sec p { margin: 0 0 12px; font-size: 13px; color: var(--aw-graphite); }
+  .linkrow { display: flex; align-items: center; gap: 10px; }
+  .linkbox { flex: 1; height: 40px; border: 1px solid var(--aw-line-strong); border-radius: 6px; display: flex; align-items: center; padding: 0 12px; font: 500 13.5px/1 var(--aw-font-mono); }
+  .qr { width: 92px; height: 92px; background: repeating-linear-gradient(90deg,#111 0 4px,#fff 4px 8px), #fff; opacity: .8; border-radius: 4px; }
+  .lang { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--aw-graphite); }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; max-width: 1200px; margin-bottom: 16px; }
+  .grid3 .sec { margin: 0; }
+  /* drag */
+  .ol { position: absolute; width: 300px; background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+  .ol .pg { font: 500 11px/1 var(--aw-font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--aw-muted); margin: 10px 4px 6px; }
+  .ol .q { padding: 8px 10px; border-radius: 6px; font-size: 13.5px; display: flex; gap: 8px; } .ol .q i { color: var(--aw-muted); font-style: normal; }
+  .ol .q.ghost { opacity: .35; border: 1px dashed var(--aw-line-strong); }
+  .drop { height: 0; border-top: 3px solid var(--aw-signal); margin: 2px 4px; position: relative; } .drop::before { content: ""; position: absolute; left: -6px; top: -6px; width: 9px; height: 9px; border-radius: 50%; background: var(--aw-signal); }
+  .lift { position: absolute; padding: 8px 12px; background: var(--aw-surface); border-radius: 6px; box-shadow: 0 10px 24px rgba(0,0,0,.2); transform: rotate(-1.5deg); font-size: 13.5px; font-weight: 600; z-index: 3; }
+</style></head>
+<body>
+<script>document.body.className = (location.hash || "#lists").slice(1);</script>
+
+<template id="side">
+  <aside class="side">
+    <div class="logo">Ask<span>werk</span></div>
+    <div class="org"><i>DM</i>Direct Mind GmbH</div>
+    <div class="nav" data-k="surveys" style="margin-top:18px">Surveys</div>
+    <div class="nav" data-k="templates">Templates</div>
+    <div class="mono grp">Administration</div>
+    <div class="nav">Organisation</div><div class="nav">Members</div><div class="nav" data-k="looks">Looks</div><div class="nav">Messages</div><div class="nav">Domains</div><div class="nav">Developers &amp; API</div>
+  </aside>
+</template>
+<template id="sideSurvey">
+  <aside class="side">
+    <div class="logo">Ask<span>werk</span></div>
+    <div class="org"><i>DM</i>Direct Mind GmbH</div>
+    <div class="nav" style="margin-top:14px;color:var(--aw-graphite)">‹ &nbsp;All surveys</div>
+    <div class="mono grp">Create</div><div class="nav" data-k="questions">Questions</div><div class="nav" data-k="look">Look</div>
+    <div class="mono grp">Collect</div><div class="nav" data-k="share">Share</div><div class="nav">Participants <span class="mono">640</span></div>
+    <div class="mono grp">Analyse</div><div class="nav">Results <span class="mono">248</span></div>
+  </aside>
+</template>
+
+<!-- ============ #lists ============ -->
+<section class="view" id="lists">
+  <div data-side="side" data-on="surveys"></div>
+  <header class="head"><span class="place">Surveys</span><span class="grow"></span><span class="btn primary">New survey</span></header>
+  <main class="main">
+    <div class="bar"><span class="search">Search surveys</span><span class="chip">All 12</span><span class="chip">Drafts 3</span><span class="chip">Published 7</span><span class="chip">Closed 2</span><span class="grow"></span>
+      <span class="seg" title="View"><span>☰ List</span><span class="on">▦ Cards</span></span></div>
+    <div class="cards" id="surveyCards"></div>
+  </main>
+  <div class="note" style="left:1040px;top:430px;max-width:330px"><b>Two modes, remembered per person:</b> List is today's table (dense, sortable); Cards shows each survey's front page in its own look, drawn from its welcome page and look, not a screenshot.</div>
+  <div class="mini" style="left:300px;top:655px;width:700px">
+    <div class="mono" style="margin-bottom:6px">List mode, as today</div>
+    <table><tr><th>Title</th><th>Status</th><th>Languages</th><th>Responses</th><th>Changed</th></tr>
+    <tr><td>Customer satisfaction 2026</td><td><span class="chip">Published · v3</span></td><td>DE EN</td><td>248</td><td>today 09:12</td></tr>
+    <tr><td>Event feedback Vienna</td><td><span class="chip draft">Draft · changes</span></td><td>DE EN</td><td>31</td><td>12 Oct</td></tr></table>
+  </div>
+</section>
+
+<!-- ============ #templates ============ -->
+<section class="view" id="templates">
+  <div data-side="side" data-on="templates"></div>
+  <header class="head"><span class="place">Templates</span><span class="grow"></span><span class="btn">New template</span></header>
+  <main class="main">
+    <div class="bar"><span class="search">Search templates</span><span class="chip">All 9</span><span class="chip">Askwerk 4</span><span class="chip">Ours 5</span><span class="grow"></span><span class="seg"><span>☰ List</span><span class="on">▦ Cards</span></span></div>
+    <div class="cards" id="templateCards"></div>
+  </main>
+  <div class="note" style="left:1080px;top:440px;max-width:320px"><b>Edit a template:</b> our templates open in the same editor as a survey (Questions and Look), with Save instead of Publish. Askwerk's own templates can't be changed: "Use" or "Copy to our templates".</div>
+  <div class="mini" style="left:300px;top:640px;width:760px;padding:0;overflow:hidden">
+    <div style="height:46px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--aw-line)">
+      <span class="crumb" style="font-size:16px">Templates</span><span class="sep" style="font-size:16px">›</span><b style="font:700 16px/1 var(--aw-font-display)">Acme check-in</b>
+      <span class="chip">Template · saved</span><span class="grow"></span><span class="btn small">Preview ▾</span><span class="btn small primary">Use for a new survey</span></div>
+    <div style="display:flex;gap:18px;padding:12px 16px;font-size:13px;color:var(--aw-graphite)"><b style="color:var(--aw-ink)">Questions</b><span>Look</span><span>Settings</span><span class="grow"></span><span>Edits save by themselves · no publishing, no results</span></div>
+  </div>
+</section>
+
+<!-- ============ #look ============ -->
+<section class="view" id="look">
+  <div data-side="sideSurvey" data-on="look"></div>
+  <header class="head"><span class="crumb">Festival feedback</span><span class="sep">›</span><span class="place">Look</span><span class="chip">Published · v2</span><span class="grow"></span><span class="btn">Preview ▾</span><span class="btn primary">Share</span></header>
+  <div class="lk">
+    <div class="lk-side">
+      <div class="lk-current">
+        <div class="name"><span class="sw"></span><div class="grow"><b style="font-size:15px">Konfetti</b><div style="font-size:12px;color:var(--aw-graphite)">changed 2 things · for this survey</div></div></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><span class="btn small" style="flex:1;justify-content:center">▦ Choose from gallery</span><span class="btn small">⋯</span></div>
+      </div>
+      <div class="tabs"><span class="on">Style</span><span>Parts</span><span>Pages</span><span>Email &amp; PDF</span></div>
+      <div class="fields">
+        <div class="f"><span class="lbl">Accent colour</span><div class="colours"><i style="background:#c2391a" class="on"></i><i style="background:#1f5f8b"></i><i style="background:#2f6f4f"></i><i style="background:#7c5cff"></i><i style="background:#b8860b"></i><i style="background:linear-gradient(135deg,#fff,#ccc)"></i></div></div>
+        <div class="f"><span class="lbl">Type</span><div class="opts"><div class="opt"><i style="font:600 15px/26px var(--aw-font);background:none">Aa</i>Sans</div><div class="opt on"><i style="font:700 15px/26px var(--aw-font-display);background:none">Aa</i>Condensed</div><div class="opt"><i style="font:600 15px/26px 'IBM Plex Serif';background:none">Aa</i>Serif</div></div></div>
+        <div class="f"><span class="lbl">Shape</span><div class="opts"><div class="opt"><i style="border-radius:1px;background:#ddd"></i>Sharp</div><div class="opt"><i style="border-radius:8px;background:#ddd"></i>Rounded</div><div class="opt on"><i style="border-radius:20px;background:#ddd"></i>Pill</div></div></div>
+        <div class="f"><span class="lbl">Background</span><div class="opts"><div class="opt"><i style="background:#fff4e0"></i>Colour</div><div class="opt on"><i style="background:radial-gradient(circle at 30% 50%,#ffc93c 0 5px,transparent 6px),radial-gradient(circle at 70% 50%,#c2391a 0 6px,transparent 7px),#fff4e0"></i>Pattern</div><div class="opt"><i style="background:linear-gradient(#d98b73,#5d8597)"></i>Picture</div></div></div>
+        <div class="f"><span class="lbl">Density</span><span class="seg"><span>Compact</span><span>Normal</span><span class="on">Airy</span></span></div>
+        <div style="padding:10px 12px;border-radius:8px;background:color-mix(in srgb,var(--aw-success,#2f7d4f) 10%,var(--aw-surface));font-size:12.5px">✓ Readable everywhere · text 14.3 : 1 · buttons 5.0 : 1</div>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-bar"><span class="seg"><span class="on">Web</span><span>Email</span><span>PDF</span></span><span class="seg"><span>Phone</span><span>Tablet</span><span class="on">Desktop</span></span><span class="grow"></span><span style="font-size:12.5px;color:var(--aw-graphite)">Page 2 of 4 · <u>Welcome</u> · <u>Thank you</u></span><span class="btn small">↗ Open in new tab</span></div>
+      <div class="canvas"><div class="phone-frame"><div class="conf"></div><div style="padding:0 80px;font:700 12px/1 var(--aw-font-display);color:#2a1b3d">● LODGE FALKENSTEIN</div>
+        <div class="pv-card"><div class="pv-steps"><i class="on"></i><i class="on"></i><i></i><i></i></div><p class="pv-q">Which stage was the best?</p>
+        <div class="pv-ch"><span>Main stage</span><span class="on">Forest stage</span><span>Tent</span><span>Lake stage</span></div>
+        <div class="pv-go"><span>← Back</span><b>Next</b></div></div></div></div>
+      <div class="zoom"><span>−</span><span>100 %</span><span>+</span><span style="border-left:1px solid var(--aw-line);">Fit</span></div>
+    </div>
+  </div>
+  <div class="note" style="left:270px;top:610px;max-width:290px"><b>Opens on the editor</b> with the survey's current look. Four tabs instead of seven folded areas: Style (the few choices most people make, as visual tiles), Parts, Pages, Email &amp; PDF. The gallery is a button.</div>
+  <div class="note" style="left:1090px;top:110px;max-width:300px"><b>Preview fills the page</b> below the bar, whatever the settings column's height; zoom −/+/Fit and Ctrl + scroll; Phone, Tablet, Desktop widths. Same on Administration → Looks and → Messages.</div>
+</section>
+
+<!-- ============ #share ============ -->
+<section class="view" id="share">
+  <div data-side="sideSurvey" data-on="share"></div>
+  <header class="head"><span class="crumb">Customer satisfaction 2026</span><span class="sep">›</span><span class="place">Share</span><span class="chip">Published · v3</span><span class="grow"></span><span class="btn">Preview ▾</span></header>
+  <main class="main">
+    <div class="sec">
+      <div style="display:flex;align-items:flex-start;gap:20px">
+        <div class="grow"><h3>Link</h3><p>Anyone with the link can answer. Respondents choose their language in the survey.</p>
+          <div class="linkrow"><span class="linkbox">surveys.directmind.at/s/k7m2pqzr</span><span class="btn">Copy</span><span class="btn">Open ↗</span></div>
+          <div style="margin-top:10px" class="lang">Opens in <span class="seg"><span class="on">Respondent's choice</span><span>DE</span><span>EN</span></span></div></div>
+        <div style="text-align:center"><div class="qr"></div><div style="margin-top:6px"><span class="btn small">Download QR</span></div></div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="sec"><h3>Invite by email</h3><p>Personal links; each person answers once. 640 invited, 248 answered.</p><span class="btn">Invite people…</span></div>
+      <div class="sec"><h3>On a website</h3><p>Embed the survey in a page of your own site.</p><span class="btn">Get embed code</span></div>
+      <div class="sec"><h3>On paper</h3><p>A printable PDF with the link's QR code.</p><span class="btn">Download PDF ▾</span></div>
+    </div>
+    <div style="position:relative;height:300px;max-width:1200px">
+      <div class="mono" style="margin:6px 0 10px">W34 · drop marker while dragging</div>
+      <div class="ol" style="left:0;top:26px">
+        <div class="pg">01 · Your visit</div>
+        <div class="q"><i>⋮⋮</i>How satisfied are you?</div>
+        <div class="q ghost"><i>⋮⋮</i>Which branch?</div>
+        <div class="q"><i>⋮⋮</i>How did you hear about us?</div>
+        <div class="drop"></div>
+        <div class="q"><i>⋮⋮</i>Would you come again?</div>
+        <div class="pg">02 · About you</div>
+        <div class="q"><i>⋮⋮</i>Age group</div>
+      </div>
+      <div class="lift" style="left:150px;top:170px">⋮⋮ Which branch?</div>
+      <div class="ol" style="left:340px;top:26px;width:360px">
+        <div class="pg">Pages</div>
+        <div class="q"><i>⋮⋮</i>01 · Your visit</div>
+        <div class="drop"></div>
+        <div class="q ghost"><i>⋮⋮</i>03 · Ideas</div>
+        <div class="q"><i>⋮⋮</i>02 · About you</div>
+      </div>
+      <div class="note" style="left:730px;top:40px;max-width:420px"><b>While dragging:</b> the item lifts and follows the pointer, its place stays as a faint outline, and an accent line with a dot shows exactly where it will land, also between pages. Pages and questions alike, in the page list and on the canvas. Escape cancels. Keyboard: Alt + ↑/↓, as today.</div>
+    </div>
+  </main>
+  <div class="note" style="left:1000px;top:760px;max-width:400px"><b>Share in order:</b> the link first, with its QR code beside it. The language is labelled and belongs to the link ("Opens in"). Then the three other ways as equal cards: email, website, paper.</div>
+</section>
+
+<script>
+for (const host of document.querySelectorAll("[data-side]")) {
+  host.replaceWith(document.getElementById(host.dataset.side).content.cloneNode(true));
+}
+for (const view of document.querySelectorAll(".view")) {
+  const on = { lists: "surveys", templates: "templates", look: "look", share: "share" }[view.id];
+  view.querySelectorAll(".nav").forEach((n) => n.dataset.k === on && n.classList.add("on"));
+}
+const looks = [
+  { t: "Customer satisfaction 2026", s: "Published · v3", n: "248", bg: "#f6f5f2", ac: "#d2440f", f: "IBM Plex Sans Condensed", lead: "Thank you for taking part. About 3 minutes." },
+  { t: "Festival feedback", s: "Published · v2", n: "140", bg: "#fff4e0", ac: "#c2391a", f: "IBM Plex Sans Condensed", r: "999px", pat: true, lead: "Two short pages. Thanks for being there!" },
+  { t: "Your stay in the mountains", s: "Closed", n: "120", bg: "linear-gradient(#2d4a6b,#d98b73 55%,#7a6f93 75%,#5d8597)", ac: "#b4532a", f: "IBM Plex Serif", tc: "#fff", mc: "#f3e7dc", oc: "#fff", r: "999px", lead: "Four short pages." },
+  { t: "Board review 2026", s: "Draft · changes", n: "24", bg: "#e9e9e7", ac: "#1a1a1a", f: "IBM Plex Mono", lead: "Confidential. About five minutes." },
+  { t: "Patient experience", s: "Published · v1", n: "240", bg: "#ffffff", ac: "#1f5f8b", f: "IBM Plex Sans", r: "999px", lead: "Anonymous, about six minutes." },
+  { t: "Night event", s: "Published · v1", n: "95", bg: "#0f1420", ac: "#5ee2c4", f: "IBM Plex Sans", tc: "#e8ecf4", mc: "#a3aec4", oc: "#e8ecf4", lead: "How was the night?" },
+  { t: "Site inspection", s: "Published · v4", n: "18", bg: "#ffffff", ac: "#111111", f: "IBM Plex Serif", lead: "Fill in on site or print as PDF." },
+  { t: "Quick pulse", s: "Draft", n: "0", bg: "#ffffff", ac: "#111111", f: "IBM Plex Sans", lead: "Three questions, one minute." },
+];
+const card = (l, sub) => `<div class="card"><div class="shot" style="background:${l.bg};--ac:${l.ac};--f:'${l.f}';--tc:${l.tc || "#1a1917"};--mc:${l.mc || "#555"};--oc:${l.oc || "#1a1917"};--r:${l.r || "3px"}">
+  ${l.pat ? '<div style="position:absolute;inset:0 0 auto 0;height:30px;background-image:radial-gradient(circle at 10% 50%,#ffc93c 0 6px,transparent 7px),radial-gradient(circle at 40% 40%,#2fb3a5 0 4px,transparent 5px),radial-gradient(circle at 75% 60%,#7b5cff 0 5px,transparent 6px)"></div>' : ""}
+  <div class="org2">● DIRECT MIND</div><div class="title">${l.t}</div><div class="lead">${l.lead}</div><div class="go">Start</div></div>
+  <div class="meta"><b>${l.t}</b><div class="row">${sub(l)}</div></div></div>`;
+document.getElementById("surveyCards").innerHTML = looks.slice(0, 4).map((l) => card(l, (x) => `<span class="chip ${x.s.startsWith("Draft") ? "draft" : ""}">${x.s}</span><span>${x.n} responses</span><span class="grow"></span><span>DE EN</span>`)).join("");
+document.getElementById("templateCards").innerHTML = looks.slice(4, 8).map((l, i) => card(l, () => `<span class="chip">${i < 2 ? "Askwerk" : "Ours"}</span><span>${8 + i * 3} questions</span><span class="grow"></span><span class="btn small">${i < 2 ? "Use" : "Edit"}</span>`)).join("");
+</script>
+</body></html>

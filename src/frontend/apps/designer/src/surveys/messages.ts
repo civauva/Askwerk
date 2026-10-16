@@ -61,6 +61,14 @@ const en = {
   languageDe: "German",
   languageEn: "English",
   loading: "Loading",
+  view: "View",
+  viewList: "☰ List",
+  viewCards: "▦ Cards",
+  start: "Start",
+  openSurvey: "Open {title}",
+  previous: "Previous",
+  next: "Next",
+  pageOf: "{from}–{to} of {total}",
 } as const;
 
 export type SurveysMessageKey = keyof typeof en;
@@ -127,5 +135,13 @@ export const surveysMessages: Catalogs<SurveysMessageKey> = {
     languageDe: "Deutsch",
     languageEn: "Englisch",
     loading: "Wird geladen",
+    view: "Ansicht",
+    viewList: "☰ Liste",
+    viewCards: "▦ Karten",
+    start: "Starten",
+    openSurvey: "{title} öffnen",
+    previous: "Zurück",
+    next: "Weiter",
+    pageOf: "{from}–{to} von {total}",
   },
 };

@@ -45,6 +45,8 @@ type DesignerProps = {
   onTab?: (tab: SurveyTab) => void;
   /** Opens another survey, e.g. a duplicate. */
   onOpenSurvey?: (surveyId: string) => void;
+  /** Back to Templates when the survey is where a template is edited (W32). */
+  onTemplates?: () => void;
   /** The profile menu at the bar's far right (W23). */
   profile?: ReactNode;
   /** Opens on Create → Look instead of Questions (W23, /surveys/{id}/look). */
@@ -68,6 +70,7 @@ export function Designer({
   onBack,
   onTab,
   onOpenSurvey,
+  onTemplates,
   profile,
   initialLook = false,
   openWindow = (url) => void window.open(url, "_blank", "noopener"),
@@ -109,6 +112,7 @@ export function Designer({
       onBack={onBack}
       onTab={onTab}
       onOpenSurvey={onOpenSurvey}
+      onTemplates={onTemplates}
       openWindow={openWindow}
       profile={profile}
       initialLook={initialLook}
@@ -121,6 +125,7 @@ type WorkspaceProps = {
   onBack: (() => void) | undefined;
   onTab: ((tab: SurveyTab) => void) | undefined;
   onOpenSurvey: ((surveyId: string) => void) | undefined;
+  onTemplates?: (() => void) | undefined;
   draft: SurveyDraft;
   locale: Locale;
   newId: () => string;
@@ -135,7 +140,7 @@ type WorkspaceProps = {
   initialLook: boolean;
 };
 
-function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard, saveFile, participants, previewInvitation, previewEmail, onBack, onTab, onOpenSurvey, openWindow, profile, initialLook }: WorkspaceProps) {
+function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard, saveFile, participants, previewInvitation, previewEmail, onBack, onTab, onOpenSurvey, onTemplates, openWindow, profile, initialLook }: WorkspaceProps) {
   // Stable between renders, so unchanged question cards are not drawn again on every keystroke.
   const t = useMemo(() => createTranslator(designerMessages, locale), [locale]);
   const typeNames = questionTypeNames[locale];
@@ -286,6 +291,8 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
         }
         onPrimary={(action) => (action === "share" ? onTab?.("share") : setPublishing(true))}
         onBack={() => onBack?.()}
+        {...(onTemplates === undefined ? {} : { onTemplates })}
+        {...(onOpenSurvey === undefined ? {} : { onOpenSurvey })}
         onChanged={loadSummary}
         {...(slot === null ? { profile } : { place: state.settings ? w("settings") : w("build"), onHome: () => dispatch({ type: "select", questionId: state.selectedQuestionId }) })}
         approval={approvals !== null && <ApprovalPill t={w} approvals={approvals} />}

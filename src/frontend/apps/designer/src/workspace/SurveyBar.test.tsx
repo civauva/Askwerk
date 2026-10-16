@@ -154,3 +154,36 @@ describe("Status with a closing date (W24 B)", () => {
     expect(statusText(workspaceText("en"), { ...summary, status: "closed", closesAt: "2020-07-01T16:00:00Z" })).toBe("Closed 1 Jul");
   });
 });
+
+describe("A template in the designer (W32)", () => {
+  const template: SurveySummary = { ...published, status: "draft", publishedVersion: null, responses: 0, participants: 0, templateId: "7f1c" };
+
+  it("leads back to Templates, has no publishing and makes a new survey from it", async () => {
+    const created: unknown[] = [];
+    const surveys = { ...fakeSurveys().surveys, create: (survey: unknown) => (created.push(survey), Promise.resolve("s9")) } as unknown as SurveysClient;
+    const onTemplates = vi.fn();
+    const onOpenSurvey = vi.fn();
+    const { container } = render(
+      <SurveyBar t={workspaceText("en")} surveys={surveys} surveyId="s1" summary={template} canEdit onPreview={vi.fn()} onPrimary={vi.fn()} onBack={vi.fn()} onChanged={vi.fn()} place="Questions" onHome={vi.fn()} onTemplates={onTemplates} onOpenSurvey={onOpenSurvey} />,
+    );
+    const crumbs = within(screen.getByRole("navigation", { name: "You are here" }));
+
+    expect(screen.getByText("Template")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
+    fireEvent.click(crumbs.getByRole("link", { name: "Templates" }));
+    expect(onTemplates).toHaveBeenCalled();
+    await expectNoAxeViolations(container);
+    fireEvent.click(screen.getByRole("button", { name: "Use for a new survey" }));
+
+    await waitFor(() => expect(onOpenSurvey).toHaveBeenCalledWith("s9"));
+    expect(created).toEqual([{ title: published.title, languages: [], defaultLanguage: "", templateId: "7f1c" }]);
+  });
+
+  it("shows only Create: no Share, Participants or Results", () => {
+    render(<SurveyTabs t={workspaceText("en")} active="build" canEdit summary={template} onSelect={vi.fn()} />);
+
+    expect(screen.getByRole("link", { name: "Questions" })).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Share" })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^Results/ })).toBeNull();
+  });
+});

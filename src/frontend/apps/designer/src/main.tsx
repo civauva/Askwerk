@@ -96,7 +96,7 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
     const at = (other: string) => `/surveys/${encodeURIComponent(other)}`;
     // One bar and one row of tabs on every screen of a survey (AWK-29, W17, W23); Questions and Look live in the editor.
     const onTab = (tab: SurveyTab) => onNavigate(tab === "build" ? at(id) : tab === "settings" ? `${at(id)}/look` : `${at(id)}/${tab}`);
-    const navigation = { surveys, surveyId: id, locale, canEdit, onTab, onBack: () => onNavigate(`/${listQuery}`), onOpenSurvey: (other: string) => onNavigate(at(other)) };
+    const navigation = { surveys, surveyId: id, locale, canEdit, onTab, onBack: () => onNavigate(`/${listQuery}`), onOpenSurvey: (other: string) => onNavigate(at(other)), onTemplates: () => onNavigate("/templates") };
     const inSurvey = (page: ReactNode) => shell(page, { onBack: navigation.onBack });
     const preview = (language: string) => previewInvitation(id, language);
 
@@ -115,7 +115,7 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
 
     return inSurvey(
       (view === undefined || view === "look") && canEdit ? (
-        <Designer key={id} api={designer} surveyId={id} initialLocale={locale} newId={() => crypto.randomUUID()} onBack={navigation.onBack} onTab={onTab} onOpenSurvey={navigation.onOpenSurvey} participants={participants} previewInvitation={previewInvitation} previewEmail={previewEmail} initialLook={view === "look"} />
+        <Designer key={id} api={designer} surveyId={id} initialLocale={locale} newId={() => crypto.randomUUID()} onBack={navigation.onBack} onTab={onTab} onOpenSurvey={navigation.onOpenSurvey} onTemplates={navigation.onTemplates} participants={participants} previewInvitation={previewInvitation} previewEmail={previewEmail} initialLook={view === "look"} />
       ) : (
         <ResultsPage key={id} client={results} {...navigation} surveyLink={`${location.origin}/s/${encodeURIComponent(id)}`} />
       ),
@@ -124,7 +124,16 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
 
 
   if (path === "/templates") {
-    return shell(<TemplatesPage client={surveys} locale={locale} canEdit={canEditSurveys(me)} onOpen={(id) => onNavigate(`/surveys/${encodeURIComponent(id)}`)} />);
+    return shell(
+      <TemplatesPage
+        client={surveys}
+        locale={locale}
+        canEdit={canEditSurveys(me)}
+        userId={me.id}
+        organisation={me.organisations.find((organisation) => organisation.id === me.currentOrganisationId)?.name ?? ""}
+        onOpen={(id) => onNavigate(`/surveys/${encodeURIComponent(id)}`)}
+      />,
+    );
   }
 
   if (path === "/organisation") {

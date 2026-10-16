@@ -645,6 +645,9 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             template.Property(row => row.Definition).HasColumnName("definition").HasColumnType("jsonb");
             template.Property(row => row.CreatedBy).HasColumnName("created_by");
             template.Property(row => row.CreatedAt).HasColumnName("created_at");
+            template.Property(row => row.SurveyId).HasColumnName("survey_id");
+            template.HasOne<Survey>().WithMany().HasForeignKey(row => row.SurveyId).OnDelete(DeleteBehavior.SetNull);
+            template.HasIndex(row => row.SurveyId).IsUnique();
             template.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
             template.HasOne<User>().WithMany().HasForeignKey(row => row.CreatedBy).OnDelete(DeleteBehavior.Restrict);
             template.HasIndex(row => row.TenantId);

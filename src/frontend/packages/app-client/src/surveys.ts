@@ -5,11 +5,13 @@ import type { components } from "./schema";
 type Schemas = components["schemas"];
 
 export type SurveyStatus = "draft" | "published" | "closed" | "archived";
-export type SurveyListItem = Omit<Schemas["SurveyListItem"], "status"> & { status: SurveyStatus };
+/** The front page a card draws (W32): the welcome page's title and text, in the look's tokens. */
+export type SurveyFront<TTokens = unknown> = { title: Record<string, string> | null; text: Record<string, string> | null; defaultLanguage: string; look: TTokens };
+export type SurveyListItem = Omit<Schemas["SurveyListItem"], "status" | "front"> & { status: SurveyStatus; front?: SurveyFront | null };
 /** One page of the survey list (W13 A); total counts every survey that matches the status and search. */
 export type SurveyList = { items: SurveyListItem[]; counts: Record<"all" | "draft" | "published" | "closed", number>; total: number };
 /** sort: title, status, responses or changed; a leading minus sorts descending (-changed by default). */
-export type SurveyListQuery = { status?: SurveyStatus; search?: string; sort?: string; offset?: number; limit?: number };
+export type SurveyListQuery = { status?: SurveyStatus; search?: string; sort?: string; offset?: number; limit?: number; cards?: boolean };
 export type NewSurvey = { title: string; languages: string[]; defaultLanguage: string; templateId?: string };
 /** A template to start a survey from (AWK-17): Askwerk's have names per language, the organisation's one name. */
 export type SurveyTemplate = {
@@ -19,7 +21,13 @@ export type SurveyTemplate = {
   names: Record<string, string> | null;
   questions: number;
   languages: string[];
+  /** The organisation's, once edited: the survey the designer edits it in (W32). */
+  surveyId?: string | null;
+  /** The front page a card draws (W32). */
+  front?: SurveyFront | null;
 };
+/** A template opened for editing (W32): the survey the designer edits it in. */
+export type TemplateEdit = { id: string; surveyId: string };
 /** A survey's look (W26): the tokens it is shown with, whether they are its own, and the look they started from. */
 export type SurveyLook<TTokens = unknown> = { tokens: TTokens; own: boolean; lookBase: string | null; themeId: string | null };
 /** One of Askwerk's sample surveys (W26), with its look's tokens and a question to draw its card. */
@@ -65,6 +73,8 @@ export type SurveySummary = {
   timeZone?: string;
   /** Whether a browser that finished may not answer again (W24); on when absent. */
   oneResponsePerPerson?: boolean;
+  /** Set when the survey is where a template is edited (W32): no publishing, no results. */
+  templateId?: string | null;
 };
 
 /** One approval of a survey's draft (AWK-28, W16). */
@@ -109,6 +119,10 @@ export interface SurveysClient {
   /** Saves the survey's draft as the organisation's template. */
   saveAsTemplate(surveyId: string, name: string): Promise<void>;
   deleteTemplate(templateId: string): Promise<void>;
+  /** Opens one of the organisation's templates in the designer (W32). */
+  editTemplate(templateId: string): Promise<TemplateEdit>;
+  /** Copies one of Askwerk's templates to the organisation's, ready to edit (W32). */
+  copyTemplate(templateId: string, language: string): Promise<TemplateEdit>;
   /** The bar's status and the tabs' counts (AWK-29); every member reads it. */
   summary(surveyId: string): Promise<SurveySummary>;
   /** The survey's menu (W17 D); editors only, 403 role-not-allowed otherwise. */
@@ -138,13 +152,14 @@ export function createSurveysClient(options: AppClientOptions): SurveysClient {
   const at = (surveyId: string) => `/api/app/surveys/${encodeURIComponent(surveyId)}`;
 
   return {
-    list: ({ status, search, sort, offset, limit }) => {
+    list: ({ status, search, sort, offset, limit, cards }) => {
       const query = new URLSearchParams();
       status && query.set("status", status);
       search?.trim() && query.set("search", search.trim());
       sort && query.set("sort", sort);
       offset && query.set("offset", String(offset));
       limit && query.set("limit", String(limit));
+      cards && query.set("cards", "true");
       const text = query.toString();
 
       return request<SurveyList>("GET", `/api/app/surveys${text ? `?${text}` : ""}`);
@@ -162,6 +177,8 @@ export function createSurveysClient(options: AppClientOptions): SurveysClient {
     listTemplates: () => request<{ items: SurveyTemplate[] }>("GET", "/api/app/templates").then((answer) => answer.items),
     saveAsTemplate: (surveyId, name) => request<{ id: string }>("POST", "/api/app/templates", { surveyId, name }).then(() => undefined),
     deleteTemplate: (templateId) => request("DELETE", `/api/app/templates/${encodeURIComponent(templateId)}`),
+    editTemplate: (templateId) => request<TemplateEdit>("POST", `/api/app/templates/${encodeURIComponent(templateId)}/edit`),
+    copyTemplate: (templateId, language) => request<TemplateEdit>("POST", `/api/app/templates/${encodeURIComponent(templateId)}/copy`, { language }),
     summary: (surveyId) => request<SurveySummary>("GET", `${at(surveyId)}/summary`),
     rename: (surveyId, title) => request("PUT", `${at(surveyId)}/title`, { title }),
     duplicate: (surveyId, title) => request<{ id: string }>("POST", `${at(surveyId)}/duplicate`, { title }).then((created) => created.id),

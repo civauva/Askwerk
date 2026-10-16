@@ -249,6 +249,14 @@ public sealed class Survey
         UpdatedAt = now;
     }
 
+    /// <summary>Soft-deletes the survey (W32: a deleted template's editing survey).</summary>
+    /// <param name="now">The time.</param>
+    public void Delete(DateTimeOffset now)
+    {
+        DeletedAt = now;
+        UpdatedAt = now;
+    }
+
     /// <summary>Puts the survey away: out of the list, no responses. Its results and versions stay.</summary>
     /// <param name="now">The time.</param>
     public void Archive(DateTimeOffset now)

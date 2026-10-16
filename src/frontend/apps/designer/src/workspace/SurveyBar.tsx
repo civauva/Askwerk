@@ -73,7 +73,7 @@ function statusOf(t: WorkspaceText, summary: SurveySummary): string {
 }
 
 /** What the survey's settings do on the server. */
-export type SurveyActions = Pick<SurveysClient, "rename" | "duplicate" | "close" | "reopen" | "archive"> & Partial<Pick<SurveysClient, "saveAsTemplate">>;
+export type SurveyActions = Pick<SurveysClient, "rename" | "duplicate" | "close" | "reopen" | "archive"> & Partial<Pick<SurveysClient, "saveAsTemplate" | "create">>;
 
 type SurveyBarProps = {
   t: WorkspaceText;
@@ -107,6 +107,9 @@ type SurveyBarProps = {
   place?: string;
   /** The breadcrumb's survey name opens the survey's home, Questions (W31). */
   onHome?: () => void;
+  /** A template being edited (W32): back to Templates, and "Use for a new survey" opens the new one. */
+  onTemplates?: () => void;
+  onOpenSurvey?: (surveyId: string) => void;
 };
 
 /**
@@ -135,14 +138,48 @@ export function SurveyBar({
   profile,
   place,
   onHome,
+  onTemplates,
+  onOpenSurvey,
 }: SurveyBarProps) {
-  const primary = primaryAction(summary, canEdit);
+  // A template (W32) is used, never published: its one action makes a new survey from it.
+  const templateId = summary?.templateId ?? null;
+  const primary = templateId === null ? primaryAction(summary, canEdit) : null;
   const action = primary === "share" && !showShare ? null : primary;
+  const [using, setUsing] = useState(false);
+  const useTemplate = () => {
+    if (templateId === null || surveys.create === undefined) {
+      return;
+    }
+
+    setUsing(true);
+    surveys.create({ title: summary?.title ?? "", languages: [], defaultLanguage: "", templateId }).then(
+      (created) => onOpenSurvey?.(created),
+      () => setUsing(false),
+    );
+  };
+  const templatesCrumb = templateId !== null && (
+    <>
+      <a
+        href="/templates"
+        className="survey-bar__crumb"
+        onClick={(event) => {
+          event.preventDefault();
+          (onTemplates ?? onBack)();
+        }}
+      >
+        {t("templates")}
+      </a>
+      <span className="survey-bar__crumb-sep" aria-hidden="true">
+        ›
+      </span>
+    </>
+  );
 
   return (
     <header className={place === undefined ? "survey-bar" : "survey-bar survey-bar--place"} aria-label={t("survey")}>
       {place !== undefined ? (
         <nav className="survey-bar__crumbs" aria-label={t("whereYouAre")}>
+          {templatesCrumb}
           <a
             href="#build"
             className="survey-bar__crumb"
@@ -164,17 +201,17 @@ export function SurveyBar({
       ) : (
       <>
       <a
-        href="/"
+        href={templateId === null ? "/" : "/templates"}
         className="survey-bar__back"
         onClick={(event) => {
           event.preventDefault();
-          onBack();
+          (templateId === null ? onBack : (onTemplates ?? onBack))();
         }}
       >
         <span aria-hidden="true">
           <Logo />
         </span>
-        <span>{t("surveys")}</span>
+        <span>{templateId === null ? t("surveys") : t("templates")}</span>
       </a>
       <span className="survey-bar__sep" aria-hidden="true">
         ›
@@ -184,7 +221,12 @@ export function SurveyBar({
       </h1>
       </>
       )}
-      {(status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : statusText(t, summary))}</span>}
+      {templateId !== null && (
+        <span className="survey-bar__template" title={t("templateHint")}>
+          {t("templateChip")}
+        </span>
+      )}
+      {(status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : templateId !== null ? t("templateHint") : statusText(t, summary))}</span>}
       <span className="survey-bar__grow" />
       {onSearch !== undefined && (
         <button type="button" className="survey-bar__search" aria-label={t("search")} aria-keyshortcuts="Control+K" onClick={onSearch}>
@@ -208,6 +250,11 @@ export function SurveyBar({
       {action !== null && (
         <button type="button" className="designer-button designer-button--primary survey-bar__primary" onClick={() => onPrimary(action)}>
           {t(action)}
+        </button>
+      )}
+      {templateId !== null && canEdit && surveys.create !== undefined && (
+        <button type="button" className="designer-button designer-button--primary survey-bar__primary" disabled={using} onClick={useTemplate}>
+          {t("useTemplate")}
         </button>
       )}
       {profile !== undefined && (
@@ -373,7 +420,7 @@ function GroupIcon({ group }: { group: (typeof groups)[number]["label"] }) {
 export function SurveyTabs({ t, active, canEdit, summary, onSelect }: { t: WorkspaceText; active: SurveyTab; canEdit: boolean; summary: SurveySummary | null; onSelect: (tab: SurveyTab) => void }) {
   const count = (tab: SurveyTab) => (tab === "results" ? summary?.responses : tab === "participants" ? summary?.participants : undefined);
   const shown = groups
-    .filter((group) => canEdit || group.edit !== true)
+    .filter((group) => (canEdit || group.edit !== true) && (summary?.templateId == null || group.edit === true))
     .map((group) => ({ ...group, tabs: group.tabs.filter((tab) => canEdit || tab !== "share") }))
     .filter((group) => group.tabs.length > 0);
   const link = (tab: SurveyTab, children: ReactNode, label?: string) => (
@@ -430,7 +477,7 @@ export function SurveyTabs({ t, active, canEdit, summary, onSelect }: { t: Works
 export function SurveyPlaces({ t, active, canEdit, summary, onSelect }: { t: WorkspaceText; active: SurveyTab; canEdit: boolean; summary: SurveySummary | null; onSelect: (tab: SurveyTab) => void }) {
   const count = (tab: SurveyTab) => (tab === "results" ? summary?.responses : tab === "participants" ? summary?.participants : undefined);
   const shown = groups
-    .filter((group) => canEdit || group.edit !== true)
+    .filter((group) => (canEdit || group.edit !== true) && (summary?.templateId == null || group.edit === true))
     .map((group) => ({ ...group, tabs: group.tabs.filter((tab) => canEdit || tab !== "share") }))
     .filter((group) => group.tabs.length > 0);
   const link = (tab: SurveyTab, children: ReactNode, label?: string) => (

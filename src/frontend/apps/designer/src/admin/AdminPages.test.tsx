@@ -195,6 +195,8 @@ describe("Templates (AWK-38, W29)", () => {
       create: (survey: unknown) => (calls.push(["create", survey]), Promise.resolve("s9")),
       createSample: (id: string, title: string) => (calls.push(["sample", id, title]), Promise.resolve("s8")),
       deleteTemplate: (id: string) => (calls.push(["delete", id]), Promise.resolve()),
+      editTemplate: (id: string) => (calls.push(["edit", id]), Promise.resolve({ id, surveyId: "e1" })),
+      copyTemplate: (id: string, language: string) => (calls.push(["copy", id, language]), Promise.resolve({ id: "c1", surveyId: "e2" })),
     };
     const onOpen = vi.fn();
     render(<TemplatesPage client={client} locale="en" canEdit onOpen={onOpen} />);
@@ -210,5 +212,39 @@ describe("Templates (AWK-38, W29)", () => {
 
     await waitFor(() => expect(calls).toContainEqual(["delete", "7f1c"]));
     expect(calls).toContainEqual(["create", { title: "NPS, short", languages: [], defaultLanguage: "", templateId: "askwerk:nps-short" }]);
+  });
+
+  it("edits our templates in the designer, copies Askwerk's to ours, and shows them as cards (W32)", async () => {
+    const calls: unknown[][] = [];
+    const look = (await import("@askwerk/schema")).themePresets[0]!.tokens;
+    const client = {
+      listTemplates: () =>
+        Promise.resolve([
+          { id: "askwerk:nps-short", scope: "askwerk" as const, name: null, names: { en: "NPS, short" }, questions: 3, languages: ["de", "en"], front: { title: { en: "How likely?" }, text: null, defaultLanguage: "en", look } },
+          { id: "7f1c", scope: "organisation" as const, name: "Acme check-in", names: null, questions: 14, languages: ["de"], front: { title: { de: "Willkommen bei Acme" }, text: null, defaultLanguage: "de", look } },
+        ]),
+      listSamples: () => Promise.resolve([]),
+      create: () => Promise.resolve("s9"),
+      createSample: () => Promise.resolve("s8"),
+      deleteTemplate: () => Promise.resolve(),
+      editTemplate: (id: string) => (calls.push(["edit", id]), Promise.resolve({ id, surveyId: "e1" })),
+      copyTemplate: (id: string, language: string) => (calls.push(["copy", id, language]), Promise.resolve({ id: "c1", surveyId: "e2" })),
+    };
+    const onOpen = vi.fn();
+    const { container } = render(<TemplatesPage client={client} locale="en" canEdit onOpen={onOpen} userId="u1" organisation="Acme GmbH" />);
+    const grid = within(await screen.findByRole("grid", { name: "Templates" }));
+
+    fireEvent.click(grid.getByRole("button", { name: "Edit Acme check-in" }));
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith("e1"));
+    fireEvent.click(grid.getByRole("button", { name: "Copy NPS, short to our templates" }));
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith("e2"));
+    expect(calls).toEqual([["edit", "7f1c"], ["copy", "askwerk:nps-short", "en"]]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Ours 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "▦ Cards" }));
+    const cards = within(screen.getByRole("list", { name: "Templates" }));
+    expect(cards.getAllByRole("listitem")).toHaveLength(1);
+    expect(cards.getByText("Willkommen bei Acme")).toBeTruthy();
+    await expectNoAxeViolations(container);
   });
 });

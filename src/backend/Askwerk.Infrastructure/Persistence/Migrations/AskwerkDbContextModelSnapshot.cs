@@ -1935,6 +1935,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
+                    b.Property<Guid?>("SurveyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("survey_id");
+
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
@@ -1942,6 +1946,9 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("SurveyId")
+                        .IsUnique();
 
                     b.HasIndex("TenantId");
 
@@ -2482,6 +2489,11 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Askwerk.Domain.Surveys.Survey", null)
+                        .WithMany()
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Askwerk.Domain.Identity.Tenant", null)
                         .WithMany()

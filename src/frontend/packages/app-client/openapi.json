@@ -850,6 +850,209 @@
         }
       }
     },
+    "/api/app/templates/{id}/edit": {
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Opens one of the organisation\u0027s templates for editing (W32): the designer edits it in a survey of its own that is\r\nnever listed, published or answered. Made on the first edit; later edits find the same one.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The template.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/templates/{id}/copy": {
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Copies one of Askwerk\u0027s templates to the organisation\u0027s (W32), ready to edit; Askwerk\u0027s stays as it is.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "\u0022askwerk:\u2026\u0022.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CopyTemplateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CopyTemplateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CopyTemplateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/templates/{id}": {
       "delete": {
         "tags": [
@@ -1281,6 +1484,15 @@
                 "string"
               ],
               "format": "int32"
+            }
+          },
+          {
+            "name": "cards",
+            "in": "query",
+            "description": "Also each survey\u0027s front page and look, for the Cards view (W32).",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
@@ -11773,6 +11985,30 @@
         },
         "description": "The current password, to confirm a sensitive change."
       },
+      "CopyTemplateRequest": {
+        "required": [
+          "name",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The copy\u0027s name; the template\u0027s own when empty."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The language of the template\u0027s own name to take."
+          }
+        },
+        "description": "A copy of one of Askwerk\u0027s templates (W32)."
+      },
       "CreateApiKeyRequest": {
         "required": [
           "name",
@@ -16617,6 +16853,48 @@
         },
         "description": "A survey\u0027s websites."
       },
+      "SurveyFront": {
+        "required": [
+          "title",
+          "text",
+          "defaultLanguage",
+          "look"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The welcome page\u0027s title per language, if any.",
+                "$ref": "#/components/schemas/TranslatedText"
+              }
+            ]
+          },
+          "text": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The welcome page\u0027s text per language, if any.",
+                "$ref": "#/components/schemas/TranslatedText"
+              }
+            ]
+          },
+          "defaultLanguage": {
+            "type": "string",
+            "description": "The language to fall back to."
+          },
+          "look": {
+            "description": "The look\u0027s tokens (packages/schema/src/theme.ts).",
+            "$ref": "#/components/schemas/JsonElement"
+          }
+        },
+        "description": "The front page a card draws (W32)."
+      },
       "SurveyLinkResponse": {
         "required": [
           "kind",
@@ -16731,6 +17009,17 @@
             ],
             "description": "Responses so far, complete and partial (AWK-24).",
             "format": "int32"
+          },
+          "front": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "With cards=true: the front page a card draws (W32).",
+                "$ref": "#/components/schemas/SurveyFront"
+              }
+            ]
           }
         },
         "description": "One row of the survey list (W6)."
@@ -16892,6 +17181,13 @@
           "oneResponsePerPerson": {
             "type": "boolean",
             "description": "Whether a browser that finished may not answer again."
+          },
+          "templateId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Set when this survey is where a template is edited (W32): no publishing, no results."
           }
         },
         "description": "What the survey\u0027s bar and tabs show (AWK-29)."
@@ -17011,6 +17307,25 @@
         },
         "description": "One log record or metric value from the browser."
       },
+      "TemplateEditResponse": {
+        "required": [
+          "id",
+          "surveyId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The template."
+          },
+          "surveyId": {
+            "type": "string",
+            "description": "The survey to open.",
+            "format": "uuid"
+          }
+        },
+        "description": "A template to edit in the designer (W32)."
+      },
       "TemplateListResponse": {
         "required": [
           "items"
@@ -17079,6 +17394,25 @@
               "type": "string"
             },
             "description": "Its languages."
+          },
+          "surveyId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The organisation\u0027s templates, once edited: the survey the designer edits it in (W32).",
+            "format": "uuid"
+          },
+          "front": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The front page a card draws (W32).",
+                "$ref": "#/components/schemas/SurveyFront"
+              }
+            ]
           }
         },
         "description": "One template."

@@ -816,3 +816,173 @@
   align-items: center;
   margin-bottom: 4px;
 }
+
+/* A survey's front page on a card (W32): the welcome page in its look. */
+.lt.fc {
+  width: 100%;
+  height: 168px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.fc-band {
+  position: absolute;
+  inset: 0 0 auto;
+}
+
+.fc-org {
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  font: 600 8.5px/1 var(--lt-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lt-text);
+}
+
+.fc-title {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 40px;
+  font: 600 17px/1.15 var(--lt-head);
+  color: var(--lt-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc-lead {
+  position: absolute;
+  left: 18px;
+  right: 30px;
+  top: 92px;
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--lt-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.fc-go {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  padding: 5px 12px;
+  border-radius: var(--lt-radius);
+  background: var(--lt-accent);
+  color: var(--lt-on);
+  font: 600 10px/1 var(--lt-body);
+}
+
+.lt.fc[data-scene="mountains"] .fc-org,
+.lt.fc[data-scene="mountains"] .fc-title,
+.lt.fc[data-scene="mountains"] .fc-lead {
+  color: #fff;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+}
+
+/* The cards of a list (W32), with what the table shows below the picture. */
+.front-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.front-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+  background: var(--aw-surface);
+  overflow: hidden;
+}
+
+.front-card__picture {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--aw-line);
+  background: none;
+  cursor: pointer;
+}
+
+.front-card__picture:hover .fc {
+  filter: brightness(0.97);
+}
+
+.front-card__meta {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 10px 12px 12px;
+}
+
+.front-card__meta b,
+.front-card__meta a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--aw-ink);
+}
+
+.front-card__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 12px;
+  color: var(--aw-graphite);
+}
+
+.front-card__row .grow {
+  flex: 1;
+}
+
+.front-card__chip {
+  padding: 2px 8px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 999px;
+  font: 500 11.5px/1.4 var(--aw-font);
+}
+
+.front-card__chip[data-draft] {
+  border-style: dashed;
+}
+
+/* List or Cards (W32). */
+.view-switch {
+  display: inline-flex;
+  margin-left: auto;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  overflow: hidden;
+}
+
+.view-switch button {
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  background: var(--aw-surface);
+  font: 600 13px/1 var(--aw-font);
+  cursor: pointer;
+}
+
+.view-switch button[aria-pressed="true"] {
+  background: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.front-pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--aw-graphite);
+}

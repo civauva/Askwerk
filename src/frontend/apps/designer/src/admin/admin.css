@@ -383,3 +383,45 @@
 .admin__linkbutton--red {
   color: var(--aw-error);
 }
+
+/* Templates (W32): search, where they come from, List or Cards. */
+.admin__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 16px;
+}
+
+.admin__search {
+  height: 40px;
+  min-width: 240px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  font: inherit;
+}
+
+.admin__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin__chips button {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 16px;
+  background: var(--aw-surface);
+  font: 600 13px/1 var(--aw-font);
+  cursor: pointer;
+}
+
+.admin__chips button[aria-pressed="true"] {
+  background: var(--aw-ink);
+  border-color: var(--aw-ink);
+  color: var(--aw-paper);
+}

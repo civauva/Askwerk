@@ -59,12 +59,15 @@ export interface DesignerApi extends Pick<SurveysClient, "rename" | "duplicate" 
   assetUrl(assetId: string, width?: number): string;
   /** Saves the survey's draft as the organisation's template (AWK-17, W10 C). */
   saveAsTemplate(surveyId: string, name: string): Promise<void>;
+  /** A new survey, here from the template being edited (W32). */
+  create?: SurveysClient["create"];
 }
 
 /** The designer's API on top of the App API's survey endpoints (AWK-15 step 3). */
 export function designerApi(surveys: SurveysClient, themes: ThemesClient): DesignerApi {
   return {
     summary: (surveyId) => surveys.summary(surveyId),
+    create: (survey) => surveys.create(survey),
     rename: (surveyId, title) => surveys.rename(surveyId, title),
     duplicate: (surveyId, title) => surveys.duplicate(surveyId, title),
     close: (surveyId) => surveys.close(surveyId),

@@ -23,6 +23,8 @@ export type WorkspaceNavigation = {
   onTab: (tab: SurveyTab) => void;
   onBack: () => void;
   onOpenSurvey?: (surveyId: string) => void;
+  /** Back to Templates when the survey is where a template is edited (W32). */
+  onTemplates?: () => void;
   openWindow?: (url: string) => void;
   /** The profile menu at the bar's far right (W23). */
   profile?: ReactNode;
@@ -60,6 +62,7 @@ export function SurveyFrame({
   onTab,
   onBack,
   onOpenSurvey,
+  onTemplates,
   openWindow = (url) => void window.open(url, "_blank", "noopener"),
   profile,
   active,
@@ -96,6 +99,8 @@ export function SurveyFrame({
         actions={actions}
         approval={canEdit && approvals !== null && <ApprovalPill t={t} approvals={approvals} />}
         onBack={onBack}
+        {...(onTemplates === undefined ? {} : { onTemplates })}
+        {...(onOpenSurvey === undefined ? {} : { onOpenSurvey })}
         onChanged={reload}
         {...(slot === null ? { profile } : { place: t(active), onHome: () => select("build") })}
       />
