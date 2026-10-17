@@ -83,6 +83,8 @@ public sealed class DemoSurveyApiTests(PostgresServer server)
             Assert.Contains(questions, question => question.ShowWhen is not null);
             Assert.Contains(questions, question => question.Type is QuestionType.Matrix or QuestionType.Ranking or QuestionType.Slider);
             Assert.StartsWith("Demo: ", demo.Title!["en"], StringComparison.Ordinal);
+            // One or two key questions (W38), so their cards show a real key result.
+            Assert.InRange(questions.Count(question => question.Key == true), 1, 2);
             Assert.All(pictures, name => Assert.Equal([0x89, 0x50, 0x4e, 0x47], SampleSurveys.Picture(name).Png[..4]));
         }
 

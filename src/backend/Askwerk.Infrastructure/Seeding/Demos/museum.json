@@ -208,6 +208,7 @@
               "en": "What did you like best?"
             },
             "required": true,
+            "key": true,
             "options": [
               {
                 "code": "1",
@@ -479,6 +480,7 @@
               "en": "How likely are you to recommend us?"
             },
             "required": true,
+            "key": true,
             "scale": {
               "min": 0,
               "max": 10,

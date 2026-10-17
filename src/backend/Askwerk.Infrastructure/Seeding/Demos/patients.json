@@ -462,6 +462,7 @@
               "en": "Overall rating"
             },
             "required": true,
+            "key": true,
             "scale": {
               "min": 1,
               "max": 10,
@@ -484,6 +485,7 @@
               "en": "How likely are you to recommend us?"
             },
             "required": true,
+            "key": true,
             "scale": {
               "min": 0,
               "max": 10

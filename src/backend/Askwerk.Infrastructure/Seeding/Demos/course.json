@@ -348,6 +348,7 @@
               "en": "The difficulty was …"
             },
             "required": true,
+            "key": true,
             "scale": {
               "min": 1,
               "max": 5,
@@ -426,6 +427,7 @@
               "en": "Which overall grade do you give?"
             },
             "required": true,
+            "key": true,
             "options": [
               {
                 "code": "1",

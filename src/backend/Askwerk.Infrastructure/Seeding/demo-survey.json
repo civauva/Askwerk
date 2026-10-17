@@ -170,7 +170,8 @@
             "de": "Denken Sie an Ihren letzten Besuch.",
             "en": "Please think about your last visit."
           },
-          "required": true
+          "required": true,
+          "key": true
         },
         {
           "id": "staff",
@@ -256,7 +257,8 @@
             "de": "Wie wahrscheinlich ist es, dass Sie uns weiterempfehlen?",
             "en": "How likely are you to recommend us?"
           },
-          "required": true
+          "required": true,
+          "key": true
         },
         {
           "id": "reason",
