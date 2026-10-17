@@ -243,7 +243,7 @@ describe("Templates (AWK-38, W29)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ours 1" }));
     fireEvent.click(screen.getByRole("button", { name: "▦ Cards" }));
     const cards = within(screen.getByRole("list", { name: "Templates" }));
-    expect(cards.getAllByRole("listitem")).toHaveLength(1);
+    expect(screen.getByRole("list", { name: "Templates" }).children).toHaveLength(1);
     expect(cards.getByText("Willkommen bei Acme")).toBeTruthy();
     await expectNoAxeViolations(container);
   });

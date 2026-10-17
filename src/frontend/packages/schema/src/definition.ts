@@ -48,6 +48,8 @@ export interface Question {
   readonly text: TranslatedText;
   readonly help?: TranslatedText;
   readonly required: boolean;
+  /** A key question (W38): its result shows on the survey's card. Questions with a result only: choices, yes/no, rating, NPS, slider. */
+  readonly key?: boolean;
   /** Image blocks: the image; other questions: an image shown with the question (AWK-17, W10 F1). */
   readonly image?: QuestionImage;
   /** Show the options in a random order per respondent. */

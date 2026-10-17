@@ -44,7 +44,20 @@ class FakeSurveys implements SurveysClient {
     // With cards (W32) each survey brings its front page and look.
     return Promise.resolve(
       query.cards === true
-        ? { ...answer, items: answer.items.map((item) => ({ ...item, front: { title: { de: `${item.title} (DE)`, en: `Welcome to ${item.title}` }, text: { en: "Takes three minutes." }, defaultLanguage: "de", look: themePresets[0]!.tokens } })) }
+        ? { ...answer, items: answer.items.map((item) => ({ ...item, front: {
+                title: { de: `${item.title} (DE)`, en: `Welcome to ${item.title}` },
+                text: { en: "Takes three minutes." },
+                defaultLanguage: "de",
+                look: themePresets[0]!.tokens,
+                contents: { questions: 12, pages: 3, minutes: 4, first: [{ text: { en: "How satisfied are you?" }, type: "rating" }], types: { rating: 4, single: 5, "long-text": 3 } },
+                answers: item.publishedVersion === null ? null : { complete: 200, partial: 48, lastAt: "2026-10-14T10:00:00Z", days: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] },
+                code: `${item.id}code`,
+                publishedAt: item.publishedVersion === null ? null : "2026-10-02T08:00:00Z",
+                keys: [
+                  { question: "q9", text: { en: "Would you recommend us?" }, type: "nps", auto: false, answered: 200, value: 34, max: null, top: null, spread: [{ code: "detractors", label: null, count: 36 }, { code: "passives", label: null, count: 60 }, { code: "promoters", label: null, count: 104 }] },
+                  { question: "q1", text: { en: "How satisfied are you?" }, type: "rating", auto: false, answered: 198, value: 4.2, max: 5, top: null, spread: [1, 2, 3, 4, 5].map((n) => ({ code: String(n), label: null, count: n * 10 })) },
+                ],
+              } })) }
         : answer,
     );
   };
@@ -426,10 +439,18 @@ describe("Surveys as List or Cards (W32)", () => {
     fireEvent.click(screen.getByRole("button", { name: "▦ Cards" }));
 
     const cards = within(await screen.findByRole("list", { name: "Surveys" }));
-    expect(cards.getAllByRole("listitem")).toHaveLength(4);
+    expect(screen.getByRole("list", { name: "Surveys" }).children).toHaveLength(4);
     expect(client.queries.at(-1)?.cards).toBe(true);
     expect(cards.getByText("Welcome to Customer satisfaction 2026")).toBeTruthy();
     expect(cards.getByText("Published · v3")).toBeTruthy();
+    // What it is and asks, how answering goes, and its facts (W32 card A).
+    const first = within(screen.getByRole("list", { name: "Surveys" }).children[0] as HTMLElement);
+    expect(first.getByText("12 questions")).toBeTruthy();
+    expect(first.getByText("How satisfied are you?")).toBeTruthy();
+    expect(first.getByText("+ 11 more · 5 choices · 4 ratings · 3 texts")).toBeTruthy();
+    expect(first.getByText("81 % complete · last 2 hours ago")).toBeTruthy();
+    expect(first.getByText("Published 2 Oct")).toBeTruthy();
+    expect(first.getByText("/s/s1code")).toBeTruthy();
     expect(storage.values.get(`askwerk.view.surveys.${anna.id}`)).toBe("cards");
     await expectNoAxeViolations(container);
     fireEvent.click(cards.getByRole("button", { name: "Open Employee pulse Q4" }));
@@ -439,5 +460,29 @@ describe("Surveys as List or Cards (W32)", () => {
     renderList({ client, storage });
     expect(await screen.findByRole("list", { name: "Surveys" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "▦ Cards" }).getAttribute("aria-pressed")).toBe("true");
+  });
+});
+
+describe("Cards show the key result (W38)", () => {
+  it("shows each survey's key result, steps through several, and remembers the choice", async () => {
+    const storage = new MemoryStorage();
+    const { container } = renderList({ storage });
+    await screen.findByRole("link", { name: "Customer satisfaction 2026" });
+    fireEvent.click(screen.getByRole("button", { name: "▦ Cards" }));
+    await screen.findByRole("list", { name: "Surveys" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Key result" }));
+
+    const first = within(screen.getByRole("list", { name: "Surveys" }).children[0] as HTMLElement);
+    expect(first.getByText("Would you recommend us?")).toBeTruthy();
+    expect(first.getByText("+34")).toBeTruthy();
+    fireEvent.click(first.getByRole("button", { name: "Next key question" }));
+    expect(first.getByText("How satisfied are you?")).toBeTruthy();
+    expect(first.getByText("of 5")).toBeTruthy();
+    expect(storage.values.get(`askwerk.view.surveys-show.${anna.id}`)).toBe("key");
+    // A draft says what will show.
+    const draft = within(screen.getByRole("list", { name: "Surveys" }).children[1] as HTMLElement);
+    expect(draft.getByText("Not published yet. Once answers come in, the result shows here.")).toBeTruthy();
+    await expectNoAxeViolations(container);
   });
 });

@@ -83,9 +83,25 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                     draft.SurveyId == survey.Id && draft.State == SurveyVersionState.Draft
                     && context.SurveyVersions.Any(published => published.SurveyId == survey.Id && published.Number == survey.PublishedVersion && published.Definition != draft.Definition)),
                 Draft = cards ? context.SurveyVersions.Where(draft => draft.SurveyId == survey.Id && draft.State == SurveyVersionState.Draft).Select(draft => draft.Definition).FirstOrDefault() : null,
+                Published = cards && survey.PublishedVersion != null ? context.SurveyVersions.Where(version => version.SurveyId == survey.Id && version.Number == survey.PublishedVersion).Select(version => version.Definition).FirstOrDefault() : null,
             })
             .ToListAsync(cancellationToken);
         var fronts = cards ? await SurveyFronts.LoadAsync(context, cancellationToken) : null;
+        var answers = cards ? await AnswersAsync([.. rows.Select(row => row.survey.Id)], cancellationToken) : null;
+        // Key results (W38): from the version respondents answer, else the draft.
+        var keys = cards
+            ? await SurveyKeyResults.LoadAsync(
+                context,
+                [.. rows.Where(row => (row.Published ?? row.Draft) is not null).Select(row => (row.survey.Id, JsonSerializer.Deserialize<SurveyDefinition>((row.Published ?? row.Draft)!, SurveyDefinitionJson.Options)!, row.Published is not null))],
+                cancellationToken)
+            : null;
+        var published = cards
+            ? await context.SurveyVersions
+                .Where(version => rows.Select(row => row.survey.Id).Contains(version.SurveyId) && version.PublishedAt != null)
+                .GroupBy(version => version.SurveyId)
+                .Select(group => new { SurveyId = group.Key, At = group.Max(version => version.PublishedAt) })
+                .ToDictionaryAsync(entry => entry.SurveyId, entry => entry.At, cancellationToken)
+            : null;
 
         int Count(SurveyStatus key) => counts.Where(count => count.Key == key).Sum(count => count.Count);
 
@@ -100,7 +116,9 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                 row.CreatedBy ?? "",
                 row.survey.UpdatedAt,
                 row.Responses,
-                fronts?.Of(row.Draft is null ? null : JsonSerializer.Deserialize<SurveyDefinition>(row.Draft, SurveyDefinitionJson.Options), row.survey.Look, row.survey.ThemeId)))],
+                fronts?.Of(row.Draft is null ? null : JsonSerializer.Deserialize<SurveyDefinition>(row.Draft, SurveyDefinitionJson.Options), row.survey.Look, row.survey.ThemeId) is { } front
+                    ? front with { Answers = answers?.GetValueOrDefault(row.survey.Id), Code = row.survey.Code, PublishedAt = published?.GetValueOrDefault(row.survey.Id), Keys = keys?.GetValueOrDefault(row.survey.Id) }
+                    : null))],
             new Dictionary<string, int>
             {
                 ["all"] = counts.Where(count => count.Key != SurveyStatus.Archived).Sum(count => count.Count),
@@ -128,6 +146,43 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
         };
 
         return descending ? ordered.ThenByDescending(survey => survey.Id) : ordered.ThenBy(survey => survey.Id);
+    }
+
+    /// <summary>How answering goes for each survey on a page of cards (W32): counts, the last response, the last 14 days.</summary>
+    private async Task<Dictionary<Guid, SurveyAnswers>> AnswersAsync(Guid[] surveyIds, CancellationToken cancellationToken)
+    {
+        var today = time.GetUtcNow().UtcDateTime.Date;
+        var from = new DateTimeOffset(today.AddDays(-13), TimeSpan.Zero);
+        var totals = await context.Responses
+            .Where(response => surveyIds.Contains(response.SurveyId))
+            .GroupBy(response => response.SurveyId)
+            .Select(group => new
+            {
+                SurveyId = group.Key,
+                Complete = group.Count(response => response.Status == ResponseStatus.Complete),
+                Partial = group.Count(response => response.Status == ResponseStatus.Partial),
+                LastAt = group.Max(response => (DateTimeOffset?)response.UpdatedAt),
+            })
+            .ToListAsync(cancellationToken);
+        var recent = await context.Responses
+            .Where(response => surveyIds.Contains(response.SurveyId) && response.StartedAt >= from)
+            .Select(response => new { response.SurveyId, response.StartedAt })
+            .ToListAsync(cancellationToken);
+
+        return totals.ToDictionary(
+            total => total.SurveyId,
+            total =>
+            {
+                var days = new int[14];
+
+                foreach (var started in recent.Where(response => response.SurveyId == total.SurveyId))
+                {
+                    var day = (int)(started.StartedAt.UtcDateTime.Date - from.UtcDateTime).TotalDays;
+                    days[Math.Clamp(day, 0, 13)]++;
+                }
+
+                return new SurveyAnswers(total.Complete, total.Partial, total.LastAt, days);
+            });
     }
 
     /// <summary>Creates a survey with one empty page in the current organisation (editors, admins, owners).</summary>

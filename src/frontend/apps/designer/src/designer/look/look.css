@@ -1037,6 +1037,19 @@
 }
 
 /* List or Cards (W32). */
+.view-show {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--aw-graphite);
+}
+
+.view-show + .view-switch {
+  margin-left: 0;
+}
+
 .view-switch {
   display: inline-flex;
   margin-left: auto;
@@ -1054,6 +1067,10 @@
   cursor: pointer;
 }
 
+.view-switch--inline {
+  margin-left: 0;
+}
+
 .view-switch button[aria-pressed="true"] {
   background: var(--aw-ink);
   color: var(--aw-paper);
@@ -1065,5 +1082,320 @@
   justify-content: flex-end;
   gap: 12px;
   font-size: 13px;
+  color: var(--aw-graphite);
+}
+
+/* The look as a strip on a content card (W32 card A). */
+.lt.fs {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 54px;
+  padding: 0 14px;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.fs-band,
+.fs-picture {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  background-position: center;
+  background-size: cover;
+}
+
+.fs-org {
+  position: relative;
+  font: 600 9px/1 var(--lt-body);
+  color: var(--lt-text);
+}
+
+.lt.fs[data-picture] .fs-org,
+.lt.fs[data-scene="mountains"] .fs-org {
+  color: #fff;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 45%);
+}
+
+.fs-go.fc-go {
+  position: relative;
+  margin: 0 0 0 auto;
+}
+
+.lt.fs[data-buttons="outline"] .fs-go {
+  background: var(--lt-surface);
+}
+
+/* A card that says what a survey is (W32 card A). */
+.content-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+  overflow: hidden;
+}
+
+.content-card__strip {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--aw-line);
+  background: none;
+  cursor: pointer;
+}
+
+.content-card > .lt.fs {
+  border-bottom: 1px solid var(--aw-line);
+}
+
+.content-card__what {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px 12px;
+}
+
+.content-card__name {
+  font: 500 11px/1.2 var(--aw-font-mono);
+  color: var(--aw-muted);
+}
+
+.content-card__what h2 {
+  margin: 0;
+  font: 600 16px/1.25 var(--aw-font);
+}
+
+.content-card__lead {
+  margin: -4px 0 0;
+  font-size: 12.5px;
+  color: var(--aw-graphite);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.content-card__size {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--aw-graphite);
+}
+
+.content-card__questions {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+}
+
+.content-card__questions li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.content-card__questions li > span:first-child {
+  font: 500 10.5px/1 var(--aw-font-mono);
+  color: var(--aw-muted);
+}
+
+.content-card__questions li > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-card__type {
+  font: 500 10px/1 var(--aw-font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.content-card__questions li.content-card__more {
+  display: block;
+  padding-left: 28px;
+  font-size: 12px;
+  color: var(--aw-muted);
+}
+
+.content-card__answers {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  align-items: end;
+  margin-top: auto;
+  padding: 10px 14px;
+  border-top: 1px solid var(--aw-line);
+}
+
+.content-card__answers--none {
+  display: block;
+  font-size: 12px;
+  color: var(--aw-muted);
+}
+
+.content-card__count {
+  font: 700 22px/1 var(--aw-font-display);
+}
+
+.content-card__count small {
+  margin-left: 4px;
+  font: 400 12px/1 var(--aw-font);
+  color: var(--aw-graphite);
+}
+
+.content-card__spark {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  justify-self: end;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 30px;
+}
+
+.content-card__spark i {
+  width: 6px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--aw-ink) 22%, transparent);
+}
+
+.content-card__spark i:last-child {
+  background: var(--aw-signal);
+}
+
+.content-card__sub {
+  grid-column: 1;
+  font-size: 11.5px;
+  color: var(--aw-graphite);
+}
+
+.content-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px 14px 12px;
+  font-size: 11.5px;
+  color: var(--aw-graphite);
+}
+
+.content-card__foot > * {
+  white-space: nowrap;
+}
+
+.content-card__code {
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+  font: 500 11px/1 var(--aw-font-mono);
+  color: var(--aw-ink);
+}
+
+/* The key result on a card (W38 card E). */
+.content-card__key {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  min-width: 0;
+  margin: 0 14px 10px;
+  padding: 12px;
+  border: 1px solid var(--aw-line);
+  border-radius: 8px;
+}
+
+.content-card__key--none {
+  font-size: 12px;
+  color: var(--aw-muted);
+}
+
+.content-card__key-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--aw-graphite);
+}
+
+.content-card__key-question {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-card__auto {
+  padding: 2px 6px;
+  border: 1px dashed var(--aw-line-strong);
+  border-radius: 4px;
+  font: 500 10px/1 var(--aw-font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.content-card__pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 500 10.5px/1 var(--aw-font-mono);
+  white-space: nowrap;
+}
+
+.content-card__pager button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 4px;
+  background: var(--aw-surface);
+  font: 600 12px/1 var(--aw-font);
+  cursor: pointer;
+}
+
+.content-card__pager button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.content-card__key-value {
+  font: 700 30px/1 var(--aw-font-display);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-card__key-value small {
+  margin-left: 6px;
+  font: 400 12px/1 var(--aw-font);
+  color: var(--aw-graphite);
+}
+
+.content-card__dist {
+  display: flex;
+  height: 10px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--aw-line);
+}
+
+.content-card__legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--aw-graphite);
+}
+
+.content-card__key-note {
+  font-size: 12px;
   color: var(--aw-graphite);
 }

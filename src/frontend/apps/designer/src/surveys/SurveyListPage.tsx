@@ -2,7 +2,7 @@
 import "./surveys.css";
 import { ApiError, type Me, type SampleSurvey, type SurveyList, type SurveyListItem, type SurveysClient, type SurveyStatus, type SurveyTemplate } from "@askwerk/app-client";
 import { createTranslator, themePresets, type Locale, type ThemeTokens, type Translate } from "@askwerk/schema";
-import { FrontCard, frontAssetUrl } from "../designer/look/FrontCard";
+import { ContentCard } from "./ContentCard";
 import { LookThumb } from "../designer/look/LookThumb";
 import { ComboBox, DataGrid, dataGridTexts, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridSort, Dialog } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
@@ -95,6 +95,12 @@ export function SurveyListPage({
   const changeView = (next: ListView) => {
     setView(next);
     storage.set(viewKey(me.id, "surveys"), next);
+  };
+  // What the cards show (W38): what each survey asks, or its key result; remembered like List or Cards.
+  const [show, setShow] = useState<"contents" | "key">(() => (storage.get(viewKey(me.id, "surveys-show")) === "key" ? "key" : "contents"));
+  const changeShow = (next: "contents" | "key") => {
+    setShow(next);
+    storage.set(viewKey(me.id, "surveys-show"), next);
   };
 
   const load = useCallback(async () => {
@@ -267,6 +273,19 @@ export function SurveyListPage({
                 </button>
               ))}
             </span>
+            {view === "cards" && (
+              <span className="view-show">
+                <span id="surveys-cards-show">{t("cardsShow")}</span>
+                <span className="view-switch view-switch--inline" role="group" aria-labelledby="surveys-cards-show">
+                  <button type="button" aria-pressed={show === "contents"} onClick={() => changeShow("contents")}>
+                    {t("showContents")}
+                  </button>
+                  <button type="button" aria-pressed={show === "key"} onClick={() => changeShow("key")}>
+                    {t("showKey")}
+                  </button>
+                </span>
+              </span>
+            )}
             <span className="view-switch" role="group" aria-label={t("view")}>
               <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>
                 {t("viewList")}
@@ -279,7 +298,7 @@ export function SurveyListPage({
           {view === "list" ? (
             grid
           ) : (
-            <SurveyCards t={t} locale={locale} list={list} organisation={organisation?.name ?? ""} count={count} page={page} size={size} onPage={setPage} onOpen={onOpen} onOpenResults={onOpenResults} />
+            <SurveyCards t={t} locale={locale} now={now()} show={show} list={list} organisation={organisation?.name ?? ""} count={count} page={page} size={size} onPage={setPage} onOpen={onOpen} onOpenResults={onOpenResults} />
           )}
         </>
       )}
@@ -289,10 +308,12 @@ export function SurveyListPage({
   );
 }
 
-/** Cards (W32): each survey's front page in its look, with its status, responses and languages below. */
+/** Cards (W32 card A): what each survey is and asks, how answering goes, and its facts. */
 function SurveyCards({
   t,
   locale,
+  now,
+  show,
   list,
   organisation,
   count,
@@ -304,6 +325,8 @@ function SurveyCards({
 }: {
   t: Translate<SurveysMessageKey>;
   locale: Locale;
+  now: Date;
+  show: "contents" | "key";
   list: SurveyList;
   organisation: string;
   count: Intl.NumberFormat;
@@ -323,49 +346,37 @@ function SurveyCards({
   return (
     <>
       <ul className="front-cards" aria-label={t("surveys")}>
-        {list.items.map((survey) => (
-          <li key={survey.id} className="front-card">
-            <button type="button" className="front-card__picture" aria-label={t("openSurvey", { title: survey.title })} onClick={() => onOpen(survey.id)}>
-              {survey.front !== undefined && survey.front !== null && (
-                <FrontCard
-                  tokens={survey.front.look as ThemeTokens}
-                  title={frontText(survey.front.title, locale, survey.front.defaultLanguage) || survey.title}
-                  text={frontText(survey.front.text, locale, survey.front.defaultLanguage)}
-                  organisation={organisation}
-                  start={t("start")}
-                  headerAsset={survey.front.headerImage ?? null}
-                  assetUrl={frontAssetUrl}
-                />
-              )}
-            </button>
-            <div className="front-card__meta">
-              <a
-                href={`/surveys/${survey.id}`}
-                onClick={(event) => {
-                  event.preventDefault();
-                  onOpen(survey.id);
-                }}
-              >
-                {survey.title}
-              </a>
-              <span className="front-card__row">
-                <span className="front-card__chip" data-draft={survey.status === "draft" || survey.hasChanges ? "" : undefined}>
-                  {statusText(t, survey)}
-                </span>
-                {survey.publishedVersion !== null &&
-                  (onOpenResults === undefined ? (
-                    <span>{Number(survey.responses) === 1 ? t("responseOne") : t("responsesCount", { count: count.format(Number(survey.responses)) })}</span>
-                  ) : (
+        {list.items.map((survey) =>
+          survey.front == null ? null : (
+            <ContentCard
+              key={survey.id}
+              front={survey.front}
+              name={survey.title}
+              locale={locale}
+              organisation={organisation}
+              now={now}
+              show={show}
+              onOpen={() => onOpen(survey.id)}
+              openLabel={t("openSurvey", { title: survey.title })}
+              footer={
+                <>
+                  <span className="front-card__chip" data-draft={survey.status === "draft" || survey.hasChanges ? "" : undefined}>
+                    {statusText(t, survey)}
+                  </span>
+                  <span>{survey.front.publishedAt != null ? t("publishedOn", { date: shortDate(locale, survey.front.publishedAt) }) : t("changedOn", { date: shortDate(locale, survey.updatedAt) })}</span>
+                  <span className="grow" />
+                  {survey.front.code != null && <span className="content-card__code">/s/{survey.front.code}</span>}
+                  <span>{survey.languages.map((language) => language.toUpperCase()).join(" ")}</span>
+                  {onOpenResults !== undefined && survey.publishedVersion !== null && (
                     <button type="button" className="surveys__count" onClick={() => onOpenResults(survey.id)}>
-                      {Number(survey.responses) === 1 ? t("responseOne") : t("responsesCount", { count: count.format(Number(survey.responses)) })}
+                      {t("results")}
                     </button>
-                  ))}
-                <span className="grow" />
-                <span>{survey.languages.map((language) => language.toUpperCase()).join(" ")}</span>
-              </span>
-            </div>
-          </li>
-        ))}
+                  )}
+                </>
+              }
+            />
+          ),
+        )}
       </ul>
       {total > size && (
         <div className="front-pager">
@@ -382,9 +393,9 @@ function SurveyCards({
   );
 }
 
-/** A text of the front page in the reader's language, else the survey's default, else any. */
-export function frontText(text: Record<string, string> | null, locale: string, fallback: string): string {
-  return text === null ? "" : (text[locale] ?? text[fallback] ?? Object.values(text)[0] ?? "").trim();
+/** "2 Oct" in the reader's language. */
+function shortDate(locale: Locale, at: string): string {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-GB" : locale, { day: "numeric", month: "short" }).format(new Date(at));
 }
 
 function statusText(t: Translate<SurveysMessageKey>, survey: SurveyListItem): string {

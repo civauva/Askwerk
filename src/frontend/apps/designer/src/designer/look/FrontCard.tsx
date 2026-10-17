@@ -75,3 +75,29 @@ export function FrontCard({ tokens, title, text, organisation, start, headerAsse
     </div>
   );
 }
+
+/** The look as a strip (W32 card A): the page's colours, pattern, scene or picture, the organisation, Start. */
+export function LookStrip({ tokens, organisation, start, headerAsset = null, assetUrl }: Omit<FrontCardProps, "title" | "text">) {
+  const colours = tokens.mode === "dark" && tokens.darkColours !== undefined ? tokens.darkColours : tokens.colours;
+  const pattern = tokens.decoration?.pattern ?? "none";
+  const scene = pattern === "mountains";
+  const picture = headerAsset ?? (tokens.layout === "header-image" || tokens.layout === "split-image" ? (tokens.headerImage?.asset ?? null) : null);
+  const style = {
+    "--lt-bg": colours.background,
+    "--lt-surface": colours.surface,
+    "--lt-text": colours.text,
+    "--lt-accent": colours.accent,
+    "--lt-on": colours.onAccent,
+    "--lt-body": stack(tokens.fonts.body.family),
+    "--lt-radius": control[tokens.corners],
+  } as CSSProperties;
+
+  return (
+    <div className="lt fs" style={style} data-scene={scene ? "mountains" : undefined} data-buttons={tokens.buttons} data-picture={picture !== null && assetUrl !== undefined ? "" : undefined} aria-hidden="true">
+      {pattern !== "none" && !scene && <div className={`lt-pattern lt-pattern--${pattern} fs-band`} />}
+      {picture !== null && assetUrl !== undefined && <div className="fs-picture" style={{ backgroundImage: `url("${assetUrl(picture, 480)}")` }} />}
+      <span className="fs-org">● {organisation}</span>
+      <span className="fc-go fs-go">{start}</span>
+    </div>
+  );
+}

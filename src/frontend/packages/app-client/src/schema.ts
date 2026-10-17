@@ -9773,6 +9773,46 @@ export interface components {
             password?: null | string;
         };
         JsonElement: unknown;
+        /** @description A key question's result on a card (W38). */
+        KeyResult: {
+            /** @description The question's id. */
+            question: string;
+            /** @description Its text per language. */
+            text: components["schemas"]["TranslatedText"];
+            /** @description Its type as in the definition: nps, rating, slider, single, multiple, dropdown, yes-no. */
+            type: string;
+            /** @description Picked because no question is flagged. */
+            auto: boolean;
+            /**
+             * Format: int32
+             * @description How many answered it.
+             */
+            answered: number | string;
+            /**
+             * Format: double
+             * @description NPS: the score; rating and slider: the average; choices: the top option's share in percent. Null before answers.
+             */
+            value: null | number | string;
+            /**
+             * Format: int32
+             * @description Rating and slider: the top of the scale.
+             */
+            max: null | number | string;
+            top: null | components["schemas"]["TranslatedText"];
+            /** @description NPS: detractors, passives, promoters; scales: each value; choices: each option, most first. */
+            spread: components["schemas"]["KeySlice"][];
+        };
+        /** @description One part of a key result's spread. */
+        KeySlice: {
+            /** @description The value, option code, or detractors / passives / promoters. */
+            code: string;
+            label: null | components["schemas"]["TranslatedText"];
+            /**
+             * Format: int32
+             * @description How many.
+             */
+            count: number | string;
+        };
         /** @description The last delivery of a webhook. */
         LastDeliveryView: {
             /** @description pending, delivered or failed. */
@@ -10924,6 +10964,26 @@ export interface components {
             /** @description `ready` or `notReady`. */
             database: string;
         };
+        /** @description How answering goes (W32): responses, the share complete, the last one, and the last 14 days. */
+        SurveyAnswers: {
+            /**
+             * Format: int32
+             * @description Complete responses.
+             */
+            complete: number | string;
+            /**
+             * Format: int32
+             * @description Started, not finished.
+             */
+            partial: number | string;
+            /**
+             * Format: date-time
+             * @description The last response's last change (UTC), if any.
+             */
+            lastAt: null | string;
+            /** @description Responses started on each of the last 14 days, oldest first, today last. */
+            days: (number | string)[];
+        };
         /** @description One approval. */
         SurveyApprovalItem: {
             /**
@@ -10960,6 +11020,30 @@ export interface components {
             state: string;
             /** @description Every approval, newest first. */
             items: components["schemas"]["SurveyApprovalItem"][];
+        };
+        /** @description What a survey asks (W32). */
+        SurveyContents: {
+            /**
+             * Format: int32
+             * @description Questions, without text blocks and pictures.
+             */
+            questions: number | string;
+            /**
+             * Format: int32
+             * @description Pages.
+             */
+            pages: number | string;
+            /**
+             * Format: int32
+             * @description About how many minutes answering takes, as the welcome page says.
+             */
+            minutes: number | string;
+            /** @description The first three questions. */
+            first: components["schemas"]["SurveyQuestionLine"][];
+            /** @description How many questions of each type, most first. */
+            types: {
+                [key: string]: number | string;
+            };
         };
         /** @description The draft the designer edits. */
         SurveyDraftResponse: {
@@ -11006,6 +11090,17 @@ export interface components {
             look: components["schemas"]["JsonElement"];
             /** @description The survey's own header picture, if any; it wins over the look's. */
             headerImage?: null | string;
+            contents?: null | components["schemas"]["SurveyContents"];
+            answers?: null | components["schemas"]["SurveyAnswers"];
+            /** @description Surveys only: the code in its link, /s/{code}. */
+            code?: null | string;
+            /**
+             * Format: date-time
+             * @description Surveys only: when the version now published was published (UTC).
+             */
+            publishedAt?: null | string;
+            /** @description Surveys only: the key questions' results (W38), in survey order. */
+            keys?: null | components["schemas"]["KeyResult"][];
         };
         /** @description A link to the survey (AWK-7). */
         SurveyLinkResponse: {
@@ -11086,6 +11181,13 @@ export interface components {
              * @description The survey's theme, if it picked one.
              */
             themeId: null | string;
+        };
+        /** @description One question on a card (W32). */
+        SurveyQuestionLine: {
+            /** @description Its text per language. */
+            text: components["schemas"]["TranslatedText"];
+            /** @description Its type as in the definition. */
+            type: string;
         };
         /** @description What the survey's bar and tabs show (AWK-29). */
         SurveySummaryResponse: {

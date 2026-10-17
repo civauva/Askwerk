@@ -123,6 +123,19 @@ describe("Designer main screen (M1)", () => {
     await waitFor(() => expect(api.saved.at(-1)?.pages[2]?.questions[0]?.required).toBe(true));
   });
 
+  it("flags a key question: a star in the outline, saved in the definition, and off again (W38)", async () => {
+    const { api, container } = await loaded();
+    fireEvent.click(outline().getByRole("button", { name: "Which branch? BRANCH" }));
+
+    fireEvent.click(inspector().getByRole("switch", { name: "Key question" }));
+
+    expect(outline().getByRole("button", { name: "Which branch? Key question BRANCH" })).toBeTruthy();
+    await waitFor(() => expect(api.saved.at(-1)?.pages[2]?.questions[0]?.key).toBe(true));
+    await expectNoAxeViolations(container);
+    fireEvent.click(inspector().getByRole("switch", { name: "Key question" }));
+    await waitFor(() => expect(api.saved.at(-1)?.pages[2]?.questions[0]).not.toHaveProperty("key"));
+  });
+
   it("draws Required like every other switch in the inspector", async () => {
     await loaded();
     fireEvent.click(outline().getByRole("button", { name: "Which branch? BRANCH" }));

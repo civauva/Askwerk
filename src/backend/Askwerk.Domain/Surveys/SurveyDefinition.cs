@@ -76,6 +76,7 @@ public sealed record Page(string Id, IReadOnlyList<Question> Questions, Translat
 /// <param name="MinuteStep">Date-time and time: minutes between offered times; divides 60.</param>
 /// <param name="Image">Image blocks: the image; other questions: an image shown with the question.</param>
 /// <param name="ShowWhen">Shown only when these hold (AWK-31); always when null. Conditions use earlier questions only.</param>
+/// <param name="Key">A key question (W38): its result shows on the survey's card.</param>
 public sealed record Question(
     string Id,
     string Variable,
@@ -100,7 +101,8 @@ public sealed record Question(
     string? Latest = null,
     int? MinuteStep = null,
     QuestionImage? Image = null,
-    LogicGroup? ShowWhen = null);
+    LogicGroup? ShowWhen = null,
+    bool? Key = null);
 
 /// <summary>"Other, please specify": an extra last option whose text goes into its own variable.</summary>
 /// <param name="Code">Option code, distinct from the other options.</param>

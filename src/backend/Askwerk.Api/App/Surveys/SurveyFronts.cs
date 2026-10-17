@@ -54,9 +54,54 @@ internal sealed class SurveyFronts
     {
         var tokens = look is not null && ThemeTokensJson.Read(look) is { } own ? own : themeId is { } id && themes.TryGetValue(id, out var theme) ? theme : fallback;
 
-        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens), definition?.HeaderImage?.Asset);
+        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens), definition?.HeaderImage?.Asset, Contents(definition));
     }
+
+    /// <summary>What a survey asks (W32 card A): its size, about how long it takes, the first questions and the types.</summary>
+    /// <param name="definition">The definition, or null.</param>
+    /// <returns>The contents; null without a definition.</returns>
+    public static SurveyContents? Contents(SurveyDefinition? definition)
+    {
+        if (definition is null)
+        {
+            return null;
+        }
+
+        // As the runner counts them: text blocks and pictures are not questions.
+        var questions = definition.Pages.SelectMany(page => page.Questions).Where(question => question.Type is not (QuestionType.TextBlock or QuestionType.Image)).ToList();
+        var types = questions.GroupBy(question => TypeName(question.Type)).OrderByDescending(group => group.Count()).ToDictionary(group => group.Key, group => group.Count());
+
+        return new SurveyContents(
+            questions.Count,
+            definition.Pages.Count,
+            Math.Max(1, (int)Math.Round(questions.Count * 0.3, MidpointRounding.AwayFromZero)),
+            [.. questions.Take(3).Select(question => new SurveyQuestionLine(question.Text, TypeName(question.Type)))],
+            types);
+    }
+
+    /// <summary>The type as the definition's JSON names it: single, rating, nps, short-text…</summary>
+    private static string TypeName(QuestionType type) => JsonSerializer.Serialize(type, SurveyDefinitionJson.Options).Trim('"');
 }
+
+/// <summary>What a survey asks (W32).</summary>
+/// <param name="Questions">Questions, without text blocks and pictures.</param>
+/// <param name="Pages">Pages.</param>
+/// <param name="Minutes">About how many minutes answering takes, as the welcome page says.</param>
+/// <param name="First">The first three questions.</param>
+/// <param name="Types">How many questions of each type, most first.</param>
+public sealed record SurveyContents(int Questions, int Pages, int Minutes, IReadOnlyList<SurveyQuestionLine> First, IReadOnlyDictionary<string, int> Types);
+
+/// <summary>One question on a card (W32).</summary>
+/// <param name="Text">Its text per language.</param>
+/// <param name="Type">Its type as in the definition.</param>
+public sealed record SurveyQuestionLine(TranslatedText Text, string Type);
+
+/// <summary>How answering goes (W32): responses, the share complete, the last one, and the last 14 days.</summary>
+/// <param name="Complete">Complete responses.</param>
+/// <param name="Partial">Started, not finished.</param>
+/// <param name="LastAt">The last response's last change (UTC), if any.</param>
+/// <param name="Days">Responses started on each of the last 14 days, oldest first, today last.</param>
+public sealed record SurveyAnswers(int Complete, int Partial, DateTimeOffset? LastAt, IReadOnlyList<int> Days);
 
 /// <summary>The front page a card draws (W32).</summary>
 /// <param name="Title">The welcome page's title per language, if any.</param>
@@ -64,4 +109,9 @@ internal sealed class SurveyFronts
 /// <param name="DefaultLanguage">The language to fall back to.</param>
 /// <param name="Look">The look's tokens (packages/schema/src/theme.ts).</param>
 /// <param name="HeaderImage">The survey's own header picture, if any; it wins over the look's.</param>
-public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look, string? HeaderImage = null);
+/// <param name="Contents">What it asks (card A).</param>
+/// <param name="Answers">Surveys only: how answering goes.</param>
+/// <param name="Code">Surveys only: the code in its link, /s/{code}.</param>
+/// <param name="PublishedAt">Surveys only: when the version now published was published (UTC).</param>
+/// <param name="Keys">Surveys only: the key questions' results (W38), in survey order.</param>
+public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look, string? HeaderImage = null, SurveyContents? Contents = null, SurveyAnswers? Answers = null, string? Code = null, DateTimeOffset? PublishedAt = null, IReadOnlyList<KeyResult>? Keys = null);

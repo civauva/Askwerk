@@ -5,8 +5,8 @@ import { createTranslator, type Locale, type ThemeTokens } from "@askwerk/schema
 import { ConfirmDialog, DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
-import { FrontCard, frontAssetUrl } from "../designer/look/FrontCard";
-import { frontText, viewKey, type ListView } from "../surveys/SurveyListPage";
+import { ContentCard } from "../surveys/ContentCard";
+import { viewKey, type ListView } from "../surveys/SurveyListPage";
 import { adminMessages } from "./messages";
 
 type From = "askwerk" | "organisation" | "sample";
@@ -150,30 +150,20 @@ export function TemplatesPage({
       ) : (
         <ul className="front-cards" aria-label={t("templates")}>
           {shown.map((row) => (
-            <li key={`${row.from}:${row.id}`} className="front-card">
-              <div className="front-card__picture" style={{ cursor: "default" }}>
-                {row.front !== null && (
-                  <FrontCard
-                    tokens={row.front.look as ThemeTokens}
-                    title={frontText(row.front.title, locale, row.front.defaultLanguage) || row.name}
-                    text={frontText(row.front.text, locale, row.front.defaultLanguage)}
-                    organisation={organisation}
-                    start={t("start")}
-                    headerAsset={row.front.headerImage ?? null}
-                    assetUrl={frontAssetUrl}
-                  />
-                )}
-              </div>
-              <div className="front-card__meta">
-                <b>{row.name}</b>
-                <span className="front-card__row">
+            <ContentCard
+              key={`${row.from}:${row.id}`}
+              front={row.front ?? { title: null, text: null, defaultLanguage: "en", look: {} }}
+              name={row.name}
+              locale={locale}
+              organisation={organisation}
+              footer={
+                <>
                   <span className="front-card__chip">{fromText(row.from)}</span>
-                  <span>{t("questionsCount", { count: row.questions })}</span>
                   <span className="grow" />
                   {actions(row)}
-                </span>
-              </div>
-            </li>
+                </>
+              }
+            />
           ))}
         </ul>
       )}

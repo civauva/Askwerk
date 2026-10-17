@@ -142,6 +142,20 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
       {question.type !== "text-block" && question.type !== "image" && (
         <Switch label={t("required")} checked={question.required} onChange={(required) => dispatch({ type: "setRequired", questionId: question.id, required })} />
       )}
+      {keyTypes.includes(question.type) && (
+        <>
+          <Switch
+            label={
+              <>
+                {t("keyQuestion")} <span className="designer-key" aria-hidden="true">★</span>
+              </>
+            }
+            checked={question.key === true}
+            onChange={(on) => dispatch(on ? { type: "patch", questionId: question.id, patch: { key: true } } : { type: "patch", questionId: question.id, patch: {}, remove: ["key"] })}
+          />
+          <p className="designer-note">{t("keyQuestionHint")}</p>
+        </>
+      )}
       {question.options !== undefined && (
         <Switch
           label={t("randomize")}
@@ -596,6 +610,8 @@ function TextField({
 }
 
 const otherTypes: readonly QuestionType[] = ["single", "multiple", "dropdown"];
+/** Questions with a result a card can show (W38): choices, yes/no, rating, NPS, slider. */
+const keyTypes: readonly QuestionType[] = ["single", "multiple", "dropdown", "yes-no", "rating", "nps", "slider"];
 
 function ItemSettings({ t, state, dispatch, question, list }: RegionProps & { question: Question; list: ItemList }) {
   const items = question[list] ?? [];

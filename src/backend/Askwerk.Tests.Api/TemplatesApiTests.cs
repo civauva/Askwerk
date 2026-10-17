@@ -170,6 +170,50 @@ public sealed class TemplatesApiTests(PostgresServer server)
         Assert.Equal(JsonValueKind.Null, plain.GetProperty("items")[0].GetProperty("front").ValueKind);
         Assert.Equal(("Customer satisfaction", "Thank you!", "de"), (front.GetProperty("title").GetProperty("en").GetString(), front.GetProperty("text").GetProperty("en").GetString(), front.GetProperty("defaultLanguage").GetString()));
         Assert.True(front.GetProperty("look").GetProperty("colours").TryGetProperty("accent", out _));
+        var contents = front.GetProperty("contents");
+        Assert.Equal((4, "rating"), (contents.GetProperty("questions").GetInt32(), contents.GetProperty("first")[0].GetProperty("type").GetString()));
+        Assert.Equal("Satisfied?", contents.GetProperty("first")[0].GetProperty("text").GetProperty("en").GetString());
+        Assert.Equal(8, front.GetProperty("code").GetString()!.Length);
+        Assert.Equal(JsonValueKind.Null, front.GetProperty("publishedAt").ValueKind);
         Assert.All(await TemplatesAsync(owner), template => Assert.Equal(JsonValueKind.Object, template.GetProperty("front").GetProperty("look").ValueKind));
+    }
+
+    [Fact]
+    public async Task Cards_ShowTheKeyQuestionsResult_OrTheFirstRatingWhenNoneIsFlagged()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        var id = await SurveysApiTests.CreateSurveyAsync(owner);
+        var definition = RunnerApiTests.Definition();
+        definition["pages"]![1]!["questions"]![0]!["key"] = true;
+        (await owner.PutAsJsonAsync(Url($"/api/app/surveys/{id}/draft"), new { definition }, Cancel)).EnsureSuccessStatusCode();
+        (await owner.PostAsync(Url($"/api/app/surveys/{id}/publish"), null, Cancel)).EnsureSuccessStatusCode();
+
+        foreach (var (rating, before) in new[] { (4, "1"), (5, "1"), (2, "0") })
+        {
+            using var respondent = await factory.CreateReadyClientAsync();
+            (await respondent.PostAsJsonAsync(Url($"/api/app/run/{id}/response"), new { language = "en" }, Cancel)).EnsureSuccessStatusCode();
+            (await respondent.PutAsJsonAsync(Url($"/api/app/run/{id}/response/pages/p1"), new { answers = new { q1 = new { number = rating } } }, Cancel)).EnsureSuccessStatusCode();
+            (await respondent.PutAsJsonAsync(Url($"/api/app/run/{id}/response/pages/p2"), new { answers = new { q3 = new { option = before } } }, Cancel)).EnsureSuccessStatusCode();
+        }
+
+        var flagged = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel)).GetProperty("items")[0].GetProperty("front").GetProperty("keys");
+        var key = flagged[0];
+        var answers = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel)).GetProperty("items")[0].GetProperty("front").GetProperty("answers");
+
+        Assert.Equal(1, flagged.GetArrayLength());
+        Assert.Equal(("q3", "yes-no", false, 3), (key.GetProperty("question").GetString(), key.GetProperty("type").GetString(), key.GetProperty("auto").GetBoolean(), key.GetProperty("answered").GetInt32()));
+        Assert.Equal(67, key.GetProperty("value").GetDouble());
+        Assert.Equal(("1", 2), (key.GetProperty("spread")[0].GetProperty("code").GetString(), key.GetProperty("spread")[0].GetProperty("count").GetInt32()));
+        Assert.Equal(3, answers.GetProperty("days")[13].GetInt32());
+
+        // Without a flag, the first rating: its average and every value of the scale.
+        definition["pages"]![1]!["questions"]![0]!.AsObject().Remove("key");
+        (await owner.PutAsJsonAsync(Url($"/api/app/surveys/{id}/draft"), new { definition }, Cancel)).EnsureSuccessStatusCode();
+        (await owner.PostAsync(Url($"/api/app/surveys/{id}/publish"), null, Cancel)).EnsureSuccessStatusCode();
+        var auto = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel)).GetProperty("items")[0].GetProperty("front").GetProperty("keys")[0];
+
+        Assert.Equal(("q1", true, 3.7, 5), (auto.GetProperty("question").GetString(), auto.GetProperty("auto").GetBoolean(), auto.GetProperty("value").GetDouble(), auto.GetProperty("max").GetInt32()));
+        Assert.Equal(5, auto.GetProperty("spread").GetArrayLength());
     }
 }

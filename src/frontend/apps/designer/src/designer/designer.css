@@ -2023,3 +2023,10 @@ button.designer-page__progress:hover {
   min-width: 52px;
   text-align: center;
 }
+
+/* Key questions (W38): a star in the accent colour. */
+.designer-key {
+  color: var(--aw-signal);
+  font-size: 13px;
+  line-height: 1;
+}

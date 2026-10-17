@@ -13688,6 +13688,121 @@
         "description": "Joining."
       },
       "JsonElement": {},
+      "KeyResult": {
+        "required": [
+          "question",
+          "text",
+          "type",
+          "auto",
+          "answered",
+          "value",
+          "max",
+          "top",
+          "spread"
+        ],
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "The question\u0027s id."
+          },
+          "text": {
+            "description": "Its text per language.",
+            "$ref": "#/components/schemas/TranslatedText"
+          },
+          "type": {
+            "type": "string",
+            "description": "Its type as in the definition: nps, rating, slider, single, multiple, dropdown, yes-no."
+          },
+          "auto": {
+            "type": "boolean",
+            "description": "Picked because no question is flagged."
+          },
+          "answered": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many answered it.",
+            "format": "int32"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d\u002B)?(?:[eE][\u002B-]?\\d\u002B)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "description": "NPS: the score; rating and slider: the average; choices: the top option\u0027s share in percent. Null before answers.",
+            "format": "double"
+          },
+          "max": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Rating and slider: the top of the scale.",
+            "format": "int32"
+          },
+          "top": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Choices: the top option\u0027s label.",
+                "$ref": "#/components/schemas/TranslatedText"
+              }
+            ]
+          },
+          "spread": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeySlice"
+            },
+            "description": "NPS: detractors, passives, promoters; scales: each value; choices: each option, most first."
+          }
+        },
+        "description": "A key question\u0027s result on a card (W38)."
+      },
+      "KeySlice": {
+        "required": [
+          "code",
+          "label",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The value, option code, or detractors / passives / promoters."
+          },
+          "label": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Choices: the option\u0027s label.",
+                "$ref": "#/components/schemas/TranslatedText"
+              }
+            ]
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many.",
+            "format": "int32"
+          }
+        },
+        "description": "One part of a key result\u0027s spread."
+      },
       "LastDeliveryView": {
         "required": [
           "status",
@@ -16671,6 +16786,56 @@
         },
         "description": "Status of this Askwerk process."
       },
+      "SurveyAnswers": {
+        "required": [
+          "complete",
+          "partial",
+          "lastAt",
+          "days"
+        ],
+        "type": "object",
+        "properties": {
+          "complete": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Complete responses.",
+            "format": "int32"
+          },
+          "partial": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Started, not finished.",
+            "format": "int32"
+          },
+          "lastAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last response\u0027s last change (UTC), if any.",
+            "format": "date-time"
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            },
+            "description": "Responses started on each of the last 14 days, oldest first, today last."
+          }
+        },
+        "description": "How answering goes (W32): responses, the share complete, the last one, and the last 14 days."
+      },
       "SurveyApprovalItem": {
         "required": [
           "id",
@@ -16754,6 +16919,65 @@
           }
         },
         "description": "The approvals of a survey (W16 C)."
+      },
+      "SurveyContents": {
+        "required": [
+          "questions",
+          "pages",
+          "minutes",
+          "first",
+          "types"
+        ],
+        "type": "object",
+        "properties": {
+          "questions": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Questions, without text blocks and pictures.",
+            "format": "int32"
+          },
+          "pages": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Pages.",
+            "format": "int32"
+          },
+          "minutes": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "About how many minutes answering takes, as the welcome page says.",
+            "format": "int32"
+          },
+          "first": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SurveyQuestionLine"
+            },
+            "description": "The first three questions."
+          },
+          "types": {
+            "type": "object",
+            "additionalProperties": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            },
+            "description": "How many questions of each type, most first."
+          }
+        },
+        "description": "What a survey asks (W32)."
       },
       "SurveyDraftResponse": {
         "required": [
@@ -16898,6 +17122,53 @@
               "string"
             ],
             "description": "The survey\u0027s own header picture, if any; it wins over the look\u0027s."
+          },
+          "contents": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "What it asks (card A).",
+                "$ref": "#/components/schemas/SurveyContents"
+              }
+            ]
+          },
+          "answers": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "Surveys only: how answering goes.",
+                "$ref": "#/components/schemas/SurveyAnswers"
+              }
+            ]
+          },
+          "code": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Surveys only: the code in its link, /s/{code}."
+          },
+          "publishedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Surveys only: when the version now published was published (UTC).",
+            "format": "date-time"
+          },
+          "keys": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/KeyResult"
+            },
+            "description": "Surveys only: the key questions\u0027 results (W38), in survey order."
           }
         },
         "description": "The front page a card draws (W32)."
@@ -17104,6 +17375,24 @@
           }
         },
         "description": "The survey\u0027s look (W26)."
+      },
+      "SurveyQuestionLine": {
+        "required": [
+          "text",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "description": "Its text per language.",
+            "$ref": "#/components/schemas/TranslatedText"
+          },
+          "type": {
+            "type": "string",
+            "description": "Its type as in the definition."
+          }
+        },
+        "description": "One question on a card (W32)."
       },
       "SurveySummaryResponse": {
         "required": [

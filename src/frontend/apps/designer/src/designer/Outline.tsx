@@ -246,6 +246,13 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
                         </>
                       )}
                     </span>{" "}
+                    {question.key === true && (
+                      <>
+                        <span className="designer-key" role="img" aria-label={t("keyQuestion")}>
+                          ★
+                        </span>{" "}
+                      </>
+                    )}
                     <code>
                       {question.showWhen !== undefined && <span aria-hidden="true">⑂ </span>}
                       {question.variable}

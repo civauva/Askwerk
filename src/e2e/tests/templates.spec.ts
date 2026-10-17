@@ -22,6 +22,12 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   await expect(cards.getByRole("listitem").first()).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath("surveys-cards.png"), fullPage: true });
+  // The key result instead of the contents (W38): NPS, average or top choice with its spread.
+  await page.getByRole("button", { name: "Key result" }).click();
+  await expect(page.getByRole("list", { name: "Surveys" }).getByText(/^First (rating|choice)$/).first()).toBeVisible();
+  expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
+  await page.screenshot({ path: info.outputPath("surveys-key.png"), fullPage: true });
+  await page.getByRole("button", { name: "Contents" }).click();
   await page.getByRole("button", { name: "☰ List" }).click();
 
   // Templates: Askwerk's copied to ours opens in the designer as a template.

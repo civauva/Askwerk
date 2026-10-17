@@ -1,0 +1,130 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W38 key questions: the flag in the designer (inspector switch, ★ in the outline), the Surveys cards' Contents /
+     Key result switch, and a Key result card with two key questions. -->
+<html lang="en"><head><meta charset="utf-8"><title>W38 key questions</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .wrap { display: grid; grid-template-columns: 560px 1fr; gap: 28px; padding: 28px 32px 40px; }
+  h2 { margin: 0 0 12px; font: 700 20px/1.2 var(--aw-font-display); }
+  .mono { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--aw-muted); }
+  .panel { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; }
+  .note { margin-top: 10px; padding: 8px 11px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; }
+  .grow { flex: 1; }
+  /* designer excerpt */
+  .designer { display: grid; grid-template-columns: 230px 1fr; overflow: hidden; }
+  .outline { border-right: 1px solid var(--aw-line); padding: 12px; display: grid; gap: 4px; align-content: start; font-size: 12.5px; }
+  .outline .pg { font: 500 10.5px/1 var(--aw-font-mono); color: var(--aw-muted); margin: 8px 0 4px; }
+  .outline .q { display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 6px; }
+  .outline .q.on { background: color-mix(in srgb, var(--aw-ink) 7%, var(--aw-surface)); font-weight: 600; }
+  .outline .q span:first-child { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .outline .v { font: 500 10px/1 var(--aw-font-mono); color: var(--aw-muted); }
+  .star { color: var(--aw-signal); font-size: 13px; }
+  .inspector { padding: 16px; display: grid; gap: 14px; align-content: start; }
+  .field { display: grid; gap: 6px; }
+  .input { padding: 8px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; font-size: 13px; }
+  .switch { display: flex; align-items: center; gap: 10px; font-size: 13.5px; }
+  .sw { width: 34px; height: 20px; border-radius: 10px; background: var(--aw-line-strong); position: relative; flex: none; }
+  .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+  .sw.on { background: var(--aw-ink); } .sw.on::after { left: 16px; }
+  .hint { font-size: 12px; color: var(--aw-graphite); margin: -6px 0 0 44px; }
+  /* surveys bar */
+  .bar { display: flex; align-items: center; gap: 10px; padding: 14px; }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 7px 11px; font-weight: 600; font-size: 12.5px; background: var(--aw-surface); } .seg .on { background: var(--aw-ink); color: var(--aw-paper); }
+  .lbl { font-size: 12.5px; color: var(--aw-graphite); }
+  /* E card */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+  .strip { height: 54px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid var(--aw-line); }
+  .strip .o { font: 600 9px/1 var(--aw-font); } .strip .lk { font: 500 10px/1 var(--aw-font-mono); opacity: .8; } .strip .go { margin-left: auto; padding: 5px 12px; font: 600 10px/1 var(--aw-font); border-radius: 999px; }
+  .what { padding: 12px 14px 0; display: grid; gap: 6px; } .what h3 { margin: 0; font: 600 16px/1.25 var(--aw-font); }
+  .lead { margin: 0; font-size: 12.5px; color: var(--aw-graphite); }
+  .size { display: flex; gap: 12px; font-size: 12px; color: var(--aw-graphite); } .size b { color: var(--aw-ink); }
+  .result { margin: 10px 14px; padding: 12px; border: 1px solid var(--aw-line); border-radius: 8px; display: grid; gap: 6px; }
+  .result .top { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--aw-graphite); }
+  .result .big { font: 700 30px/1 var(--aw-font-display); } .result .big small { font: 400 12px/1 var(--aw-font); color: var(--aw-graphite); margin-left: 6px; }
+  .dist { display: flex; height: 10px; border-radius: 3px; overflow: hidden; }
+  .legend { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--aw-graphite); }
+  .pager { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; font: 500 10.5px/1 var(--aw-font-mono); }
+  .pager b { width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid var(--aw-line-strong); border-radius: 4px; font-weight: 600; }
+  .foot { display: flex; align-items: center; gap: 8px; padding: 0 14px 12px; font-size: 11.5px; color: var(--aw-graphite); white-space: nowrap; }
+  .chip { padding: 2px 8px; border: 1px solid var(--aw-line-strong); border-radius: 999px; font-size: 11.5px; }
+  .code { font: 500 11px/1 var(--aw-font-mono); padding: 3px 6px; border-radius: 4px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); color: var(--aw-ink); }
+  .auto { font: 500 10px/1 var(--aw-font-mono); padding: 2px 6px; border: 1px dashed var(--aw-line-strong); border-radius: 4px; }
+</style></head>
+<body>
+<div class="wrap">
+  <section>
+    <h2>1 · Flag a key question</h2>
+    <div class="panel designer">
+      <div class="outline">
+        <span class="pg">01 · PAGE 1</span>
+        <span class="q"><span>How often do you use the app?</span><span class="v">USE</span></span>
+        <span class="q"><span>How easy is signing in?</span><span class="v">LOGIN</span></span>
+        <span class="pg">02 · PAGE 2</span>
+        <span class="q on"><span>Would you recommend us?</span><span class="star">★</span><span class="v">NPS</span></span>
+        <span class="q"><span>Overall, how satisfied are you?</span><span class="star">★</span><span class="v">SAT</span></span>
+        <span class="q"><span>What should we improve?</span><span class="v">WHY</span></span>
+      </div>
+      <div class="inspector">
+        <span class="mono">Q3 · NPS</span>
+        <div class="field"><span class="lbl">Question</span><span class="input">Would you recommend us?</span></div>
+        <div class="switch"><span class="sw on"></span>Required</div>
+        <div class="switch"><span class="sw on"></span>Key question <span class="star">★</span></div>
+        <p class="hint">Its result shows on the survey&#39;s card. Mark one or a few: the answers that matter most.</p>
+      </div>
+    </div>
+    <p class="note"><b>Key question:</b> a switch beside Required on any question with a result (choice, rating, NPS, yes/no, slider). Key questions get a ★ in the outline. Several are allowed; the card shows them one at a time, in survey order.</p>
+
+    <h2 style="margin-top:28px">2 · What the cards show</h2>
+    <div class="panel bar"><span class="lbl">Search surveys</span><span class="grow"></span><span class="lbl">Cards show</span><span class="seg"><span>Contents</span><span class="on">Key result</span></span><span class="seg"><span>☰ List</span><span class="on">▦ Cards</span></span></div>
+    <p class="note"><b>Contents</b> (A) or <b>Key result</b> (E), beside List / Cards; remembered per person, like List / Cards. Templates always show Contents: they have no answers.</p>
+  </section>
+
+  <section>
+    <h2>3 · Key result card</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="strip" style="background:#efeeea"><span class="o">● Acme GmbH</span><span class="lk">Monochrome</span><span class="go" style="background:#111;color:#fff">Start</span></div>
+        <div class="what"><h3>How well does our online banking work?</h3><p class="lead">Five minutes about the app, the web and advice.</p><div class="size"><span><b>14</b> questions</span><span><b>4</b> pages</span><span>about <b>5 min</b></span></div></div>
+        <div class="result"><span class="top"><span class="star">★</span>Would you recommend us?<span class="pager"><b>‹</b>1 / 2<b>›</b></span></span>
+          <span class="big">+34<small>NPS</small></span>
+          <span class="dist"><i style="width:18%;background:#c94a3a"></i><i style="width:30%;background:#d9d2c3"></i><i style="width:52%;background:#2f6f4f"></i></span>
+          <span class="legend"><span>210 responses · 86 % complete</span><span>last 2 hours ago</span></span></div>
+        <div class="foot"><span class="chip">Published · v1</span><span>Published 2 Oct</span><span class="grow"></span><span class="code">/s/b4nk7qwe</span><span>DE EN</span></div>
+      </div>
+      <div class="card">
+        <div class="strip" style="background:#efeeea"><span class="o">● Acme GmbH</span><span class="lk">Monochrome</span><span class="go" style="background:#111;color:#fff">Start</span></div>
+        <div class="what"><h3>How well does our online banking work?</h3><p class="lead">The same card, the second key question.</p><div class="size"><span><b>14</b> questions</span><span><b>4</b> pages</span><span>about <b>5 min</b></span></div></div>
+        <div class="result"><span class="top"><span class="star">★</span>Overall, how satisfied are you?<span class="pager"><b>‹</b>2 / 2<b>›</b></span></span>
+          <span class="big">4.2<small>of 5</small></span>
+          <span class="dist"><i style="width:4%;background:#c94a3a"></i><i style="width:7%;background:#e39b58"></i><i style="width:12%;background:#d9d2c3"></i><i style="width:38%;background:#7fb08f"></i><i style="width:39%;background:#2f6f4f"></i></span>
+          <span class="legend"><span>204 answers</span><span>last 2 hours ago</span></span></div>
+        <div class="foot"><span class="chip">Published · v1</span><span>Published 2 Oct</span><span class="grow"></span><span class="code">/s/b4nk7qwe</span><span>DE EN</span></div>
+      </div>
+      <div class="card">
+        <div class="strip" style="background:#f4f7fa"><span class="o">● Acme GmbH</span><span class="lk">Klinik</span><span class="go" style="background:#1f5f8b;color:#fff">Start</span></div>
+        <div class="what"><h3>Your experience at our outpatient clinic</h3><p class="lead">No key question flagged yet.</p><div class="size"><span><b>18</b> questions</span><span><b>5</b> pages</span><span>about <b>6 min</b></span></div></div>
+        <div class="result"><span class="top">How were you treated?<span class="pager"><span class="auto">FIRST RATING</span></span></span>
+          <span class="big">4.4<small>of 5</small></span>
+          <span class="dist"><i style="width:3%;background:#c94a3a"></i><i style="width:5%;background:#e39b58"></i><i style="width:9%;background:#d9d2c3"></i><i style="width:31%;background:#7fb08f"></i><i style="width:52%;background:#2f6f4f"></i></span>
+          <span class="legend"><span>240 responses · 92 % complete</span><span>last 35 minutes ago</span></span></div>
+        <div class="foot"><span class="chip">Published · v1</span><span>Published 29 Sep</span><span class="grow"></span><span class="code">/s/k7m2pqzr</span><span>DE EN</span></div>
+      </div>
+      <div class="card">
+        <div class="strip" style="background:#fff"><span class="o">● Acme GmbH</span><span class="lk">Werkstatt</span><span class="go" style="background:#d2440f;color:#fff">Start</span></div>
+        <div class="what"><h3>Employee pulse Q4</h3><p class="lead">A draft: nothing to show yet.</p><div class="size"><span><b>5</b> questions</span><span><b>1</b> page</span><span>about <b>2 min</b></span></div></div>
+        <div class="result"><span class="top"><span class="star">★</span>How do you feel at work this week?</span><span class="lead">Not published yet. Once answers come in, the result shows here.</span></div>
+        <div class="foot"><span class="chip" style="border-style:dashed">Draft</span><span>Changed yesterday</span><span class="grow"></span><span class="code">/s/p9lse4qq</span><span>DE</span></div>
+      </div>
+    </div>
+    <p class="note"><b>Several key questions:</b> ‹ 1 / 2 › steps through them on the card. <b>None flagged:</b> the first NPS or rating question, else the first choice question, marked FIRST RATING so it is clear it was picked automatically.</p>
+  </section>
+</div>
+</body></html>
