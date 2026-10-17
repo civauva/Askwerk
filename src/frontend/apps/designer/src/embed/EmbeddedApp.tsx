@@ -6,17 +6,23 @@ import {
   createResultsClient,
   createSurveysClient,
   createThemesClient,
+  getKeyResult,
   renewEmbedSession,
   startEmbedSession,
   type AppClientOptions,
   type EmbedSession,
+  type EmbedView,
 } from "@askwerk/app-client";
+import { hostLookVariables, type HostLook } from "@askwerk/ui";
 import { createTranslator, pickLocale, type Locale } from "@askwerk/schema";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { designerApi, type DesignerApi } from "../designer/api";
 import { Designer } from "../designer/Designer";
 import { ResultsPage } from "../results/ResultsPage";
 import { ParticipantsPage, SharePage, type SurveyTab } from "../workspace";
+import "./embed.css";
+import { EmbeddedList } from "./EmbeddedList";
+import { EmbeddedResult } from "./EmbeddedResult";
 import { embedMessages, type EmbedMessageKey } from "./messages";
 
 /** What the frame tells the host page (W21 1). */
@@ -27,17 +33,23 @@ export type HostEvent =
   | { type: "askwerk:resize"; height: number }
   | { type: "askwerk:navigate"; to: "list" | SurveyTab; surveyId: string }
   | { type: "askwerk:session-ending"; endsAt: string }
-  | { type: "askwerk:error"; code: string };
+  | { type: "askwerk:error"; code: string }
+  | { type: "askwerk:open"; surveyId: string; view: "results" | "designer" }
+  | { type: "askwerk:create" };
 
 type EmbeddedAppProps = {
   /** The host's hand-over token from the frame's address; used once. */
   token: string;
-  view: "designer" | "results";
+  view: EmbedView;
+  /** <askwerk-result question="…">: the question to show (W37). */
+  question?: string | null;
+  /** The host app's look from #look=… (W37). */
+  look?: HostLook | null;
   /** ?lang= from the host; wins over the token's locale and the browser's. */
   lang: string | null;
   telemetry: AppClientOptions["telemetry"];
   post: (event: HostEvent) => void;
-  start?: (options: AppClientOptions, token: string, view: "designer" | "results") => Promise<EmbedSession>;
+  start?: (options: AppClientOptions, token: string, view: EmbedView) => Promise<EmbedSession>;
   renew?: (options: AppClientOptions) => Promise<{ expiresAt: string; endsAt: string }>;
   now?: () => number;
   saveFile?: (name: string, file: Blob) => void;
@@ -63,7 +75,7 @@ function withHostEvents(api: DesignerApi, post: (event: HostEvent) => void): Des
  * The designer or Results inside a host product (AWK-13, W21): no Askwerk bar, survey list or account menu; the host
  * owns the navigation. The session's bearer token lives in memory only, renewed while the frame is open.
  */
-export function EmbeddedApp({ token, view, lang, telemetry, post, start = startEmbedSession, renew = renewEmbedSession, now = () => Date.now(), saveFile = () => undefined }: EmbeddedAppProps) {
+export function EmbeddedApp({ token, view, question = null, look = null, lang, telemetry, post, start = startEmbedSession, renew = renewEmbedSession, now = () => Date.now(), saveFile = () => undefined }: EmbeddedAppProps) {
   const [session, setSession] = useState<EmbedSession | null>(null);
   const [problem, setProblem] = useState<EmbedMessageKey | null>(null);
   const [ending, setEnding] = useState(false);
@@ -71,6 +83,23 @@ export function EmbeddedApp({ token, view, lang, telemetry, post, start = startE
   const bearer = useRef<string>("");
   const locale: Locale = pickLocale([lang ?? session?.language ?? "", ...navigator.languages]);
   const t = useMemo(() => createTranslator(embedMessages, locale), [locale]);
+
+  // The host's look (W37): accent, background, font and corners for everything in the frame.
+  useEffect(() => {
+    if (look === null) {
+      return undefined;
+    }
+
+    const root = document.documentElement;
+    const variables = Object.entries(hostLookVariables(look, "app"));
+    variables.forEach(([name, value]) => root.style.setProperty(name, value));
+    root.dataset.hostLook = "";
+
+    return () => {
+      variables.forEach(([name]) => root.style.removeProperty(name));
+      delete root.dataset.hostLook;
+    };
+  }, [look]);
 
   useEffect(() => {
     start({ telemetry }, token, view).then(
@@ -149,6 +178,14 @@ export function EmbeddedApp({ token, view, lang, telemetry, post, start = startE
         <p>{t("starting")}</p>
       </main>
     );
+  }
+
+  if (session.view === "list") {
+    return <EmbeddedList surveys={clients.surveys} locale={locale} post={post} />;
+  }
+
+  if (session.view === "result") {
+    return <EmbeddedResult load={() => getKeyResult(options, session.surveyId, question)} locale={locale} />;
   }
 
   const surveyId = session.surveyId;

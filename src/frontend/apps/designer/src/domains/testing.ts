@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // A hand-written DomainsClient for the Domains page's tests.
-import { ApiError, type DomainItem, type DomainList, type DomainsClient } from "@askwerk/app-client";
+import { ApiError, type DomainItem, type DomainList, type DomainsClient, type HostLookSettings } from "@askwerk/app-client";
 
 const record = (part: Partial<DomainItem> & Pick<DomainItem, "id" | "hostname" | "status">): DomainItem => ({
   isPrimary: false,
@@ -80,6 +80,13 @@ export class FakeDomainsClient implements DomainsClient {
   survey: { origins: string[]; organisation: string[] } = { origins: [], organisation: [] };
 
   designerEmbedding = () => Promise.resolve([...this.designerOrigins]);
+  look: HostLookSettings | null = null;
+  hostLook = () => Promise.resolve(this.look);
+  setHostLook = (look: HostLookSettings) => {
+    this.calls.push(["setHostLook", look]);
+    this.look = look;
+    return Promise.resolve(look);
+  };
 
   setDesignerEmbedding = (origins: readonly string[]) => {
     this.calls.push(["setDesignerEmbedding", [...origins]]);

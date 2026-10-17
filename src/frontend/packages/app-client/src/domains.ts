@@ -41,6 +41,10 @@ export interface DomainsClient {
   /** The websites that may show the designer and Results (AWK-13); none switches it off. */
   designerEmbedding(): Promise<string[]>;
   setDesignerEmbedding(origins: readonly string[]): Promise<void>;
+  /** The host look drop-in components follow (W37); null when not set. */
+  hostLook(): Promise<HostLookSettings | null>;
+  /** Keeps the host look; all null clears it. 400 look-invalid. */
+  setHostLook(look: HostLookSettings): Promise<HostLookSettings>;
   /** A survey's own websites, some of the organisation's; none uses them all (W21 3). */
   surveyEmbedding(surveyId: string): Promise<SurveyEmbedding>;
   setSurveyEmbedding(surveyId: string, origins: readonly string[]): Promise<void>;
@@ -58,6 +62,8 @@ export function createDomainsClient(options: AppClientOptions): DomainsClient {
     remove: (id) => request("DELETE", at(id)),
     embedding: () => request<{ origins: string[] }>("GET", "/api/app/embedding").then((answer) => answer.origins),
     setEmbedding: (origins) => request("PUT", "/api/app/embedding", { origins }),
+    hostLook: () => request<{ hostLook?: HostLookSettings | null }>("GET", "/api/app/embedding").then((answer) => answer.hostLook ?? null),
+    setHostLook: (look) => request<HostLookSettings>("PUT", "/api/app/embedding/host-look", look),
     designerEmbedding: () => request<{ designerOrigins: string[] }>("GET", "/api/app/embedding").then((answer) => answer.designerOrigins),
     setDesignerEmbedding: (origins) => request("PUT", "/api/app/embedding", { designerOrigins: origins }),
     surveyEmbedding: (surveyId) => request<SurveyEmbedding>("GET", `/api/app/surveys/${encodeURIComponent(surveyId)}/embed-origins`),
@@ -71,22 +77,45 @@ export interface SurveyEmbedding {
   readonly organisation: string[];
 }
 
+/** What an embedded session shows: the designer, Results, the survey list or one key result (W37). */
+export type EmbedView = "designer" | "results" | "list" | "result";
+
 /** An embedded session of the designer or Results (AWK-13): its bearer token stays in memory. */
 export interface EmbedSession {
   readonly token: string;
   readonly expiresAt: string;
   readonly endsAt: string;
   readonly surveyId: string;
-  readonly view: "designer" | "results";
+  readonly view: EmbedView;
   readonly language: string | null;
 }
 
 /** Starts an embedded session from the host's token; failures are ApiError with code token-invalid, embedding-off, no-access or survey-not-found. */
-export function startEmbedSession(options: AppClientOptions, token: string, view: "designer" | "results"): Promise<EmbedSession> {
+export function startEmbedSession(options: AppClientOptions, token: string, view: EmbedView): Promise<EmbedSession> {
   return createRequest(options)<EmbedSession>("POST", "/api/app/embed/session", { token, view });
 }
 
 /** Renews an embedded session's token for another hour, never past its end. */
 export function renewEmbedSession(options: AppClientOptions): Promise<{ expiresAt: string; endsAt: string }> {
   return createRequest(options)<{ expiresAt: string; endsAt: string }>("POST", "/api/app/embed/session/renew");
+}
+
+/** One survey's key result (W37, <askwerk-result>): the question by its variable, else the key question. */
+export interface SurveyKeyResult {
+  readonly title: string;
+  readonly responses: number;
+  readonly complete: number;
+  readonly key: import("./surveys").KeyResult | null;
+}
+
+export function getKeyResult(options: AppClientOptions, surveyId: string, question?: string | null): Promise<SurveyKeyResult> {
+  return createRequest(options)<SurveyKeyResult>("GET", `/api/app/surveys/${encodeURIComponent(surveyId)}/key-result${question ? `?question=${encodeURIComponent(question)}` : ""}`);
+}
+
+/** The host look (W37): accent, background, font and corners in px; null where not set. */
+export interface HostLookSettings {
+  accent: string | null;
+  background: string | null;
+  font: string | null;
+  radius: number | null;
 }

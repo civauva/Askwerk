@@ -40,6 +40,8 @@ export interface RunSurvey<TDefinition = unknown> {
     readonly oneResponsePerPerson?: boolean;
   };
   readonly response: RunResponse | null;
+  /** The organisation's host look (W37), for <askwerk-survey look="host">. */
+  readonly hostLook?: { readonly accent?: string | null; readonly background?: string | null; readonly font?: string | null; readonly radius?: number | null } | null;
 }
 
 /** The runner's calls (AWK-6). A survey that is not published answers null; errors are ApiError with the problems per question. */

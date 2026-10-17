@@ -56,6 +56,7 @@ public sealed class RunController(AskwerkDbContext context, DbSessionContext ses
         var response = await CurrentResponseAsync(surveyId, cancellationToken);
         var definition = version.ReadDefinition();
         var now = time.GetUtcNow();
+        var hostLook = await context.Tenants.Where(tenant => tenant.Id == survey.TenantId).Select(tenant => tenant.HostLook).SingleOrDefaultAsync(cancellationToken);
 
         return new RunSurveyResponse(
             new RunSurvey(
@@ -67,7 +68,8 @@ public sealed class RunController(AskwerkDbContext context, DbSessionContext ses
                 survey.ClosesAt <= now ? survey.ClosesAt : null,
                 (await settings.FindAsync(cancellationToken))?.TimeZone ?? "UTC",
                 survey.OneResponsePerPerson),
-            response is null ? null : new RunResponse(Lower(response.Status), response.PageKey, response.Language, await AnswersOfAsync(response, definition, cancellationToken)));
+            response is null ? null : new RunResponse(Lower(response.Status), response.PageKey, response.Language, await AnswersOfAsync(response, definition, cancellationToken)),
+            Askwerk.Api.App.Domains.HostLook.Read(hostLook));
     }
 
     /// <summary>The survey a short link names (AWK-7): /s/{code}. Only published or closed surveys are found.</summary>
@@ -562,7 +564,8 @@ public sealed class RunController(AskwerkDbContext context, DbSessionContext ses
 /// <summary>What the runner gets when it opens a link.</summary>
 /// <param name="Survey">The survey for respondents.</param>
 /// <param name="Response">The response so far in this browser, if any.</param>
-public sealed record RunSurveyResponse(RunSurvey Survey, RunResponse? Response);
+/// <param name="HostLook">The organisation's host look (W37), for a survey shown by &lt;askwerk-survey look="host"&gt;.</param>
+public sealed record RunSurveyResponse(RunSurvey Survey, RunResponse? Response, Askwerk.Api.App.Domains.HostLook? HostLook = null);
 
 /// <summary>A survey as respondents see it: no internal title, only what the definition shows.</summary>
 /// <param name="Id">The survey.</param>

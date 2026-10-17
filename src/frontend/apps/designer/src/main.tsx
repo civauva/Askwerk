@@ -15,7 +15,9 @@ import { Designer } from "./designer/Designer";
 import { canEditSurveys } from "./account/roles";
 import { ApiKeysPage } from "./apiKeys/ApiKeysPage";
 import { DevelopersPage } from "./developers/DevelopersPage";
+import { DropInPage } from "./developers/DropInPage";
 import { DomainsPage } from "./domains/DomainsPage";
+import { readHostLook } from "@askwerk/ui";
 import { EmbeddedApp } from "./embed/EmbeddedApp";
 import { LookPage } from "./look/LookPage";
 import { MembersPage } from "./members/MembersPage";
@@ -160,12 +162,16 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell, onContactsCoun
     return shell(<InstallationPage client={installation} locale={locale} />);
   }
 
+  if (path === "/developers/drop-in") {
+    return shell(<DropInPage domains={domains} locale={locale} onNavigate={onNavigate} writeClipboard={(text) => navigator.clipboard.writeText(text)} />);
+  }
+
   if (path === "/developers") {
     const role = me.organisations.find((organisation) => organisation.id === me.currentOrganisationId)?.role;
 
     return (
       shell(
-        <DevelopersPage client={developers} locale={locale} canManageKeys={role === "owner" || role === "admin"} onOpenApiKeys={() => onNavigate("/api-keys")} initialGuide={new URLSearchParams(location.search).get("guide")} />
+        <DevelopersPage client={developers} locale={locale} canManageKeys={role === "owner" || role === "admin"} onOpenApiKeys={() => onNavigate("/api-keys")} onOpenDropIn={() => onNavigate("/developers/drop-in")} initialGuide={new URLSearchParams(location.search).get("guide")} />
       )
     );
   }
@@ -276,9 +282,12 @@ if (import.meta.env.DEV && location.pathname === "/dev/controls") {
       <DesignerPreview />
     </StrictMode>,
   );
-} else if (/^\/embed\/(designer|results)$/.test(location.pathname)) {
-  // The designer or Results inside a host product (AWK-13): the token is used once, so it leaves the address at once.
+} else if (/^\/embed\/(designer|results|list|result)$/.test(location.pathname)) {
+  // The designer, Results, the survey list or one key result inside a host product (AWK-13, W37): the token is used
+  // once, so it leaves the address at once; the host's look comes in the #look=… part.
   const query = new URLSearchParams(location.search);
+  const look = readHostLook(location.hash);
+  const view = location.pathname.slice("/embed/".length) as "designer" | "results" | "list" | "result";
   const token = query.get("token") ?? "";
   query.delete("token");
   history.replaceState(null, "", `${location.pathname}${query.size > 0 ? `?${query.toString()}` : ""}`);
@@ -286,7 +295,9 @@ if (import.meta.env.DEV && location.pathname === "/dev/controls") {
     <StrictMode>
       <EmbeddedApp
         token={token}
-        view={location.pathname.endsWith("results") ? "results" : "designer"}
+        view={view}
+        question={query.get("question")}
+        look={look}
         lang={query.get("lang")}
         telemetry={telemetry}
         post={(event) => window.parent.postMessage(event, "*")}

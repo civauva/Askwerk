@@ -1,0 +1,300 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W37 Drop-in components</title>
+<style>
+  :root {
+    --ink: #17191e; --graphite: #4a4f59; --muted: #7b808a; --line: #e3e5e9; --paper: #f5f6f8; --surface: #fff;
+    --aw-signal: #e8590c; --aw-soft: #fdeee4;
+    /* The host's look: what the components follow when "Follow the host app" is on. */
+    --host-accent: #1456b8; --host-soft: #e7effb; --host-font: "Segoe UI", system-ui, sans-serif; --host-radius: 4px; --host-bg: #f3f5f9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, sans-serif; color: var(--ink); background: #dfe2e7; }
+  .switch { position: sticky; top: 0; z-index: 9; display: flex; gap: 8px; align-items: center; padding: 10px 20px; background: #20232a; color: #fff; font-size: 13px; }
+  .switch a { padding: 4px 10px; border-radius: 999px; color: #cfd3da; text-decoration: none; }
+  .switch a.on { background: #fff; color: #20232a; font-weight: 600; }
+  .switch span { margin-left: auto; color: #9aa0aa; }
+  .frame { display: none; padding: 22px; }
+  .frame.on { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 20px; align-items: start; }
+  /* The host app */
+  .host { min-height: 820px; border-radius: 8px; overflow: hidden; background: var(--host-bg); font-family: var(--host-font); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .host-top { display: flex; align-items: center; gap: 22px; height: 54px; padding: 0 20px; background: #0f2a52; color: #fff; }
+  .host-top b { font-size: 16px; letter-spacing: .2px; }
+  .host-top nav { display: flex; gap: 18px; font-size: 13px; color: #b9c8e2; }
+  .host-top nav .on { color: #fff; border-bottom: 2px solid #fff; padding-bottom: 15px; margin-bottom: -17px; }
+  .host-top .me { margin-left: auto; font-size: 13px; color: #b9c8e2; }
+  .host-body { padding: 22px 26px; }
+  .host h1 { margin: 0 0 4px; font-size: 22px; font-weight: 600; }
+  .host .sub { margin: 0 0 18px; color: var(--graphite); }
+  .host-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .host-card { padding: 14px 16px; border: 1px solid #d9dfe8; border-radius: var(--host-radius); background: #fff; }
+  .host-card h3 { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--graphite); text-transform: uppercase; letter-spacing: .4px; }
+  .host-card .big { font-size: 26px; font-weight: 600; }
+  /* The drop-in component: it follows the host's look, with a thin outline here only to show where it is. */
+  .drop { position: relative; border: 1.5px dashed var(--aw-signal); border-radius: 6px; padding: 14px; background: transparent; }
+  .drop > .tag { position: absolute; top: -10px; left: 10px; padding: 0 6px; background: var(--aw-signal); color: #fff; font: 600 11px/18px ui-monospace, monospace; border-radius: 3px; }
+  .btn { display: inline-block; padding: 7px 14px; border-radius: var(--host-radius); background: var(--host-accent); color: #fff; font: 600 13px/1.3 var(--host-font); border: 0; }
+  .btn.ghost { background: #fff; color: var(--host-accent); border: 1px solid var(--host-accent); }
+  .chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--host-soft); color: var(--host-accent); font-size: 12px; font-weight: 600; }
+  .muted { color: var(--muted); font-size: 12px; }
+  table.list { width: 100%; border-collapse: collapse; background: #fff; border-radius: var(--host-radius); overflow: hidden; }
+  table.list th, table.list td { padding: 10px 12px; border-bottom: 1px solid #e6eaf0; text-align: left; font-size: 13px; }
+  table.list th { font-size: 12px; font-weight: 600; color: var(--graphite); background: #f8f9fb; }
+  .bar { height: 8px; border-radius: 4px; background: #e6eaf0; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--host-accent); }
+  /* The side: what the developer writes, and what Askwerk offers */
+  .side { display: grid; gap: 14px; }
+  .panel { padding: 16px; border-radius: 8px; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .panel h2 { margin: 0 0 6px; font: 700 16px/1.3 Georgia, serif; }
+  .panel p { margin: 0 0 8px; color: var(--graphite); font-size: 13px; }
+  pre { margin: 8px 0 0; padding: 12px; border-radius: 6px; background: #16181d; color: #e8eaee; font: 12px/1.55 ui-monospace, Consolas, monospace; white-space: pre-wrap; }
+  pre .k { color: #ffb37a; } pre .s { color: #9fd59c; } pre .c { color: #8a909b; }
+  ul.points { margin: 6px 0 0; padding-left: 18px; color: var(--graphite); font-size: 13px; }
+  ul.points li { margin: 3px 0; }
+  .kicker { font: 600 11px/1 system-ui; letter-spacing: .6px; text-transform: uppercase; color: var(--aw-signal); }
+  /* Askwerk's own screen (D) */
+  .aw { min-height: 820px; border-radius: 8px; overflow: hidden; background: #f7f7f5; box-shadow: 0 1px 2px rgba(0,0,0,.08); display: grid; grid-template-columns: 210px 1fr; }
+  .aw-side { padding: 16px 12px; background: #fff; border-right: 1px solid var(--line); font-size: 13px; }
+  .aw-side .logo { font: 700 18px/1 Georgia, serif; margin: 0 6px 18px; } .aw-side .logo span { color: var(--aw-signal); }
+  .aw-side div { padding: 6px 8px; border-radius: 6px; color: var(--graphite); } .aw-side .on { background: #f0f0ee; color: var(--ink); font-weight: 600; }
+  .aw-main { padding: 22px 28px; }
+  .aw-main h1 { margin: 0 0 4px; font: 700 26px/1.2 Georgia, serif; }
+  .tabs { display: flex; gap: 18px; margin: 14px 0 18px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .tabs span { padding-bottom: 8px; color: var(--graphite); } .tabs .on { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--ink); }
+  .aw-card { padding: 16px 18px; margin-bottom: 14px; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+  .aw-card h3 { margin: 0 0 8px; font-size: 15px; }
+  .row { display: grid; grid-template-columns: 200px 1fr; gap: 10px 16px; align-items: start; font-size: 13px; }
+  .row b { font-weight: 600; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg span { padding: 6px 12px; font-size: 13px; } .seg .on { background: var(--ink); color: #fff; }
+  .comp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .comp div { padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 12px; } .comp div.on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  .comp code { display: block; margin-bottom: 4px; font: 600 12px ui-monospace, monospace; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; }
+  /* The survey inside the host (D) */
+  .q { padding: 16px; background: #fff; border: 1px solid #d9dfe8; border-radius: var(--host-radius); }
+  .q h4 { margin: 0 0 10px; font-size: 15px; }
+  .scale { display: flex; gap: 6px; } .scale span { display: grid; place-items: center; width: 40px; height: 36px; border: 1px solid #c9d1dd; border-radius: var(--host-radius); font-weight: 600; }
+  .scale .on { background: var(--host-accent); color: #fff; border-color: var(--host-accent); }
+  .progress { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px; color: var(--graphite); }
+</style>
+</head>
+<body>
+<div class="switch">
+  <a href="?v=a" data-v="a">A · Survey list in my app</a>
+  <a href="?v=b" data-v="b">B · Designer in my app</a>
+  <a href="?v=c" data-v="c">C · Results and a result widget</a>
+  <a href="?v=d" data-v="d">D · Survey for respondents + set-up in Askwerk</a>
+  <span>Dashed orange outline = the drop-in component (only in this mockup)</span>
+</div>
+
+<!-- A: <askwerk-surveys> -->
+<section class="frame" id="a">
+  <div class="host">
+    <div class="host-top"><b>Acme Portal</b><nav><span>Customers</span><span>Orders</span><span class="on">Feedback</span><span>Reports</span></nav><span class="me">Anna Berger ▾</span></div>
+    <div class="host-body">
+      <h1>Feedback</h1>
+      <p class="sub">Your surveys, inside the portal: no second login, the portal's colours and font.</p>
+      <div class="drop"><span class="tag">&lt;askwerk-surveys&gt;</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div><span class="chip">Published 3</span> <span class="muted">· Drafts 2 · Closed 4</span></div>
+          <button class="btn">+ New survey</button>
+        </div>
+        <table class="list">
+          <tr><th>Survey</th><th>Status</th><th>Answers</th><th>Key result</th><th></th></tr>
+          <tr><td><b>Customer satisfaction 2026</b><div class="muted">k7m2pqzr · published 2 Sep</div></td><td><span class="chip">Published</span></td><td>412</td><td style="width:160px"><div class="bar"><i style="width:78%"></i></div><span class="muted">Satisfied 78 %</span></td><td><button class="btn ghost">Results</button> <button class="btn ghost">Edit</button></td></tr>
+          <tr><td><b>Onboarding check-in</b><div class="muted">q3rt8bnc · published 14 Oct</div></td><td><span class="chip">Published</span></td><td>37</td><td><div class="bar"><i style="width:64%"></i></div><span class="muted">Easy to start 64 %</span></td><td><button class="btn ghost">Results</button> <button class="btn ghost">Edit</button></td></tr>
+          <tr><td><b>Service desk, Q4</b><div class="muted">draft · changed yesterday</div></td><td><span class="chip" style="background:#eef0f3;color:#4a4f59">Draft</span></td><td>—</td><td class="muted">no answers yet</td><td><button class="btn ghost">Edit</button></td></tr>
+        </table>
+        <p class="muted" style="margin:10px 0 0">Results and Edit open the designer or the results in the portal (B, C), or send an event so the portal decides.</p>
+      </div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><span class="kicker">What the portal writes</span><h2>Two lines, one tag</h2>
+<pre><span class="c">&lt;!-- once, in the page --&gt;</span>
+&lt;<span class="k">script</span> src=<span class="s">"https://surveys.acme.at/components.js"</span> type=<span class="s">"module"</span>&gt;&lt;/script&gt;
+
+&lt;<span class="k">askwerk-surveys</span>
+  token=<span class="s">"eyJ…"</span>            <span class="c">&lt;!-- signed by the portal's server --&gt;</span>
+  look=<span class="s">"host"</span>             <span class="c">&lt;!-- follow the portal's colours --&gt;</span>
+  lang=<span class="s">"de"</span>&gt;
+&lt;/askwerk-surveys&gt;
+
+<span class="c">// the portal decides where Results and Edit go</span>
+list.addEventListener(<span class="s">"askwerk:open"</span>, (e) =&gt;
+  router.go(`/feedback/${e.detail.surveyId}/${e.detail.view}`));</pre></div>
+    <div class="panel"><span class="kicker">How it works</span><h2>A tag that loads a frame</h2>
+      <ul class="points">
+        <li>Each component is a thin loader around the same signed frame Askwerk already embeds: one code base, nothing to keep in step.</li>
+        <li>The portal's server signs who is working (the hand-over token, as today); roles come from the token.</li>
+        <li>The frame grows with its content, so it reads as part of the page.</li>
+        <li>Works in React, Angular, Vue or plain HTML; no framework, no build step.</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- B: <askwerk-designer> -->
+<section class="frame" id="b">
+  <div class="host">
+    <div class="host-top"><b>Acme Portal</b><nav><span>Customers</span><span>Orders</span><span class="on">Feedback</span><span>Reports</span></nav><span class="me">Anna Berger ▾</span></div>
+    <div class="host-body">
+      <div class="muted">Feedback › Customer satisfaction 2026</div>
+      <h1 style="margin-top:4px">Customer satisfaction 2026</h1>
+      <div class="drop" style="margin-top:12px;padding:0"><span class="tag">&lt;askwerk-designer survey="k7m2pqzr"&gt;</span>
+        <div style="display:grid;grid-template-columns:200px 1fr 230px;min-height:600px;background:#fff;border-radius:6px;overflow:hidden">
+          <div style="border-right:1px solid #e6eaf0;padding:14px;font-size:13px">
+            <div class="muted" style="margin-bottom:8px">PAGES</div>
+            <div style="padding:6px 8px;border-radius:var(--host-radius);background:var(--host-soft);color:var(--host-accent);font-weight:600">1 · About you</div>
+            <div style="padding:6px 8px">2 · Our service</div><div style="padding:6px 8px">3 · Anything else</div>
+            <button class="btn ghost" style="margin-top:10px">+ Question</button>
+          </div>
+          <div style="padding:18px;background:var(--host-bg)">
+            <div class="q" style="margin-bottom:10px;border-color:var(--host-accent);box-shadow:0 0 0 1px var(--host-accent)"><h4>★ How satisfied are you with our service?</h4><div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div>
+            <div class="q"><h4>What should we do better?</h4><div style="height:56px;border:1px solid #c9d1dd;border-radius:var(--host-radius);background:#fff"></div></div>
+          </div>
+          <div style="border-left:1px solid #e6eaf0;padding:14px;font-size:13px">
+            <div class="muted" style="margin-bottom:8px">QUESTION</div>
+            <div style="margin-bottom:8px"><b>Type</b><br>Rating 1–5</div>
+            <div style="margin-bottom:8px"><b>Key question</b><br><span class="chip">On</span></div>
+            <div style="margin-bottom:14px"><b>Required</b><br>Yes</div>
+            <button class="btn" style="width:100%">Publish</button>
+            <p class="muted">Saved 2 min ago</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><span class="kicker">What the portal writes</span><h2>The designer, in the portal's look</h2>
+<pre>&lt;<span class="k">askwerk-designer</span>
+  token=<span class="s">"eyJ…"</span>
+  survey=<span class="s">"k7m2pqzr"</span>
+  look=<span class="s">"host"</span>
+  chrome=<span class="s">"none"</span>&gt;   <span class="c">&lt;!-- no Askwerk bar: the portal has its own --&gt;</span>
+&lt;/askwerk-designer&gt;
+
+designer.addEventListener(<span class="s">"askwerk:published"</span>, (e) =&gt;
+  toast(`Version ${e.detail.version} is live`));</pre></div>
+    <div class="panel"><span class="kicker">The host look</span><h2>Four values, not a theme editor</h2>
+      <ul class="points">
+        <li><span class="swatch" style="background:#1456b8"></span>accent · <span class="swatch" style="background:#f3f5f9;border:1px solid #ccc"></span>background · font · corner radius.</li>
+        <li>Given as CSS variables on the tag (<code>--askwerk-accent</code> …) or set once in Askwerk (D); Askwerk's own logo and colours step back.</li>
+        <li>The survey respondents see keeps the survey's own look unless it is set to follow the host.</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- C: <askwerk-results> and <askwerk-result> -->
+<section class="frame" id="c">
+  <div class="host">
+    <div class="host-top"><b>Acme Portal</b><nav><span>Customers</span><span>Orders</span><span>Feedback</span><span class="on">Reports</span></nav><span class="me">Anna Berger ▾</span></div>
+    <div class="host-body">
+      <h1>Monthly report</h1>
+      <p class="sub">The portal's own numbers next to Askwerk's key results.</p>
+      <div class="host-grid">
+        <div class="host-card"><h3>Orders</h3><div class="big">1 284</div><span class="muted">+6 % on September</span></div>
+        <div class="host-card"><h3>Returns</h3><div class="big">2.1 %</div><span class="muted">−0.3 points</span></div>
+        <div class="drop" style="background:#fff;border-radius:var(--host-radius)"><span class="tag">&lt;askwerk-result question="SAT"&gt;</span>
+          <h3 style="margin:0 0 6px;font-size:13px;color:var(--graphite);text-transform:uppercase;letter-spacing:.4px">Customer satisfaction</h3>
+          <div class="big" style="font-size:26px;font-weight:600">78 % <span class="muted" style="font-size:12px">satisfied (4–5)</span></div>
+          <div class="bar" style="margin-top:6px"><i style="width:78%"></i></div><span class="muted">412 answers · live</span>
+        </div>
+      </div>
+      <div class="drop" style="margin-top:22px"><span class="tag">&lt;askwerk-results survey="k7m2pqzr"&gt;</span>
+        <div style="display:flex;gap:10px;margin-bottom:12px"><span class="chip">All answers</span><span class="chip" style="background:#eef0f3;color:#4a4f59">Department: Sales</span><span class="muted" style="margin-left:auto">412 answers · 2 Sep – today</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="host-card"><h3>How satisfied are you?</h3>
+            <div style="display:grid;gap:6px;margin-top:8px;font-size:12px">
+              <div>5 <div class="bar"><i style="width:46%"></i></div></div><div>4 <div class="bar"><i style="width:32%"></i></div></div><div>3 <div class="bar"><i style="width:13%"></i></div></div><div>1–2 <div class="bar"><i style="width:9%"></i></div></div>
+            </div></div>
+          <div class="host-card"><h3>What should we do better?</h3><p style="margin:6px 0;font-size:13px">“Faster answers on the phone.”<br>“Invoices in English as well.”<br>“Keep the friendly service desk!”</p><span class="muted">186 comments · Show all</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><span class="kicker">What the portal writes</span><h2>A whole page, or one number</h2>
+<pre>&lt;<span class="k">askwerk-result</span>
+  token=<span class="s">"eyJ…"</span> survey=<span class="s">"k7m2pqzr"</span>
+  question=<span class="s">"SAT"</span>&gt;&lt;/askwerk-result&gt;   <span class="c">&lt;!-- the key question if left out --&gt;</span>
+
+&lt;<span class="k">askwerk-results</span>
+  token=<span class="s">"eyJ…"</span> survey=<span class="s">"k7m2pqzr"</span>
+  filter=<span class="s">"department:Sales"</span>
+  look=<span class="s">"host"</span>&gt;&lt;/askwerk-results&gt;</pre></div>
+    <div class="panel"><span class="kicker">Notes</span><h2>The key result goes anywhere</h2>
+      <ul class="points">
+        <li>&lt;askwerk-result&gt; is the key result of the survey cards (W38), on its own: one question, one number, live.</li>
+        <li>Who may see what comes from the token's role (viewer, analyst), as in Askwerk.</li>
+        <li>The data stays in Askwerk; the portal never stores answers unless it fetches them with the API.</li>
+      </ul></div>
+  </div>
+</section>
+
+<!-- D: <askwerk-survey> for respondents, and the set-up page in Askwerk -->
+<section class="frame" id="d">
+  <div style="display:grid;gap:20px">
+    <div class="host" style="min-height:360px">
+      <div class="host-top"><b>Acme Portal</b><nav><span>My orders</span><span class="on">Help</span></nav><span class="me">Lena Gruber ▾</span></div>
+      <div class="host-body">
+        <h1>How did we do?</h1>
+        <div class="drop" style="max-width:620px"><span class="tag">&lt;askwerk-survey survey="k7m2pqzr"&gt;</span>
+          <div class="progress"><span>Page 1 of 3</span><span>Lena Gruber · CRM-10442</span></div>
+          <div class="q"><h4>How satisfied are you with our service?</h4><div class="scale"><span>1</span><span>2</span><span>3</span><span class="on">4</span><span>5</span></div></div>
+          <div style="margin-top:12px;text-align:right"><button class="btn">Next</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="aw" style="min-height:440px">
+      <div class="aw-side"><div class="logo">Ask<span>werk</span></div><div>Surveys</div><div>Templates</div><div class="muted" style="margin-top:12px">ADMINISTRATION</div><div>Connections</div><div>Domains</div><div class="on">Developers &amp; API</div></div>
+      <div class="aw-main">
+        <h1>Drop-in components</h1>
+        <p class="muted" style="font-size:13px">Put surveys, the designer and results into your own app. Set up once; then each page needs one tag.</p>
+        <div class="aw-card"><h3>1 · Which components</h3>
+          <div class="comp">
+            <div class="on"><code>&lt;askwerk-survey&gt;</code>A survey for respondents</div>
+            <div class="on"><code>&lt;askwerk-surveys&gt;</code>The survey list</div>
+            <div class="on"><code>&lt;askwerk-designer&gt;</code>Edit a survey</div>
+            <div class="on"><code>&lt;askwerk-results&gt;</code>Results, or one key result</div>
+          </div></div>
+        <div class="aw-card"><h3>2 · Where and in which look</h3>
+          <div class="row">
+            <b>Allowed sites</b><span>portal.acme.at · intranet.acme.at <span class="muted">(from Domains)</span></span>
+            <b>Look</b><span class="seg"><span class="on">Follow the host app</span><span>Askwerk</span><span>The survey's look</span></span>
+            <b>Host look</b><span><span class="swatch" style="background:#1456b8"></span>#1456B8 accent · <span class="swatch" style="background:#f3f5f9;border:1px solid #ccc"></span>#F3F5F9 · Segoe UI · 4 px corners <span class="muted">— or read from the page</span></span>
+            <b>Who is working</b><span>Signed by your server, as for Sign in with our login (Connections) · roles from the token</span>
+          </div></div>
+      </div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel"><span class="kicker">What the portal writes</span><h2>The respondent is known</h2>
+<pre>&lt;<span class="k">askwerk-survey</span>
+  survey=<span class="s">"k7m2pqzr"</span>
+  identity=<span class="s">"eyJ…"</span>   <span class="c">&lt;!-- who answers: External ID CRM-10442 --&gt;</span>
+  look=<span class="s">"host"</span>&gt;
+&lt;/askwerk-survey&gt;
+
+survey.addEventListener(<span class="s">"askwerk:completed"</span>, () =&gt;
+  showThanks());</pre></div>
+    <div class="panel"><span class="kicker">Effort and upkeep</span><h2>Small, because it reuses the frame</h2>
+      <ul class="points">
+        <li>components.js: ~4 custom elements over the existing embed frames and events; no second UI.</li>
+        <li>New: the host look (4 values), &lt;askwerk-surveys&gt; and &lt;askwerk-result&gt; screens for embedding, chrome="none".</li>
+        <li>Not proposed: in-page React components sharing the host's DOM — every Askwerk change would break hosts.</li>
+        <li>Estimate: 1.5–2 days, with tests and docs.</li>
+      </ul></div>
+  </div>
+</section>
+
+<script>
+  const v = new URLSearchParams(location.search).get("v") || "a";
+  document.getElementById(v)?.classList.add("on");
+  document.querySelector(`.switch a[data-v="${v}"]`)?.classList.add("on");
+</script>
+</body>
+</html>

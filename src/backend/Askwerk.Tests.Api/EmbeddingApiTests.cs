@@ -143,4 +143,68 @@ public sealed class EmbeddingApiTests(PostgresServer server)
         var participant = page.GetProperty("items")[0].GetProperty("participant");
         Assert.Equal(("hanna@acme.at", "emp-77"), (participant.GetProperty("email").GetString(), participant.GetProperty("externalId").GetString()));
     }
+
+    [Fact]
+    public async Task AListSession_ReadsTheSurveyList_AndNothingElse()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        using var key = RSA.Create(2048);
+        var (audience, id) = await SetUpAsync(owner, key);
+
+        var started = await StartAsync(factory, HandoverApiTests.Token(key, audience, "u-6", "eva@acme.at", NoGroups), "list");
+        var session = await started.Content.ReadFromJsonAsync<JsonElement>(Cancel);
+        using var frame = factory.CreateClient();
+        frame.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session.GetProperty("token").GetString());
+        var list = await frame.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel);
+
+        Assert.Equal(HttpStatusCode.OK, started.StatusCode);
+        Assert.Equal("list", session.GetProperty("view").GetString());
+        Assert.Contains(list.GetProperty("items").EnumerateArray(), item => item.GetProperty("id").GetString() == id);
+        Assert.Equal(HttpStatusCode.Forbidden, (await frame.GetAsync(Url($"/api/app/surveys/{id}/draft"), Cancel)).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await frame.PostAsJsonAsync(Url("/api/app/surveys"), new { title = "No" }, Cancel)).StatusCode);
+    }
+
+    [Fact]
+    public async Task AResultSession_ReadsItsSurveysKeyResult_ByQuestionOrTheKeyQuestion()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        using var key = RSA.Create(2048);
+        var (audience, id) = await SetUpAsync(owner, key);
+
+        var started = await StartAsync(factory, HandoverApiTests.Token(key, audience, "u-7", "eva@acme.at", NoGroups, survey: id), "result");
+        var session = await started.Content.ReadFromJsonAsync<JsonElement>(Cancel);
+        using var frame = factory.CreateClient();
+        frame.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", session.GetProperty("token").GetString());
+        var result = await frame.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/key-result"), Cancel);
+        var unknown = await frame.GetAsync(Url($"/api/app/surveys/{id}/key-result?question=NOPE"), Cancel);
+
+        Assert.Equal("result", session.GetProperty("view").GetString());
+        Assert.Equal(0, result.GetProperty("responses").GetInt32());
+        Assert.Equal(HttpStatusCode.NotFound, unknown.StatusCode);
+    }
+
+    [Fact]
+    public async Task TheHostLook_IsKeptChecked_AndReachesEmbeddedFramesAndTheSurvey()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        using var key = RSA.Create(2048);
+        var (audience, id) = await SetUpAsync(owner, key);
+
+        var bad = await owner.PutAsJsonAsync(Url("/api/app/embedding/host-look"), new { accent = "red;}body{", font = "Segoe UI" }, Cancel);
+        var saved = await owner.PutAsJsonAsync(Url("/api/app/embedding/host-look"), new { accent = "#1456b8", background = "#f3f5f9", font = "\"Segoe UI\", sans-serif", radius = 4 }, Cancel);
+        var embedding = await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/embedding"), Cancel);
+        var started = await (await StartAsync(factory, HandoverApiTests.Token(key, audience, "u-8", "eva@acme.at", NoGroups), "list")).Content.ReadFromJsonAsync<JsonElement>(Cancel);
+        using var anonymous = factory.CreateClient();
+        var run = await anonymous.GetFromJsonAsync<JsonElement>(Url($"/api/app/run/{id}"), Cancel);
+
+        Assert.Equal(HttpStatusCode.BadRequest, bad.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        Assert.Equal("#1456b8", embedding.GetProperty("hostLook").GetProperty("accent").GetString());
+        Assert.Equal(4, started.GetProperty("hostLook").GetProperty("radius").GetInt32());
+        Assert.Equal("#f3f5f9", run.GetProperty("hostLook").GetProperty("background").GetString());
+    }
 }
+

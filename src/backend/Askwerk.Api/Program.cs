@@ -193,10 +193,19 @@ var appFiles = Directory.Exists(settings.WebRoot) ? new PhysicalFileProvider(set
 var appFileOptions = new StaticFileOptions
 {
     FileProvider = appFiles,
-    OnPrepareResponse = context => context.Context.Response.Headers.CacheControl =
-        context.Context.Request.Path.StartsWithSegments("/assets") || context.Context.Request.Path.StartsWithSegments("/s/assets")
-            ? "public, max-age=31536000, immutable"
-            : "no-cache",
+    OnPrepareResponse = context =>
+    {
+        context.Context.Response.Headers.CacheControl =
+            context.Context.Request.Path.StartsWithSegments("/assets") || context.Context.Request.Path.StartsWithSegments("/s/assets")
+                ? "public, max-age=31536000, immutable"
+                : "no-cache";
+
+        // The drop-in components (W37) load as a module from other websites, which needs CORS; the file is public.
+        if (context.Context.Request.Path.Equals("/s/components.js", StringComparison.Ordinal))
+        {
+            context.Context.Response.Headers.AccessControlAllowOrigin = "*";
+        }
+    },
 };
 
 // Who may frame Askwerk's pages: survey pages also the organisation's listed websites (AWK-7).

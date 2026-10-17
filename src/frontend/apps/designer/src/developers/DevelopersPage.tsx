@@ -71,6 +71,8 @@ export type DevelopersPageProps = {
   /** Owners and admins create keys, a trial key included. */
   canManageKeys: boolean;
   onOpenApiKeys: () => void;
+  /** Developers & API → Drop-in components (W37); owners and admins. */
+  onOpenDropIn?: () => void;
   /** A guide to open first, e.g. from ?guide=crm (W36). */
   initialGuide?: string | null;
   /** Calls the public API for Try it; the browser's fetch by default. */
@@ -82,7 +84,7 @@ export type DevelopersPageProps = {
  * The Developers hub (AWK-34, W27): this Askwerk's API address, guides to fit it into other systems, the API reference
  * with Try it, SDKs, samples, and downloads with the address built in. Every member reads it.
  */
-export function DevelopersPage({ client, locale, canManageKeys, onOpenApiKeys, initialGuide = null, fetcher = (input, init) => fetch(input, init), writeClipboard = (text) => navigator.clipboard.writeText(text) }: DevelopersPageProps) {
+export function DevelopersPage({ client, locale, canManageKeys, onOpenApiKeys, onOpenDropIn, initialGuide = null, fetcher = (input, init) => fetch(input, init), writeClipboard = (text) => navigator.clipboard.writeText(text) }: DevelopersPageProps) {
   const t: T = useMemo(() => createTranslator(developersMessages, locale), [locale]);
   const [info, setInfo] = useState<DevelopersInfo | null>(null);
   const [operations, setOperations] = useState<Operation[] | null>(null);
@@ -155,6 +157,17 @@ export function DevelopersPage({ client, locale, canManageKeys, onOpenApiKeys, i
             }}
           >
             {t("yourKeys")}
+          </a>
+        )}
+        {canManageKeys && onOpenDropIn !== undefined && (
+          <a
+            href="/developers/drop-in"
+            onClick={(event) => {
+              event.preventDefault();
+              onOpenDropIn();
+            }}
+          >
+            {t("dropIn")}
           </a>
         )}
       </nav>

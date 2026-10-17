@@ -30,6 +30,12 @@ public static class EmbedSessions
     /// <summary>The claim naming the one survey an embedded session may open.</summary>
     public const string SurveyClaim = "askwerk:embed-survey";
 
+    /// <summary>The survey claim of a survey-list session (W37): no survey, only the list.</summary>
+    public static readonly string ListSurvey = Guid.Empty.ToString();
+
+    /// <summary>What an embedded session shows: the designer, Results, the survey list, or one key result (W37).</summary>
+    public static readonly string[] Views = ["designer", "results", "list", "result"];
+
     /// <summary>Whether a request carries an embedded session's token.</summary>
     public static bool HasToken(HttpRequest request) =>
         request?.Headers.Authorization.ToString().StartsWith("Bearer aws_", StringComparison.Ordinal) == true;
@@ -41,7 +47,7 @@ public static class EmbedSessions
     public static IApplicationBuilder UseEmbedLimits(this IApplicationBuilder app) =>
         app.Use(async (context, next) =>
         {
-            if (context.User.FindFirst(SurveyClaim)?.Value is { } survey && !Allowed(context.Request.Path.Value ?? "", survey))
+            if (context.User.FindFirst(SurveyClaim)?.Value is { } survey && !Allowed(context.Request.Method, context.Request.Path.Value ?? "", survey))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 return;
@@ -50,7 +56,7 @@ public static class EmbedSessions
             await next(context);
         });
 
-    private static bool Allowed(string path, string survey)
+    private static bool Allowed(string method, string path, string survey)
     {
         if (!path.StartsWith("/api/app/", StringComparison.Ordinal))
         {
@@ -59,6 +65,12 @@ public static class EmbedSessions
 
         var rest = path["/api/app/".Length..];
         var first = rest.Split('/')[0];
+
+        // The survey list of a host app (W37, <askwerk-surveys>): the list and the shared reads, nothing else.
+        if (survey == ListSurvey)
+        {
+            return first is "me" or "embed" or "themes" or "assets" or "telemetry" or "status" || (rest.TrimEnd('/') == "surveys" && HttpMethods.IsGet(method));
+        }
 
         return first switch
         {
@@ -135,7 +147,7 @@ public sealed class EmbedSessionController(
     public async Task<IActionResult> Start(EmbedSessionRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var view = request.View == "results" ? "results" : "designer";
+        var view = EmbedSessions.Views.Contains(request.View) ? request.View! : "designer";
 
         if (string.IsNullOrWhiteSpace(request.Token) || request.Token.Length > 16_000 || HandoverTokens.TenantOf(request.Token) is not { } tenantId)
         {
@@ -163,7 +175,10 @@ public sealed class EmbedSessionController(
 
         context.HandoverTokenUses.Add(new HandoverTokenUse(tenantId, claims.Jti, claims.ExpiresAt));
 
-        if (claims.Survey is not { } surveyId || !await context.Surveys.AnyAsync(survey => survey.Id == surveyId && survey.DeletedAt == null, cancellationToken))
+        // The survey list needs no survey; every other view opens the one in the token.
+        var surveyId = view == "list" ? Guid.Empty : claims.Survey ?? Guid.Empty;
+
+        if (view != "list" && (surveyId == Guid.Empty || !await context.Surveys.AnyAsync(survey => survey.Id == surveyId && survey.DeletedAt == null, cancellationToken)))
         {
             await context.SaveChangesAsync(cancellationToken);
             return Problem(StatusCodes.Status404NotFound, "survey-not-found");
@@ -184,7 +199,9 @@ public sealed class EmbedSessionController(
         await audit.WriteAsync(new AuditContent(now, tenantId, AuditActorKind.User, result.User.Id.ToString(), "embed.session-started", "Survey", surveyId.ToString(), JsonSerializer.Serialize(new { view = started.Session.View, externalId = claims.Subject }), trace.CurrentTraceId), cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Ok(new EmbedSessionResponse(started.Token, started.Session.ExpiresAt, started.Session.EndsAt, surveyId, started.Session.View, claims.Locale));
+        var hostLook = await context.Tenants.Where(tenant => tenant.Id == tenantId).Select(tenant => tenant.HostLook).SingleOrDefaultAsync(cancellationToken);
+
+        return Ok(new EmbedSessionResponse(started.Token, started.Session.ExpiresAt, started.Session.EndsAt, surveyId, started.Session.View, claims.Locale, Askwerk.Api.App.Domains.HostLook.Read(hostLook)));
     }
 
     /// <summary>Renews the embedded session's token for another hour, never past its end.</summary>
@@ -225,7 +242,8 @@ public sealed record EmbedSessionRequest(string? Token, string? View);
 /// <param name="SurveyId">The survey it may open.</param>
 /// <param name="View">designer or results; analysts and viewers always get results.</param>
 /// <param name="Language">The token's locale, if any.</param>
-public sealed record EmbedSessionResponse(string Token, DateTimeOffset ExpiresAt, DateTimeOffset EndsAt, Guid SurveyId, string View, string? Language);
+/// <param name="HostLook">The organisation's host look (W37), which the frame follows unless the tag gives its own.</param>
+public sealed record EmbedSessionResponse(string Token, DateTimeOffset ExpiresAt, DateTimeOffset EndsAt, Guid SurveyId, string View, string? Language, Askwerk.Api.App.Domains.HostLook? HostLook = null);
 
 /// <summary>A renewed embedded session.</summary>
 /// <param name="ExpiresAt">When it stops working unless renewed again.</param>

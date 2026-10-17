@@ -223,6 +223,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             tenant.Property(row => row.CreatedAt).HasColumnName("created_at");
             tenant.Property(row => row.EmbedOrigins).HasColumnName("embed_origins").HasDefaultValueSql("'{}'");
             tenant.Property(row => row.DesignerEmbedOrigins).HasColumnName("designer_embed_origins").HasDefaultValueSql("'{}'");
+            tenant.Property(row => row.HostLook).HasColumnName("host_look").HasColumnType("jsonb");
             tenant.Property(row => row.Status).HasColumnName("status").HasConversion(LowerCase<TenantStatus>()).HasMaxLength(16).HasDefaultValue(TenantStatus.Active);
             tenant.Property(row => row.DeletedAt).HasColumnName("deleted_at");
             tenant.Property(row => row.PurgedAt).HasColumnName("purged_at");

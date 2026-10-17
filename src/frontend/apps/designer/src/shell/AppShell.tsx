@@ -36,7 +36,7 @@ export function placeOf(path: string): Place | null {
     return "surveys";
   }
 
-  if (path === "/api-keys") {
+  if (path === "/api-keys" || path === "/developers/drop-in") {
     return "developers";
   }
 

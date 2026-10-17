@@ -967,6 +967,61 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/surveys/{id}/key-result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The survey's key result, live. */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description A question's variable, e.g. SAT; the key question when empty. */
+                    question?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SurveyKeyResult"];
+                        "application/json": components["schemas"]["SurveyKeyResult"];
+                        "text/json": components["schemas"]["SurveyKeyResult"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/surveys/{id}/approvals": {
         parameters: {
             query?: never;
@@ -8843,6 +8898,76 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/embedding/host-look": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * The host look (W37): accent, background, font and corners that drop-in components follow when the tag gives
+         *     none. All empty clears it.
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["HostLook"];
+                    "text/json": components["schemas"]["HostLook"];
+                    "application/*+json": components["schemas"]["HostLook"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["HostLook"];
+                        "application/json": components["schemas"]["HostLook"];
+                        "text/json": components["schemas"]["HostLook"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["DomainProblem"];
+                        "application/json": components["schemas"]["DomainProblem"];
+                        "text/json": components["schemas"]["DomainProblem"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/surveys/{surveyId}/embed-origins": {
         parameters: {
             query?: never;
@@ -11554,6 +11679,7 @@ export interface components {
             origins: string[];
             /** @description Websites that may show the designer and Results (AWK-13); none: off. */
             designerOrigins: string[];
+            hostLook?: null | components["schemas"]["HostLook"];
         };
         /** @description Why an embedded session did not start: token-invalid, embedding-off, no-access or survey-not-found. */
         EmbedProblem: {
@@ -11603,6 +11729,7 @@ export interface components {
             view: string;
             /** @description The token's locale, if any. */
             language: null | string;
+            hostLook?: null | components["schemas"]["HostLook"];
         };
         /** @description A code from the app. */
         EnableTwoFactorRequest: {
@@ -11712,6 +11839,23 @@ export interface components {
             version?: null | number | string;
             /** @description The language of labels; the survey's default when it does not offer it. */
             language?: null | string;
+        };
+        /**
+         * @description The host look (W37): what drop-in components follow in a host app. Only safe values: colours (#hex, rgb(), hsl()),
+         *     a plain font list, corners of 0 to 24 px.
+         */
+        HostLook: {
+            /** @description Buttons, links, the key result's bar. */
+            accent: null | string;
+            /** @description Behind the components. */
+            background: null | string;
+            /** @description The font list, e.g. "Segoe UI", sans-serif. */
+            font: null | string;
+            /**
+             * Format: int32
+             * @description Corners in px.
+             */
+            radius: null | number | string;
         };
         /** Format: binary */
         IFormFile: string;
@@ -12945,6 +13089,7 @@ export interface components {
             /** @description The survey for respondents. */
             survey: components["schemas"]["RunSurvey"];
             response: null | components["schemas"]["RunResponse"];
+            hostLook?: null | components["schemas"]["HostLook"];
         };
         /** @description The samples to choose from. */
         SampleListResponse: {
@@ -13449,6 +13594,22 @@ export interface components {
             lookName?: null | string;
             /** @description The Askwerk look it is or started from ("konfetti"); the card names it in the reader's language. */
             lookPreset?: null | string;
+        };
+        /** @description One survey's key result. */
+        SurveyKeyResult: {
+            /** @description The survey's internal title. */
+            title: string;
+            /**
+             * Format: int32
+             * @description All responses.
+             */
+            responses: number | string;
+            /**
+             * Format: int32
+             * @description Complete responses.
+             */
+            complete: number | string;
+            key: null | components["schemas"]["KeyResult"];
         };
         /** @description A link to the survey (AWK-7). */
         SurveyLinkResponse: {

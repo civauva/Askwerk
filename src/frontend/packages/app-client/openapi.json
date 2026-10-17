@@ -1282,6 +1282,76 @@
         }
       }
     },
+    "/api/app/surveys/{id}/key-result": {
+      "get": {
+        "tags": [
+          "KeyResult"
+        ],
+        "summary": "The survey\u0027s key result, live.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "question",
+            "in": "query",
+            "description": "A question\u0027s variable, e.g. SAT; the key question when empty.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyKeyResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyKeyResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyKeyResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/surveys/{id}/approvals": {
       "get": {
         "tags": [
@@ -11611,6 +11681,97 @@
         }
       }
     },
+    "/api/app/embedding/host-look": {
+      "put": {
+        "tags": [
+          "Embedding"
+        ],
+        "summary": "The host look (W37): accent, background, font and corners that drop-in components follow when the tag gives\r\nnone. All empty clears it.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostLook"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostLook"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/HostLook"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostLook"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostLook"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostLook"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/surveys/{surveyId}/embed-origins": {
       "get": {
         "tags": [
@@ -16394,6 +16555,17 @@
               "type": "string"
             },
             "description": "Websites that may show the designer and Results (AWK-13); none: off."
+          },
+          "hostLook": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "What drop-in components follow (W37); null when not set.",
+                "$ref": "#/components/schemas/HostLook"
+              }
+            ]
           }
         },
         "description": "The websites that may embed the surveys."
@@ -16495,6 +16667,17 @@
               "string"
             ],
             "description": "The token\u0027s locale, if any."
+          },
+          "hostLook": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The organisation\u0027s host look (W37), which the frame follows unless the tag gives its own.",
+                "$ref": "#/components/schemas/HostLook"
+              }
+            ]
           }
         },
         "description": "A started embedded session."
@@ -16746,6 +16929,49 @@
           }
         },
         "description": "An export (W11 C)."
+      },
+      "HostLook": {
+        "required": [
+          "accent",
+          "background",
+          "font",
+          "radius"
+        ],
+        "type": "object",
+        "properties": {
+          "accent": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Buttons, links, the key result\u0027s bar."
+          },
+          "background": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Behind the components."
+          },
+          "font": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The font list, e.g. \u0022Segoe UI\u0022, sans-serif."
+          },
+          "radius": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Corners in px.",
+            "format": "int32"
+          }
+        },
+        "description": "The host look (W37): what drop-in components follow in a host app. Only safe values: colours (#hex, rgb(), hsl()),\r\na plain font list, corners of 0 to 24 px."
       },
       "IFormFile": {
         "type": "string",
@@ -19798,6 +20024,17 @@
                 "$ref": "#/components/schemas/RunResponse"
               }
             ]
+          },
+          "hostLook": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The organisation\u0027s host look (W37), for a survey shown by \u0026lt;askwerk-survey look=\u0022host\u0022\u0026gt;.",
+                "$ref": "#/components/schemas/HostLook"
+              }
+            ]
           }
         },
         "description": "What the runner gets when it opens a link."
@@ -21257,6 +21494,51 @@
         },
         "description": "The front page a card draws (W32)."
       },
+      "SurveyKeyResult": {
+        "required": [
+          "title",
+          "responses",
+          "complete",
+          "key"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The survey\u0027s internal title."
+          },
+          "responses": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "All responses.",
+            "format": "int32"
+          },
+          "complete": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Complete responses.",
+            "format": "int32"
+          },
+          "key": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The key result; null when the survey has no question to show.",
+                "$ref": "#/components/schemas/KeyResult"
+              }
+            ]
+          }
+        },
+        "description": "One survey\u0027s key result."
+      },
       "SurveyLinkResponse": {
         "required": [
           "kind",
@@ -22321,6 +22603,9 @@
     },
     {
       "name": "Telemetry"
+    },
+    {
+      "name": "KeyResult"
     },
     {
       "name": "SurveyApprovals"

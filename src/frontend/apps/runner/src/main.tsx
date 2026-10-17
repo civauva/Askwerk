@@ -6,7 +6,8 @@ import { beaconTransport, createTelemetry, installGlobalErrorHandlers, observeWe
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { postHeight, withEmbedEvents, type EmbedEvent } from "./embed";
-import { Runner } from "./Runner";
+import { readHostLook } from "@askwerk/ui";
+import { HostStyle, Runner } from "./Runner";
 import { Unsubscribe } from "./Unsubscribe";
 
 const telemetry = createTelemetry({ service: "runner", transport: beaconTransport(), route: () => "/s/:survey" });
@@ -60,8 +61,12 @@ async function runSurvey() {
   // ?answer={question}:{value}: an answer clicked in the invitation email (AWK-17 step 6).
   const [answerQuestion, answerValue] = (query.get("answer") ?? "").split(":");
 
+  // <askwerk-survey look="host"> (W37): the host app's accent, background, font and corners, from #look=….
+  const hostLook = embedded ? readHostLook(location.hash) : null;
+
   createRoot(document.getElementById("root")!).render(
     <StrictMode>
+      <HostStyle.Provider value={hostLook}>
       <Runner
         client={preview ? createPreviewClient({ telemetry }) : embedded ? withEmbedEvents(runClient, segment, post) : runClient}
         // In the designer's side panel, the panel already says so; a tab of its own shows the banner (M5 B, C).
@@ -72,6 +77,7 @@ async function runSurvey() {
         initialLocale={language}
         reducedMotion={matchMedia("(prefers-reduced-motion: reduce)").matches}
       />
+      </HostStyle.Provider>
     </StrictMode>,
   );
 }

@@ -2,6 +2,7 @@
 import "./runner.css";
 import { ApiError, type AnswerValue, type Answers, type RunClient, type RunResponse } from "@askwerk/app-client";
 import { createTranslator, route, type Question, type SurveyDefinition, type ThemeTokens, type TranslatedText } from "@askwerk/schema";
+import { hostLookVariables, type HostLook } from "@askwerk/ui";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { runnerMessages } from "./messages";
 import { AssetUrl, QuestionField, textOf } from "./QuestionField";
@@ -28,6 +29,12 @@ const PreviewMode = createContext(false);
 /** The survey's look (AWK-17); null until the survey is loaded, and for the Werkstatt look. */
 const LookContext = createContext<Look | null>(null);
 
+/** The host app's look from the frame's address (W37, <askwerk-survey look="host">); it wins over the survey's look. */
+export const HostStyle = createContext<HostLook | null>(null);
+
+/** The organisation's saved host look, under the one from the address. */
+const SavedHostLook = createContext<HostLook | null>(null);
+
 type Screen =
   | { kind: "loading" }
   | { kind: "not-found" }
@@ -52,13 +59,15 @@ export function Runner({ preview = false, ...props }: RunnerProps) {
 
 function RunnerScreens(props: Omit<RunnerProps, "preview">) {
   const [look, setLook] = useState<Look | null>(null);
+  const [savedHost, setSavedHost] = useState<HostLook | null>(null);
   const { client, surveyId } = props;
   const preview = props.liveLook === true;
   const ownHeader = useRef<SurveyDefinition["headerImage"]>(undefined);
   // Stable, so loading the survey does not start again when the look is set.
   const onTheme = useCallback(
-    (theme: ThemeTokens | undefined, own?: SurveyDefinition["headerImage"]) => {
+    (theme: ThemeTokens | undefined, own?: SurveyDefinition["headerImage"], host?: HostLook | null) => {
       ownHeader.current = own;
+      host !== undefined && setSavedHost(host);
       setLook(theme === undefined ? null : themeLook(theme, (assetId, width) => client.assetUrl(surveyId, assetId, width), own));
     },
     [client, surveyId],
@@ -86,15 +95,17 @@ function RunnerScreens(props: Omit<RunnerProps, "preview">) {
 
   return (
     <LookContext.Provider value={look}>
+      <SavedHostLook.Provider value={savedHost}>
       <AssetUrl.Provider value={assetUrl}>
         {look !== null && <ThemeFonts look={look} />}
         <SurveyScreens {...props} onTheme={onTheme} />
       </AssetUrl.Provider>
+      </SavedHostLook.Provider>
     </LookContext.Provider>
   );
 }
 
-function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false, initialAnswer, liveLook, onTheme }: Omit<RunnerProps, "preview"> & { onTheme: (theme: ThemeTokens | undefined, own?: SurveyDefinition["headerImage"]) => void }) {
+function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false, initialAnswer, liveLook, onTheme }: Omit<RunnerProps, "preview"> & { onTheme: (theme: ThemeTokens | undefined, own?: SurveyDefinition["headerImage"], host?: HostLook | null) => void }) {
   const preview = liveLook === true;
   const [definition, setDefinition] = useState<SurveyDefinition | null>(null);
   const [organisation, setOrganisation] = useState("");
@@ -126,7 +137,7 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
       }
 
       const survey = opened.survey.definition;
-      onTheme(opened.survey.theme as ThemeTokens | undefined, survey.headerImage);
+      onTheme(opened.survey.theme as ThemeTokens | undefined, survey.headerImage, hostLookOf(opened.hostLook));
 
       // The designer's Look sends the look being edited once the preview has its survey (W26).
       if (preview && window.parent !== window) {
@@ -682,10 +693,13 @@ function Frame({
   const preview = useContext(PreviewMode);
   const look = useContext(LookContext);
   const prefersDark = usePrefersDark();
-  const dark = look?.dark !== undefined && (look.dark.always || prefersDark);
+  const fromAddress = useContext(HostStyle);
+  const saved = useContext(SavedHostLook);
+  const host = fromAddress === null ? null : hostStyleOf({ ...saved, ...fromAddress });
+  const dark = host === null && look?.dark !== undefined && (look.dark.always || prefersDark);
 
   return (
-    <div className={`run${wide ? " run--one" : ""}`} style={dark ? { ...look.style, ...look.dark!.style } : look?.style} {...look?.data} data-mode={dark ? "dark" : undefined}>
+    <div className={`run${wide ? " run--one" : ""}`} style={{ ...(dark ? { ...look.style, ...look.dark!.style } : look?.style), ...host }} {...look?.data} data-mode={dark ? "dark" : undefined}>
       <header className="run-top">
         {preview && (
           <p role="note" className="run-preview">
@@ -814,4 +828,24 @@ function answerFromEmail(survey: SurveyDefinition, answer: { questionId: string;
     default:
       return undefined;
   }
+}
+
+/** The saved host look as the runner takes it: only the values that are set. */
+function hostLookOf(saved: { accent?: string | null; background?: string | null; font?: string | null; radius?: number | null } | null | undefined): HostLook | null {
+  if (saved == null) {
+    return null;
+  }
+
+  const look: HostLook = {};
+  saved.accent != null && (look.accent = saved.accent);
+  saved.background != null && (look.background = saved.background);
+  saved.font != null && (look.font = saved.font);
+  saved.radius != null && (look.radius = saved.radius);
+
+  return look;
+}
+
+/** The style of the host look on the runner's page: its variables, and its background instead of the survey's. */
+function hostStyleOf(look: HostLook): Record<string, string> {
+  return { ...hostLookVariables(look, "run"), ...(look.background === undefined ? {} : { background: look.background, backgroundImage: "none" }) };
 }

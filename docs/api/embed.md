@@ -76,3 +76,46 @@ The frame posts these messages to your page (`window.postMessage`):
 | `askwerk:error` `{code}` | `token-invalid`, `embedding-off`, `no-access`, `survey-not-found` or `failed` |
 
 Check `event.origin` against your Askwerk address before you act on a message.
+
+## Drop-in components
+
+One script and one tag per place: the components are custom elements that put Askwerk in a frame, keep it as tall as
+its content and pass Askwerk's events on as DOM events on the element (`event.detail` is the message). They work in
+any framework or in plain HTML. Developers & API → Drop-in components shows the code for your choice.
+
+```html
+<script src="https://surveys.acme.at/s/components.js" type="module"></script>
+
+<askwerk-survey survey="kz26b7mq" identity="eyJ…"></askwerk-survey>     <!-- a survey for respondents -->
+<askwerk-surveys token="eyJ…"></askwerk-surveys>                         <!-- the survey list -->
+<askwerk-designer token="eyJ…"></askwerk-designer>                       <!-- the designer of the token's survey -->
+<askwerk-results token="eyJ…"></askwerk-results>                         <!-- Results of the token's survey -->
+<askwerk-result token="eyJ…" question="SAT"></askwerk-result>            <!-- one key result, live -->
+```
+
+- `<askwerk-survey>` takes `survey` (the code of its link), `lang` and `identity` as the embed script does.
+- The others take the hand-over token your server signs (see above). `<askwerk-surveys>` needs no `survey` claim and
+  shows the list only; `<askwerk-designer>`, `<askwerk-results>` and `<askwerk-result>` open the token's survey.
+- `<askwerk-result>` shows the survey's key question, or the question whose variable `question` names: a scale as the
+  share of its top two values, NPS as its score, a choice as its top option's share.
+
+The list sends `askwerk:open` `{surveyId, view}` for Results and Edit, and `askwerk:create` for New survey: your app
+decides where they lead, usually to a page with `<askwerk-results>` or `<askwerk-designer>` and a new token.
+
+### The look
+
+`look="host"` (the default) follows your app: the custom properties `--askwerk-accent`, `--askwerk-background`,
+`--askwerk-font` and `--askwerk-radius` on the element (or the attributes `accent`, `background`, `font`, `radius`),
+then the organisation's host look saved under Drop-in components, then your page's font. `look="askwerk"` keeps
+Askwerk's look, and `<askwerk-survey look="survey">` the survey's own. Only colours, a font list and 0–24 px corners
+pass.
+
+```css
+askwerk-survey, askwerk-surveys, askwerk-designer, askwerk-results, askwerk-result {
+  --askwerk-accent: #1456b8;
+  --askwerk-font: "Segoe UI", sans-serif;
+  --askwerk-radius: 4px;
+}
+```
+
+Organisation → Domains lists the websites that may show them, as for the embed script and the designer.

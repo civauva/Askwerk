@@ -34,9 +34,51 @@ public sealed class EmbeddingController(AskwerkDbContext context, IAuditWriter a
     public async Task<ActionResult<EmbeddingResponse>> Get(CancellationToken cancellationToken)
     {
         var tenantId = User.TenantId();
-        var tenant = await context.Tenants.AsNoTracking().Where(tenant => tenant.Id == tenantId).Select(tenant => new { tenant.EmbedOrigins, tenant.DesignerEmbedOrigins }).SingleAsync(cancellationToken);
+        var tenant = await context.Tenants.AsNoTracking().Where(tenant => tenant.Id == tenantId).Select(tenant => new { tenant.EmbedOrigins, tenant.DesignerEmbedOrigins, tenant.HostLook }).SingleAsync(cancellationToken);
 
-        return new EmbeddingResponse(tenant.EmbedOrigins, tenant.DesignerEmbedOrigins);
+        return new EmbeddingResponse(tenant.EmbedOrigins, tenant.DesignerEmbedOrigins, HostLook.Read(tenant.HostLook));
+    }
+
+    /// <summary>
+    /// The host look (W37): accent, background, font and corners that drop-in components follow when the tag gives
+    /// none. All empty clears it.
+    /// </summary>
+    /// <param name="request">The four values.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The look as kept; 400 look-invalid; 403 for other roles.</returns>
+    [HttpPut("host-look")]
+    [ProducesResponseType<HostLook>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<DomainProblem>(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> PutHostLook(HostLook request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var tenantId = User.TenantId();
+        var userId = User.UserId();
+        var role = await context.Memberships
+            .Where(membership => membership.UserId == userId && membership.TenantId == tenantId)
+            .Select(membership => (TenantRole?)membership.Role)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (role is not (TenantRole.Owner or TenantRole.Admin))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new DomainProblem("role-not-allowed", System.Diagnostics.Activity.Current?.TraceId.ToHexString()));
+        }
+
+        var (look, valid) = request.Checked();
+
+        if (!valid)
+        {
+            ModelState.AddModelError("look", "look-invalid");
+            return ValidationProblem(ModelState);
+        }
+
+        var tenant = await context.Tenants.SingleAsync(row => row.Id == tenantId, cancellationToken);
+        tenant.SetHostLook(look is null ? null : JsonSerializer.Serialize(look, JsonSerializerOptions.Web));
+        await audit.WriteAsync(new AuditContent(time.GetUtcNow(), tenantId, AuditActorKind.User, userId.ToString(), "host-look.changed", "Tenant", tenant.Id.ToString(), tenant.HostLook, trace.CurrentTraceId), cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Ok(look ?? new HostLook(null, null, null, null));
     }
 
     /// <summary>Replaces the websites that may embed the surveys; an empty list switches embedding off.</summary>
@@ -176,9 +218,44 @@ internal static class FrameAncestors
 /// <summary>The websites that may embed the surveys.</summary>
 /// <param name="Origins">E.g. https://www.acme.at.</param>
 /// <param name="DesignerOrigins">Websites that may show the designer and Results (AWK-13); none: off.</param>
-public sealed record EmbeddingResponse(IReadOnlyList<string> Origins, IReadOnlyList<string> DesignerOrigins);
+/// <param name="HostLook">What drop-in components follow (W37); null when not set.</param>
+public sealed record EmbeddingResponse(IReadOnlyList<string> Origins, IReadOnlyList<string> DesignerOrigins, HostLook? HostLook = null);
 
 /// <summary>The websites to allow.</summary>
 /// <param name="Origins">Scheme, host and port, e.g. https://www.acme.at; at most 20; null keeps them.</param>
 /// <param name="DesignerOrigins">Websites that may show the designer and Results; null keeps them, empty switches it off.</param>
 public sealed record EmbeddingRequest(IReadOnlyList<string>? Origins, IReadOnlyList<string>? DesignerOrigins = null);
+
+/// <summary>
+/// The host look (W37): what drop-in components follow in a host app. Only safe values: colours (#hex, rgb(), hsl()),
+/// a plain font list, corners of 0 to 24 px.
+/// </summary>
+/// <param name="Accent">Buttons, links, the key result's bar.</param>
+/// <param name="Background">Behind the components.</param>
+/// <param name="Font">The font list, e.g. "Segoe UI", sans-serif.</param>
+/// <param name="Radius">Corners in px.</param>
+public sealed partial record HostLook(string? Accent, string? Background, string? Font, int? Radius)
+{
+    [System.Text.RegularExpressions.GeneratedRegex(@"^(#[0-9a-fA-F]{3,8}|rgba?\([\d\s.,%]+\)|hsla?\([\d\s.,%deg]+\))$")]
+    private static partial System.Text.RegularExpressions.Regex Colour();
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"^[\w\s""',.-]{1,200}$")]
+    private static partial System.Text.RegularExpressions.Regex FontList();
+
+    /// <summary>The look trimmed and checked; null when all is empty.</summary>
+    /// <returns>The look, and whether every value given is allowed.</returns>
+    public (HostLook? Look, bool Valid) Checked()
+    {
+        var accent = string.IsNullOrWhiteSpace(Accent) ? null : Accent.Trim();
+        var background = string.IsNullOrWhiteSpace(Background) ? null : Background.Trim();
+        var font = string.IsNullOrWhiteSpace(Font) ? null : Font.Trim();
+        var valid = (accent is null || Colour().IsMatch(accent)) && (background is null || Colour().IsMatch(background)) && (font is null || FontList().IsMatch(font)) && Radius is null or (>= 0 and <= 24);
+
+        return (accent, background, font, Radius) is (null, null, null, null) ? (null, valid) : (new HostLook(accent, background, font, Radius), valid);
+    }
+
+    /// <summary>The kept look, or null.</summary>
+    /// <param name="json">The tenant's host_look.</param>
+    /// <returns>The look.</returns>
+    public static HostLook? Read(string? json) => json is null ? null : JsonSerializer.Deserialize<HostLook>(json, JsonSerializerOptions.Web);
+}

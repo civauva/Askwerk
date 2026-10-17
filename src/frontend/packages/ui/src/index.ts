@@ -11,3 +11,4 @@ export { StatusPill } from "./StatusPill";
 export { DataGrid, dataGridTexts, pageItems, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridMore, type DataGridPaging, type DataGridSelection, type DataGridSort, type DataGridTexts } from "./DataGrid";
 export { CodeInput } from "./CodeInput";
 export { Checkbox, ConfirmDialog, Dialog, DialogActions, Field, Menu, MenuItem, MenuLink, MenuSeparator, Notice, RadioGroup, Switch, Tabs } from "./StandardControls";
+export { hostLookVariables, readHostLook, type HostLook } from "./hostLook";

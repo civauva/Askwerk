@@ -43,6 +43,13 @@ public sealed partial class Tenant
     /// <param name="origins">Origins as browsers send them.</param>
     public void SetDesignerEmbedOrigins(IEnumerable<string> origins) => DesignerEmbedOrigins = [.. origins];
 
+    /// <summary>Gets the host look (W37) as JSON: accent, background, font and corners the drop-in components follow.</summary>
+    public string? HostLook { get; private set; }
+
+    /// <summary>Sets the host look; null clears it.</summary>
+    /// <param name="json">The checked look as JSON.</param>
+    public void SetHostLook(string? json) => HostLook = json;
+
     /// <summary>Gets whether the organisation works (AWK-38): suspended and deleted ones are closed to their members.</summary>
     public TenantStatus Status { get; private set; } = TenantStatus.Active;
 

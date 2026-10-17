@@ -407,6 +407,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnName("embed_origins")
                         .HasDefaultValueSql("'{}'");
 
+                    b.Property<string>("HostLook")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("host_look");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)

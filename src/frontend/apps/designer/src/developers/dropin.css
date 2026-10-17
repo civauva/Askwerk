@@ -1,0 +1,148 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* Developers & API → Drop-in components (W37), as design/AWK-50-drop-in/w37-drop-in.html?v=d. */
+.dropin {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.dropin__title {
+  margin: 0;
+  font: 700 26px/1.2 var(--aw-font-display);
+}
+
+.dropin__lead {
+  margin: -8px 0 4px;
+  font-size: 13px;
+  color: var(--aw-muted);
+}
+
+.dropin-card {
+  padding: 16px 18px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: 10px;
+}
+
+.dropin-card h2 {
+  margin: 0 0 8px;
+  font: 600 15px/1.3 var(--aw-font);
+}
+
+.dropin-components {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dropin-components button {
+  padding: 10px;
+  border: 1px solid var(--aw-line);
+  border-radius: 8px;
+  background: var(--aw-surface);
+  font: 400 12px/1.4 var(--aw-font);
+  color: var(--aw-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropin-components button[aria-pressed="true"] {
+  border-color: var(--aw-ink);
+  box-shadow: inset 0 0 0 1px var(--aw-ink);
+}
+
+.dropin-components code {
+  display: block;
+  margin-bottom: 4px;
+  font: 600 12px var(--aw-font-mono);
+}
+
+.dropin-rows {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 10px 16px;
+  align-items: start;
+  font-size: 13px;
+}
+
+.dropin-rows b {
+  font-weight: 600;
+}
+
+.dropin-segment {
+  display: inline-flex;
+  justify-self: start;
+  overflow: hidden;
+  border: 1px solid var(--aw-line);
+  border-radius: 8px;
+}
+
+.dropin-segment label {
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.dropin-segment label[data-on] {
+  background: var(--aw-ink);
+  color: #fff;
+}
+
+.dropin-segment label:has(:focus-visible) {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: -2px;
+}
+
+.dropin-segment input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dropin-look {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+
+.dropin-look label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dropin-look input[type="color"] {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 3px;
+}
+
+.dropin-number {
+  width: 64px;
+}
+
+.dropin-muted {
+  font-size: 12px;
+  color: var(--aw-muted);
+}
+
+.dropin-code {
+  margin: 0 0 10px;
+  padding: 12px;
+  overflow: auto;
+  border-radius: 6px;
+  background: #16181d;
+  font: 12px/1.55 var(--aw-font-mono);
+  color: #e8eaee;
+  white-space: pre;
+}
+
+@media (max-width: 760px) {
+  .dropin-components,
+  .dropin-rows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
