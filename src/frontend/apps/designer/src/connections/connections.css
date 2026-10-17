@@ -443,3 +443,15 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Long code lines scroll inside their block; they never widen the dialog. */
+.connect-wizard .aw-dialog__body > *,
+.connection-panel .aw-dialog__body > *,
+.connect-test > *,
+.connection-code {
+  min-width: 0;
+}
+
+.connection-code__body {
+  max-width: 100%;
+}
