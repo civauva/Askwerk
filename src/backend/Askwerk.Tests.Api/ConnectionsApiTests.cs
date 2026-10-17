@@ -24,6 +24,7 @@ public sealed class ConnectionsApiTests(PostgresServer server)
     private static readonly string[] Results = ["results"];
     private static readonly string[] ResponseCompleted = ["response.completed"];
     private static readonly string[] Published = ["survey.published"];
+    private static readonly string[] Reading = ["surveys:read", "responses:read"];
 
     private static CancellationToken Cancel => TestContext.Current.CancellationToken;
 
@@ -115,6 +116,9 @@ public sealed class ConnectionsApiTests(PostgresServer server)
         Assert.EndsWith(Convert.ToHexStringLower(HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), Encoding.UTF8.GetBytes($"{timestamp}.{body}"))), headers["Askwerk-Signature"], StringComparison.Ordinal);
         Assert.Equal(("works", 1), (after.GetProperty("health").GetString(), after.GetProperty("webhook").GetProperty("deliveredThisWeek").GetInt32()));
         Assert.NotEqual(JsonValueKind.Null, after.GetProperty("lastActivityAt").ValueKind);
+        Assert.Equal(200, after.GetProperty("webhook").GetProperty("lastStatus").GetInt32());
+        Assert.True(after.GetProperty("webhook").GetProperty("lastDurationMs").GetInt32() >= 0);
+        Assert.Equal(1, after.GetProperty("days")[6].GetProperty("ok").GetInt32());
     }
 
     [Fact]
@@ -172,6 +176,7 @@ public sealed class ConnectionsApiTests(PostgresServer server)
         var receivedWhilePaused = factory.Webhooks.Received.Count;
         (await owner.PutAsJsonAsync(Url($"/api/app/connections/{nightlyId}/paused"), new { paused = false }, Cancel)).EnsureSuccessStatusCode();
         var keyAfter = await key.GetAsync(Url("/api/v1/surveys"), Cancel);
+        var counted = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/connections/{nightlyId}"), Cancel);
 
         Assert.Equal("paused", paused.GetProperty("health").GetString());
         Assert.False(string.IsNullOrEmpty(paused.GetProperty("pausedBy").GetString()));
@@ -179,6 +184,9 @@ public sealed class ConnectionsApiTests(PostgresServer server)
         Assert.Equal(HttpStatusCode.Unauthorized, tokenWhilePaused.StatusCode);
         Assert.Equal(0, receivedWhilePaused);
         Assert.Equal(HttpStatusCode.OK, keyAfter.StatusCode);
+        Assert.Equal(("warning", "calls-refused", 1), (counted.GetProperty("health").GetString(), counted.GetProperty("reason").GetString(), counted.GetProperty("refusedThisWeek").GetInt32()));
+        var today = counted.GetProperty("days")[6];
+        Assert.Equal((1, 1), (today.GetProperty("ok").GetInt32(), today.GetProperty("failed").GetInt32()));
     }
 
     [Fact]
@@ -285,5 +293,21 @@ public sealed class ConnectionsApiTests(PostgresServer server)
 
         Assert.Equal(1, second.GetProperty("invited").GetInt32());
         Assert.Equal(HttpStatusCode.Forbidden, refused.StatusCode);
+    }
+
+    [Fact]
+    public async Task AKeyMadeBeforeConnections_BecomesAConnection_Once()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        var (_, keyId) = await ApiKeysApiTests.CreateKeyAsync(owner, Reading);
+
+        var made = await owner.PostAsJsonAsync(Url("/api/app/connections/adopt"), new { kind = "api-key", id = keyId }, Cancel);
+        var again = await owner.PostAsJsonAsync(Url("/api/app/connections/adopt"), new { kind = "api-key", id = keyId }, Cancel);
+        var view = await JsonAsync(made);
+
+        Assert.Equal(HttpStatusCode.Created, made.StatusCode);
+        Assert.Equal(("answers", "api-key"), (view.GetProperty("goals")[0].GetString(), view.GetProperty("calls").GetProperty("signIn").GetString()));
+        Assert.Equal(HttpStatusCode.Conflict, again.StatusCode);
     }
 }

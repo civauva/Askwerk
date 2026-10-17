@@ -159,7 +159,6 @@ export function SharePage({ participants, preview, writeClipboard = (text) => na
 
         return (
           <main className="survey-page survey-page--wide">
-            <h2 className="survey-page__title">{t("share")}</h2>
             {summary.publishedVersion === null ? (
               <p className="survey-page__empty">{t("shareFirst")}</p>
             ) : (
@@ -201,13 +200,14 @@ type ParticipantsPageProps = WorkspaceNavigation & {
 /** The Participants tab (W17 E): who was invited and what happened. */
 export function ParticipantsPage({ participants, contacts, saveFile, preview, timeZone, ...navigation }: ParticipantsPageProps) {
   return (
-    <SurveyFrame {...navigation} active="participants">
-      {() => (
+    <SurveyFrame {...navigation} active="participants" className="participants-frame">
+      {({ reload }) => (
         <main className="survey-page survey-page--wide">
           <ParticipantsPanel
             client={participants}
             surveyId={navigation.surveyId}
             locale={navigation.locale}
+            onLoaded={reload}
             {...(contacts === undefined ? {} : { contacts })}
             {...(saveFile === undefined ? {} : { saveFile })}
             {...(preview === undefined ? {} : { preview })}

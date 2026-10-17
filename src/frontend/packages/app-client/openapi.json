@@ -1053,6 +1053,97 @@
         }
       }
     },
+    "/api/app/templates/new": {
+      "post": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "A new, empty template of the organisation\u0027s (W32 \u0022New template\u0022), ready to edit in the designer.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTemplateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTemplateRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/NewTemplateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateEditResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/templates/{id}": {
       "delete": {
         "tags": [
@@ -6553,6 +6644,38 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "The file."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "The chosen contacts as CSV (W35), as the export of all.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "The file."
@@ -12141,6 +12264,117 @@
         }
       }
     },
+    "/api/app/connections/adopt": {
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Makes a connection of an API key, OAuth client or webhook made before Connections (\u0022Make a connection of it\u0022):\r\nnamed after it, its goals from what it may do.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionAdoption"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionAdoption"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionAdoption"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/connections/{id}/test": {
       "post": {
         "tags": [
@@ -14315,6 +14549,28 @@
         },
         "description": "The current password, to confirm a sensitive change."
       },
+      "ConnectionAdoption": {
+        "required": [
+          "kind",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "api-key, oauth-client or webhook."
+          },
+          "id": {
+            "type": "string",
+            "description": "Its id.",
+            "format": "uuid"
+          }
+        },
+        "description": "What to make a connection of."
+      },
       "ConnectionCalls": {
         "required": [
           "signIn",
@@ -14452,6 +14708,64 @@
         },
         "description": "The secrets of a connection, shown once; null where it has none."
       },
+      "ConnectionDay": {
+        "required": [
+          "day",
+          "ok",
+          "failed"
+        ],
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "string",
+            "description": "The day (UTC).",
+            "format": "date"
+          },
+          "ok": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Calls let in and events delivered.",
+            "format": "int32"
+          },
+          "failed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Calls refused and events that failed.",
+            "format": "int32"
+          }
+        },
+        "description": "One day of a connection: what went through, and what failed or was refused."
+      },
+      "ConnectionExport": {
+        "required": [
+          "at",
+          "size"
+        ],
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "When it was ready.",
+            "format": "date-time"
+          },
+          "size": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Its size in bytes.",
+            "format": "int64"
+          }
+        },
+        "description": "The last export the connection\u0027s key fetched."
+      },
       "ConnectionList": {
         "required": [
           "items"
@@ -14467,6 +14781,27 @@
           }
         },
         "description": "The organisation\u0027s connections."
+      },
+      "ConnectionLogin": {
+        "required": [
+          "kind",
+          "host"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "oidc, ldap or handover."
+          },
+          "host": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The login\u0027s address."
+          }
+        },
+        "description": "How colleagues sign in, for a connection with the sign-in goal."
       },
       "ConnectionPause": {
         "required": [
@@ -14605,7 +14940,12 @@
           "pausedBy",
           "calls",
           "webhook",
-          "createdAt"
+          "createdAt",
+          "days",
+          "refusedThisWeek",
+          "lastExport",
+          "login",
+          "sites"
         ],
         "type": "object",
         "properties": {
@@ -14638,7 +14978,7 @@
               "null",
               "string"
             ],
-            "description": "Why warning or failing: credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused."
+            "description": "Why warning or failing: calls-refused, credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused."
           },
           "lastActivityAt": {
             "type": [
@@ -14689,6 +15029,51 @@
             "type": "string",
             "description": "Created (UTC).",
             "format": "date-time"
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionDay"
+            },
+            "description": "The last 7 days, oldest first."
+          },
+          "refusedThisWeek": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Calls refused in the last 7 days.",
+            "format": "int32"
+          },
+          "lastExport": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The last export its key fetched.",
+                "$ref": "#/components/schemas/ConnectionExport"
+              }
+            ]
+          },
+          "login": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "How colleagues sign in, for the sign-in goal; null when not set up.",
+                "$ref": "#/components/schemas/ConnectionLogin"
+              }
+            ]
+          },
+          "sites": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The websites that may show its surveys, for the embed goal."
           }
         },
         "description": "A connection as Connections shows it."
@@ -14756,6 +15141,26 @@
             ],
             "description": "Since when every delivery failed.",
             "format": "date-time"
+          },
+          "lastStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "What the system answered to the last try.",
+            "format": "int32"
+          },
+          "lastDurationMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "How long the last try took.",
+            "format": "int32"
           }
         },
         "description": "How Askwerk calls the system."
@@ -15016,6 +15421,14 @@
           "bounced": {
             "type": "boolean",
             "description": "Their address was refused."
+          },
+          "unsubscribedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When they unsubscribed (UTC).",
+            "format": "date-time"
           }
         },
         "description": "One contact in the list."
@@ -16861,6 +17274,13 @@
               "string"
             ],
             "description": "With SaveToContacts: the group they join."
+          },
+          "importedFrom": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The people came from an import (W35): the file\u0027s name, or empty for a pasted table."
           }
         },
         "description": "An invitation to send."
@@ -17383,6 +17803,30 @@
         },
         "description": "One message text."
       },
+      "NewTemplateRequest": {
+        "required": [
+          "name",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Its name."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Its language, de or en; en when not given."
+          }
+        },
+        "description": "A new, empty template (W32)."
+      },
       "NpsSummary": {
         "required": [
           "score",
@@ -17898,6 +18342,20 @@
             ],
             "description": "Reminded: how many reminders so far.",
             "format": "int32"
+          },
+          "source": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Invited: where they came from, \u0022import:\u0022 and the file\u0027s name or \u0022contacts\u0022 (W35)."
+          },
+          "automatic": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Reminded: sent by the automatic reminders rather than by hand (W35)."
           }
         },
         "description": "One thing that happened to a person (W35)."
@@ -18057,6 +18515,56 @@
             ],
             "description": "Their contact, if any (W35).",
             "format": "uuid"
+          },
+          "invitedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When they were added (UTC, W35).",
+            "format": "date-time"
+          },
+          "lastActivityKind": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "What the last activity was (W35): answered, started, opened, reminded, sent, invited, bounced or unsubscribed."
+          },
+          "bounceReason": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Bounced: mailbox-full, unknown-address or refused (W35)."
+          },
+          "unsubscribedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When they unsubscribed (UTC, W35).",
+            "format": "date-time"
+          },
+          "page": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Started: the page they are on, from 1 (W35).",
+            "format": "int32"
+          },
+          "pages": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Started: how many pages the survey has (W35).",
+            "format": "int32"
           }
         },
         "description": "A participant in the list."
@@ -19401,6 +19909,17 @@
           "preview": {
             "description": "A question to show on the card.",
             "$ref": "#/components/schemas/SamplePreview"
+          },
+          "front": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The front page and contents a Templates card draws (W32).",
+                "$ref": "#/components/schemas/SurveyFront"
+              }
+            ]
           }
         },
         "description": "One sample."
@@ -20720,6 +21239,20 @@
               "$ref": "#/components/schemas/KeyResult"
             },
             "description": "Surveys only: the key questions\u0027 results (W38), in survey order."
+          },
+          "lookName": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The name of its look when that is one of the organisation\u0027s looks."
+          },
+          "lookPreset": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The Askwerk look it is or started from (\u0022konfetti\u0022); the card names it in the reader\u0027s language."
           }
         },
         "description": "The front page a card draws (W32)."

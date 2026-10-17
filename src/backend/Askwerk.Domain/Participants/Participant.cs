@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 using System.Security.Cryptography;
+using System.Text.Json;
 
 namespace Askwerk.Domain.Participants;
 
@@ -15,6 +16,7 @@ public sealed class Participant
         Email = "";
         Token = "";
         Fields = "{}";
+        ReminderLog = "[]";
     }
 
     /// <summary>Stable id.</summary>
@@ -71,6 +73,12 @@ public sealed class Participant
     /// <summary>No more reminders for them (W35), chosen by hand.</summary>
     public bool RemindersOff { get; private set; }
 
+    /// <summary>Why the mail server refused their address (W35): mailbox-full, unknown-address or refused.</summary>
+    public string? BounceReason { get; private set; }
+
+    /// <summary>Each reminder sent (W35), as a JSON array of {"at": time, "automatic": bool}, oldest first.</summary>
+    public string ReminderLog { get; private set; }
+
     /// <summary>A new participant with a fresh token.</summary>
     public static Participant Add(Guid id, Guid tenantId, Guid surveyId, Guid invitationId, string email, string? name, string? language, DateTimeOffset now) => new()
     {
@@ -83,6 +91,7 @@ public sealed class Participant
         Language = string.IsNullOrWhiteSpace(language) ? null : language.Trim().ToLowerInvariant(),
         Token = RandomNumberGenerator.GetString("abcdefghijklmnopqrstuvwxyz0123456789", 32),
         CreatedAt = now,
+        ReminderLog = "[]",
     };
 
     /// <summary>A new participant with their details (W35): External ID, fields, and the contact they came from.</summary>
@@ -117,18 +126,27 @@ public sealed class Participant
     /// <summary>The invitation went out.</summary>
     public void Sent(DateTimeOffset now) => SentAt = now;
 
-    /// <summary>The mail server refused the address; no more emails go there.</summary>
-    public void Bounced(DateTimeOffset now) => BouncedAt = now;
+    /// <summary>The mail server refused the address, and why (W35); no more emails go there.</summary>
+    public void Bounced(DateTimeOffset now, string? reason = null)
+    {
+        BouncedAt = now;
+        BounceReason = reason;
+    }
 
     /// <summary>They opened their link; the first time counts.</summary>
     public void Opened(DateTimeOffset now) => OpenedAt ??= now;
 
-    /// <summary>A reminder went out.</summary>
-    public void Reminded(DateTimeOffset now)
+    /// <summary>A reminder went out: sent by the automatic reminders, or by hand (W35).</summary>
+    public void Reminded(DateTimeOffset now, bool automatic = false)
     {
         Reminders++;
         RemindedAt = now;
+        ReminderLog = JsonSerializer.Serialize(ReadReminderLog().Append(new SentReminder(now, automatic)), JsonSerializerOptions.Web);
     }
+
+    /// <summary>The reminders sent, oldest first; empty for reminders sent before the log existed.</summary>
+    public IReadOnlyList<SentReminder> ReadReminderLog() =>
+        string.IsNullOrWhiteSpace(ReminderLog) ? [] : JsonSerializer.Deserialize<List<SentReminder>>(ReminderLog, JsonSerializerOptions.Web) ?? [];
 }
 
 /// <summary>One sending to a list (W12 C step 2): when, the deadline, and the reminder.</summary>
@@ -169,11 +187,14 @@ public sealed class Invitation
     /// <summary>Created (UTC).</summary>
     public DateTimeOffset CreatedAt { get; private set; }
 
+    /// <summary>Where the people came from (W35): "import:" and the file's name, "contacts", or empty.</summary>
+    public string? Source { get; private set; }
+
     /// <summary>
     /// A new sending. The reminder goes three days before the deadline, at least a day after sending; without a
     /// deadline the invitation asks for an answer within two weeks.
     /// </summary>
-    public static Invitation Create(Guid id, Guid tenantId, Guid surveyId, bool send, DateTimeOffset? sendAt, DateOnly? deadline, bool reminder, string? host, Guid createdBy, DateTimeOffset now)
+    public static Invitation Create(Guid id, Guid tenantId, Guid surveyId, bool send, DateTimeOffset? sendAt, DateOnly? deadline, bool reminder, string? host, Guid createdBy, DateTimeOffset now, string? source = null)
     {
         var when = sendAt is { } later && later > now ? later : now;
         var by = deadline ?? DateOnly.FromDateTime(when.UtcDateTime.AddDays(14));
@@ -191,9 +212,15 @@ public sealed class Invitation
             Host = host,
             CreatedBy = createdBy,
             CreatedAt = now,
+            Source = string.IsNullOrWhiteSpace(source) ? null : source.Trim()[..Math.Min(source.Trim().Length, 300)],
         };
     }
 }
+
+/// <summary>A reminder sent to a person (W35).</summary>
+/// <param name="At">When (UTC).</param>
+/// <param name="Automatic">Sent by the automatic reminders rather than by hand.</param>
+public sealed record SentReminder(DateTimeOffset At, bool Automatic);
 
 /// <summary>An address that asked for no more invitations from the organisation (W12 note b).</summary>
 public sealed class Unsubscribe

@@ -27,13 +27,17 @@ type DialogProps = {
   /** A line above the title, e.g. "Publish version 4". */
   kicker?: ReactNode;
   className?: string;
+  /** More in the head beside or below the title, e.g. steps (W35). */
+  head?: ReactNode;
+  /** A bar below the content that stays in view, e.g. the actions (W35). */
+  footer?: ReactNode;
 };
 
 /**
  * A modal dialog (W20 1): title, content, Escape and ✕ close it, focus stays inside and goes back where it was.
  * On phones it opens as a sheet from the bottom.
  */
-export function Dialog({ title, onClose, children, wide = false, kicker, className }: DialogProps) {
+export function Dialog({ title, onClose, children, wide = false, kicker, className, head, footer }: DialogProps) {
   const id = useId();
   const box = useRef<HTMLDivElement>(null);
 
@@ -87,8 +91,10 @@ export function Dialog({ title, onClose, children, wide = false, kicker, classNa
         <div className="aw-dialog__head">
           {kicker !== undefined && <span className="aw-dialog__kicker">{kicker}</span>}
           <h2 id={`${id}-title`}>{title}</h2>
+          {head}
         </div>
         <div className="aw-dialog__body">{children}</div>
+        {footer !== undefined && footer !== null && footer !== false && <div className="aw-dialog__foot">{footer}</div>}
       </div>
     </div>
   );

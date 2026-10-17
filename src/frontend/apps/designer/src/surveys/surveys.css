@@ -92,8 +92,26 @@
 }
 
 .surveys__search {
-  flex: 1 1 260px;
-  max-width: 360px;
+  flex: 0 1 300px;
+  min-width: 200px;
+}
+
+/* A survey's status as a chip (W32): outlined; amber while a draft or changes wait. */
+.surveys__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 999px;
+  background: var(--aw-surface);
+  font: 500 11.5px/1.2 var(--aw-font-mono);
+  color: var(--aw-graphite);
+  white-space: nowrap;
+}
+
+.surveys__status[data-draft] {
+  background: #fdf1dc;
+  border-color: #e7c27c;
 }
 
 .surveys__input[aria-invalid="true"] {

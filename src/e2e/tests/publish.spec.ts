@@ -19,8 +19,8 @@ const definition = {
 };
 
 const text = {
-  "desktop-en": { publish: "Publish", published: "Published. Responses are being collected.", qr: /^QR code for /, embed: "Embed code", pdf: "Download PDF (with QR code)" },
-  "phone-de": { publish: "Veröffentlichen", published: "Veröffentlicht. Antworten werden gesammelt.", qr: /^QR-Code für /, embed: "Code zum Einbetten", pdf: "PDF herunterladen (mit QR-Code)" },
+  "desktop-en": { publish: "Publish", published: "Published. Responses are being collected.", qr: /^QR code for /, getEmbed: "Get embed code", embed: "Embed code", pdf: /^Download PDF/, pdfIn: /^PDF in / },
+  "phone-de": { publish: "Veröffentlichen", published: "Veröffentlicht. Antworten werden gesammelt.", qr: /^QR-Code für /, getEmbed: "Code zum Einbetten holen", embed: "Code zum Einbetten", pdf: /^PDF herunterladen/, pdfIn: /^PDF auf / },
 } as const;
 
 test("an owner publishes and gets the link, QR code, embed code and PDF on one screen", async ({ page }, info) => {
@@ -43,8 +43,12 @@ test("an owner publishes and gets the link, QR code, embed code and PDF on one s
   await page.getByRole("dialog").getByRole("button", { name: t.publish, exact: true }).click();
   const dialog = page.getByRole("dialog", { name: t.published });
   await expect(dialog.getByRole("img", { name: t.qr })).toBeVisible();
-  await expect(dialog.getByRole("textbox", { name: t.embed })).toHaveValue(/\/s\/embed\.js" data-survey="[23456789abcdefghjkmnpqrstuvwxyz]{8}"/);
-  await expect(dialog.getByRole("link", { name: t.pdf })).toHaveAttribute("href", new RegExp(`^/api/app/surveys/${id}/pdf\\?language=`));
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath(`published-${info.project.name}.png`), fullPage: true });
+  // The PDF from the "Download PDF ▾" menu, the embed code in its own dialog (W34).
+  await dialog.getByRole("button", { name: t.pdf }).click();
+  await expect(page.getByRole("menuitem", { name: t.pdfIn }).first()).toHaveAttribute("href", new RegExp(`^/api/app/surveys/${id}/pdf\\?language=`));
+  await page.keyboard.press("Escape");
+  await dialog.getByRole("button", { name: t.getEmbed, exact: true }).click();
+  await expect(page.getByRole("dialog", { name: t.embed }).getByRole("textbox", { name: t.embed })).toHaveValue(/\/s\/embed\.js" data-survey="[23456789abcdefghjkmnpqrstuvwxyz]{8}"/);
 });

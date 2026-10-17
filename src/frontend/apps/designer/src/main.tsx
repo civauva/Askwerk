@@ -19,6 +19,7 @@ import { DomainsPage } from "./domains/DomainsPage";
 import { EmbeddedApp } from "./embed/EmbeddedApp";
 import { LookPage } from "./look/LookPage";
 import { MembersPage } from "./members/MembersPage";
+import { ConnectPage } from "./connections/ConnectPage";
 import { ConnectionsPage } from "./connections/ConnectionsPage";
 import { ContactsPage } from "./contacts/ContactsPage";
 import { SignInPage } from "./members/SignInPage";
@@ -71,6 +72,8 @@ let listQuery = "";
 /** Signed in: every page inside the app's sidebar (AWK-38, W29); a survey's screens step into it. */
 function Home(props: HomeProps) {
   const { me, locale, client: authClient, path, onNavigate, onSignedOut, onSwitched, onOpenAccount } = props;
+  // The Contacts count in the sidebar (W35), once the Contacts page has read it.
+  const [contactsCount, setContactsCount] = useState<number | null>(null);
   const shell = (page: ReactNode, survey?: { onBack: () => void }) => (
     <AppShell
       client={authClient}
@@ -83,15 +86,16 @@ function Home(props: HomeProps) {
       onOpenAccount={onOpenAccount}
       onLeave={() => members.remove(me.id).then(onSwitched)}
       {...(survey !== undefined && { survey })}
+      {...(contactsCount === null ? {} : { counts: { contacts: contactsCount } })}
     >
       {page}
     </AppShell>
   );
 
-  return <Pages {...props} shell={shell} />;
+  return <Pages {...props} shell={shell} onContactsCount={setContactsCount} />;
 }
 
-function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & { shell: (page: ReactNode, survey?: { onBack: () => void }) => ReactNode }) {
+function Pages({ me, locale, path, onNavigate, onSwitched, shell, onContactsCount }: HomeProps & { shell: (page: ReactNode, survey?: { onBack: () => void }) => ReactNode; onContactsCount: (count: number) => void }) {
   const [, surveyId, view] = /^\/surveys\/([^/]+)(?:\/(look|share|results|participants|survey-settings))?$/.exec(path) ?? [];
 
   if (surveyId !== undefined) {
@@ -161,7 +165,7 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
 
     return (
       shell(
-        <DevelopersPage client={developers} locale={locale} canManageKeys={role === "owner" || role === "admin"} onOpenApiKeys={() => onNavigate("/api-keys")} />
+        <DevelopersPage client={developers} locale={locale} canManageKeys={role === "owner" || role === "admin"} onOpenApiKeys={() => onNavigate("/api-keys")} initialGuide={new URLSearchParams(location.search).get("guide")} />
       )
     );
   }
@@ -183,11 +187,15 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
   }
 
   if (path === "/contacts") {
-    return shell(<ContactsPage client={contacts} participants={participants} surveys={surveys} locale={locale} canEdit={canEditSurveys(me)} />);
+    return shell(<ContactsPage client={contacts} participants={participants} surveys={surveys} locale={locale} canEdit={canEditSurveys(me)} onCount={onContactsCount} saveFile={saveFile} />);
   }
 
   if (path === "/connections") {
-    return shell(<ConnectionsPage client={connections} surveys={surveys} locale={locale} onNavigate={onNavigate} writeClipboard={(text) => navigator.clipboard.writeText(text)} />);
+    return shell(<ConnectionsPage client={connections} locale={locale} onNavigate={onNavigate} writeClipboard={(text) => navigator.clipboard.writeText(text)} />);
+  }
+
+  if (path === "/connections/new") {
+    return shell(<ConnectPage client={connections} surveys={surveys} locale={locale} onNavigate={onNavigate} writeClipboard={(text) => navigator.clipboard.writeText(text)} />);
   }
 
   if (path === "/members") {
@@ -209,7 +217,7 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
   if (path === "/api-keys") {
     return (
       shell(
-        <ApiKeysPage client={apiKeys} webhooks={webhooks} oauthClients={oauthClients} locale={locale} />
+        <ApiKeysPage client={apiKeys} webhooks={webhooks} oauthClients={oauthClients} locale={locale} makeConnection={(kind, id) => connections.adopt(kind, id).then(() => onNavigate("/connections"))} />
       )
     );
   }

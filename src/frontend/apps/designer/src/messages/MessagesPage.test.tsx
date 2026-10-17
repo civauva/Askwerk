@@ -67,6 +67,11 @@ describe("Messages (AWK-17 step 6, W10 D): stupid simple", () => {
     expect(frame.getAttribute("srcdoc")).toContain("Preview of s1");
     expect(frame.getAttribute("sandbox")).toBe("");
     expect(preview.getByText("Acme GmbH: your opinion counts")).toBeTruthy();
+    // On its stage (W32): a phone's width, and the zoom.
+    fireEvent.click(preview.getByRole("button", { name: "Phone" }));
+    expect(frame.parentElement!.style.width).toBe("390px");
+    fireEvent.click(preview.getByRole("button", { name: "Zoom out" }));
+    expect(frame.parentElement!.style.transform).toBe("scale(0.9)");
     fireEvent.click(preview.getByRole("button", { name: /^Preview with/ }));
     fireEvent.click(screen.getByRole("option", { name: "Employee pulse Q4" }));
 

@@ -45,6 +45,18 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
     /// <summary>The organisation's connections to other systems (W36).</summary>
     public DbSet<Connection> Connections => Set<Connection>();
 
+    /// <summary>Calls and refused calls per key or client and day (W36).</summary>
+    public DbSet<IntegrationActivity> IntegrationActivities => Set<IntegrationActivity>();
+
+    /// <summary>Notes a call, or a refused call, of an API key or OAuth client; works before the request has an organisation.</summary>
+    /// <param name="tenantId">The key's or client's organisation.</param>
+    /// <param name="credentialId">The key or client.</param>
+    /// <param name="refused">Whether the call was refused.</param>
+    /// <param name="cancellationToken">Cancels the write.</param>
+    /// <returns>When written.</returns>
+    public Task NoteIntegrationActivityAsync(Guid tenantId, Guid credentialId, bool refused, CancellationToken cancellationToken) =>
+        Database.ExecuteSqlInterpolatedAsync($"SELECT note_integration_activity({tenantId}, {credentialId}, {(refused ? 0 : 1)}, {(refused ? 1 : 0)})", cancellationToken);
+
     /// <summary>Gets the webhooks' deliveries (AWK-32).</summary>
     public DbSet<WebhookDelivery> WebhookDeliveries => Set<WebhookDelivery>();
 
@@ -333,6 +345,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             delivery.Property(row => row.Error).HasColumnName("error").HasMaxLength(500);
             delivery.Property(row => row.CreatedAt).HasColumnName("created_at");
             delivery.Property(row => row.DeliveredAt).HasColumnName("delivered_at");
+            delivery.Property(row => row.DurationMs).HasColumnName("duration_ms");
             delivery.HasOne<Webhook>().WithMany().HasForeignKey(row => row.WebhookId).OnDelete(DeleteBehavior.Cascade);
             delivery.HasIndex(row => new { row.WebhookId, row.Id });
         });
@@ -724,6 +737,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             invitation.Property(row => row.Host).HasColumnName("host").HasMaxLength(253);
             invitation.Property(row => row.CreatedBy).HasColumnName("created_by");
             invitation.Property(row => row.CreatedAt).HasColumnName("created_at");
+            invitation.Property(row => row.Source).HasColumnName("source").HasMaxLength(300);
             invitation.HasOne<Survey>().WithMany().HasForeignKey(row => row.SurveyId).OnDelete(DeleteBehavior.Restrict);
             invitation.HasIndex(row => row.SurveyId);
         });
@@ -750,6 +764,8 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             participant.Property(row => row.Fields).HasColumnName("fields").HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
             participant.Property(row => row.ContactId).HasColumnName("contact_id");
             participant.Property(row => row.RemindersOff).HasColumnName("reminders_off");
+            participant.Property(row => row.BounceReason).HasColumnName("bounce_reason").HasMaxLength(40);
+            participant.Property(row => row.ReminderLog).HasColumnName("reminder_log").HasColumnType("jsonb").HasDefaultValueSql("'[]'::jsonb");
             participant.HasOne<Askwerk.Domain.Participants.Contact>().WithMany().HasForeignKey(row => row.ContactId).OnDelete(DeleteBehavior.SetNull);
             participant.HasIndex(row => new { row.SurveyId, row.ExternalId });
             participant.HasOne<Survey>().WithMany().HasForeignKey(row => row.SurveyId).OnDelete(DeleteBehavior.Restrict);
@@ -809,6 +825,18 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             key.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
             key.HasIndex(row => row.Prefix).IsUnique();
             key.HasIndex(row => row.TenantId);
+        });
+
+        modelBuilder.Entity<IntegrationActivity>(activity =>
+        {
+            activity.ToTable("integration_activity");
+            activity.HasKey(row => new { row.CredentialId, row.Day });
+            activity.Property(row => row.TenantId).HasColumnName("tenant_id");
+            activity.Property(row => row.CredentialId).HasColumnName("credential_id");
+            activity.Property(row => row.Day).HasColumnName("day");
+            activity.Property(row => row.Calls).HasColumnName("calls");
+            activity.Property(row => row.Refused).HasColumnName("refused");
+            activity.HasIndex(row => row.TenantId);
         });
 
         modelBuilder.Entity<Connection>(connection =>

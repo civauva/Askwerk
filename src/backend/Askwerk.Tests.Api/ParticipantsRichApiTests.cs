@@ -119,6 +119,39 @@ public sealed class ParticipantsRichApiTests(PostgresServer server)
     }
 
     [Fact]
+    public async Task TheList_SaysWhatHappenedLast_WhereStartedPeopleAre_AndWhyAnAddressBounced()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        var (owner, id) = await PublishedAsync(factory);
+        using var _ = owner;
+        factory.Emails.FailFor.Add("jakob@acme.at");
+        (await owner.PostAsJsonAsync(Url($"/api/app/surveys/{id}/invitations"), new { participants = new[] { Person("lena@acme.at", "Lena", "CRM-1", "Sales"), Person("sarah@acme.at", "Sarah", "CRM-2", "Sales"), Person("jakob@acme.at", "Jakob", "CRM-3", "IT") }, importedFrom = "customers-q4.csv" }, Cancel)).EnsureSuccessStatusCode();
+        await RunJobsAsync(factory);
+        var token = factory.Emails.Sent.Single(sent => sent.Message.To == "sarah@acme.at").Message.Body.Split("?t=")[1][..32];
+        using var respondent = await factory.CreateReadyClientAsync();
+        (await respondent.PostAsJsonAsync(Url($"/api/app/run/{id}/response"), new { language = "de", token }, Cancel)).EnsureSuccessStatusCode();
+        (await respondent.PutAsJsonAsync(Url($"/api/app/run/{id}/response/pages/p1"), new { answers = new { q1 = new { number = 4 } } }, Cancel)).EnsureSuccessStatusCode();
+        var before = (await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants"), Cancel)).GetProperty("items").EnumerateArray().ToDictionary(item => item.GetProperty("email").GetString()!);
+        (await owner.PostAsJsonAsync(Url($"/api/app/surveys/{id}/participants/remind"), new { participantIds = new[] { before["lena@acme.at"].GetProperty("id").GetString() } }, Cancel)).EnsureSuccessStatusCode();
+        await RunJobsAsync(factory);
+
+        var items = (await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants"), Cancel)).GetProperty("items").EnumerateArray().ToDictionary(item => item.GetProperty("email").GetString()!);
+        var it = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants?search=it"), Cancel);
+        var lena = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants/{items["lena@acme.at"].GetProperty("id").GetString()}"), Cancel);
+
+        Assert.Equal(("bounced", "bounced", "unknown-address"), (items["jakob@acme.at"].GetProperty("status").GetString(), items["jakob@acme.at"].GetProperty("lastActivityKind").GetString(), items["jakob@acme.at"].GetProperty("bounceReason").GetString()));
+        Assert.Equal(("started", "started", 2, 2), (items["sarah@acme.at"].GetProperty("status").GetString(), items["sarah@acme.at"].GetProperty("lastActivityKind").GetString(), items["sarah@acme.at"].GetProperty("page").GetInt32(), items["sarah@acme.at"].GetProperty("pages").GetInt32()));
+        Assert.Equal("reminded", items["lena@acme.at"].GetProperty("lastActivityKind").GetString());
+        Assert.Equal(JsonValueKind.String, items["lena@acme.at"].GetProperty("invitedAt").ValueKind);
+        // A field's value is found by the search: IT is Jakob's department.
+        Assert.Equal(["jakob@acme.at"], it.GetProperty("items").EnumerateArray().Select(item => item.GetProperty("email").GetString()));
+        var history = lena.GetProperty("history").EnumerateArray().ToList();
+        Assert.Equal("import:customers-q4.csv", history.Single(entry => entry.GetProperty("kind").GetString() == "invited").GetProperty("source").GetString());
+        var reminded = history.Single(entry => entry.GetProperty("kind").GetString() == "reminded");
+        Assert.Equal((1, false), (reminded.GetProperty("count").GetInt32(), reminded.GetProperty("automatic").GetBoolean()));
+    }
+
+    [Fact]
     public async Task AutomaticReminders_GoToThoseDueWhoHaveNotAnswered_UpToTheMost()
     {
         await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
@@ -142,6 +175,8 @@ public sealed class ParticipantsRichApiTests(PostgresServer server)
         // At most one: Lena is done; Thomas is due in a week.
         Assert.Equal(1, list.GetProperty("autoReminders").GetProperty("nextCount").GetInt32());
         Assert.True(list.GetProperty("autoReminders").GetProperty("nextAt").GetDateTimeOffset() > DateTimeOffset.UtcNow.AddDays(6));
+        var lena = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants/{ids["lena@acme.at"]}"), Cancel);
+        Assert.True(lena.GetProperty("history").EnumerateArray().Single(entry => entry.GetProperty("kind").GetString() == "reminded").GetProperty("automatic").GetBoolean());
     }
 
     [Fact]
@@ -161,6 +196,9 @@ public sealed class ParticipantsRichApiTests(PostgresServer server)
         var invited = await owner.PostAsJsonAsync(Url($"/api/app/surveys/{id}/invitations"), new { contactIds, send = false }, Cancel);
         var participants = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{id}/participants?sort=name"), Cancel);
         var linked = await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/contacts"), Cancel);
+        var chosen = await (await owner.PostAsJsonAsync(Url("/api/app/contacts/contacts.csv"), new { contactIds = contactIds.Take(1) }, Cancel)).Content.ReadAsStringAsync(Cancel);
+        await SurveysApiTests.ScalarAsync(factory, "INSERT INTO unsubscribe (id, tenant_id, email, created_at) SELECT gen_random_uuid(), tenant_id, email, now() FROM contact WHERE email = 'thomas@acme.at'");
+        var unsubscribed = await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/contacts?state=unsubscribed"), Cancel);
 
         Assert.Equal((2, 0, 1), (first.GetProperty("added").GetInt32(), first.GetProperty("updated").GetInt32(), first.GetProperty("invalid").GetArrayLength()));
         Assert.Equal((0, 1), (again.GetProperty("added").GetInt32(), again.GetProperty("updated").GetInt32()));
@@ -170,5 +208,8 @@ public sealed class ParticipantsRichApiTests(PostgresServer server)
         Assert.Equal(HttpStatusCode.Accepted, invited.StatusCode);
         Assert.Equal(["CRM-1", "CRM-2"], participants.GetProperty("items").EnumerateArray().Select(item => item.GetProperty("externalId").GetString()).Order());
         Assert.All(linked.GetProperty("items").EnumerateArray(), item => Assert.Equal(1, item.GetProperty("surveys").GetInt32()));
+        // The chosen ones only, with the same columns as the export of all.
+        Assert.Equal(2, chosen.TrimStart((char)0xFEFF).Split("\r\n", StringSplitOptions.RemoveEmptyEntries).Length);
+        Assert.Equal(("thomas@acme.at", JsonValueKind.String), (unsubscribed.GetProperty("items")[0].GetProperty("email").GetString(), unsubscribed.GetProperty("items")[0].GetProperty("unsubscribedAt").ValueKind));
     }
 }

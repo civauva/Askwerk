@@ -116,7 +116,7 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
                 row.CreatedBy ?? "",
                 row.survey.UpdatedAt,
                 row.Responses,
-                fronts?.Of(row.Draft is null ? null : JsonSerializer.Deserialize<SurveyDefinition>(row.Draft, SurveyDefinitionJson.Options), row.survey.Look, row.survey.ThemeId) is { } front
+                fronts?.Of(row.Draft is null ? null : JsonSerializer.Deserialize<SurveyDefinition>(row.Draft, SurveyDefinitionJson.Options), row.survey.Look, row.survey.ThemeId, row.survey.LookBase) is { } front
                     ? front with { Answers = answers?.GetValueOrDefault(row.survey.Id), Code = row.survey.Code, PublishedAt = published?.GetValueOrDefault(row.survey.Id), Keys = keys?.GetValueOrDefault(row.survey.Id) }
                     : null))],
             new Dictionary<string, int>

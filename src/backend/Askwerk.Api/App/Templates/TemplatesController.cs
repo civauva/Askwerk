@@ -41,7 +41,7 @@ public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter a
             .Select(template => new
             {
                 template,
-                Survey = context.Surveys.Where(survey => survey.Id == template.SurveyId).Select(survey => new { survey.Look, survey.ThemeId }).FirstOrDefault(),
+                Survey = context.Surveys.Where(survey => survey.Id == template.SurveyId).Select(survey => new { survey.Look, survey.ThemeId, survey.LookBase }).FirstOrDefault(),
                 Draft = context.SurveyVersions.Where(draft => draft.SurveyId == template.SurveyId && draft.State == SurveyVersionState.Draft).Select(draft => draft.Definition).FirstOrDefault(),
             })
             .ToListAsync(cancellationToken);
@@ -52,7 +52,7 @@ public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter a
         {
             var definition = JsonSerializer.Deserialize<SurveyDefinition>(row.Draft ?? row.template.Definition, SurveyDefinitionJson.Options)!;
 
-            return new TemplateResponse(row.template.Id.ToString(), "organisation", row.template.Name, null, Count(definition), definition.Languages, row.template.SurveyId, fronts.Of(definition, row.Survey?.Look, row.Survey?.ThemeId));
+            return new TemplateResponse(row.template.Id.ToString(), "organisation", row.template.Name, null, Count(definition), definition.Languages, row.template.SurveyId, fronts.Of(definition, row.Survey?.Look, row.Survey?.ThemeId, row.Survey?.LookBase));
         });
 
         return new TemplateListResponse([.. askwerk, .. organisation]);
@@ -121,6 +121,50 @@ public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter a
         var name = !string.IsNullOrWhiteSpace(request?.Name) ? request.Name : system.Names.TryGetValue(request?.Language ?? "en", out var named) ? named : system.Names.Values.First();
         var template = SurveyTemplate.Create(Guid.CreateVersion7(now), tenantId, name, JsonSerializer.Serialize(system.Definition, SurveyDefinitionJson.Options), User.UserId()!.Value, now);
         var surveyId = EditingSurvey(tenantId, template.Name, system.Definition);
+        template.EditIn(surveyId);
+        context.SurveyTemplates.Add(template);
+        await AuditAsync(template, "template.saved", cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Created($"/api/app/templates/{template.Id}", new TemplateEditResponse(template.Id.ToString(), surveyId));
+    }
+
+    /// <summary>A new, empty template of the organisation's (W32 "New template"), ready to edit in the designer.</summary>
+    /// <param name="request">Its name and language.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>201 with the template and its editing survey; 400 at the field; 403 for viewers and analysts.</returns>
+    [HttpPost("new")]
+    [ProducesResponseType<TemplateEditResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> New(NewTemplateRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (User.TenantId() is not { } tenantId || !await MayEditAsync(tenantId, cancellationToken))
+        {
+            return Forbid();
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            ModelState.AddModelError("name", "name-required");
+        }
+        else if (request.Name.Trim().Length > 200)
+        {
+            ModelState.AddModelError("name", "name-too-long");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        var now = time.GetUtcNow();
+        var language = request.Language is "de" or "en" ? request.Language : "en";
+        var definition = new SurveyDefinition(1, [language], language, [new Page("p1", [])]);
+        var template = SurveyTemplate.Create(Guid.CreateVersion7(now), tenantId, request.Name!.Trim(), JsonSerializer.Serialize(definition, SurveyDefinitionJson.Options), User.UserId()!.Value, now);
+        var surveyId = EditingSurvey(tenantId, template.Name, definition);
         template.EditIn(surveyId);
         context.SurveyTemplates.Add(template);
         await AuditAsync(template, "template.saved", cancellationToken);
@@ -302,6 +346,11 @@ public sealed record CopyTemplateRequest(string? Name, string? Language);
 /// <param name="LookBase">Where that look started.</param>
 /// <param name="ThemeId">Its theme, if any.</param>
 public sealed record TemplateLook(string? Tokens, string? LookBase, Guid? ThemeId);
+
+/// <summary>A new, empty template (W32).</summary>
+/// <param name="Name">Its name.</param>
+/// <param name="Language">Its language, de or en; en when not given.</param>
+public sealed record NewTemplateRequest(string? Name, string? Language);
 
 /// <summary>A survey's draft to save as a template.</summary>
 /// <param name="SurveyId">The survey.</param>

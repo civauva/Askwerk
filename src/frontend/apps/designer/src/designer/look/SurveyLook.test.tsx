@@ -99,7 +99,7 @@ describe("Create → Look: make it yours (W26 B)", () => {
     fireEvent.click(areas().getByRole("group", { name: "Marker" }).querySelector("button:nth-child(2)")!);
 
     await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.components?.choices?.marker).toBe("check"), saved);
-    expect(areas().getByText(/changed 1 thing/)).toBeTruthy();
+    expect(areas().getByText("changed 1 thing · for this survey")).toBeTruthy();
     await expectNoAxeViolations(container);
     fireEvent.click(areas().getByRole("button", { name: "Back to Konfetti's choices" }));
     await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.components?.choices?.marker).toBeUndefined(), saved);
@@ -109,6 +109,7 @@ describe("Create → Look: make it yours (W26 B)", () => {
     const { api } = await openLook();
     await pick("Werkstatt");
 
+    open("Parts", "Colours");
     fireEvent.click(areas().getByRole("group", { name: "Mode" }).querySelector("button:nth-child(2)")!);
 
     await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.mode).toBe("dark"), saved);
@@ -120,7 +121,7 @@ describe("Create → Look: make it yours (W26 B)", () => {
     await pick("Klar");
     await waitFor(() => expect(api.lookCalls).toHaveLength(1), saved);
 
-    fireEvent.click(areas().getByText("All colours"));
+    open("Parts", "Colours");
     fireEvent.change(areas().getByRole("textbox", { name: "Text" }), { target: { value: "#ffffff" } });
 
     expect(await screen.findByText(/text is hard to read on surface/)).toBeTruthy();
@@ -172,31 +173,73 @@ describe("Create → Look: make it yours (W26 B)", () => {
   });
 });
 
-describe("Create → Look: Style as tiles, the Preview zooms (W33)", () => {
-  it("changes accent, type and background from the Style tab", async () => {
+describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)", () => {
+  it("shows Style as in the mockup: accent colour, three faces, shape, background, density and readability last", async () => {
+    const { container } = await openLook();
+
+    expect([...container.querySelectorAll(".sl-tab .sl-lbl")].map((label) => label.textContent)).toEqual(["Accent colour", "Type", "Shape", "Background", "Density"]);
+    expect(areas().getByRole("group", { name: "Density" })).toBeTruthy();
+    expect(container.querySelector(".sl-tab")!.lastElementChild!.previousElementSibling!.className).toBe("sl-readable");
+    expect(within(areas().getByRole("group", { name: "Type" })).getAllByRole("button").map((tile) => tile.textContent)).toEqual(["AaSans", "AaCondensed", "AaSerif"]);
+    expect(within(areas().getByRole("group", { name: "Background" })).getAllByRole("button").map((tile) => tile.textContent)).toEqual(["Colour", "Pattern", "Picture"]);
+    expect(areas().getByText(/^Readable everywhere · text \d+\.\d : 1 · buttons \d+\.\d : 1$/)).toBeTruthy();
+    expect(areas().getByText("for this survey")).toBeTruthy();
+    expect(areas().queryByText("All colours")).toBeNull();
+    expect(areas().queryByRole("group", { name: "Mode" })).toBeNull();
+  });
+
+  it("changes accent, type and background from the Style tab, a picture uploaded on the spot", async () => {
     const { api } = await openLook();
 
     fireEvent.click(areas().getByRole("button", { name: "#1f5f8b" }));
     fireEvent.click(areas().getByRole("button", { name: "Serif" }));
-    fireEvent.click(areas().getByRole("button", { name: "Mountains" }));
+    fireEvent.click(areas().getByRole("button", { name: "Pattern" }));
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.decoration?.pattern).toBe("confetti"), saved);
+    fireEvent.change(areas().getByLabelText("Background picture file"), { target: { files: [new File([new Uint8Array([137, 80])], "hall.png", { type: "image/png" })] } });
 
-    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.decoration?.pattern).toBe("mountains"), saved);
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.background?.image?.asset).toBe("a1"), saved);
+    expect(api.lookCalls.at(-1)?.tokens.decoration).toBeUndefined();
     expect(api.lookCalls.at(-1)?.tokens.colours.accent).toBe("#1f5f8b");
     expect(api.lookCalls.at(-1)?.tokens.fonts.heading.family).toBe("IBM Plex Serif");
+    expect(areas().getByRole("button", { name: "Picture" }).getAttribute("aria-pressed")).toBe("true");
   });
 
-  it("zooms the preview out and back, and shows a tablet width", async () => {
+  it("zooms the page out and back, also with Ctrl + scroll, and shows a tablet width", async () => {
     await openLook();
     const preview = within(screen.getByRole("complementary", { name: "Preview" }));
-    const frame = () => preview.getByTitle("Survey preview") as HTMLIFrameElement;
+    const page = () => (preview.getByTitle("Survey preview") as HTMLIFrameElement).parentElement!;
 
     fireEvent.click(preview.getByRole("button", { name: "Zoom out" }));
     expect(preview.getByText("90 %")).toBeTruthy();
-    expect(frame().style.transform).toBe("scale(0.9)");
+    expect(page().style.transform).toBe("scale(0.9)");
     fireEvent.click(preview.getByRole("button", { name: "Fit" }));
-    expect(frame().style.transform).toBe("");
+    expect(page().style.transform).toBe("");
+    const wheel = new WheelEvent("wheel", { deltaY: -100, ctrlKey: true, cancelable: true, bubbles: true });
+    preview.getByRole("region", { name: "Zoom" }).dispatchEvent(wheel);
+    expect(wheel.defaultPrevented).toBe(true);
+    expect(await preview.findByText("110 %")).toBeTruthy();
     fireEvent.click(preview.getByRole("button", { name: "Tablet" }));
-    expect(frame().style.width).toBe("768px");
+    expect(page().style.width).toBe("768px");
+    expect(preview.getByRole("button", { name: "Tablet" }).getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("says in the stage bar where the survey is, and jumps to the welcome and thank-you pages", async () => {
+    await openLook();
+    const preview = within(screen.getByRole("complementary", { name: "Preview" }));
+    const frame = preview.getByTitle("Survey preview") as HTMLIFrameElement;
+    const sent: unknown[] = [];
+    frame.contentWindow!.addEventListener("message", (event) => sent.push(event.data));
+
+    await act(async () => {
+      window.dispatchEvent(new MessageEvent("message", { data: { type: "askwerk:preview-page", at: 2, pages: 4 }, origin: window.location.origin, source: frame.contentWindow }));
+    });
+    expect(preview.getByText(/^Page 2 of 4 ·/)).toBeTruthy();
+    fireEvent.click(preview.getByRole("button", { name: "Thank you" }));
+    fireEvent.click(preview.getByRole("button", { name: "Welcome" }));
+
+    await waitFor(() => expect(sent).toContainEqual({ type: "askwerk:goto", target: "end" }));
+    expect(sent).toContainEqual({ type: "askwerk:goto", target: "welcome" });
+    expect(preview.getByRole("button", { name: "Open in new tab" })).toBeTruthy();
   });
 });
 

@@ -354,12 +354,22 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
               frameRef={frame}
               onFrameLoad={onFrameLoad}
               views={{
-                labels: { web: lt("previewWeb"), email: lt("previewEmail"), pdf: lt("previewPdfTab"), shows: lt("previewShows"), emailFrame: lt("emailFrame"), pdfFrame: lt("pdfFrame") },
+                labels: {
+                  web: lt("previewWeb"),
+                  email: lt("previewEmail"),
+                  pdf: lt("previewPdfTab"),
+                  shows: lt("previewShows"),
+                  emailFrame: lt("emailFrame"),
+                  pdfFrame: lt("pdfFrame"),
+                  pageOf: (page, pages) => lt("previewPageOf", { page, pages }),
+                  welcome: lt("previewWelcome"),
+                  thanks: lt("previewThanks"),
+                  newTab: lt("previewOpenNewTab"),
+                },
                 ...(previewEmail !== undefined && { email: () => previewEmail(draft.surveyId, state.language) }),
                 pdf: pdfUrl(draft.surveyId, state.language),
                 saves: saves + lookSaves,
               }}
-              approval={approvalSlot}
             />
           )}
         />

@@ -25,6 +25,8 @@ describe("Share → Embed → Only on these sites (AWK-13, W21 3)", () => {
       />,
     );
 
+    // The embed code and its sites are in the "Get embed code" dialog (W34).
+    fireEvent.click(screen.getByRole("button", { name: "Get embed code" }));
     fireEvent.click(await screen.findByText("Only on these sites"));
     fireEvent.click(screen.getByRole("checkbox", { name: "https://intranet.acme.at" }));
 

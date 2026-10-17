@@ -156,6 +156,59 @@ public sealed class TemplatesApiTests(PostgresServer server)
     }
 
     [Fact]
+    public async Task New_MakesAnEmptyTemplateOfOurs_ReadyToEdit_AndNeedsAName()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+
+        var nameless = await owner.PostAsJsonAsync(Url("/api/app/templates/new"), new { name = " ", language = "de" }, Cancel);
+        var made = await owner.PostAsJsonAsync(Url("/api/app/templates/new"), new { name = "Acme check-in", language = "de" }, Cancel);
+        var created = await JsonAsync(made);
+        var own = (await TemplatesAsync(owner)).Last();
+        var draft = await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{created.GetProperty("surveyId").GetString()}/draft"), Cancel);
+
+        Assert.Equal(HttpStatusCode.BadRequest, nameless.StatusCode);
+        Assert.Equal("name-required", (await JsonAsync(nameless)).GetProperty("errors").GetProperty("name")[0].GetString());
+        Assert.Equal(HttpStatusCode.Created, made.StatusCode);
+        Assert.Equal(("organisation", "Acme check-in", 0), (own.GetProperty("scope").GetString(), own.GetProperty("name").GetString(), own.GetProperty("questions").GetInt32()));
+        Assert.Equal(created.GetProperty("surveyId").GetString(), own.GetProperty("surveyId").GetString());
+        Assert.Equal(["de"], draft.GetProperty("definition").GetProperty("languages").EnumerateArray().Select(language => language.GetString()));
+    }
+
+    [Fact]
+    public async Task Cards_NameTheLook_TheAskwerkLookItStartedFrom_OrTheOrganisationsDefault()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+        var surveyId = await SurveysApiTests.CreateSurveyAsync(owner);
+        var plain = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel)).GetProperty("items")[0].GetProperty("front");
+        var tokens = (await owner.GetFromJsonAsync<JsonElement>(Url($"/api/app/surveys/{surveyId}/look"), Cancel)).GetProperty("tokens");
+        (await owner.PutAsJsonAsync(Url($"/api/app/surveys/{surveyId}/look"), new { tokens, lookBase = "preset:konfetti" }, Cancel)).EnsureSuccessStatusCode();
+
+        var own = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/surveys?cards=true"), Cancel)).GetProperty("items")[0].GetProperty("front");
+
+        Assert.True(plain.GetProperty("lookName").ValueKind == JsonValueKind.String || plain.GetProperty("lookPreset").GetString() == "werkstatt");
+        Assert.Equal(("konfetti", JsonValueKind.Null), (own.GetProperty("lookPreset").GetString(), own.GetProperty("lookName").ValueKind));
+    }
+
+    [Fact]
+    public async Task Samples_CarryAFront_WithWhatTheyAsk_LikeTemplates()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+
+        var samples = (await owner.GetFromJsonAsync<JsonElement>(Url("/api/app/samples"), Cancel)).GetProperty("items").EnumerateArray().ToList();
+
+        Assert.All(samples, sample =>
+        {
+            var front = sample.GetProperty("front");
+            Assert.Equal(sample.GetProperty("look").GetString(), front.GetProperty("lookPreset").GetString());
+            Assert.Equal(sample.GetProperty("questions").GetInt32(), front.GetProperty("contents").GetProperty("questions").GetInt32());
+            Assert.NotEmpty(front.GetProperty("contents").GetProperty("first").EnumerateArray());
+        });
+    }
+
+    [Fact]
     public async Task Cards_DrawEachSurveysWelcomePageInItsLook()
     {
         await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);

@@ -153,7 +153,7 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
             checked={question.key === true}
             onChange={(on) => dispatch(on ? { type: "patch", questionId: question.id, patch: { key: true } } : { type: "patch", questionId: question.id, patch: {}, remove: ["key"] })}
           />
-          <p className="designer-note">{t("keyQuestionHint")}</p>
+          <p className="designer-note designer-note--switch">{t("keyQuestionHint")}</p>
         </>
       )}
       {question.options !== undefined && (

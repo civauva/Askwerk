@@ -5,7 +5,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { createPortal } from "react-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { anna, FakeAuthClient } from "../account/testing";
-import { AppShell, placeOf, useShellSlot, type Place } from "./AppShell";
+import { AppShell, placeOf, useShellSlot, useShellTemplate, type Place } from "./AppShell";
 
 afterEach(cleanup);
 
@@ -39,7 +39,7 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
       "Contacts",
       "Connections",
       "Sign-in",
-      "Look of surveys",
+      "Looks",
       "Messages",
       "Domains",
       "Developers & API",
@@ -48,6 +48,16 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
     fireEvent.click(side.getByRole("link", { name: "Members" }));
     expect(onNavigate).toHaveBeenCalledWith("/members");
     await expectNoAxeViolations(container);
+  });
+
+  it("shows a count beside a place once it is known (W35: Contacts 1,284)", () => {
+    render(
+      <AppShell client={new FakeAuthClient()} locale="en" me={anna} active="contacts" onNavigate={vi.fn()} onSignedOut={vi.fn()} onSwitched={vi.fn()} onOpenAccount={vi.fn()} counts={{ contacts: 1284 }}>
+        <main>Page</main>
+      </AppShell>,
+    );
+
+    expect(within(screen.getByRole("complementary", { name: "Navigation" })).getByRole("link", { name: /^Contacts/ }).textContent).toBe("Contacts1,284");
   });
 
   it("shows an editor only Developers & API in Administration, and installation administrators This Askwerk", () => {
@@ -91,6 +101,21 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
     expect(side.getByRole("navigation", { name: "Survey" })).toBeTruthy();
     fireEvent.click(side.getByRole("link", { name: "All surveys" }));
     expect(onBack).toHaveBeenCalled();
+  });
+
+  it("inside a template, the way back says All templates and leads to Templates (W32)", () => {
+    const onBack = vi.fn();
+
+    function TemplateScreen() {
+      useShellTemplate(true);
+      return null;
+    }
+
+    const { side, onNavigate } = shown({ survey: { onBack } }, <TemplateScreen />);
+
+    fireEvent.click(side.getByRole("link", { name: "All templates" }));
+    expect(onNavigate).toHaveBeenCalledWith("/templates");
+    expect(onBack).not.toHaveBeenCalled();
   });
 
   it("finds the place of a path", () => {

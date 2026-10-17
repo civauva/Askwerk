@@ -14,10 +14,10 @@ namespace Askwerk.Api.App.Surveys;
 /// </summary>
 internal sealed class SurveyFronts
 {
-    private readonly Dictionary<Guid, ThemeTokens> themes;
-    private readonly ThemeTokens fallback;
+    private readonly Dictionary<Guid, (ThemeTokens Tokens, string Name)> themes;
+    private readonly (ThemeTokens Tokens, string? Name) fallback;
 
-    private SurveyFronts(Dictionary<Guid, ThemeTokens> themes, ThemeTokens fallback)
+    private SurveyFronts(Dictionary<Guid, (ThemeTokens Tokens, string Name)> themes, (ThemeTokens Tokens, string? Name) fallback)
     {
         this.themes = themes;
         this.fallback = fallback;
@@ -29,32 +29,52 @@ internal sealed class SurveyFronts
     /// <returns>The fronts.</returns>
     public static async Task<SurveyFronts> LoadAsync(AskwerkDbContext context, CancellationToken cancellationToken)
     {
-        var rows = await context.Themes.Select(theme => new { theme.Id, theme.IsDefault, theme.Tokens }).ToListAsync(cancellationToken);
-        var themes = new Dictionary<Guid, ThemeTokens>();
-        ThemeTokens? fallback = null;
+        var rows = await context.Themes.Select(theme => new { theme.Id, theme.IsDefault, theme.Tokens, theme.Name }).ToListAsync(cancellationToken);
+        var themes = new Dictionary<Guid, (ThemeTokens Tokens, string Name)>();
+        (ThemeTokens Tokens, string? Name)? fallback = null;
 
         foreach (var row in rows)
         {
             if (ThemeTokensJson.Read(row.Tokens) is { } tokens)
             {
-                themes[row.Id] = tokens;
-                fallback = row.IsDefault ? tokens : fallback;
+                themes[row.Id] = (tokens, row.Name);
+                fallback = row.IsDefault ? (tokens, row.Name) : fallback;
             }
         }
 
-        return new SurveyFronts(themes, fallback ?? DefaultTheme.Werkstatt);
+        // Without a look of its own, an organisation's surveys look like Askwerk's Werkstatt.
+        return new SurveyFronts(themes, fallback ?? (DefaultTheme.Werkstatt, null));
     }
 
     /// <summary>The front of a survey or template.</summary>
     /// <param name="definition">The definition, or null for none.</param>
     /// <param name="look">Its own look as tokens JSON, if any.</param>
     /// <param name="themeId">Its theme, if any.</param>
-    /// <returns>The front.</returns>
-    public SurveyFront Of(SurveyDefinition? definition, string? look, Guid? themeId)
+    /// <param name="lookBase">Where its own look started: "preset:konfetti" or "theme:{id}".</param>
+    /// <returns>The front, with the name of its look a card shows (W32): a theme's name, or the Askwerk look it came from.</returns>
+    public SurveyFront Of(SurveyDefinition? definition, string? look, Guid? themeId, string? lookBase = null)
     {
-        var tokens = look is not null && ThemeTokensJson.Read(look) is { } own ? own : themeId is { } id && themes.TryGetValue(id, out var theme) ? theme : fallback;
+        ThemeTokens tokens;
+        string? name = null;
+        string? preset = null;
 
-        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens), definition?.HeaderImage?.Asset, Contents(definition));
+        if (look is not null && ThemeTokensJson.Read(look) is { } own)
+        {
+            tokens = own;
+            name = lookBase is not null && lookBase.StartsWith("theme:", StringComparison.Ordinal) && Guid.TryParse(lookBase["theme:".Length..], out var baseId) && themes.TryGetValue(baseId, out var based) ? based.Name : null;
+            preset = lookBase is not null && lookBase.StartsWith("preset:", StringComparison.Ordinal) ? lookBase["preset:".Length..] : null;
+        }
+        else if (themeId is { } id && themes.TryGetValue(id, out var theme))
+        {
+            (tokens, name) = theme;
+        }
+        else
+        {
+            (tokens, name) = fallback;
+            preset = name is null ? "werkstatt" : null;
+        }
+
+        return new SurveyFront(definition?.Welcome?.Title, definition?.Welcome?.Text, definition?.DefaultLanguage ?? "", SurveyThemes.ToJson(tokens), definition?.HeaderImage?.Asset, Contents(definition), LookName: name, LookPreset: preset);
     }
 
     /// <summary>What a survey asks (W32 card A): its size, about how long it takes, the first questions and the types.</summary>
@@ -114,4 +134,6 @@ public sealed record SurveyAnswers(int Complete, int Partial, DateTimeOffset? La
 /// <param name="Code">Surveys only: the code in its link, /s/{code}.</param>
 /// <param name="PublishedAt">Surveys only: when the version now published was published (UTC).</param>
 /// <param name="Keys">Surveys only: the key questions' results (W38), in survey order.</param>
-public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look, string? HeaderImage = null, SurveyContents? Contents = null, SurveyAnswers? Answers = null, string? Code = null, DateTimeOffset? PublishedAt = null, IReadOnlyList<KeyResult>? Keys = null);
+/// <param name="LookName">The name of its look when that is one of the organisation's looks.</param>
+/// <param name="LookPreset">The Askwerk look it is or started from ("konfetti"); the card names it in the reader's language.</param>
+public sealed record SurveyFront(TranslatedText? Title, TranslatedText? Text, string DefaultLanguage, JsonElement Look, string? HeaderImage = null, SurveyContents? Contents = null, SurveyAnswers? Answers = null, string? Code = null, DateTimeOffset? PublishedAt = null, IReadOnlyList<KeyResult>? Keys = null, string? LookName = null, string? LookPreset = null);

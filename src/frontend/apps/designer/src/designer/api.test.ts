@@ -48,6 +48,7 @@ describe("designerApi", () => {
       deleteTemplate: () => Promise.reject(new Error("not used")),
       editTemplate: () => Promise.reject(new Error("not used")),
       copyTemplate: () => Promise.reject(new Error("not used")),
+      newTemplate: () => Promise.reject(new Error("not used")),
     };
     const themes = {
       list: () => Promise.resolve([{ id: "t1", name: "Acme", isDefault: true, tokens: {} }]),

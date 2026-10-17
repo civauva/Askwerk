@@ -3,7 +3,7 @@ import "./shell.css";
 import type { AuthClient, Me } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { ConfirmDialog, Dialog, DialogActions, Menu, MenuItem } from "@askwerk/ui";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { roleName } from "../account/ChooseOrganisationPage";
 import { accountMessages } from "../account/messages";
 import { initialsOf } from "../account/ProfileMenu";
@@ -40,6 +40,10 @@ export function placeOf(path: string): Place | null {
     return "developers";
   }
 
+  if (path === "/connections/new") {
+    return "connections";
+  }
+
   const found = (Object.entries(placePaths) as [Place, string][]).find(([, at]) => at !== "/" && path === at);
 
   return found?.[0] ?? null;
@@ -50,6 +54,20 @@ const ShellSlot = createContext<HTMLElement | null>(null);
 
 /** The element the open survey's places go into, or null outside the shell (the embedded designer, tests). */
 export const useShellSlot = () => useContext(ShellSlot);
+
+/** Inside a template (W32) the way back leads to Templates; the screen says when it shows one. */
+const ShellTemplate = createContext<(on: boolean) => void>(() => undefined);
+
+/** Tells the shell the open survey is where a template is edited, so its back link says "All templates". */
+export function useShellTemplate(on: boolean) {
+  const set = useContext(ShellTemplate);
+
+  useEffect(() => {
+    set(on);
+
+    return () => set(false);
+  }, [set, on]);
+}
 
 type Item = { place: Place; label: ShellMessageKey; icon: ReactNode };
 
@@ -91,6 +109,8 @@ export type AppShellProps = {
   onLeave?: () => Promise<unknown>;
   /** Inside a survey (W29 drill-in): the way back, and the survey's places come from its screen. */
   survey?: { onBack: () => void; count?: number };
+  /** Counts beside places (W35: Contacts 1,284), once known. */
+  counts?: Partial<Record<Place, number>>;
   children: ReactNode;
 };
 
@@ -98,10 +118,11 @@ export type AppShellProps = {
  * The app's frame (AWK-38, W29): a sidebar with the organisation, the places and Administration, the person at the
  * foot; inside a survey it steps into the survey. On phones the sidebar is a drawer behind a menu button.
  */
-export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, onSwitched, onOpenAccount, onLeave, survey, children }: AppShellProps) {
+export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, onSwitched, onOpenAccount, onLeave, survey, counts, children }: AppShellProps) {
   const t = createTranslator(shellMessages, locale);
   const a = createTranslator(accountMessages, locale);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const [inTemplate, setInTemplate] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [leaving, setLeaving] = useState<"ask" | "refused" | null>(null);
   const current = me.organisations.find((organisation) => organisation.id === me.currentOrganisationId);
@@ -124,6 +145,7 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
     >
       {glyph}
       <span>{t(label)}</span>
+      {counts?.[place] !== undefined && <span className="shell-count">{new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB").format(counts[place])}</span>}
     </a>
   );
 
@@ -206,16 +228,20 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
           {survey !== undefined ? (
             <>
               <a
-                href="/"
+                href={inTemplate ? placePaths.templates : "/"}
                 className="shell-item shell-back"
                 onClick={(event) => {
                   event.preventDefault();
                   setDrawer(false);
-                  survey.onBack();
+                  if (inTemplate) {
+                    onNavigate(placePaths.templates);
+                  } else {
+                    survey.onBack();
+                  }
                 }}
               >
                 {icons.back}
-                <span>{t("allSurveys")}</span>
+                <span>{t(inTemplate ? "allTemplates" : "allSurveys")}</span>
               </a>
               <div ref={setSlot} className="shell-survey" />
             </>
@@ -257,7 +283,9 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
         </Menu>
       </aside>
       <div className="shell-main">
-        <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
+        <ShellTemplate.Provider value={setInTemplate}>
+          <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
+        </ShellTemplate.Provider>
       </div>
       {leaving === "ask" && onLeave !== undefined && (
         <ConfirmDialog

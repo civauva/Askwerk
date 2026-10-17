@@ -169,6 +169,10 @@ describe("A template in the designer (W32)", () => {
     const crumbs = within(screen.getByRole("navigation", { name: "You are here" }));
 
     expect(screen.getByText("Template")).toBeTruthy();
+    // Templates › its name, and what editing means, said in the bar (W32).
+    expect(crumbs.getByRole("heading", { level: 1 }).textContent).toBe(published.title);
+    expect(crumbs.queryByText("Questions")).toBeNull();
+    expect(screen.getByText("Edits save by themselves · no publishing, no results")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Publish" })).toBeNull();
     expect(screen.queryByText("Not approved")).toBeNull();
     fireEvent.click(crumbs.getByRole("link", { name: "Templates" }));

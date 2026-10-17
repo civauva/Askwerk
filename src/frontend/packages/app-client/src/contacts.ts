@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { createRequest, type AppClientOptions } from "./client";
+import { createDownload, createRequest, type AppClientOptions } from "./client";
 import type { ParticipantInput, PeopleTable } from "./participants";
 
 /** A contact in the organisation's address book (W35). */
@@ -19,6 +19,7 @@ export interface ContactItem {
   readonly invitable: boolean;
   readonly unsubscribed: boolean;
   readonly bounced: boolean;
+  readonly unsubscribedAt?: string | null;
 }
 
 export interface ContactList {
@@ -47,12 +48,15 @@ export interface ContactsClient {
   /** By External ID, then email: known ones get the new details. */
   import(people: readonly ParticipantInput[], group: string | null): Promise<{ added: number; updated: number; invalid: readonly { line: number; text: string }[] }>;
   exportUrl(group?: string): string;
+  /** The chosen contacts as CSV. */
+  exportChosen(ids: readonly string[]): Promise<{ blob: Blob; fileName: string }>;
   /** A file or a pasted table read as columns. */
   table(source: File | string): Promise<PeopleTable>;
 }
 
 export function createContactsClient(options: AppClientOptions): ContactsClient {
   const request = createRequest(options);
+  const download = createDownload(options);
 
   return {
     list: ({ search, group, state, offset, limit } = {}) => {
@@ -80,6 +84,7 @@ export function createContactsClient(options: AppClientOptions): ContactsClient 
       form.append("file", source);
       return request<PeopleTable>("POST", "/api/app/contacts/table", form);
     },
+    exportChosen: (ids) => download("POST", "/api/app/contacts/contacts.csv", { contactIds: ids }),
     exportUrl: (group) => `/api/app/contacts/contacts.csv${group ? `?group=${encodeURIComponent(group)}` : ""}`,
   };
 }

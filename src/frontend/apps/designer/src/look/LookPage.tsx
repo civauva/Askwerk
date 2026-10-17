@@ -4,7 +4,7 @@ import { ApiError, type StoredTheme, type ThemesClient } from "@askwerk/app-clie
 import { checkTheme, contrastRatio, createTranslator, themePresets, type Locale, type ThemeIssue, type ThemeTokens } from "@askwerk/schema";
 import { ComboBox } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
-import { ZoomBox } from "../designer/ZoomBox";
+import { DeviceSwitch, deviceWidth, ZoomBox, type Device } from "../designer/ZoomBox";
 import { lookMessages, type LookMessageKey } from "./messages";
 
 type T = (key: LookMessageKey, values?: Record<string, string | number>) => string;
@@ -25,8 +25,9 @@ const dark = "#1a1917";
 const white = "#ffffff";
 
 /**
- * Organisation → Look of surveys (AWK-17, W10 A), stupid simple: pick a preset, set name, logo and accent colour;
- * everything else waits under More. Changes save by themselves once the theme checks pass.
+ * Administration → Looks (AWK-17, W10 A, W32), stupid simple: pick a preset, set name, logo and accent colour;
+ * everything else waits under More. Changes save by themselves once the theme checks pass. Laid out like a survey's
+ * Look: the settings in a column beside the page on its stage.
  */
 export function LookPage({ client, locale, saveDelayMs = 600 }: LookPageProps) {
   const t: T = useMemo(() => createTranslator(lookMessages, locale), [locale]);
@@ -60,9 +61,8 @@ export function LookPage({ client, locale, saveDelayMs = 600 }: LookPageProps) {
   }
 
   const selected = themes?.find((theme) => theme.id === selectedId);
-
-  return (
-    <main className="look" lang={locale}>
+  const head = (
+    <>
       <h1>{t("title")}</h1>
       <p className="look-lead">{t("lead")}</p>
       {themes === null ? (
@@ -70,57 +70,65 @@ export function LookPage({ client, locale, saveDelayMs = 600 }: LookPageProps) {
           {t("loading")}
         </p>
       ) : (
-        <div className="look-work">
-          {themes.length > 0 && (
-            <nav className="look-list" aria-label={t("themes")}>
-              {themes.map((theme) => (
-                <button
-                  key={theme.id}
-                  type="button"
-                  className="look-list__theme"
-                  aria-current={theme.id === selectedId && !choosing ? "true" : undefined}
-                  onClick={() => {
-                    setSelectedId(theme.id);
-                    setChoosing(false);
-                  }}
-                >
-                  <i className="look-swatch" style={{ background: theme.tokens.colours.accent }} aria-hidden="true" />
-                  <span>{theme.name}</span>
-                  {theme.isDefault && (
-                    <>
-                      {" "}
-                      <span className="look-badge">{t("default")}</span>
-                    </>
-                  )}
-                </button>
-              ))}
-              <button type="button" className="look-list__new" onClick={() => setChoosing(true)}>
-                {t("newTheme")}
-              </button>
-            </nav>
-          )}
-          {themes.length === 0 || choosing ? (
-            <Presets t={t} locale={locale} empty={themes.length === 0} onPick={(id) => void startFrom(id)} onCancel={themes.length > 0 ? () => setChoosing(false) : undefined} />
-          ) : (
-            selected !== undefined && (
-              <Editor
-                key={selected.id}
-                t={t}
-                locale={locale}
-                client={client}
-                theme={selected}
-                saveDelayMs={saveDelayMs}
-                onSaved={(name, tokens) => setThemes((current) => current?.map((theme) => (theme.id === selected.id ? { ...theme, name, tokens } : theme)) ?? null)}
-                onMadeDefault={() => setThemes((current) => current?.map((theme) => ({ ...theme, isDefault: theme.id === selected.id })) ?? null)}
-                onDeleted={() => {
-                  const rest = themes.filter((theme) => theme.id !== selected.id);
-                  setThemes(rest);
-                  setSelectedId(rest[0]?.id ?? null);
+        themes.length > 0 && (
+          <nav className="look-list" aria-label={t("themes")}>
+            {themes.map((theme) => (
+              <button
+                key={theme.id}
+                type="button"
+                className="look-list__theme"
+                aria-current={theme.id === selectedId && !choosing ? "true" : undefined}
+                onClick={() => {
+                  setSelectedId(theme.id);
+                  setChoosing(false);
                 }}
-              />
-            )
+              >
+                <i className="look-swatch" style={{ background: theme.tokens.colours.accent }} aria-hidden="true" />
+                <span>{theme.name}</span>
+                {theme.isDefault && (
+                  <>
+                    {" "}
+                    <span className="look-badge">{t("default")}</span>
+                  </>
+                )}
+              </button>
+            ))}
+            <button type="button" className="look-list__new" onClick={() => setChoosing(true)}>
+              {t("newTheme")}
+            </button>
+          </nav>
+        )
+      )}
+    </>
+  );
+
+  // The same layout as a survey's Look (W32): the settings in a column, the page on a stage that fills the height.
+  return (
+    <main className="look look--stage" lang={locale}>
+      {themes !== null && selected !== undefined && themes.length > 0 && !choosing ? (
+        <Editor
+          key={selected.id}
+          t={t}
+          locale={locale}
+          client={client}
+          theme={selected}
+          head={head}
+          saveDelayMs={saveDelayMs}
+          onSaved={(name, tokens) => setThemes((current) => current?.map((theme) => (theme.id === selected.id ? { ...theme, name, tokens } : theme)) ?? null)}
+          onMadeDefault={() => setThemes((current) => current?.map((theme) => ({ ...theme, isDefault: theme.id === selected.id })) ?? null)}
+          onDeleted={() => {
+            const rest = themes.filter((theme) => theme.id !== selected.id);
+            setThemes(rest);
+            setSelectedId(rest[0]?.id ?? null);
+          }}
+        />
+      ) : (
+        <>
+          <div className="look-side">{head}</div>
+          {themes !== null && (
+            <Presets t={t} locale={locale} empty={themes.length === 0} onPick={(id) => void startFrom(id)} onCancel={themes.length > 0 ? () => setChoosing(false) : undefined} />
           )}
-        </div>
+        </>
       )}
     </main>
   );
@@ -157,13 +165,16 @@ type EditorProps = {
   locale: Locale;
   client: ThemesClient;
   theme: Theme;
+  /** The page title and the list of themes, at the top of the settings column. */
+  head: ReactNode;
   saveDelayMs: number;
   onSaved: (name: string, tokens: ThemeTokens) => void;
   onMadeDefault: () => void;
   onDeleted: () => void;
 };
 
-function Editor({ t, locale, client, theme, saveDelayMs, onSaved, onMadeDefault, onDeleted }: EditorProps) {
+function Editor({ t, locale, client, theme, head, saveDelayMs, onSaved, onMadeDefault, onDeleted }: EditorProps) {
+  const [device, setDevice] = useState<Device>("desktop");
   const [name, setName] = useState(theme.name);
   const [tokens, setTokens] = useState(theme.tokens);
   const [more, setMore] = useState(false);
@@ -223,81 +234,88 @@ function Editor({ t, locale, client, theme, saveDelayMs, onSaved, onMadeDefault,
 
   return (
     <>
-      <section className="look-editor" aria-label={t("theme")}>
-        <div className="look-field">
-          <label htmlFor="look-name">{t("name")}</label>
-          <input id="look-name" className="look-input" value={name} onChange={(event) => setName(event.target.value)} />
-        </div>
-        <div className="look-field">
-          <span className="look-label">{t("logo")}</span>
-          <div className="look-row">
-            {logoUrl !== undefined && <img className="look-logo" src={logoUrl} alt="" />}
-            <FileButton label={t("uploadLogo")} fileLabel={t("logoFile")} accept="image/png,image/jpeg,image/webp" onFile={(file) => void upload(file, "image", (asset) => set("logo", { asset }))} />
-            {tokens.logo !== undefined && (
-              <button type="button" className="look-link" onClick={() => setTokens(({ logo: _, ...rest }) => rest as ThemeTokens)}>
-                {t("removeLogo")}
-              </button>
+      <div className="look-side">
+        {head}
+        <section className="look-editor" aria-label={t("theme")}>
+          <div className="look-field">
+            <label htmlFor="look-name">{t("name")}</label>
+            <input id="look-name" className="look-input" value={name} onChange={(event) => setName(event.target.value)} />
+          </div>
+          <div className="look-field">
+            <span className="look-label">{t("logo")}</span>
+            <div className="look-row">
+              {logoUrl !== undefined && <img className="look-logo" src={logoUrl} alt="" />}
+              <FileButton label={t("uploadLogo")} fileLabel={t("logoFile")} accept="image/png,image/jpeg,image/webp" onFile={(file) => void upload(file, "image", (asset) => set("logo", { asset }))} />
+              {tokens.logo !== undefined && (
+                <button type="button" className="look-link" onClick={() => setTokens(({ logo: _, ...rest }) => rest as ThemeTokens)}>
+                  {t("removeLogo")}
+                </button>
+              )}
+            </div>
+          </div>
+          <ColourField
+            label={t("accent")}
+            hexLabel={t("accentHex")}
+            value={tokens.colours.accent}
+            // Button text follows the accent, so a new colour never makes buttons unreadable.
+            onChange={(accent) => setColours({ accent, onAccent: readableOn(accent) })}
+          />
+          <p className="look-note">{t("accentNote")}</p>
+          {uploadError !== null && (
+            <p className="look-error" role="status">
+              {uploadError}
+            </p>
+          )}
+          {errors.length > 0 && (
+            <div className="look-error" role="alert">
+              {errors.map((issue) => (
+                <p key={`${issue.code}-${issue.path}-${issue.against ?? ""}`}>{describe(t, locale, issue)}</p>
+              ))}
+              <p>
+                <b>{t("notSaved")}</b>
+              </p>
+            </div>
+          )}
+          <button type="button" className="look-more" aria-expanded={more} onClick={() => setMore((current) => !current)}>
+            {more ? t("less") : t("more")} <span aria-hidden="true">{more ? "▴" : "▾"}</span>
+          </button>
+          {more && <More t={t} tokens={tokens} setColours={setColours} set={set} upload={upload} />}
+          <div className="look-actions">
+            <span className="look-status" role="status">
+              {!blocked && (status === "saved" ? t("saved") : status === "saving" ? t("saving") : t("saveFailed"))}
+            </span>
+            {theme.isDefault ? (
+              <p className="look-note">{t("isDefault")}</p>
+            ) : (
+              <>
+                <button type="button" className="look-button" onClick={() => void client.makeDefault(theme.id).then(onMadeDefault)}>
+                  {t("makeDefault")}
+                </button>
+                <button type="button" className="look-link" onClick={() => setConfirmDelete(true)}>
+                  {t("delete")}
+                </button>
+              </>
             )}
           </div>
-        </div>
-        <ColourField
-          label={t("accent")}
-          hexLabel={t("accentHex")}
-          value={tokens.colours.accent}
-          // Button text follows the accent, so a new colour never makes buttons unreadable.
-          onChange={(accent) => setColours({ accent, onAccent: readableOn(accent) })}
-        />
-        <p className="look-note">{t("accentNote")}</p>
-        {uploadError !== null && (
-          <p className="look-error" role="status">
-            {uploadError}
-          </p>
-        )}
-        {errors.length > 0 && (
-          <div className="look-error" role="alert">
-            {errors.map((issue) => (
-              <p key={`${issue.code}-${issue.path}-${issue.against ?? ""}`}>{describe(t, locale, issue)}</p>
-            ))}
-            <p>
-              <b>{t("notSaved")}</b>
-            </p>
-          </div>
-        )}
-        <button type="button" className="look-more" aria-expanded={more} onClick={() => setMore((current) => !current)}>
-          {more ? t("less") : t("more")} <span aria-hidden="true">{more ? "▴" : "▾"}</span>
-        </button>
-        {more && <More t={t} tokens={tokens} setColours={setColours} set={set} upload={upload} />}
-        <div className="look-actions">
-          <span className="look-status" role="status">
-            {!blocked && (status === "saved" ? t("saved") : status === "saving" ? t("saving") : t("saveFailed"))}
-          </span>
-          {theme.isDefault ? (
-            <p className="look-note">{t("isDefault")}</p>
-          ) : (
-            <>
-              <button type="button" className="look-button" onClick={() => void client.makeDefault(theme.id).then(onMadeDefault)}>
-                {t("makeDefault")}
+          {confirmDelete && (
+            <div className="look-confirm">
+              <p>{t("deleteQuestion", { name: theme.name })}</p>
+              <button type="button" className="look-button look-button--primary" onClick={() => void client.remove(theme.id).then(onDeleted)}>
+                {t("deleteTheme")}
               </button>
-              <button type="button" className="look-link" onClick={() => setConfirmDelete(true)}>
-                {t("delete")}
+              <button type="button" className="look-button" onClick={() => setConfirmDelete(false)}>
+                {t("cancel")}
               </button>
-            </>
+            </div>
           )}
-        </div>
-        {confirmDelete && (
-          <div className="look-confirm">
-            <p>{t("deleteQuestion", { name: theme.name })}</p>
-            <button type="button" className="look-button look-button--primary" onClick={() => void client.remove(theme.id).then(onDeleted)}>
-              {t("deleteTheme")}
-            </button>
-            <button type="button" className="look-button" onClick={() => setConfirmDelete(false)}>
-              {t("cancel")}
-            </button>
-          </div>
-        )}
-      </section>
-      <section className="look-preview-region" aria-label={t("preview")}>
-        <ZoomBox texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}>
+        </section>
+      </div>
+      <section className="look-stage" aria-label={t("preview")}>
+        <ZoomBox
+          texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}
+          bar={<DeviceSwitch label={t("width")} texts={{ phone: t("phone"), tablet: t("tablet"), desktop: t("desktop") }} value={device} onChange={setDevice} />}
+          width={deviceWidth(device)}
+        >
           <Preview t={t} tokens={tokens} logoUrl={logoUrl} headerUrl={tokens.headerImage?.asset !== undefined ? client.assetUrl(tokens.headerImage.asset) : undefined} />
         </ZoomBox>
       </section>

@@ -57,6 +57,12 @@ public sealed class OAuthTokenController(AskwerkDbContext context, DbSessionCont
 
         if (client is null || !client.Matches(secret) || !client.IsUsable(now))
         {
+            // The right secret of a paused, expired or revoked client: a refused call in Connections (W36).
+            if (client is not null && client.Matches(secret))
+            {
+                await context.NoteIntegrationActivityAsync(client.TenantId, client.Id, refused: true, cancellationToken);
+            }
+
             return Error(StatusCodes.Status401Unauthorized, "invalid_client", "Unknown client, wrong secret, or the client was revoked or has expired.");
         }
 

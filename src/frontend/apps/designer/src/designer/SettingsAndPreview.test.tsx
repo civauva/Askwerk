@@ -89,7 +89,8 @@ describe("Preview (AWK-22, W9 B and C, M5 B)", () => {
     expect(frame().getAttribute("src")).toBe("/s/s1?preview");
     expect(panel().getByRole("button", { name: "Desktop" }).getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(panel().getByRole("button", { name: "Phone" }));
-    expect(frame().style.width).toBe("390px");
+    // The page is laid out at the phone's width on its stage.
+    expect(frame().parentElement!.style.width).toBe("390px");
     const before = frame();
     fireEvent.click(panel().getByRole("button", { name: "Restart" }));
     expect(frame()).not.toBe(before);

@@ -296,6 +296,7 @@ public sealed class DeliverWebhookJob(AskwerkDbContext context, IHttpClientFacto
         var now = time.GetUtcNow();
         int? status = null;
         string? error = null;
+        var watch = System.Diagnostics.Stopwatch.StartNew();
 
         try
         {
@@ -310,6 +311,8 @@ public sealed class DeliverWebhookJob(AskwerkDbContext context, IHttpClientFacto
         {
             error = exception.Message;
         }
+
+        delivery.Took((int)Math.Min(int.MaxValue, watch.ElapsedMilliseconds));
 
         if (status is >= 200 and < 300)
         {

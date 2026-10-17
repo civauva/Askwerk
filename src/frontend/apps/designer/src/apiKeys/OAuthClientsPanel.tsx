@@ -2,6 +2,7 @@
 import { apiKeyPresets, type OAuthClientItem, type OAuthClientsClient } from "@askwerk/app-client";
 import { DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useState, type ReactNode } from "react";
+import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
 import type { ApiKeysMessageKey } from "./messages";
 
 type T = (key: ApiKeysMessageKey, values?: Record<string, string | number>) => string;
@@ -10,7 +11,7 @@ type Dialog = (props: { title: string; onClose: () => void; children: ReactNode 
 const same = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((scope) => b.includes(scope));
 
 /** Organisation → API → OAuth clients (AWK-32, C32 B): the clients, creating one with its secret shown once, revoking. */
-export function OAuthClientsPanel({ t, client, locale, writeClipboard, timeZone, dialog: Dialog }: { t: T; client: OAuthClientsClient; locale: string; writeClipboard: (text: string) => Promise<void>; timeZone: string | undefined; dialog: Dialog }) {
+export function OAuthClientsPanel({ t, client, locale, writeClipboard, timeZone, dialog: Dialog, makeConnection }: { t: T; client: OAuthClientsClient; locale: string; writeClipboard: (text: string) => Promise<void>; timeZone: string | undefined; dialog: Dialog; makeConnection?: MakeConnection | undefined }) {
   const [items, setItems] = useState<OAuthClientItem[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -43,9 +44,12 @@ export function OAuthClientsPanel({ t, client, locale, writeClipboard, timeZone,
       header: t("revoke"),
       align: "end",
       cell: (item) => (
-        <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: item.name })} onClick={() => setRevoking(item)}>
-          {t("revoke")}
-        </button>
+        <span className="api-keys__actions">
+          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="oauth-client" id={item.id} name={item.name} make={makeConnection} />}
+          <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: item.name })} onClick={() => setRevoking(item)}>
+            {t("revoke")}
+          </button>
+        </span>
       ),
     },
   ];

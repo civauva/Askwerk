@@ -199,6 +199,15 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
     return () => window.removeEventListener("message", received);
   }, [preview, definition]);
 
+  // The Preview beside Look says where the survey is (W32): "Page 2 of 4", the welcome or the end.
+  const at = screen.kind === "answering" ? screen.page + 1 : screen.kind === "welcome" ? "welcome" : screen.kind === "done" ? "end" : null;
+
+  useEffect(() => {
+    if (preview && definition !== null && at !== null && window.parent !== window) {
+      window.parent.postMessage({ type: "askwerk:preview-page", at, pages: definition.pages.length }, window.location.origin);
+    }
+  }, [preview, definition, at]);
+
   useEffect(() => {
     document.documentElement.lang = uiLanguage;
   }, [uiLanguage]);

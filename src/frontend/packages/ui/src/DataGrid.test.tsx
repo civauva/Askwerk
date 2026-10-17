@@ -229,6 +229,33 @@ describe("DataGrid selection", () => {
     expect(screen.getByTestId("chosen").textContent).toBe("");
   });
 
+  it("W35: a boxed bar says the count in its own words and what it is of, and its box clears the choice; the compact pager sits in the card", () => {
+    const onChange = vi.fn();
+    const onPage = vi.fn();
+    const { container } = render(
+      <DataGrid
+        label="Participants"
+        columns={columns}
+        rows={surveys}
+        rowKey={(survey) => survey.id}
+        paging={{ page: 1, pageSize: 50, total: 86, of: 640, note: "Sales: 86", compact: true, onPage, onPageSize: () => undefined }}
+        selection={{ selected: new Set(["s1"]), all: false, rowLabel: (survey) => survey.title, onChange, actions: <button type="button">Remind now</button>, count: (count) => `${count} chosen`, context: "· of 392 not answered", boxed: true }}
+        texts={texts}
+      />,
+    );
+    const bar = screen.getByRole("region", { name: "1 chosen" });
+
+    expect(bar.textContent).toBe("1 chosen· of 392 not answeredRemind now");
+    expect(within(bar).queryByRole("button", { name: "Clear" })).toBeNull();
+    fireEvent.click(within(bar).getByRole("checkbox", { name: "Clear" }));
+    expect(onChange).toHaveBeenCalledWith(new Set(), false);
+    const card = container.querySelector(".aw-grid__card")!;
+    expect(within(card as HTMLElement).getByText("1–50 of 640 · Sales: 86")).toBeTruthy();
+    expect(within(card as HTMLElement).queryByRole("button", { name: "Page 2" })).toBeNull();
+    fireEvent.click(within(card as HTMLElement).getByRole("button", { name: "Next page" }));
+    expect(onPage).toHaveBeenCalledWith(2);
+  });
+
   it("selects the page by the header box, then every match across pages", () => {
     render(<Chooser />);
 

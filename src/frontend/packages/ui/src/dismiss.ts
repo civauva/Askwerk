@@ -20,7 +20,9 @@ export function useDismiss(open: boolean, container: RefObject<HTMLElement | nul
     const onFocusIn = (event: FocusEvent) => outside(event.target) && latest.current(false);
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        // Only the popup closes, not the dialog it sits in: caught on the way down, before the dialog sees it.
         event.preventDefault();
+        event.stopPropagation();
         latest.current(true);
       }
     };
@@ -28,13 +30,13 @@ export function useDismiss(open: boolean, container: RefObject<HTMLElement | nul
     document.addEventListener("mousedown", onPointerDown);
     document.addEventListener("touchstart", onPointerDown);
     document.addEventListener("focusin", onFocusIn);
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown, true);
 
     return () => {
       document.removeEventListener("mousedown", onPointerDown);
       document.removeEventListener("touchstart", onPointerDown);
       document.removeEventListener("focusin", onFocusIn);
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keydown", onKeyDown, true);
     };
   }, [open, container]);
 }

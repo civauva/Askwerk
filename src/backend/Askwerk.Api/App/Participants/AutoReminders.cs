@@ -111,7 +111,7 @@ public sealed class AutoRemindersJob(AskwerkDbContext context, TimeProvider time
 
         if (dueNow.Count > 0)
         {
-            JobRunner.Enqueue(context, survey.TenantId, ParticipantsController.SendReminders, new SendRemindersPayload(survey.Id, InvitationId: null, dueNow), now, now);
+            JobRunner.Enqueue(context, survey.TenantId, ParticipantsController.SendReminders, new SendRemindersPayload(survey.Id, InvitationId: null, dueNow, Automatic: true), now, now);
         }
 
         // Every day while it is on: new invitations bring new people.

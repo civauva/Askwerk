@@ -4,6 +4,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testi
 import { afterEach, describe, expect, it } from "vitest";
 import { Designer } from "./Designer";
 import { FakeDesignerApi, sampleDraft, sequentialIds } from "./testing";
+import { dropLine, grab, moveTo, placeAt, release } from "./dragTesting";
 
 afterEach(cleanup);
 
@@ -87,11 +88,46 @@ describe("Pages in the designer (AWK-29, W17 A)", () => {
     expect(screen.getByRole("button", { name: "Duplicate" })).toBeTruthy();
   });
 
-  it("moves a page by dragging it onto another page", async () => {
+  it("moves a page by dragging its grip in the page list, marked before the page it lands on (W34)", async () => {
     await loaded();
+    const page = outline().getByRole("button", { name: "03 · About you" });
+    const welcome = outline().getByRole("button", { name: "01 · Welcome" }).closest("section")!;
+    placeAt(welcome, 100, 100);
 
-    fireEvent.dragStart(outline().getByRole("button", { name: "03 · About you" }));
-    fireEvent.drop(outline().getByRole("button", { name: "01 · Welcome" }));
+    grab(page.querySelector("[data-grip]")!);
+    moveTo(120);
+    expect(page.getAttribute("data-lifted")).toBe("true");
+    expect(document.querySelector(".designer-lift")?.textContent).toBe("03 · About you");
+    expect(welcome.firstElementChild).toBe(dropLine());
+    release();
+
+    expect(pageTitles()).toEqual(["01 · About you", "02 · Welcome", "03 · Your visit"]);
+    expect(screen.getByText("Moved to position 1 of 3.")).toBeTruthy();
+  });
+
+  it("moves a page after another one when dropped on its lower half", async () => {
+    await loaded();
+    const welcome = outline().getByRole("button", { name: "01 · Welcome" });
+    const visit = outline().getByRole("button", { name: "02 · Your visit" }).closest("section")!;
+    placeAt(visit, 100, 100);
+
+    grab(welcome);
+    moveTo(180);
+    expect(visit.lastElementChild).toBe(dropLine());
+    release();
+
+    expect(pageTitles()).toEqual(["01 · Your visit", "02 · Welcome", "03 · About you"]);
+  });
+
+  it("moves a page on the canvas by the grip in its header (W34)", async () => {
+    await loaded();
+    const canvas = within(screen.getByRole("main", { name: "Canvas" }));
+    const first = canvas.getByRole("button", { name: "Move page 1" }).closest("[data-drop-kind='page']")!;
+    placeAt(first, 0, 200);
+
+    grab(canvas.getByRole("button", { name: "Move page 3" }));
+    moveTo(20);
+    release();
 
     expect(pageTitles()).toEqual(["01 · About you", "02 · Welcome", "03 · Your visit"]);
   });

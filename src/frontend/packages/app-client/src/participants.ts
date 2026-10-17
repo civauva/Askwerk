@@ -37,6 +37,8 @@ export interface InviteRequest {
   /** Also keep the people in Contacts (W35), in a group. */
   readonly saveToContacts?: boolean;
   readonly contactGroup?: string;
+  /** The people came from an import (W35): the file's name, or empty for a pasted table. */
+  readonly importedFrom?: string;
 }
 
 export type ParticipantStatus = "waiting" | "link-only" | "sent" | "opened" | "started" | "answered" | "bounced" | "unsubscribed";
@@ -57,6 +59,16 @@ export interface ParticipantItem {
   readonly remindedAt?: string | null;
   readonly remindersOff?: boolean;
   readonly contactId?: string | null;
+  /** When they were added (W35). */
+  readonly invitedAt?: string | null;
+  /** What the last activity was (W35). */
+  readonly lastActivityKind?: "answered" | "started" | "opened" | "reminded" | "sent" | "invited" | "bounced" | "unsubscribed" | null;
+  /** Bounced: why (W35). */
+  readonly bounceReason?: "mailbox-full" | "unknown-address" | "refused" | null;
+  readonly unsubscribedAt?: string | null;
+  /** Started: the page they are on, from 1, and how many there are (W35). */
+  readonly page?: number | null;
+  readonly pages?: number | null;
 }
 
 /** The automatic reminders of a survey (W35) and the next one: when and to how many. */
@@ -81,6 +93,10 @@ export interface ParticipantEvent {
   readonly kind: "invited" | "sent" | "reminded" | "opened" | "started" | "answered" | "bounced" | "unsubscribed";
   readonly at: string;
   readonly count: number | null;
+  /** Invited: "import:" and the file's name, or "contacts" (W35). */
+  readonly source?: string | null;
+  /** Reminded: sent by the automatic reminders (W35). */
+  readonly automatic?: boolean | null;
 }
 
 /** One person (W35): details, personal link and history. */

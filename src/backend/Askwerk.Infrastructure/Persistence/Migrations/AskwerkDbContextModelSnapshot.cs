@@ -1104,6 +1104,35 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.ToTable("export", (string)null);
                 });
 
+            modelBuilder.Entity("Askwerk.Domain.Integrations.IntegrationActivity", b =>
+                {
+                    b.Property<Guid>("CredentialId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("credential_id");
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date")
+                        .HasColumnName("day");
+
+                    b.Property<int>("Calls")
+                        .HasColumnType("integer")
+                        .HasColumnName("calls");
+
+                    b.Property<int>("Refused")
+                        .HasColumnType("integer")
+                        .HasColumnName("refused");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.HasKey("CredentialId", "Day");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("integration_activity", (string)null);
+                });
+
             modelBuilder.Entity("Askwerk.Domain.Integrations.OAuthClient", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1245,6 +1274,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset?>("DeliveredAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("delivered_at");
+
+                    b.Property<int?>("DurationMs")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_ms");
 
                     b.Property<string>("Error")
                         .HasMaxLength(500)
@@ -1492,6 +1525,11 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("send_at");
 
+                    b.Property<string>("Source")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("source");
+
                     b.Property<Guid>("SurveyId")
                         .HasColumnType("uuid")
                         .HasColumnName("survey_id");
@@ -1512,6 +1550,11 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("BounceReason")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("bounce_reason");
 
                     b.Property<DateTimeOffset?>("BouncedAt")
                         .HasColumnType("timestamp with time zone")
@@ -1564,6 +1607,13 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset?>("RemindedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("reminded_at");
+
+                    b.Property<string>("ReminderLog")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("reminder_log")
+                        .HasDefaultValueSql("'[]'::jsonb");
 
                     b.Property<int>("Reminders")
                         .HasColumnType("integer")

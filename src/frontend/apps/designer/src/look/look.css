@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
-/* Organisation → Look of surveys (AWK-17, W10 A) in the Werkstatt look; the preview uses the theme's own tokens. */
+/* Administration → Looks and → Messages (AWK-17, W10 A, W32) in the Werkstatt look; the preview uses the theme's own tokens. */
 .look {
   box-sizing: content-box;
   max-width: var(--aw-page-list);
@@ -336,8 +336,7 @@
   white-space: nowrap;
 }
 
-/* The preview: only the theme's tokens, so it shows what respondents get. */
-/* The preview fills the page height beside the settings and zooms (W33). */
+/* Messages: the preview fills the page height beside the settings, on its stage (W32). */
 .look-preview-region {
   position: sticky;
   top: 16px;
@@ -348,18 +347,20 @@
   min-height: 480px;
 }
 
-.look-preview-region > .zoom-box {
+.look-preview-region > .aw-stage {
   flex: 1;
+  border: 1px solid var(--aw-line);
 }
 
+/* The preview: only the theme's tokens, so it shows what respondents get; it fills its page on the stage. */
 .look-preview {
   --look-radius: 0px;
   --look-gap: 14px;
   --look-size: 15px;
+  min-height: 100%;
   background: var(--look-background);
   color: var(--look-text);
   font: 400 var(--look-size) / 1.5 var(--look-body-font);
-  border: 1px solid var(--aw-line-strong);
   overflow: hidden;
 }
 
@@ -506,53 +507,64 @@
   justify-self: start;
 }
 
-/* A preview that zooms (W33): the stage scrolls when zoomed in. */
-.zoom-box {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
+/* Administration → Looks (W32): laid out like a survey's Look, the settings in a 340 px column beside the stage. */
+.look--stage {
+  box-sizing: border-box;
+  max-width: none;
+  height: 100vh;
+  padding: 0;
+  gap: 0;
+  grid-template-columns: 340px minmax(0, 1fr);
 }
 
-.zoom-box__stage {
-  flex: 1;
+.look-side {
+  display: grid;
+  align-content: start;
+  gap: 16px;
   min-height: 0;
+  padding: 16px;
   overflow: auto;
-  border: 1px solid var(--aw-line);
-  background: var(--aw-paper, var(--aw-surface));
-}
-
-.zoom-box__content {
-  height: 100%;
-  transform-origin: 0 0;
-}
-
-.zoom-box__controls {
-  align-self: flex-end;
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--aw-line-strong);
-  border-radius: var(--aw-radius-control);
+  border-right: 1px solid var(--aw-line);
   background: var(--aw-surface);
-  font: 600 12.5px/1 var(--aw-font-mono);
 }
 
-.zoom-box__controls button {
+.look-side h1 {
+  font-size: 24px;
+}
+
+.look-side .look-lead {
+  margin: -8px 0 0;
+  font-size: 13.5px;
+}
+
+.look-side .look-editor {
+  padding: 16px 0 0;
   border: 0;
-  background: transparent;
-  padding: 6px 10px;
-  font: inherit;
-  cursor: pointer;
+  border-top: 1px solid var(--aw-line);
+  border-radius: 0;
 }
 
-.zoom-box__controls button:disabled {
-  opacity: 0.4;
-  cursor: default;
+.look-stage {
+  min-height: 0;
 }
 
-.zoom-box__controls output {
-  min-width: 48px;
-  text-align: center;
+.look--stage > .look-presets {
+  align-content: start;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--aw-paper);
+  overflow: auto;
+}
+
+@media (max-width: 760px) {
+  .look--stage {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+
+  .look-stage {
+    height: 70vh;
+    min-height: 480px;
+  }
 }

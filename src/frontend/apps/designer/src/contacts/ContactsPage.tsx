@@ -6,6 +6,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, DataGrid, dataGridTexts, Dialog, DialogActions, type DataGridColumn } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { ImportDialog } from "../participants/ImportDialog";
+import { dayText, fieldLabel } from "../participants/peopleFormat";
 import { peopleMessages, type PeopleMessageKey } from "../participants/peopleMessages";
 
 type ContactsPageProps = {
@@ -15,10 +16,14 @@ type ContactsPageProps = {
   surveys: Pick<SurveysClient, "list">;
   locale: Locale;
   canEdit: boolean;
+  /** How many contacts there are, for the count in the sidebar (W35). */
+  onCount?: (count: number) => void;
+  /** Saves a file, e.g. the chosen contacts as CSV. */
+  saveFile?: (name: string, file: Blob) => void;
 };
 
 const states: [string | null, PeopleMessageKey, "all" | "invitable" | "unsubscribed" | "bounced"][] = [
-  [null, "all", "all"],
+  [null, "allChip", "all"],
   ["invitable", "canBeInvited", "invitable"],
   ["unsubscribed", "contactsUnsubscribed", "unsubscribed"],
   ["bounced", "contactsBounced", "bounced"],
@@ -28,7 +33,7 @@ const states: [string | null, PeopleMessageKey, "all" | "invitable" | "unsubscri
  * Contacts (W35): the organisation's address book. Groups at the side; search and who can be invited; the chosen go
  * into a survey, a group, a CSV, or away; each contact opens to change, with their External ID and fields.
  */
-export function ContactsPage({ client, participants, surveys, locale, canEdit }: ContactsPageProps) {
+export function ContactsPage({ client, participants, surveys, locale, canEdit, onCount, saveFile = download }: ContactsPageProps) {
   const t = useMemo(() => createTranslator(peopleMessages, locale), [locale]);
   const [list, setList] = useState<ContactList | null>(null);
   const [failed, setFailed] = useState(false);
@@ -43,6 +48,8 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
   const [inviting, setInviting] = useState(false);
   const [grouping, setGrouping] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [naming, setNaming] = useState<string | null>(null);
+  const [newGroups, setNewGroups] = useState<string[]>([]);
   const size = 50;
 
   const reload = useCallback(() => {
@@ -55,7 +62,13 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
     return () => clearTimeout(timer);
   }, [reload]);
 
-  const dates = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+  useEffect(() => {
+    list !== null && onCount?.(list.counts.all);
+  }, [list, onCount]);
+
+  const day = (at: string) => dayText(locale, at);
+  // A new group exists once someone is in it; until then it waits here, chosen, for Add to group.
+  const groups = [...(list?.groups ?? []), ...newGroups.filter((name) => !(list?.groups ?? []).some((each) => each.name === name)).map((name) => ({ name, count: 0 }))];
   const ids = [...selected];
   const done = (text: string) => {
     setNotice(text);
@@ -92,15 +105,15 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
         </span>
       ),
     },
-    ...(fieldColumn === undefined ? [] : [{ key: `field-${fieldColumn}`, header: fieldColumn, cell: (contact: ContactItem) => contact.fields[fieldColumn] ?? "—" }]),
-    { key: "surveys", header: t("surveys"), cell: (contact) => t("surveysCount", { count: contact.surveys, answered: contact.answered }) },
-    { key: "last", header: t("lastInvited"), cell: (contact) => (contact.lastInvitedAt === null ? "—" : dates.format(new Date(contact.lastInvitedAt))) },
+    ...(fieldColumn === undefined ? [] : [{ key: `field-${fieldColumn}`, header: fieldLabel(fieldColumn), cell: (contact: ContactItem) => contact.fields[fieldColumn] ?? "—" }]),
+    { key: "surveys", header: t("surveys"), cell: (contact) => <span className="participants__small">{t("surveysCount", { count: contact.surveys, answered: contact.answered })}</span> },
+    { key: "last", header: t("lastInvited"), cell: (contact) => <span className="participants__small">{contact.lastInvitedAt === null ? "—" : day(contact.lastInvitedAt)}</span> },
     {
       key: "invitable",
       header: t("invitable"),
       cell: (contact) => (
         <span data-state={contact.unsubscribed ? "no" : contact.bounced ? "check" : "yes"} className="contacts__state">
-          {contact.unsubscribed ? t("noUnsubscribed") : contact.bounced ? t("checkBounced") : t("yes")}
+          {contact.unsubscribed ? (contact.unsubscribedAt != null ? t("noUnsubscribedOn", { date: day(contact.unsubscribedAt) }) : t("noUnsubscribed")) : contact.bounced ? t("checkBounced") : t("yes")}
         </span>
       ),
     },
@@ -114,15 +127,15 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
           <p className="participants__lead">{t("contactsLead")}</p>
         </div>
         <span className="participants__grow" />
-        <a className="designer-button" href={client.exportUrl(group ?? undefined)} download>
+        <a className="participants__button" href={client.exportUrl(group ?? undefined)} download>
           {t("export")}
         </a>
         {canEdit && (
           <>
-            <button type="button" className="designer-button" onClick={() => setImporting(true)}>
+            <button type="button" className="participants__button" onClick={() => setImporting(true)}>
               {t("import")}
             </button>
-            <button type="button" className="designer-button designer-button--primary" onClick={() => setEditing("new")}>
+            <button type="button" className="participants__button participants__button--primary" onClick={() => setEditing("new")}>
               {t("addContact")}
             </button>
           </>
@@ -136,22 +149,43 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
             <span>{t("allContacts")}</span>
             <small>{list?.counts.all ?? ""}</small>
           </button>
-          {(list?.groups ?? []).map((each) => (
+          {groups.map((each) => (
             <button key={each.name} type="button" aria-current={group === each.name ? "true" : undefined} onClick={() => (setGroup(each.name), setPage(1))}>
               <span>{each.name}</span>
               <small>{each.count}</small>
             </button>
           ))}
-          {(list?.fieldKeys.length ?? 0) > 0 && (
-            <>
-              <p className="import-map__title">{t("fields")}</p>
-              {list!.fieldKeys.map((key) => (
-                <span key={key} className="contacts__field">
-                  {key}
-                </span>
-              ))}
-            </>
-          )}
+          {canEdit &&
+            (naming === null ? (
+              <button type="button" className="contacts__new-group" onClick={() => setNaming("")}>
+                {t("newGroup")}
+              </button>
+            ) : (
+              <form
+                className="contacts__naming"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const name = naming.trim();
+
+                  if (name !== "") {
+                    setNewGroups((current) => [...current, name]);
+                    setGroup(name);
+                    setPage(1);
+                  }
+
+                  setNaming(null);
+                }}
+              >
+                <input className="designer-input" aria-label={t("groupName")} placeholder={t("groupName")} value={naming} autoFocus onChange={(event) => setNaming(event.target.value)} onBlur={(event) => event.currentTarget.form?.requestSubmit()} />
+              </form>
+            ))}
+          <p className="import-map__title">{t("fields")}</p>
+          <span className="contacts__field">{t("externalId")}</span>
+          {(list?.fieldKeys ?? []).map((key) => (
+            <span key={key} className="contacts__field">
+              {fieldLabel(key)}
+            </span>
+          ))}
         </nav>
 
         <div className="contacts__list">
@@ -179,12 +213,15 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
               rows={list?.items ?? null}
               rowKey={(contact) => contact.id}
               {...(canEdit ? { onOpen: (contact: ContactItem) => setEditing(contact) } : {})}
-              paging={{ page, pageSize: size, total: list?.matching ?? 0, onPage: setPage, onPageSize: () => undefined }}
+              {...((list?.matching ?? 0) > size ? { paging: { page, pageSize: size, total: list?.matching ?? 0, compact: true, onPage: setPage, onPageSize: () => undefined } } : {})}
               {...(canEdit
                 ? {
                     selection: {
                       selected,
                       all: false,
+                      boxed: true,
+                      count: (count: number) => t("chosen", { count }),
+                      ...(group === null ? {} : { context: t("ofGroup", { group }) }),
                       rowLabel: (contact: ContactItem) => contact.email,
                       onChange: (next: ReadonlySet<string>) => {
                         setSelected(next);
@@ -203,7 +240,7 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
                         </>
                       ) : grouping !== null ? (
                         <>
-                          <input className="participants__group" aria-label={t("groupName")} placeholder={t("groupName")} value={grouping} onChange={(event) => setGrouping(event.target.value)} />
+                          <input className="participants__group" aria-label={t("groupName")} placeholder={t("groupName")} value={grouping} autoFocus onChange={(event) => setGrouping(event.target.value)} />
                           <button type="button" disabled={grouping.trim() === ""} onClick={() => void client.group(ids, grouping.trim()).then(({ changed }) => done(t("groupAdded", { count: changed, group: grouping.trim() })), () => setNotice(t("failed")))}>
                             {t("save")}
                           </button>
@@ -216,14 +253,12 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit }:
                           <button type="button" onClick={() => setInviting(true)}>
                             {t("inviteToSurvey")}
                           </button>
-                          <button type="button" onClick={() => setGrouping("")}>
+                          <button type="button" onClick={() => setGrouping(group !== null && !(list?.groups ?? []).some((each) => each.name === group) ? group : "")}>
                             {t("addToGroup")}
                           </button>
-                          {group !== null && (
-                            <button type="button" onClick={() => void client.group(ids, group, true).then(() => done(t("changed")), () => setNotice(t("failed")))}>
-                              {t("leaveGroup", { group })}
-                            </button>
-                          )}
+                          <button type="button" onClick={() => void client.exportChosen(ids).then(({ blob, fileName }) => saveFile(fileName, blob), () => setNotice(t("failed")))}>
+                            {t("export")}
+                          </button>
                           <button type="button" onClick={() => setConfirming(true)}>
                             {t("remove")}
                           </button>
@@ -352,10 +387,10 @@ function ContactDialog({ t, contact, onSave, onClose }: { t: (key: PeopleMessage
         </p>
       )}
       <DialogActions>
-        <button type="button" className="designer-button designer-button--quiet" onClick={() => onClose(false)}>
+        <button type="button" className="participants__button" onClick={() => onClose(false)}>
           {t("cancel")}
         </button>
-        <button type="button" className="designer-button designer-button--primary" onClick={save}>
+        <button type="button" className="participants__button participants__button--primary" onClick={save}>
           {t("save")}
         </button>
       </DialogActions>
@@ -376,6 +411,16 @@ function ContactField({ id, name, value, prompt, onChange }: { id: string; name:
       <input id={id} className="designer-input" value={value} aria-label={naming ? name || prompt : undefined} onChange={(event) => onChange(name, event.target.value)} />
     </>
   );
+}
+
+/** Saves a file through a temporary link, as a download. */
+function download(name: string, file: Blob) {
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /** Invite the chosen contacts to a survey: published surveys only, newest first. */
@@ -402,12 +447,12 @@ function InviteToSurvey({ t, surveys, count, onInvite, onClose }: { t: (key: Peo
       </div>
       {failed !== null && <p className="designer-error">{failed}</p>}
       <DialogActions>
-        <button type="button" className="designer-button designer-button--quiet" onClick={() => onClose()}>
+        <button type="button" className="participants__button" onClick={() => onClose()}>
           {t("cancel")}
         </button>
         <button
           type="button"
-          className="designer-button designer-button--primary"
+          className="participants__button participants__button--primary"
           disabled={survey === undefined}
           onClick={() => survey !== undefined && onInvite(survey).then(onClose, (caught: unknown) => setFailed(caught instanceof ApiError && caught.problem.code === "email-not-set-up" ? t("noEmail") : t("failed")))}
         >

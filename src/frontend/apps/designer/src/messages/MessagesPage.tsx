@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import "../look/look.css";
 import "./messages.css";
-import { ZoomBox } from "../designer/ZoomBox";
+import { DeviceSwitch, deviceWidth, ZoomBox, type Device } from "../designer/ZoomBox";
 import { ApiError, type EmailPreview, type MessageKind, type MessageText, type MessagesClient, type Texts } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox } from "@askwerk/ui";
@@ -196,6 +196,7 @@ function Preview({ t, client, kind, surveys, language, subject, body, answerInEm
   const [surveyId, setSurveyId] = useState(surveys[0]?.id ?? null);
   const [email, setEmail] = useState<EmailPreview | null>(null);
   const [sent, setSent] = useState<string | null>(null);
+  const [device, setDevice] = useState<Device>("desktop");
   const label = useId();
 
   useEffect(() => {
@@ -247,7 +248,11 @@ function Preview({ t, client, kind, surveys, language, subject, body, answerInEm
             <>
               <p className="messages-subject">{email.subject}</p>
               {/* Sandboxed: the email's HTML never runs or reaches the app. */}
-              <ZoomBox texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}>
+              <ZoomBox
+                texts={{ zoom: t("zoom"), zoomIn: t("zoomIn"), zoomOut: t("zoomOut"), fit: t("fit") }}
+                bar={<DeviceSwitch label={t("width")} texts={{ phone: t("phone"), tablet: t("tablet"), desktop: t("desktop") }} value={device} onChange={setDevice} />}
+                width={deviceWidth(device)}
+              >
                 <iframe className="messages-frame" title={t("emailPreview")} sandbox="" srcDoc={email.html} />
               </ZoomBox>
             </>

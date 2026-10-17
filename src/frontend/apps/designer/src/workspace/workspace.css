@@ -436,9 +436,21 @@
 
 /* A template being edited (W32). */
 .survey-bar__template {
-  padding: 2px 9px;
-  border: 1px dashed var(--aw-line-strong);
+  padding: 3px 9px;
+  border: 1px solid var(--aw-line-strong);
   border-radius: 999px;
-  font: 600 12px/1.4 var(--aw-font);
+  background: var(--aw-surface);
+  font: 500 11.5px/1.2 var(--aw-font-mono);
   color: var(--aw-graphite);
+  white-space: nowrap;
+}
+
+/* A template (W32): what editing it means, said once in the bar. */
+.survey-bar__hint {
+  font-size: 13px;
+  color: var(--aw-graphite);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }

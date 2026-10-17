@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { ApiError, type ParticipantCheck, type ParticipantInput, type PeopleTable } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox, Dialog, DialogActions } from "@askwerk/ui";
-import { useId, useMemo, useState } from "react";
-import { peopleMessages } from "./peopleMessages";
+import { ComboBox, Dialog } from "@askwerk/ui";
+import { useEffect, useId, useMemo, useState } from "react";
+import { peopleMessages, type PeopleMessageKey } from "./peopleMessages";
 
 type Target = PeopleTable["guesses"][number] | "skip";
 
 /** How the import ends (W35): the people, and for a survey whether to send now and where to keep them. */
-export type ImportChoice = { readonly sendNow: boolean; readonly saveToContacts: boolean; readonly group: string };
+export type ImportChoice = { readonly sendNow: boolean; readonly saveToContacts: boolean; readonly group: string; readonly fileName?: string | null };
 
 type ImportDialogProps = {
   locale: Locale;
@@ -17,6 +17,8 @@ type ImportDialogProps = {
   read: (source: File | string) => Promise<PeopleTable>;
   /** Participants: what the survey would do with the people. */
   check?: (people: readonly ParticipantInput[]) => Promise<ParticipantCheck>;
+  /** The fields the people already have, so a new one says so. */
+  knownFields?: readonly string[];
   /** Imports the people; resolves with what to tell the user. */
   onImport: (people: readonly ParticipantInput[], choice: ImportChoice) => Promise<string>;
   onClose: (notice?: string) => void;
@@ -25,19 +27,20 @@ type ImportDialogProps = {
 const address = /^[^@\s<>",;]+@[^@\s<>",;]+\.[a-z]{2,}$/i;
 
 /**
- * Import people (W35): a CSV or Excel file, or a table pasted from Excel; then which column is what (Askwerk guesses,
- * extra columns become fields); then the check and, for a survey, whether to send now and keep them in Contacts.
+ * Import people (W35): a CSV or Excel file, or a table pasted from Excel; then one step with which column is what
+ * (Askwerk guesses, extra columns become fields), what the check found and, for a survey, whether to send now and
+ * keep them in Contacts.
  */
-export function ImportDialog({ locale, mode, read, check, onImport, onClose }: ImportDialogProps) {
+export function ImportDialog({ locale, mode, read, check, knownFields = [], onImport, onClose }: ImportDialogProps) {
   const t = useMemo(() => createTranslator(peopleMessages, locale), [locale]);
   const id = useId();
   const [table, setTable] = useState<PeopleTable | null>(null);
   const [targets, setTargets] = useState<Target[]>([]);
   const [pasted, setPasted] = useState("");
-  const [step, setStep] = useState<"file" | "columns" | "check">("file");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checked, setChecked] = useState<ParticipantCheck | null>(null);
+  const [showInvalid, setShowInvalid] = useState(false);
   const [sendNow, setSendNow] = useState(true);
   const [saveToContacts, setSaveToContacts] = useState(mode === "contacts");
   const [group, setGroup] = useState("");
@@ -49,7 +52,7 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
       (read) => {
         setTable(read);
         setTargets([...read.guesses]);
-        setStep("columns");
+        setGroup(groupOf(read.fileName));
         setBusy(false);
       },
       (caught: unknown) => {
@@ -80,35 +83,39 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
     });
   };
 
-  const toCheck = () => {
-    if (!targets.includes("email")) {
-      setError(t("needEmail"));
+  const hasEmail = targets.includes("email");
+
+  // The check follows the mapping (W35): mapping, check and what then are one step.
+  useEffect(() => {
+    if (table === null || !hasEmail) {
+      setChecked(null);
       return;
     }
 
-    setError(null);
     const everyone = people();
 
     if (check === undefined) {
-      const valid = everyone.filter((person) => address.test(person.email));
-      setChecked({ participants: valid, duplicates: 0, alreadyInvited: 0, unsubscribed: 0, invalid: everyone.filter((person) => !address.test(person.email)).map((person, index) => ({ line: index + 2, text: person.email })) });
-      setStep("check");
+      setChecked({ participants: everyone.filter((person) => address.test(person.email)), duplicates: 0, alreadyInvited: 0, unsubscribed: 0, invalid: everyone.flatMap((person, index) => (address.test(person.email) ? [] : [{ line: index + 2, text: person.email }])) });
       return;
     }
 
-    setBusy(true);
-    check(everyone).then(
-      (result) => {
-        setChecked(result);
-        setStep("check");
-        setBusy(false);
-      },
-      () => {
-        setError(t("failed"));
-        setBusy(false);
-      },
+    let current = true;
+    const timer = setTimeout(
+      () =>
+        check(everyone).then(
+          (result) => current && setChecked(result),
+          () => current && setError(t("failed")),
+        ),
+      150,
     );
-  };
+
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    };
+    // people() is rebuilt from the table and the targets.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table, targets, check]);
 
   const submit = () => {
     if (checked === null) {
@@ -117,12 +124,13 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
 
     setBusy(true);
     setError(null);
-    onImport(checked.participants, { sendNow, saveToContacts, group: group.trim() }).then(onClose, (caught: unknown) => {
+    onImport(checked.participants, { sendNow, saveToContacts, group: group.trim(), fileName: table?.fileName ?? null }).then(onClose, (caught: unknown) => {
       setError(caught instanceof ApiError && caught.problem.code === "email-not-set-up" ? t("noEmail") : t("failed"));
       setBusy(false);
     });
   };
 
+  const known = new Set(knownFields);
   const options = (column: string) => [
     { value: "email", label: t("asEmail") },
     { value: "firstName", label: t("asFirstName") },
@@ -130,24 +138,64 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
     { value: "name", label: t("asName") },
     { value: "language", label: t("asLanguage") },
     { value: "externalId", label: t("asExternalId") },
-    { value: "field", label: t("asField", { name: column }) },
+    { value: "field", label: known.has(fieldKey(column)) ? t("asField", { name: column }) : t("asFieldNew", { name: column }) },
     { value: "skip", label: t("leaveOut") },
   ];
   const fieldExample = table?.columns.find((_, index) => targets[index] === "field");
-  const stepClass = (mine: typeof step, order: number) => (mine === step ? "import-steps__on" : ["file", "columns", "check"].indexOf(step) > order ? "import-steps__done" : undefined);
+  const steps = [t("stepFile"), t("stepColumns"), t("stepCheck"), ...(mode === "participants" ? [t("stepInvite")] : [])];
+  const count = checked?.participants.length ?? 0;
+  const footer =
+    table === null ? (
+      <>
+        <button type="button" className="participants__button" onClick={() => onClose()}>
+          {t("cancel")}
+        </button>
+        <span className="participants__grow" />
+        <button type="button" className="participants__button participants__button--primary" disabled={busy || pasted.trim() === ""} onClick={() => load(pasted)}>
+          {busy ? t("reading") : t("read")}
+        </button>
+      </>
+    ) : (
+      <>
+        <button type="button" className="participants__button" onClick={() => (setTable(null), setChecked(null))}>
+          {t("back")}
+        </button>
+        <span className="participants__grow" />
+        {fieldExample !== undefined && <span className="participants__small">{t("placeholdersHint", { placeholder: `{${fieldKey(fieldExample)}}` })}</span>}
+        <button type="button" className="participants__button participants__button--primary" disabled={busy || count === 0} onClick={submit}>
+          {mode === "contacts" ? t("importContactsCount", { count }) : count === 1 ? t("importCountOne") : t("importCount", { count })}
+        </button>
+      </>
+    );
 
   return (
-    <Dialog title={mode === "contacts" ? t("importToContacts") : t("importTitle")} onClose={() => onClose()} wide className="import-dialog">
-      <ol className="import-steps" aria-label={t("importTitle")}>
-        <li className={stepClass("file", 0)}>{t("stepFile")}</li>
-        <li className={stepClass("columns", 1)}>{t("stepColumns")}</li>
-        <li className={stepClass("check", 2)}>{t("stepCheck")}</li>
-        {table !== null && <li className="import-steps__meta">{[table.fileName, t("rows", { count: table.rows.length })].filter(Boolean).join(" · ")}</li>}
-      </ol>
+    <Dialog
+      title={mode === "contacts" ? t("importToContacts") : t("importTitle")}
+      onClose={() => onClose()}
+      wide
+      className="import-dialog"
+      head={
+        <>
+          <ol className="import-steps" aria-label={t("importTitle")}>
+            {steps.map((label, index) => {
+              const at = table === null ? 0 : 1;
 
-      {step === "file" && (
+              return (
+                <li key={label} className={index === at ? "import-steps__on" : index < at ? "import-steps__done" : undefined} aria-current={index === at ? "step" : undefined}>
+                  {index < at ? `✓ ${label}` : `${index + 1} ${label}`}
+                </li>
+              );
+            })}
+          </ol>
+          <span className="participants__grow" />
+          {table !== null && <span className="participants__small">{[table.fileName, t("rows", { count: table.rows.length })].filter(Boolean).join(" · ")}</span>}
+        </>
+      }
+      footer={footer}
+    >
+      {table === null && (
         <div className="import-file">
-          <label className="designer-button">
+          <label className="participants__button import-file__choose">
             {t("chooseFile")}
             <input type="file" accept=".csv,.xlsx,.txt,text/csv" className="look-visually-hidden" onChange={(event) => event.target.files?.[0] !== undefined && load(event.target.files[0])} />
           </label>
@@ -155,30 +203,26 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
             {t("orPaste")}
           </label>
           <textarea id={`${id}-paste`} className="designer-input import-file__paste" rows={6} value={pasted} onChange={(event) => setPasted(event.target.value)} />
-          <DialogActions>
-            <button type="button" className="designer-button designer-button--quiet" onClick={() => onClose()}>
-              {t("cancel")}
-            </button>
-            <button type="button" className="designer-button designer-button--primary" disabled={busy || pasted.trim() === ""} onClick={() => load(pasted)}>
-              {busy ? t("reading") : t("read")}
-            </button>
-          </DialogActions>
         </div>
       )}
 
-      {step === "columns" && table !== null && (
+      {table !== null && (
         <div className="import-map">
           <p className="import-map__title">{t("whichColumn")}</p>
           <div className="import-map__grid" role="table" aria-label={t("whichColumn")}>
             <div role="row" className="import-map__head">
               <span role="columnheader">{t("inFile")}</span>
+              <span role="columnheader" aria-hidden="true" />
               <span role="columnheader">{t("becomes")}</span>
               <span role="columnheader">{t("firstRows")}</span>
             </div>
             {table.columns.map((column, index) => (
-              <div role="row" key={index}>
+              <div role="row" key={index} data-skip={targets[index] === "skip" ? "" : undefined}>
                 <span role="cell" className="import-map__column" id={`${id}-col-${index}`}>
                   {column}
+                </span>
+                <span role="cell" aria-hidden="true" className="import-map__arrow">
+                  →
                 </span>
                 <span role="cell">
                   <ComboBox
@@ -201,55 +245,54 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
               </div>
             ))}
           </div>
-          {error !== null && (
-            <p className="designer-error" role="alert">
-              {error}
-            </p>
-          )}
-          <DialogActions>
-            <button type="button" className="designer-button designer-button--quiet" onClick={() => setStep("file")}>
-              {t("back")}
-            </button>
-            <button type="button" className="designer-button designer-button--primary" disabled={busy} onClick={toCheck}>
-              {t("next")}
-            </button>
-          </DialogActions>
-        </div>
-      )}
 
-      {step === "check" && checked !== null && (
-        <div className="import-check">
           <p className="import-map__title">{t("checkFound")}</p>
-          <div className="import-check__numbers">
-            <span className="import-check__ok">
-              <b>{checked.participants.length}</b>
-              {t("willAdd")}
-            </span>
-            {checked.alreadyInvited > 0 && (
-              <span className="import-check__warn">
-                <b>{checked.alreadyInvited}</b>
-                {t("skippedInvited")}
+          {!hasEmail ? (
+            <p className="designer-error" role="alert">
+              {t("needEmail")}
+            </p>
+          ) : (
+            <div className="import-check__numbers" aria-busy={checked === null || undefined}>
+              <span className="import-check__ok">
+                <b>{checked?.participants.length ?? "…"}</b>
+                {t("willAdd")}
               </span>
-            )}
-            {checked.duplicates > 0 && (
-              <span className="import-check__warn">
-                <b>{checked.duplicates}</b>
-                {t("skippedDuplicates")}
+              {mode === "participants" && (
+                <span className="import-check__warn">
+                  <b>{checked?.alreadyInvited ?? "…"}</b>
+                  {t("skippedInvited")}
+                </span>
+              )}
+              <span className="import-check__bad">
+                <b>{checked?.invalid.length ?? "…"}</b>
+                <span>
+                  {t("notValid")}
+                  {(checked?.invalid.length ?? 0) > 0 && (
+                    <>
+                      {" · "}
+                      <button type="button" className="import-check__show" aria-expanded={showInvalid} onClick={() => setShowInvalid(!showInvalid)}>
+                        {showInvalid ? t("hide") : t("show")}
+                      </button>
+                    </>
+                  )}
+                </span>
               </span>
-            )}
-            {checked.invalid.length > 0 && (
-              <span className="import-check__bad" title={checked.invalid.map((line) => line.text).join(", ")}>
-                <b>{checked.invalid.length}</b>
-                {t("notValid")}
-              </span>
-            )}
-            {checked.unsubscribed > 0 && (
-              <span className="import-check__warn">
-                <b>{checked.unsubscribed}</b>
-                {t("skippedUnsubscribed")}
-              </span>
-            )}
-          </div>
+              {mode === "participants" && (
+                <span className="import-check__warn">
+                  <b>{checked?.unsubscribed ?? "…"}</b>
+                  {t("skippedUnsubscribed")}
+                </span>
+              )}
+              {(checked?.duplicates ?? 0) > 0 && (
+                <span className="import-check__warn">
+                  <b>{checked!.duplicates}</b>
+                  {t("skippedDuplicates")}
+                </span>
+              )}
+            </div>
+          )}
+          {showInvalid && checked !== null && checked.invalid.length > 0 && <p className="import-check__invalid">{checked.invalid.map((line) => line.text || "—").join(", ")}</p>}
+
           {mode === "participants" ? (
             <fieldset className="import-then">
               <legend className="import-map__title">{t("stepThen")}</legend>
@@ -267,35 +310,23 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
                   <small>{t("sendLaterHint")}</small>
                 </span>
               </label>
-              <label className="import-then__choice">
-                <input type="checkbox" checked={saveToContacts} onChange={(event) => setSaveToContacts(event.target.checked)} />
-                <span>
+              <span className="import-then__choice">
+                <input id={`${id}-contacts`} type="checkbox" checked={saveToContacts} onChange={(event) => setSaveToContacts(event.target.checked)} />
+                <label htmlFor={`${id}-contacts`}>
                   <b>{t("saveContacts")}</b>
-                </span>
-              </label>
-              {saveToContacts && <GroupField id={id} label={t("contactGroup")} value={group} onChange={setGroup} />}
+                </label>
+                <GroupTag id={id} t={t} value={group} onChange={setGroup} />
+              </span>
             </fieldset>
           ) : (
-            <GroupField id={id} label={t("contactGroup")} value={group} onChange={setGroup} />
+            <span className="import-then__choice">
+              <GroupTag id={id} t={t} value={group} onChange={setGroup} />
+            </span>
           )}
-          {error !== null && (
-            <p className="designer-error" role="alert">
-              {error}
-            </p>
-          )}
-          <DialogActions>
-            <button type="button" className="designer-button designer-button--quiet" onClick={() => setStep("columns")}>
-              {t("back")}
-            </button>
-            {fieldExample !== undefined && <span className="import-check__hint">{t("placeholdersHint", { placeholder: `{${fieldKey(fieldExample)}}` })}</span>}
-            <button type="button" className="designer-button designer-button--primary" disabled={busy || checked.participants.length === 0} onClick={submit}>
-              {mode === "contacts" ? t("importContactsCount", { count: checked.participants.length }) : t("importCount", { count: checked.participants.length })}
-            </button>
-          </DialogActions>
         </div>
       )}
 
-      {step === "file" && error !== null && (
+      {error !== null && (
         <p className="designer-error" role="alert">
           {error}
         </p>
@@ -304,15 +335,24 @@ export function ImportDialog({ locale, mode, read, check, onImport, onClose }: I
   );
 }
 
-function GroupField({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (value: string) => void }) {
+/** The group they go into, as a tag: "group: Customers Q4". */
+function GroupTag({ id, t, value, onChange }: { id: string; t: ReturnType<typeof createTranslator<PeopleMessageKey>>; value: string; onChange: (value: string) => void }) {
   return (
-    <div className="import-then__group">
-      <label className="aw-label" htmlFor={`${id}-group`}>
-        {label}
-      </label>
-      <input id={`${id}-group`} className="designer-input" value={value} maxLength={100} onChange={(event) => onChange(event.target.value)} />
-    </div>
+    <span className="import-then__tag">
+      <span aria-hidden="true">{t("groupTag")}</span>
+      <input id={`${id}-group`} aria-label={t("contactGroup")} value={value} maxLength={100} size={Math.max(8, value.length + 1)} onChange={(event) => onChange(event.target.value)} />
+    </span>
   );
+}
+
+/** A group named after the file: "customers-q4.csv" becomes "Customers Q4". */
+export function groupOf(fileName: string | null): string {
+  return (fileName ?? "")
+    .replace(/\.[^.]+$/, "")
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toLocaleUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 /** A field's key as placeholders use it: "Customer no." becomes customer_no (as the server does). */

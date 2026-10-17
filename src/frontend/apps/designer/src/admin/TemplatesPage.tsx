@@ -2,8 +2,8 @@
 import "./admin.css";
 import type { SampleSurvey, SurveyFront, SurveysClient, SurveyTemplate } from "@askwerk/app-client";
 import { createTranslator, type Locale, type ThemeTokens } from "@askwerk/schema";
-import { ConfirmDialog, DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ConfirmDialog, DataGrid, dataGridTexts, Dialog, type DataGridColumn } from "@askwerk/ui";
+import { useCallback, useEffect, useId, useMemo, useState, type FormEvent } from "react";
 import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
 import { ContentCard } from "../surveys/ContentCard";
 import { viewKey, type ListView } from "../surveys/SurveyListPage";
@@ -13,7 +13,7 @@ type From = "askwerk" | "organisation" | "sample";
 type Row = { id: string; name: string; from: From; questions: number; languages: string[]; front: SurveyFront | null };
 type Filter = "all" | From;
 
-type TemplatesClient = Pick<SurveysClient, "listTemplates" | "listSamples" | "create" | "createSample" | "deleteTemplate" | "editTemplate" | "copyTemplate">;
+type TemplatesClient = Pick<SurveysClient, "listTemplates" | "listSamples" | "create" | "createSample" | "deleteTemplate" | "editTemplate" | "copyTemplate" | "newTemplate">;
 
 /**
  * Templates (AWK-38, W29, W32): Askwerk's templates, the samples, and the organisation's own, each one click from a new
@@ -43,6 +43,7 @@ export function TemplatesPage({
   const [rows, setRows] = useState<Row[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [removing, setRemoving] = useState<Row | null>(null);
+  const [creating, setCreating] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
   const [view, setView] = useState<ListView>(() => (storage.get(viewKey(userId, "templates")) === "cards" ? "cards" : "list"));
@@ -66,7 +67,8 @@ export function TemplatesPage({
             from: "sample" as const,
             questions: sample.questions,
             languages: sample.languages,
-            front: { title: sample.names, text: sample.kind, defaultLanguage: "en", look: sample.tokens },
+            // Like a template's card (W32): its welcome page and what it asks.
+            front: sample.front ?? { title: sample.names, text: sample.kind, defaultLanguage: "en", look: sample.tokens, lookPreset: sample.look },
           })),
         ]),
       () => setFailed(true),
@@ -87,6 +89,9 @@ export function TemplatesPage({
   const fromText = (from: From) => t(from === "askwerk" ? "fromAskwerk" : from === "sample" ? "fromSample" : "fromOrganisation");
   const shown = (rows ?? []).filter((row) => (filter === "all" || row.from === filter) && row.name.toLowerCase().includes(search.trim().toLowerCase()));
   const counts = (key: Filter) => (rows ?? []).filter((row) => key === "all" || row.from === key).length;
+  // A card's one action (W32): ours are edited, Askwerk's and the samples are used.
+  const main = (row: Row) => (row.from === "organisation" ? () => edit(row) : () => use(row));
+  const mainLabel = (row: Row) => (row.from === "organisation" ? t("editTemplateNamed", { name: row.name }) : t("useTemplate", { name: row.name }));
 
   const actions = (row: Row) =>
     canEdit && (
@@ -123,8 +128,14 @@ export function TemplatesPage({
 
   return (
     <main className="admin admin--wide" lang={locale}>
-      <h1>{t("templates")}</h1>
-      <p className="admin__lead">{t("templatesLead")}</p>
+      <div className="admin__head">
+        <h1>{t("templates")}</h1>
+        {canEdit && (
+          <button type="button" className="admin__button" onClick={() => setCreating(true)}>
+            {t("newTemplate")}
+          </button>
+        )}
+      </div>
       <div className="admin__tools">
         <input type="search" className="admin__search" aria-label={t("searchTemplates")} placeholder={t("searchTemplates")} value={search} onChange={(event) => setSearch(event.target.value)} />
         <span className="admin__chips" role="group" aria-label={t("colFrom")}>
@@ -156,17 +167,24 @@ export function TemplatesPage({
               name={row.name}
               locale={locale}
               organisation={organisation}
+              {...(canEdit ? { onOpen: main(row), openLabel: mainLabel(row) } : {})}
               footer={
                 <>
                   <span className="front-card__chip">{fromText(row.from)}</span>
+                  <span>{row.questions === 1 ? t("questionOne") : t("questionsCount", { count: row.questions })}</span>
                   <span className="grow" />
-                  {actions(row)}
+                  {canEdit && (
+                    <button type="button" className="admin__button admin__button--small" aria-label={mainLabel(row)} onClick={main(row)}>
+                      {row.from === "organisation" ? t("editTemplate") : t("use")}
+                    </button>
+                  )}
                 </>
               }
             />
           ))}
         </ul>
       )}
+      {creating && <NewTemplateDialog client={client} locale={locale} onCancel={() => setCreating(false)} onCreated={onOpen} />}
       {removing !== null && (
         <ConfirmDialog
           title={t("deleteTemplate")}
@@ -178,5 +196,65 @@ export function TemplatesPage({
         />
       )}
     </main>
+  );
+}
+
+/** New template (W32): a name, then the designer opens on the empty template. */
+function NewTemplateDialog({ client, locale, onCancel, onCreated }: { client: TemplatesClient; locale: Locale; onCancel: () => void; onCreated: (surveyId: string) => void }) {
+  const t = createTranslator(adminMessages, locale);
+  const id = useId();
+  const [name, setName] = useState("");
+  const [error, setError] = useState<"nameRequired" | "somethingWrong" | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+
+    if (name.trim() === "") {
+      setError("nameRequired");
+      return;
+    }
+
+    setBusy(true);
+    client.newTemplate(name.trim(), locale).then(
+      (made) => onCreated(made.surveyId),
+      () => {
+        setError("somethingWrong");
+        setBusy(false);
+      },
+    );
+  };
+
+  return (
+    <Dialog title={t("newTemplate")} onClose={onCancel}>
+      <form className="admin__form" onSubmit={submit} noValidate>
+        <label className="admin__label" htmlFor={`${id}-name`}>
+          {t("name")}
+        </label>
+        <input
+          id={`${id}-name`}
+          className="admin__input"
+          autoFocus
+          maxLength={200}
+          value={name}
+          aria-invalid={error === "nameRequired"}
+          aria-describedby={error !== null ? `${id}-error` : undefined}
+          onChange={(event) => setName(event.target.value)}
+        />
+        {error !== null && (
+          <span id={`${id}-error`} className="admin__error" role="alert">
+            {t(error)}
+          </span>
+        )}
+        <div className="admin__row" style={{ justifyContent: "flex-end" }}>
+          <button type="button" className="admin__button" onClick={onCancel}>
+            {t("cancel")}
+          </button>
+          <button type="submit" className="admin__button admin__button--primary" disabled={busy}>
+            {t("createTemplate")}
+          </button>
+        </div>
+      </form>
+    </Dialog>
   );
 }

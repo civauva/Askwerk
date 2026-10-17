@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { Checkbox, encodeQr, Tabs } from "@askwerk/ui";
-import { ComboBox, QrCode, qrSvg } from "@askwerk/ui";
+import { Checkbox, Dialog, DialogActions, encodeQr, Menu, MenuLink, Tabs } from "@askwerk/ui";
+import { ComboBox, QrCode } from "@askwerk/ui";
 import type { ParticipantsClient, SurveyEmbedding } from "@askwerk/app-client";
 import type { Locale, Translate } from "@askwerk/schema";
 import { useEffect, useId, useState } from "react";
@@ -68,6 +68,9 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
   const [embed, setEmbed] = useState<"script" | "iframe">("script");
   const [copied, setCopied] = useState<string | null>(null);
   const [inviting, setInviting] = useState(false);
+  const [embedding, setEmbedding] = useState(false);
+  // Invited and answered (W34), from the participants' counts.
+  const [people, setPeople] = useState<{ invited: number; answered: number } | null>(null);
   const link = links.find((each) => each.hostname === hostname) ?? links[0]!;
   // The respondent's own language by default; a set language goes into the link, the QR code and the embed code.
   const [opensIn, setOpensIn] = useState<string | null>(null);
@@ -78,6 +81,26 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
     embed === "script"
       ? `<script src="${origin}/s/embed.js" data-survey="${code}"${opensIn === null ? "" : ` data-lang="${opensIn}"`} async></script>`
       : `<iframe src="${link.url}?embed${opensIn === null ? "" : `&lang=${opensIn}`}" title="${title.replaceAll('"', "&quot;")}" style="width:100%;height:720px;border:0" loading="lazy"></iframe>`;
+  const languageName = (code: string) => {
+    try {
+      return new Intl.DisplayNames([locale], { type: "language" }).of(code) ?? code.toUpperCase();
+    } catch {
+      return code.toUpperCase();
+    }
+  };
+  // The PDF in the link's language, else in each of the survey's languages (W34 "Download PDF ▾").
+  const pdfLanguages = opensIn !== null ? [opensIn] : languages.length > 0 ? languages : [language];
+
+  useEffect(() => {
+    if (participants === undefined) {
+      return;
+    }
+
+    participants.list(surveyId, { limit: 1 }).then(
+      (list) => setPeople({ invited: list.total, answered: list.counts.answered ?? 0 }),
+      () => setPeople(null),
+    );
+  }, [participants, surveyId, inviting]);
 
   const copy = (what: string, text: string) => writeClipboard(text).then(() => setCopied(what), () => undefined);
 
@@ -86,9 +109,9 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
       {/* The link first, with its QR code beside it (W34): the way most people share. */}
       <section className="designer-share designer-share--link" aria-labelledby={addressId}>
         <div className="designer-share__main">
-          <h3 id={addressId} className="designer-share__title">
+          <h2 id={addressId} className="designer-share__title">
             {t("linkTitle")}
-          </h3>
+          </h2>
           <p className="designer-published__hint">{t("linkHint")}</p>
           <span id={`${addressId}-address`} className="designer-visually-hidden">
             {t("address")}
@@ -107,7 +130,7 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
             <button type="button" className="designer-button" aria-label={t("copyLink", { url })} onClick={() => void copy("link", url)}>
               {copied === "link" ? t("copied") : t("copy")}
             </button>
-            <a className="designer-button designer-button--quiet" href={url} target="_blank" rel="noopener">
+            <a className="designer-button" href={url} target="_blank" rel="noopener">
               {t("openLink")}
             </a>
           </div>
@@ -128,28 +151,26 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
           )}
         </div>
         <div className="designer-published__qr" aria-label={t("qrCode")} role="group">
-          <QrCode value={url} label={t("qrFor", { url })} size={112} />
-          <div>
-            <button type="button" className="designer-link-button" onClick={() => void qrPng(url).then((png) => png !== null && saveFile(`${code}-qr.png`, png))}>
-              {t("downloadPng")}
-            </button>
-            <button type="button" className="designer-link-button" onClick={() => saveFile(`${code}-qr.svg`, new Blob([qrSvg(url)], { type: "image/svg+xml" }))}>
-              {t("downloadSvg")}
-            </button>
-          </div>
+          <QrCode value={url} label={t("qrFor", { url })} size={92} />
+          <button type="button" className="designer-button designer-button--small" onClick={() => void qrPng(url).then((png) => png !== null && saveFile(`${code}-qr.png`, png))}>
+            {t("downloadQr")}
+          </button>
         </div>
       </section>
-      {/* Then the other ways, as equal cards: email, a website, paper. */}
+      {/* Then the other ways, as three equal cards: email, a website, paper. */}
       <div className="designer-share__ways">
         {participants !== undefined && (
           <section className="designer-share" aria-labelledby={`${addressId}-invite`}>
-            <h3 id={`${addressId}-invite`} className="designer-share__title">
+            <h2 id={`${addressId}-invite`} className="designer-share__title">
               {t("personalInvitations")}
-            </h3>
-            <p className="designer-published__hint">{t("personalInvitationsHint")}</p>
+            </h2>
+            <p className="designer-published__hint">
+              {t("personalInvitationsHint")}
+              {people !== null && people.invited > 0 && ` ${t("invitedAnswered", { invited: people.invited, answered: people.answered })}`}
+            </p>
             <div>
               <button type="button" className="designer-button" onClick={() => setInviting(true)}>
-                {t("inviteParticipants")}
+                {t("invitePeople")}
               </button>
             </div>
             {inviting && (
@@ -165,26 +186,56 @@ function Addresses({ t, surveyId, title, language, languages = [], links, writeC
           </section>
         )}
         <section className="designer-share" aria-labelledby={`${addressId}-embed`}>
-          <h3 id={`${addressId}-embed`} className="designer-share__title">
-            {t("embed")}
-          </h3>
-          <p className="designer-published__hint">{t("embedHint")}</p>
-          <Tabs label={t("embed")} tabs={[["script", t("embedScript")], ["iframe", "iframe"]]} value={embed} onChange={setEmbed} />
-          <textarea className="designer-published__code" readOnly rows={4} aria-label={t("embedCode")} value={snippet} />
-          <button type="button" className="designer-link-button" onClick={() => void copy("embed", snippet)}>
-            {copied === "embed" ? t("copied") : t("copyEmbed")}
-          </button>
-          {embedSites !== undefined && <EmbedSites t={t} sites={embedSites} />}
+          <h2 id={`${addressId}-embed`} className="designer-share__title">
+            {t("onWebsite")}
+          </h2>
+          <p className="designer-published__hint">{t("onWebsiteHint")}</p>
+          <div>
+            <button type="button" className="designer-button" onClick={() => setEmbedding(true)}>
+              {t("getEmbedCode")}
+            </button>
+          </div>
+          {/* The code, its kind and where it may run, in a dialog (W34). */}
+          {embedding && (
+            <Dialog title={t("embedCode")} onClose={() => setEmbedding(false)}>
+              <p className="designer-published__hint">{t("embedHint")}</p>
+              <Tabs label={t("embed")} tabs={[["script", t("embedScript")], ["iframe", "iframe"]]} value={embed} onChange={setEmbed} />
+              <textarea className="designer-published__code" readOnly rows={4} aria-label={t("embedCode")} value={snippet} />
+              <div>
+                <button type="button" className="designer-button" onClick={() => void copy("embed", snippet)}>
+                  {copied === "embed" ? t("copied") : t("copyEmbed")}
+                </button>
+              </div>
+              {embedSites !== undefined && <EmbedSites t={t} sites={embedSites} />}
+              <DialogActions>
+                <button type="button" className="designer-button" onClick={() => setEmbedding(false)}>
+                  {t("done")}
+                </button>
+              </DialogActions>
+            </Dialog>
+          )}
         </section>
         <section className="designer-share" aria-labelledby={`${addressId}-paper`}>
-          <h3 id={`${addressId}-paper`} className="designer-share__title">
+          <h2 id={`${addressId}-paper`} className="designer-share__title">
             {t("onPaper")}
-          </h3>
+          </h2>
           <p className="designer-published__hint">{t("paperHint")}</p>
           <div>
-            <a className="designer-button" href={pdfUrl(surveyId, opensIn ?? language, link.hostname)} target="_blank" rel="noopener">
-              {t("downloadPdf")}
-            </a>
+            <Menu
+              label={t("downloadPdf")}
+              alignEnd={false}
+              trigger={(props) => (
+                <button type="button" className="designer-button" {...props}>
+                  {t("downloadPdf")} <span aria-hidden="true">▾</span>
+                </button>
+              )}
+            >
+              {pdfLanguages.map((each) => (
+                <MenuLink key={each} href={pdfUrl(surveyId, each, link.hostname)} newTab>
+                  {t("pdfIn", { language: languageName(each) })}
+                </MenuLink>
+              ))}
+            </Menu>
           </div>
         </section>
       </div>

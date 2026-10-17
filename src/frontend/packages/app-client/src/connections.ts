@@ -13,7 +13,7 @@ export type ConnectionPermission = (typeof connectionPermissions)[number];
 
 export type ConnectionHealth = "works" | "waiting" | "warning" | "failing" | "paused";
 
-export type ConnectionReason = "credentials-ending" | "credentials-ended" | "deliveries-failed" | "deliveries-failing" | "webhook-paused";
+export type ConnectionReason = "calls-refused" | "credentials-ending" | "credentials-ended" | "deliveries-failed" | "deliveries-failing" | "webhook-paused";
 
 /** How the system calls Askwerk. */
 export interface ConnectionCalls {
@@ -36,6 +36,9 @@ export interface ConnectionWebhook {
   readonly failedThisWeek: number;
   readonly lastDeliveredAt: string | null;
   readonly failingSince: string | null;
+  /** What the system answered to the last try, and how long it took. */
+  readonly lastStatus?: number | null;
+  readonly lastDurationMs?: number | null;
 }
 
 /** A connection as Connections shows it. */
@@ -52,6 +55,15 @@ export interface ConnectionItem {
   readonly calls: ConnectionCalls | null;
   readonly webhook: ConnectionWebhook | null;
   readonly createdAt: string;
+  /** The last 7 days, oldest first: calls let in and events delivered, calls refused and events failed. */
+  readonly days: readonly { readonly day: string; readonly ok: number; readonly failed: number }[];
+  readonly refusedThisWeek: number;
+  /** The last export its key fetched. */
+  readonly lastExport: { readonly at: string; readonly size: number } | null;
+  /** How colleagues sign in, for the sign-in goal. */
+  readonly login: { readonly kind: "oidc" | "ldap" | "handover"; readonly host: string | null } | null;
+  /** The websites that may show its surveys, for the embed goal. */
+  readonly sites: readonly string[];
 }
 
 /** The secrets of a connection, shown once; null where it has none. */
@@ -89,6 +101,8 @@ export interface ConnectionsClient {
   newSecrets(id: string): Promise<ConnectionCredentials>;
   pause(id: string, paused: boolean): Promise<ConnectionItem>;
   remove(id: string): Promise<void>;
+  /** Makes a connection of a key, client or webhook made before Connections; 409 already-connected. */
+  adopt(kind: "api-key" | "oauth-client" | "webhook", id: string): Promise<ConnectionItem>;
 }
 
 export function createConnectionsClient(options: AppClientOptions): ConnectionsClient {
@@ -104,5 +118,6 @@ export function createConnectionsClient(options: AppClientOptions): ConnectionsC
     newSecrets: (id) => request<ConnectionCredentials>("POST", `${at(id)}/secrets`),
     pause: (id, paused) => request<ConnectionItem>("PUT", `${at(id)}/paused`, { paused }),
     remove: (id) => request("DELETE", at(id)),
+    adopt: (kind, id) => request<ConnectionItem>("POST", "/api/app/connections/adopt", { kind, id }),
   };
 }

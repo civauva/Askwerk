@@ -29,14 +29,14 @@ test("an owner imports people with External IDs, opens one, turns on reminders a
   // Import: a table pasted from Excel, the columns guessed.
   await page.goto(`/surveys/${id}/participants`);
   await page.getByRole("button", { name: /^\+ Add people/ }).click();
-  await page.getByRole("menuitem", { name: /^Import a file or table/ }).click();
+  await page.getByRole("menuitem", { name: /^Import a file/ }).click();
   const dialog = page.getByRole("dialog", { name: "Import people" });
   await dialog.getByRole("textbox", { name: /or paste a table/ }).fill("E-Mail-Adresse\tVorname\tNachname\tKundennummer\tAbteilung\nlena@acme.at\tLena\tGruber\tCRM-10442\tSales\nthomas@acme.at\tThomas\tHuber\tCRM-10871\tService\nsarah@acme.at\tSarah\tNovak\tCRM-11003\tSales\n");
   await dialog.getByRole("button", { name: "Read" }).click();
   await expect(dialog.getByRole("table", { name: "Which column is what" })).toBeVisible();
-  await page.screenshot({ path: info.outputPath("import-columns.png") });
-  await dialog.getByRole("button", { name: "Next" }).click();
+  // The mapping, the check and what then are one step (W35).
   await expect(dialog.getByText("will be added")).toBeVisible();
+  await page.screenshot({ path: info.outputPath("import-columns.png") });
   await dialog.getByRole("radio", { name: /Add them, send later/ }).check();
   await dialog.getByRole("checkbox", { name: "Also save them in Contacts" }).check();
   await dialog.getByRole("textbox", { name: "Group" }).fill("Key accounts");
@@ -46,7 +46,7 @@ test("an owner imports people with External IDs, opens one, turns on reminders a
   // The list: External IDs, the field, the funnel.
   const grid = page.getByRole("grid", { name: "Participants" });
   await expect(grid.getByText("lena@acme.at · CRM-10442")).toBeVisible();
-  await expect(grid.getByRole("columnheader", { name: "abteilung" })).toBeVisible();
+  await expect(grid.getByRole("columnheader", { name: "Abteilung" })).toBeVisible();
   await page.getByRole("switch", { name: "Automatic reminders" }).click();
   await expect(page.getByRole("switch", { name: "Automatic reminders" })).toHaveAttribute("aria-checked", "true");
   expect((await new AxeBuilder({ page }).analyze()).violations.map((violation) => violation.id)).toEqual([]);
@@ -56,7 +56,7 @@ test("an owner imports people with External IDs, opens one, turns on reminders a
   await grid.getByText("lena@acme.at · CRM-10442").click();
   const person = page.getByRole("dialog", { name: "Lena Gruber" });
   await expect(person.getByRole("textbox", { name: "External ID" })).toHaveValue("CRM-10442");
-  await expect(person.getByText("Invited", { exact: true })).toBeVisible();
+  await expect(person.getByText("Invited · added by import", { exact: true })).toBeVisible();
   await page.screenshot({ path: info.outputPath("person.png") });
   await page.keyboard.press("Escape");
 

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Look of surveys (AWK-17 step 2, W10 A): an owner starts a theme from a preset, changes the accent and finds it saved.
+// Administration → Looks (AWK-17 step 2, W10 A, W32): an owner starts a theme from a preset, changes the accent and finds it saved.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { goTo, openAccountMenu } from "./nav";
 import { owner, readTwoFactorKey, totp } from "./owner";
 
 const text = {
-  "desktop-en": { organisation: /^Organisation: /, look: "Look of surveys", preset: "Start from Klar", newTheme: "New theme", accent: "Accent colour (hex)", saved: "Saved", more: "More", themes: "Themes", logoFile: "Logo file", logo: "Logo", preview: "Preview" },
-  "phone-de": { organisation: /^Organisation: /, look: "Aussehen der Umfragen", preset: "Mit Klar beginnen", newTheme: "Neues Design", accent: "Akzentfarbe (Hex)", saved: "Gespeichert", more: "Mehr", themes: "Designs", logoFile: "Logo-Datei", logo: "Logo", preview: "Vorschau" },
+  "desktop-en": { organisation: /^Organisation: /, look: "Looks", preset: "Start from Klar", newTheme: "New theme", accent: "Accent colour (hex)", saved: "Saved", more: "More", themes: "Themes", logoFile: "Logo file", logo: "Logo", preview: "Preview" },
+  "phone-de": { organisation: /^Organisation: /, look: "Looks", preset: "Mit Klar beginnen", newTheme: "Neues Design", accent: "Akzentfarbe (Hex)", saved: "Gespeichert", more: "Mehr", themes: "Designs", logoFile: "Logo-Datei", logo: "Logo", preview: "Vorschau" },
 } as const;
 
 /** A 1 × 1 PNG; the server decodes it (SkiaSharp), which proves the image library runs in this build. */
@@ -27,7 +27,7 @@ test("an owner gives the surveys a look: preset, accent colour, saved by itself"
 
   // Both projects share one organisation: the first starts from a preset, the second adds a theme.
   const themes = page.getByRole("navigation", { name: t.themes });
-  await page.locator(".look-work").waitFor();
+  await page.locator(".look-side").waitFor();
 
   if (await themes.isVisible()) {
     await themes.getByRole("button", { name: t.newTheme }).click();

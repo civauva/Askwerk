@@ -29,7 +29,7 @@ type Field =
   | { readonly kind: "choice"; readonly label: LookMessageKey; readonly path: LookPath; readonly options: readonly Option[]; readonly fallback: string }
   | { readonly kind: "switch"; readonly label: LookMessageKey; readonly path: LookPath; readonly fallback: boolean }
   | { readonly kind: "colour"; readonly label: LookMessageKey; readonly path: LookPath; readonly fallback?: LookPath }
-  | { readonly kind: "logo" | "header" | "questions-layout" | "dark-colours" };
+  | { readonly kind: "logo" | "header" | "questions-layout" | "mode" | "dark-colours" };
 type Part = { readonly id: string; readonly label: LookMessageKey; readonly fields: readonly Field[]; readonly goto?: string };
 type Area = { readonly id: string; readonly label: LookMessageKey; readonly fields?: readonly Field[]; readonly parts?: readonly Part[]; readonly goto?: string };
 
@@ -62,6 +62,7 @@ const areas: readonly Area[] = [
       colour("cMuted", "muted"),
       colour("cLine", "line"),
       { kind: "colour", label: "cError", path: ["components", "messages", "error"] },
+      { kind: "mode" },
       { kind: "dark-colours" },
     ],
   },
@@ -187,7 +188,8 @@ const tags: readonly (readonly [ThemeTag, LookMessageKey])[] = [
   ["kiosk", "tagKiosk"],
 ];
 
-const pathsOf = (fields: readonly Field[]): LookPath[] => fields.flatMap((field) => ("path" in field ? [field.path] : field.kind === "logo" ? [["logo"]] : field.kind === "dark-colours" ? [["darkColours"], ["mode"]] : []));
+const pathsOf = (fields: readonly Field[]): LookPath[] =>
+  fields.flatMap((field) => ("path" in field ? [field.path] : field.kind === "logo" ? [["logo"]] : field.kind === "mode" ? [["mode"]] : field.kind === "dark-colours" ? [["darkColours"]] : []));
 const areaPaths = (area: Area): LookPath[] => [...pathsOf(area.fields ?? []), ...(area.parts ?? []).flatMap((part) => pathsOf(part.fields))];
 
 export type SurveyLookProps = {
@@ -469,8 +471,8 @@ type SideProps = {
 
 type LookTab = "style" | "parts" | "pages" | "mail";
 
-/** The areas each tab holds (W33): Style is drawn on its own; the rest are folded areas as before. */
-const tabAreas: Record<Exclude<LookTab, "style">, readonly string[]> = { parts: ["type", "shape", "components"], pages: ["header", "pages"], mail: ["mail-pdf"] };
+/** The areas each tab holds (W33): Style is drawn on its own; the rest are folded areas, every colour under Parts. */
+const tabAreas: Record<Exclude<LookTab, "style">, readonly string[]> = { parts: ["colours", "type", "shape", "components"], pages: ["header", "pages"], mail: ["mail-pdf"] };
 
 /**
  * The look's settings beside the preview (W33): what the look is and where it came from, the gallery and the rare
@@ -585,21 +587,18 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
           <span className="sl-swatch" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${tokens.colours.accent} 0 40%, ${tokens.colours.background} 40% 70%, ${tokens.colours.text} 70%)` }} />
           <div className="sl-side__name">
             <b>{name}</b>
-            <span className="sl-note">
-              {changes > 0 ? `${changes === 1 ? t("changedOne") : t("changed", { count: changes })} · ` : ""}
-              {t("forThisSurvey")}
-            </span>
+            <span className="sl-side__changed">{changes === 0 ? t("subtitleNone") : changes === 1 ? t("subtitleOne") : t("subtitleMany", { count: changes })}</span>
           </div>
         </div>
         <div className="sl-side__actions">
-          <button type="button" className="designer-button sl-side__gallery" onClick={onGallery}>
+          <button type="button" className="designer-button sl-small sl-side__gallery" onClick={onGallery}>
             <span aria-hidden="true">▦ </span>
             {t("chooseFromGallery")}
           </button>
           <Menu
             label={t("moreActions")}
             trigger={(props) => (
-              <button type="button" className="designer-button designer-button--quiet" aria-label={t("moreActions")} {...props}>
+              <button type="button" className="designer-button sl-small" aria-label={t("moreActions")} {...props}>
                 ⋯
               </button>
             )}
@@ -622,20 +621,32 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
       />
       <div className="sl-areas">
         {tab === "style" ? (
-          <StyleTab t={t} tokens={tokens} onChange={onChange} colours={fieldsOf(areas.find((area) => area.id === "colours")!.fields!)} />
+          <div className="sl-tab">
+            <StyleTab t={t} tokens={tokens} api={api} onChange={onChange} />
+            <Checks t={t} tokens={tokens} status={status} notice={notice} />
+          </div>
         ) : tab === "mail" ? (
-          <div className="sl-tab">{fieldsOf(areas.find((area) => area.id === "mail-pdf")!.fields!)}</div>
+          <div className="sl-tab">
+            {fieldsOf(areas.find((area) => area.id === "mail-pdf")!.fields!)}
+            {!["none", "mountains"].includes(tokens.decoration?.pattern ?? "none") && <p className="sl-note">{t("pdfPattern")}</p>}
+            <Checks t={t} tokens={tokens} status={status} notice={notice} />
+          </div>
         ) : (
-          areas.filter((area) => tabAreas[tab].includes(area.id)).map(folded)
+          <>
+            {areas.filter((area) => tabAreas[tab].includes(area.id)).map(folded)}
+            <div className="sl-tab">
+              <Checks t={t} tokens={tokens} status={status} notice={notice} />
+            </div>
+          </>
         )}
       </div>
-      <Checks t={t} tokens={tokens} status={status} notice={notice} />
       {naming && <NameDialog t={t} initial={base.name} onCancel={() => setNaming(false)} onSave={(newName) => onSaveForOrg(newName).then(() => setNaming(false))} />}
     </aside>
   );
 }
 
-const accents = ["#d2440f", "#1f5f8b", "#2f6f4f", "#6a4ce0", "#b8860b", "#1a1a1a"];
+/** The accent colours Style offers (W32), after the look's own; any other colour is set under Parts → Colours. */
+const accents = ["#c2391a", "#1f5f8b", "#2f6f4f", "#7c5cff", "#b8860b", "#1a1a1a"];
 
 /** One visual choice among a few (W33): a picture of the option and its name. */
 function Tile({ on, label, picture, onClick }: { on: boolean; label: string; picture: ReactNode; onClick: () => void }) {
@@ -649,16 +660,42 @@ function Tile({ on, label, picture, onClick }: { on: boolean; label: string; pic
   );
 }
 
-/** Style (W33): accent, type, shape, background, density and mode, as tiles; every colour folded below. */
-function StyleTab({ t, tokens, onChange, colours }: { t: LookText; tokens: ThemeTokens; onChange: (tokens: ThemeTokens) => void; colours: ReactNode }) {
-  const pattern = tokens.decoration?.pattern ?? "none";
-  const background = pattern === "none" ? "plain" : pattern === "mountains" ? "mountains" : "pattern";
-  const setPattern = (next: string) => onChange(setAt(tokens, ["decoration"], next === "none" ? undefined : { pattern: next }));
+/** One labelled choice in Style (W32): the label above, the choice below. */
+function StyleField({ label, children }: { label: string; children: ReactNode }) {
+  const id = useId();
 
   return (
-    <div className="sl-tab sl-style">
-      <div className="sl-style__group" role="group" aria-label={t("accent")}>
-        <span className="sl-style__label">{t("accent")}</span>
+    <div className="sl-f" role="group" aria-labelledby={id}>
+      <span className="sl-lbl" id={id}>
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
+/** The three type faces of Style (W32), each tile with an "Aa" in its face. */
+const faces: readonly (readonly [string, LookMessageKey, number])[] = [
+  ["IBM Plex Sans", "fontSans", 600],
+  ["IBM Plex Sans Condensed", "fontCondensed", 700],
+  ["IBM Plex Serif", "fontSerif", 600],
+];
+
+/**
+ * Style (W32): accent colour, type, shape, background and density, the choices most people make, as tiles. Every
+ * colour, the mode and each pattern sit under Parts and Pages.
+ */
+function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeTokens; api: LookApi; onChange: (tokens: ThemeTokens) => void }) {
+  const file = useRef<HTMLInputElement>(null);
+  const pattern = tokens.decoration?.pattern ?? "none";
+  const image = tokens.background?.kind !== "colour" ? tokens.background?.image : undefined;
+  const background = image !== undefined || pattern === "mountains" ? "picture" : pattern !== "none" ? "pattern" : "colour";
+  const withPicture = (asset: string) =>
+    onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], { kind: "image-overlay", image: { asset }, fit: "cover", overlay: tokens.colours.background, overlayOpacity: 0.8 }));
+
+  return (
+    <>
+      <StyleField label={t("accentColour")}>
         <span className="sl-swatches">
           {[...new Set([tokens.colours.accent, ...accents])].slice(0, 6).map((colour) => (
             <button
@@ -671,109 +708,122 @@ function StyleTab({ t, tokens, onChange, colours }: { t: LookText; tokens: Theme
               onClick={() => onChange(setAt(tokens, ["colours", "accent"], colour))}
             />
           ))}
-          <ColourField t={t} label={t("customColour")} value={tokens.colours.accent} onChange={(accent) => accent !== "" && onChange(setAt(tokens, ["colours", "accent"], accent))} />
         </span>
-      </div>
-      <div className="sl-style__group" role="group" aria-label={t("fonts")}>
-        <span className="sl-style__label">{t("fonts")}</span>
-        <div className="sl-tiles">
-          {families.map(([family, key]) => (
-            <Tile key={family} on={tokens.fonts.heading.family === family} label={t(key)} picture={<span style={{ fontFamily: `"${family}"`, fontWeight: 600, fontSize: 18 }}>Aa</span>} onClick={() => onChange(setAt(tokens, ["fonts", "heading"], { family }))} />
+      </StyleField>
+      <StyleField label={t("typeLabel")}>
+        <div className="sl-opts">
+          {faces.map(([family, key, weight]) => (
+            <Tile key={family} on={tokens.fonts.heading.family === family} label={t(key)} picture={<span className="sl-tile__face" style={{ fontFamily: `"${family}"`, fontWeight: weight }}>Aa</span>} onClick={() => onChange(setAt(tokens, ["fonts", "heading"], { family }))} />
           ))}
         </div>
-      </div>
-      <div className="sl-style__group" role="group" aria-label={t("corners")}>
-        <span className="sl-style__label">{t("corners")}</span>
-        <div className="sl-tiles">
+      </StyleField>
+      <StyleField label={t("shapeLabel")}>
+        <div className="sl-opts">
           {(["sharp", "rounded", "pill"] as const).map((corners) => (
             <Tile
               key={corners}
               on={tokens.corners === corners}
               label={t(corners === "sharp" ? "cornersSharp" : corners === "rounded" ? "cornersRounded" : "cornersPill")}
-              picture={<i className="sl-tile__shape" style={{ borderRadius: corners === "sharp" ? 2 : corners === "rounded" ? 8 : 999 }} />}
+              picture={<i className="sl-tile__fill sl-tile__fill--shape" style={{ borderRadius: corners === "sharp" ? 1 : corners === "rounded" ? 8 : 20 }} />}
               onClick={() => onChange(setAt(tokens, ["corners"], corners))}
             />
           ))}
         </div>
-      </div>
-      <div className="sl-style__group" role="group" aria-label={t("backgroundLabel")}>
-        <span className="sl-style__label">{t("backgroundLabel")}</span>
-        <div className="sl-tiles">
-          <Tile on={background === "plain"} label={t("bgPlain")} picture={<i className="sl-tile__fill" style={{ background: tokens.colours.background }} />} onClick={() => setPattern("none")} />
-          <Tile on={background === "pattern"} label={t("bgPattern")} picture={<i className="sl-tile__fill sl-tile__fill--pattern" />} onClick={() => background !== "pattern" && setPattern("confetti")} />
-          <Tile on={background === "mountains"} label={t("patternMountains")} picture={<i className="sl-tile__fill sl-tile__fill--mountains" />} onClick={() => setPattern("mountains")} />
-        </div>
-        {background === "pattern" && (
-          <Segment
-            label={t("pattern")}
-            value={pattern}
-            options={(["confetti", "dots", "grid", "waves", "hills", "stripes"] as const).map((each) => [each, t(`pattern${each[0]!.toUpperCase()}${each.slice(1)}` as LookMessageKey)] as const)}
-            onChange={setPattern}
+      </StyleField>
+      <StyleField label={t("backgroundLabel")}>
+        <div className="sl-opts">
+          <Tile
+            on={background === "colour"}
+            label={t("bgPlain")}
+            picture={<i className="sl-tile__fill" style={{ background: tokens.colours.background }} />}
+            onClick={() => onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], undefined))}
           />
-        )}
-      </div>
-      <Segment
-        label={t("density")}
-        value={tokens.spacing}
-        options={[
-          ["compact", t("spacingCompact")],
-          ["normal", t("spacingNormal")],
-          ["airy", t("spacingAiry")],
-        ]}
-        onChange={(spacing) => onChange(setAt(tokens, ["spacing"], spacing))}
-      />
-      <Segment
-        label={t("mode")}
-        value={tokens.mode ?? "light"}
-        options={[
-          ["light", t("modeLight")],
-          ["dark", t("modeDark")],
-          ["auto", t("modeAuto")],
-        ]}
-        onChange={(mode) => {
-          const withMode = setAt(tokens, ["mode"], mode === "light" ? undefined : mode);
-          onChange(mode !== "light" && withMode.darkColours === undefined ? setAt(withMode, ["darkColours"], darkColoursFor(tokens.colours)) : withMode);
-        }}
-      />
-      <details className="sl-more">
-        <summary>{t("allColours")}</summary>
-        {colours}
-      </details>
-    </div>
+          <Tile
+            on={background === "pattern"}
+            label={t("bgPattern")}
+            picture={<i className="sl-tile__fill sl-tile__fill--pattern" style={{ backgroundColor: tokens.colours.background }} />}
+            onClick={() => background !== "pattern" && onChange(setAt(setAt(tokens, ["background"], undefined), ["decoration"], { pattern: "confetti" }))}
+          />
+          <Tile
+            on={background === "picture"}
+            label={t("bgPicture")}
+            picture={<i className="sl-tile__fill sl-tile__fill--picture" style={image !== undefined ? { backgroundImage: `url("${api.assetUrl(image.asset, 240)}")` } : undefined} />}
+            onClick={() => (image !== undefined ? withPicture(image.asset) : background !== "picture" && file.current?.click())}
+          />
+        </div>
+        <input
+          ref={file}
+          type="file"
+          className="designer-visually-hidden"
+          aria-label={t("pictureFile")}
+          accept="image/png,image/jpeg,image/webp"
+          tabIndex={-1}
+          onChange={(event) => {
+            const chosen = event.target.files?.[0];
+            event.target.value = "";
+
+            if (chosen !== undefined) {
+              void api.uploadImage(chosen).then(withPicture);
+            }
+          }}
+        />
+      </StyleField>
+      <StyleField label={t("density")}>
+        <span className="sl-seg">
+          {(["compact", "normal", "airy"] as const).map((spacing) => (
+            <button key={spacing} type="button" aria-pressed={tokens.spacing === spacing} onClick={() => onChange(setAt(tokens, ["spacing"], spacing))}>
+              {t(spacing === "compact" ? "spacingCompact" : spacing === "normal" ? "spacingNormal" : "spacingAiry")}
+            </button>
+          ))}
+        </span>
+      </StyleField>
+    </>
   );
 }
 
-/** Readable or not, saved or not (W26), at the foot of the settings. */
+/**
+ * Readable or not (W26, W32), the last item of the settings: a green box with the contrast of text and buttons, or
+ * what is hard to read. Saving is told to screen readers only; a save that did not happen is shown.
+ */
 function Checks({ t, tokens, status, notice }: { t: LookText; tokens: ThemeTokens; status: "idle" | "saving" | "saved" | "invalid" | "failed"; notice: string | null }) {
   const errors = checkTheme(tokens).filter((issue) => issue.severity === "error");
   const hexRgb = (hex: string) => [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255) as unknown as [number, number, number];
   const ratio = (a: string, b: string) => (Math.floor(contrastRatio(hexRgb(a), hexRgb(b)) * 10) / 10).toFixed(1);
   const what = (path: string | undefined) => (path ?? "").split("/").at(-1) ?? "";
+  const failed = status === "invalid" || status === "failed";
 
   return (
-    <div className={errors.length === 0 ? "sl-checks" : "sl-checks sl-checks--bad"} role="status">
-      {errors.length === 0 ? (
-        <p>
-          <span className="sl-ok">✓</span> {t("checkReadable", { text: ratio(tokens.colours.text, tokens.colours.surface), buttons: ratio(tokens.colours.onAccent, tokens.colours.accent) })}
-        </p>
-      ) : (
-        errors.map((issue: ThemeIssue, index) => (
-          <p key={index} className="sl-bad">
-            !{" "}
-            {issue.code === "contrast-too-low"
-              ? t("checkContrast", { what: what(issue.path), against: what(issue.against), ratio: issue.ratio ?? 0 })
-              : issue.code === "dark-colours-missing"
-                ? t("checkDarkMissing")
-                : issue.code === "colour-invalid"
-                  ? t("checkInvalid", { what: what(issue.path) })
-                  : t("checkOther", { code: issue.code, what: issue.path })}
+    <>
+      <div className={errors.length === 0 ? "sl-readable" : "sl-readable sl-readable--bad"}>
+        {errors.length === 0 ? (
+          <p>
+            <span aria-hidden="true">✓ </span>
+            {t("readableEverywhere", { text: ratio(tokens.colours.text, tokens.colours.surface), buttons: ratio(tokens.colours.onAccent, tokens.colours.accent) })}
           </p>
-        ))
+        ) : (
+          errors.map((issue: ThemeIssue, index) => (
+            <p key={index}>
+              !{" "}
+              {issue.code === "contrast-too-low"
+                ? t("checkContrast", { what: what(issue.path), against: what(issue.against), ratio: issue.ratio ?? 0 })
+                : issue.code === "dark-colours-missing"
+                  ? t("checkDarkMissing")
+                  : issue.code === "colour-invalid"
+                    ? t("checkInvalid", { what: what(issue.path) })
+                    : t("checkOther", { code: issue.code, what: issue.path })}
+            </p>
+          ))
+        )}
+      </div>
+      <p className={failed ? "sl-note sl-bad" : "designer-visually-hidden"} role="status">
+        {status === "saving" ? t("saving") : status === "saved" ? t("saved") : status === "invalid" ? t("notSaved") : status === "failed" ? t("failed") : ""}
+      </p>
+      {notice !== null && (
+        <p className="sl-note" role="status">
+          {notice}
+        </p>
       )}
-      {!["none", "mountains"].includes(tokens.decoration?.pattern ?? "none") && <p className="sl-note">{t("pdfPattern")}</p>}
-      {status !== "idle" && <p className="sl-note">{status === "saving" ? t("saving") : status === "saved" ? t("saved") : status === "invalid" ? t("notSaved") : t("failed")}</p>}
-      {notice !== null && <p className="sl-note">{notice}</p>}
-    </div>
+    </>
   );
 }
 
@@ -838,6 +888,22 @@ function FieldControl({ t, field, tokens, definition, language, api, onChange, o
             />
           ))}
         </div>
+      );
+    case "mode":
+      return (
+        <Segment
+          label={t("mode")}
+          value={tokens.mode ?? "light"}
+          options={[
+            ["light", t("modeLight")],
+            ["dark", t("modeDark")],
+            ["auto", t("modeAuto")],
+          ]}
+          onChange={(mode) => {
+            const withMode = setAt(tokens, ["mode"], mode === "light" ? undefined : mode);
+            onChange(mode !== "light" && withMode.darkColours === undefined ? setAt(withMode, ["darkColours"], darkColoursFor(tokens.colours)) : withMode);
+          }}
+        />
       );
     case "questions-layout":
       return (

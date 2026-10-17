@@ -6,6 +6,7 @@ import { Dialog, DialogActions } from "@askwerk/ui";
 import { useId, useState, type ReactNode } from "react";
 import { Logo } from "../designer/Logo";
 import { PreviewMenu } from "../designer/Preview";
+import { useShellTemplate } from "../shell/AppShell";
 import { workspaceMessages, type WorkspaceMessageKey } from "./messages";
 
 export type WorkspaceText = Translate<WorkspaceMessageKey>;
@@ -180,6 +181,13 @@ export function SurveyBar({
       {place !== undefined ? (
         <nav className="survey-bar__crumbs" aria-label={t("whereYouAre")}>
           {templatesCrumb}
+          {/* A template (W32): Templates › its name; the place is in the sidebar. */}
+          {templateId !== null ? (
+            <h1 className="survey-bar__place" aria-current="page" title={summary?.title ?? ""}>
+              {summary?.title ?? ""}
+            </h1>
+          ) : (
+          <>
           <a
             href="#build"
             className="survey-bar__crumb"
@@ -197,6 +205,8 @@ export function SurveyBar({
           <h1 className="survey-bar__place" aria-current="page">
             {place}
           </h1>
+          </>
+          )}
         </nav>
       ) : (
       <>
@@ -223,13 +233,12 @@ export function SurveyBar({
       )}
       {/* A template (W32): one chip, with the editor's save state when it gives one. */}
       {templateId !== null ? (
-        <span className="survey-bar__template" title={t("templateHint")}>
-          {status ?? t("templateChip")}
-        </span>
+        <span className="survey-bar__template">{status ?? t("templateChip")}</span>
       ) : (
         (status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : statusText(t, summary))}</span>
       )}
       <span className="survey-bar__grow" />
+      {templateId !== null && <span className="survey-bar__hint">{t("templateHint")}</span>}
       {onSearch !== undefined && (
         <button type="button" className="survey-bar__search" aria-label={t("search")} aria-keyshortcuts="Control+K" onClick={onSearch}>
           <span aria-hidden="true">{t("searchHint")}</span>
@@ -478,6 +487,8 @@ export function SurveyTabs({ t, active, canEdit, summary, onSelect }: { t: Works
  * Analyse and Survey settings. The same links, names and counts as SurveyTabs, so both read the same.
  */
 export function SurveyPlaces({ t, active, canEdit, summary, onSelect }: { t: WorkspaceText; active: SurveyTab; canEdit: boolean; summary: SurveySummary | null; onSelect: (tab: SurveyTab) => void }) {
+  // A template's way back is to Templates (W32).
+  useShellTemplate(summary?.templateId != null);
   const count = (tab: SurveyTab) => (tab === "results" ? summary?.responses : tab === "participants" ? summary?.participants : undefined);
   const shown = groups
     .filter((group) => (canEdit || group.edit !== true) && (summary?.templateId == null || group.edit === true))

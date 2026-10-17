@@ -414,9 +414,9 @@ describe("Participants (AWK-7, W12 D, W35; its own tab since AWK-29)", () => {
     expect(within(grid).getByText("Sales")).toBeTruthy();
     expect(within(grid).getByText("Answered")).toBeTruthy();
     expect(screen.getByText("answered · 33 %")).toBeTruthy();
-    expect(screen.getByText("1 address refused")).toBeTruthy();
+    expect(screen.getByText("bounced").parentElement?.textContent).toBe("1 bounced");
     expect(screen.getByRole("switch", { name: "Automatic reminders" }).getAttribute("aria-checked")).toBe("true");
-    expect(screen.getByText(/^next: .* to 2$/)).toBeTruthy();
+    expect(screen.getByText(/^next: .* to 2 people$/)).toBeTruthy();
     await expectNoAxeViolations(container);
   });
 
@@ -428,15 +428,14 @@ describe("Participants (AWK-7, W12 D, W35; its own tab since AWK-29)", () => {
 
     fireEvent.click(within(screen.getByRole("group", { name: "Status" })).getByRole("button", { name: /^Not answered/ }));
     await waitFor(() => expect(participants.calls.at(-1)).toEqual(["list", "s1", { status: "not-answered", offset: 0, limit: 50 }]));
-    fireEvent.change(screen.getByRole("searchbox", { name: "Search name, email, External ID…" }), { target: { value: "CRM-2" } });
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search name, email, field…" }), { target: { value: "CRM-2" } });
     await waitFor(() => expect(participants.calls.at(-1)).toEqual(["list", "s1", { search: "CRM-2", status: "not-answered", offset: 0, limit: 50 }]));
     fireEvent.click(screen.getByRole("button", { name: "+ Filter" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Value" }), { target: { value: "Sales" } });
     fireEvent.click(screen.getByRole("button", { name: "Apply" }));
     await waitFor(() => expect(participants.calls.at(-1)).toEqual(["list", "s1", { search: "CRM-2", status: "not-answered", field: "department:Sales", offset: 0, limit: 50 }]));
-    fireEvent.click(within(screen.getByRole("columnheader", { name: "Status" })).getByRole("button"));
-
-    await waitFor(() => expect(participants.calls.at(-1)?.[2]).toMatchObject({ sort: "status" }));
+    // W35: plain headers, no sorting.
+    expect(within(screen.getByRole("columnheader", { name: "Status" })).queryByRole("button")).toBeNull();
   });
 
   it("reminds, invites again, exports and saves the chosen to a contacts group", async () => {
@@ -446,7 +445,7 @@ describe("Participants (AWK-7, W12 D, W35; its own tab since AWK-29)", () => {
 
     fireEvent.click(await screen.findByRole("checkbox", { name: "Select: josef@acme.at" }));
     fireEvent.click(screen.getByRole("checkbox", { name: "Select: old@acme.at" }));
-    const bar = () => within(screen.getByRole("region", { name: "2 selected" }));
+    const bar = () => within(screen.getByRole("region", { name: "2 chosen" }));
     fireEvent.click(bar().getByRole("button", { name: "Export chosen" }));
     await waitFor(() => expect(saved).toEqual(["participants.csv"]));
     fireEvent.click(bar().getByRole("button", { name: "Add to contacts group" }));
@@ -456,11 +455,11 @@ describe("Participants (AWK-7, W12 D, W35; its own tab since AWK-29)", () => {
     expect(await screen.findByText("In Contacts: 1 added, 1 updated.")).toBeTruthy();
     expect(participants.calls.find(([name]) => name === "saveToContacts")).toEqual(["saveToContacts", "s1", { participantIds: ["p2", "p3"] }, "Key accounts"]);
     fireEvent.click(await screen.findByRole("checkbox", { name: "Select: josef@acme.at" }));
-    fireEvent.click(within(screen.getByRole("region", { name: "1 selected" })).getByRole("button", { name: "Remind now" }));
+    fireEvent.click(within(screen.getByRole("region", { name: "1 chosen" })).getByRole("button", { name: "Remind now" }));
     expect(await screen.findByText("Reminder on its way to the 1 chosen who have not answered.")).toBeTruthy();
     participants.emailReady = false;
     fireEvent.click(await screen.findByRole("checkbox", { name: "Select: josef@acme.at" }));
-    fireEvent.click(within(screen.getByRole("region", { name: "1 selected" })).getByRole("button", { name: "Remind now" }));
+    fireEvent.click(within(screen.getByRole("region", { name: "1 chosen" })).getByRole("button", { name: "Remind now" }));
     expect(await screen.findByText("Email is not set up yet. Download the links and share them another way.")).toBeTruthy();
   });
 
@@ -471,7 +470,7 @@ describe("Participants (AWK-7, W12 D, W35; its own tab since AWK-29)", () => {
 
     fireEvent.click(await screen.findByRole("checkbox", { name: "Select this page" }));
     fireEvent.click(screen.getByRole("button", { name: /^Select all/ }));
-    const bar = within(screen.getByRole("region", { name: /selected$/ }));
+    const bar = within(screen.getByRole("region", { name: /chosen$/ }));
     fireEvent.click(bar.getByRole("button", { name: "Remove" }));
     fireEvent.click(bar.getByRole("button", { name: "Yes, remove" }));
 

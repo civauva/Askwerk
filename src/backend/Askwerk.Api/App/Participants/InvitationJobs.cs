@@ -59,9 +59,9 @@ public abstract class InvitationJob(AskwerkDbContext context, EmailSettingsProvi
                 await sender.SendAsync(smtp, new EmailMessage(person.Email, message.Subject, message.Text, message.Html), cancellationToken);
                 sent(person);
             }
-            catch (EmailRejectedException)
+            catch (EmailRejectedException exception)
             {
-                person.Bounced(time.GetUtcNow());
+                person.Bounced(time.GetUtcNow(), BounceReasons.Of(exception.Message));
             }
 
             await context.SaveChangesAsync(cancellationToken);
@@ -126,6 +126,27 @@ public sealed class SendRemindersJob(AskwerkDbContext context, EmailSettingsProv
             .ToListAsync(cancellationToken);
         var invitations = await context.Invitations.Where(row => row.SurveyId == survey.Id).ToDictionaryAsync(row => row.Id, cancellationToken);
 
-        await SendAsync(MessageKind.Reminder, survey, people, invitations, person => person.Reminded(time.GetUtcNow()), cancellationToken);
+        await SendAsync(MessageKind.Reminder, survey, people, invitations, person => person.Reminded(time.GetUtcNow(), work.Automatic), cancellationToken);
+    }
+}
+
+/// <summary>Why a mail server refused an address (W35), in a word the list can show.</summary>
+public static class BounceReasons
+{
+    /// <summary>mailbox-full, unknown-address or refused, from the server's answer.</summary>
+    /// <param name="answer">What the mail server said.</param>
+    /// <returns>The reason.</returns>
+    public static string Of(string? answer)
+    {
+        var text = (answer ?? "").ToLowerInvariant();
+
+        if (text.Contains("full", StringComparison.Ordinal) || text.Contains("quota", StringComparison.Ordinal) || text.Contains("storage", StringComparison.Ordinal))
+        {
+            return "mailbox-full";
+        }
+
+        return text.Contains("unavailable", StringComparison.Ordinal) || text.Contains("unknown", StringComparison.Ordinal) || text.Contains("not exist", StringComparison.Ordinal) || text.Contains("no such", StringComparison.Ordinal) || text.Contains("not allowed", StringComparison.Ordinal)
+            ? "unknown-address"
+            : "refused";
     }
 }

@@ -1,0 +1,165 @@
+/* SPDX-License-Identifier: AGPL-3.0-only */
+/* The stage a page is shown on (W32, ZoomBox): Look, Looks and Messages. Values from the approved mockup. */
+.aw-stage {
+  --aw-stage-check-a: #eeece8;
+  --aw-stage-check-b: #f5f3ef;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: repeating-conic-gradient(var(--aw-stage-check-a) 0 25%, var(--aw-stage-check-b) 0 50%) 0 0 / 22px 22px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .aw-stage {
+    --aw-stage-check-a: #1c1a18;
+    --aw-stage-check-b: #211f1c;
+  }
+}
+
+:root[data-theme="dark"] .aw-stage {
+  --aw-stage-check-a: #1c1a18;
+  --aw-stage-check-b: #211f1c;
+}
+
+.aw-stage__bar {
+  flex: none;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: var(--aw-surface);
+  border-bottom: 1px solid var(--aw-line);
+  overflow: hidden;
+}
+
+.aw-stage__grow {
+  flex: 1;
+}
+
+.aw-stage__seg {
+  display: inline-flex;
+  flex: none;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  overflow: hidden;
+  background: var(--aw-surface);
+}
+
+.aw-stage__seg button {
+  border: 0;
+  background: transparent;
+  padding: 7px 11px;
+  color: var(--aw-ink);
+  font: 600 12px/1 var(--aw-font-mono);
+  cursor: pointer;
+}
+
+.aw-stage__seg button[aria-pressed="true"] {
+  background: var(--aw-ink);
+  color: var(--aw-paper);
+}
+
+.aw-stage__pages {
+  font-size: 12.5px;
+  color: var(--aw-graphite);
+  white-space: nowrap;
+}
+
+.aw-stage__link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.aw-stage__button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  font: 600 12.5px/1.2 var(--aw-font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.aw-stage__canvas {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  min-height: 0;
+  padding: 24px;
+  overflow: auto;
+}
+
+.aw-stage__frame {
+  flex: none;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  background: var(--aw-surface);
+  overflow: hidden;
+}
+
+.aw-stage__page {
+  transform-origin: 0 0;
+}
+
+.aw-stage__page > iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.aw-stage__zoom {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 8px;
+  background: var(--aw-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font: 600 12.5px/1 var(--aw-font-mono);
+}
+
+.aw-stage__zoom button,
+.aw-stage__zoom output {
+  padding: 6px 10px;
+  font: inherit;
+}
+
+.aw-stage__zoom button {
+  border: 0;
+  background: transparent;
+  color: var(--aw-ink);
+  cursor: pointer;
+}
+
+.aw-stage__zoom button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.aw-stage__zoom .aw-stage__fit {
+  border-left: 1px solid var(--aw-line);
+}
+
+.aw-stage :focus-visible {
+  outline: 2px solid var(--aw-focus);
+  outline-offset: 2px;
+}

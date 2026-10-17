@@ -2,7 +2,7 @@
 import type { Catalogs } from "@askwerk/schema";
 
 const en = {
-  title: "Look of surveys",
+  title: "Looks",
   lead: "How your organisation's surveys look on the web. Email and PDF follow the same theme.",
   loading: "Loading themes",
   themes: "Themes",
@@ -107,6 +107,10 @@ const en = {
   zoomIn: "Zoom in",
   zoomOut: "Zoom out",
   fit: "Fit",
+  width: "Width",
+  phone: "Phone",
+  tablet: "Tablet",
+  desktop: "Desktop",
   previewTitle: "Customer satisfaction 2026",
   previewText: "Thank you for taking part.",
   previewQuestion: "How satisfied are you?",
@@ -119,7 +123,7 @@ export type LookMessageKey = keyof typeof en;
 export const lookMessages: Catalogs<LookMessageKey> = {
   en,
   de: {
-    title: "Aussehen der Umfragen",
+    title: "Looks",
     lead: "So sehen die Umfragen Ihrer Organisation im Web aus. E-Mail und PDF folgen demselben Design.",
     loading: "Designs werden geladen",
     themes: "Designs",
@@ -224,6 +228,10 @@ export const lookMessages: Catalogs<LookMessageKey> = {
     zoomIn: "Vergrößern",
     zoomOut: "Verkleinern",
     fit: "Einpassen",
+    width: "Breite",
+    phone: "Telefon",
+    tablet: "Tablet",
+    desktop: "Desktop",
     previewTitle: "Kundenzufriedenheit 2026",
     previewText: "Danke, dass Sie mitmachen.",
     previewQuestion: "Wie zufrieden sind Sie?",

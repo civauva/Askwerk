@@ -197,6 +197,7 @@ describe("Templates (AWK-38, W29)", () => {
       deleteTemplate: (id: string) => (calls.push(["delete", id]), Promise.resolve()),
       editTemplate: (id: string) => (calls.push(["edit", id]), Promise.resolve({ id, surveyId: "e1" })),
       copyTemplate: (id: string, language: string) => (calls.push(["copy", id, language]), Promise.resolve({ id: "c1", surveyId: "e2" })),
+      newTemplate: (name: string, language: string) => (calls.push(["new", name, language]), Promise.resolve({ id: "n1", surveyId: "e3" })),
     };
     const onOpen = vi.fn();
     render(<TemplatesPage client={client} locale="en" canEdit onOpen={onOpen} />);
@@ -229,6 +230,7 @@ describe("Templates (AWK-38, W29)", () => {
       deleteTemplate: () => Promise.resolve(),
       editTemplate: (id: string) => (calls.push(["edit", id]), Promise.resolve({ id, surveyId: "e1" })),
       copyTemplate: (id: string, language: string) => (calls.push(["copy", id, language]), Promise.resolve({ id: "c1", surveyId: "e2" })),
+      newTemplate: (name: string, language: string) => (calls.push(["new", name, language]), Promise.resolve({ id: "n1", surveyId: "e3" })),
     };
     const onOpen = vi.fn();
     const { container } = render(<TemplatesPage client={client} locale="en" canEdit onOpen={onOpen} userId="u1" organisation="Acme GmbH" />);
@@ -246,5 +248,70 @@ describe("Templates (AWK-38, W29)", () => {
     expect(screen.getByRole("list", { name: "Templates" }).children).toHaveLength(1);
     expect(cards.getByText("Willkommen bei Acme")).toBeTruthy();
     await expectNoAxeViolations(container);
+  });
+
+  it("gives each card one action, Use or Edit, after where it comes from and its size; the strip does the same (W32)", async () => {
+    const look = (await import("@askwerk/schema")).themePresets[0]!.tokens;
+    const contents = { questions: 7, pages: 2, minutes: 2, first: [{ text: { en: "How was the coffee?" }, type: "rating" }], types: { rating: 7 } };
+    const client = {
+      listTemplates: () =>
+        Promise.resolve([
+          { id: "askwerk:nps-short", scope: "askwerk" as const, name: null, names: { en: "NPS, short" }, questions: 3, languages: ["en"], front: { title: { en: "How likely?" }, text: null, defaultLanguage: "en", look } },
+          { id: "7f1c", scope: "organisation" as const, name: "Acme check-in", names: null, questions: 14, languages: ["de"], front: { title: { de: "Willkommen" }, text: null, defaultLanguage: "de", look } },
+        ]),
+      listSamples: () =>
+        Promise.resolve([
+          { id: "cafe", names: { en: "Café visit" }, kind: {}, features: {}, look: "atelier", tokens: look, languages: ["en"], questions: 7, responses: 86, preview: { question: {}, choices: [] }, front: { title: { en: "Your visit" }, text: null, defaultLanguage: "en", look, contents, lookPreset: "atelier" } } as never,
+        ]),
+      create: () => Promise.resolve("s9"),
+      createSample: () => Promise.resolve("s8"),
+      deleteTemplate: () => Promise.resolve(),
+      editTemplate: (id: string) => Promise.resolve({ id, surveyId: "e1" }),
+      copyTemplate: () => Promise.resolve({ id: "c1", surveyId: "e2" }),
+      newTemplate: () => Promise.resolve({ id: "n1", surveyId: "e3" }),
+    };
+    const onOpen = vi.fn();
+    render(<TemplatesPage client={client} locale="en" canEdit onOpen={onOpen} storage={{ get: () => "cards", set: () => undefined }} />);
+    const list = await screen.findByRole("list", { name: "Templates" });
+    const [askwerk, ours, sample] = [...list.children].map((card) => within(card as HTMLElement));
+
+    expect(askwerk!.getAllByRole("button", { name: /NPS, short/ }).length).toBe(2);
+    expect(askwerk!.getByText("Askwerk")).toBeTruthy();
+    expect(askwerk!.getByText("3 questions")).toBeTruthy();
+    expect(askwerk!.getByText("Use")).toBeTruthy();
+    expect(askwerk!.queryByText("Copy to our templates")).toBeNull();
+    expect(ours!.getByText("Ours")).toBeTruthy();
+    expect(ours!.getByText("Edit")).toBeTruthy();
+    expect(ours!.queryByText("Delete")).toBeNull();
+    // Samples show what they ask, like templates.
+    expect(sample!.getByText("How was the coffee?")).toBeTruthy();
+    fireEvent.click(ours!.getAllByRole("button", { name: "Edit Acme check-in" })[0]!);
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith("e1"));
+  });
+
+  it("makes a new template from a name and opens it (W32)", async () => {
+    const calls: unknown[][] = [];
+    const client = {
+      listTemplates: () => Promise.resolve([]),
+      listSamples: () => Promise.resolve([]),
+      create: () => Promise.resolve("s9"),
+      createSample: () => Promise.resolve("s8"),
+      deleteTemplate: () => Promise.resolve(),
+      editTemplate: (id: string) => Promise.resolve({ id, surveyId: "e1" }),
+      copyTemplate: () => Promise.resolve({ id: "c1", surveyId: "e2" }),
+      newTemplate: (name: string, language: string) => (calls.push(["new", name, language]), Promise.resolve({ id: "n1", surveyId: "e3" })),
+    };
+    const onOpen = vi.fn();
+    render(<TemplatesPage client={client} locale="de" canEdit onOpen={onOpen} />);
+
+    fireEvent.click(await screen.findByRole("button", { name: "Neue Vorlage" }));
+    const dialog = within(screen.getByRole("dialog", { name: "Neue Vorlage" }));
+    fireEvent.click(dialog.getByRole("button", { name: "Anlegen" }));
+    expect(dialog.getByText("Geben Sie einen Namen ein.")).toBeTruthy();
+    fireEvent.change(dialog.getByLabelText("Name"), { target: { value: "Acme check-in" } });
+    fireEvent.click(dialog.getByRole("button", { name: "Anlegen" }));
+
+    await waitFor(() => expect(onOpen).toHaveBeenCalledWith("e3"));
+    expect(calls).toEqual([["new", "Acme check-in", "de"]]);
   });
 });

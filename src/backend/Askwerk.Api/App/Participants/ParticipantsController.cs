@@ -147,7 +147,8 @@ public sealed class ParticipantsController(
 
         var check = await CheckPeopleAsync(surveyId, inputs, cancellationToken);
         var now = time.GetUtcNow();
-        var invitation = Invitation.Create(Guid.CreateVersion7(now), survey.TenantId, survey.Id, send, request.SendAt, request.Deadline, request.Reminder ?? true, request.Host, User.UserId()!.Value, now);
+        var source = request.ImportedFrom is { } file ? $"import:{file}" : request.ContactIds is { Count: > 0 } && (request.Participants ?? []).Count == 0 ? "contacts" : null;
+        var invitation = Invitation.Create(Guid.CreateVersion7(now), survey.TenantId, survey.Id, send, request.SendAt, request.Deadline, request.Reminder ?? true, request.Host, User.UserId()!.Value, now, source);
         context.Invitations.Add(invitation);
         var contacts = await ContactBook.MatchAsync(context, check.Participants, cancellationToken);
 
@@ -177,7 +178,7 @@ public sealed class ParticipantsController(
 
             if (invitation.RemindAt is { } remindAt)
             {
-                JobRunner.Enqueue(context, survey.TenantId, SendReminders, new SendRemindersPayload(survey.Id, invitation.Id), remindAt, now);
+                JobRunner.Enqueue(context, survey.TenantId, SendReminders, new SendRemindersPayload(survey.Id, invitation.Id, Automatic: true), remindAt, now);
             }
         }
 
@@ -228,15 +229,25 @@ public sealed class ParticipantsController(
                 : 1,
             });
         var counts = await rows.GroupBy(row => row.Rank).Select(group => new { group.Key, Count = group.Count() }).ToListAsync(cancellationToken);
-        var shown = Filtered(rows, search, status, field);
+        var shown = Filtered(context, rows, search, status, field);
         var matching = await shown.CountAsync(cancellationToken);
         var page = await Sorted(shown, sort).Skip(Math.Max(0, offset)).Take(Math.Clamp(limit ?? DefaultLimit, 1, MaxLimit)).ToListAsync(cancellationToken);
         var pageIds = page.Select(row => row.Participant.Id).ToList();
-        var activity = await context.Responses
+        // Each person's latest response (W35): when they last answered or started, and on which page they are.
+        var responses = (await context.Responses
             .Where(response => response.ParticipantId != null && pageIds.Contains(response.ParticipantId.Value))
-            .GroupBy(response => response.ParticipantId!.Value)
-            .Select(group => new { Id = group.Key, At = group.Max(response => response.UpdatedAt) })
-            .ToDictionaryAsync(row => row.Id, row => row.At, cancellationToken);
+            .Select(response => new { Id = response.ParticipantId!.Value, response.Status, response.UpdatedAt, response.CompletedAt, response.PageKey, response.SurveyVersionId })
+            .ToListAsync(cancellationToken))
+            .GroupBy(response => response.Id)
+            .ToDictionary(group => group.Key, group => group.OrderByDescending(response => response.UpdatedAt).First());
+        var versionIds = responses.Values.Where(response => response.Status != ResponseStatus.Complete).Select(response => response.SurveyVersionId).Distinct().ToList();
+        var pages = (await context.SurveyPages.Where(row => versionIds.Contains(row.SurveyVersionId)).Select(row => new { row.SurveyVersionId, row.PageKey, row.Position }).ToListAsync(cancellationToken))
+            .GroupBy(row => row.SurveyVersionId)
+            .ToDictionary(group => group.Key, group => (Count: group.Count(), Positions: group.ToDictionary(row => row.PageKey, row => row.Position, StringComparer.Ordinal)));
+        var pageEmails = page.Select(row => row.Participant.Email).ToList();
+        var unsubscribedAt = (await context.Unsubscribes.Where(row => pageEmails.Contains(row.Email)).Select(row => new { row.Email, row.CreatedAt }).ToListAsync(cancellationToken))
+            .GroupBy(row => row.Email, StringComparer.Ordinal)
+            .ToDictionary(group => group.Key, group => group.Min(row => row.CreatedAt), StringComparer.Ordinal);
         var fieldKeys = await context.Database
             .SqlQuery<string>($"SELECT DISTINCT jsonb_object_keys(fields) AS \"Value\" FROM participant WHERE survey_id = {surveyId} ORDER BY 1")
             .ToListAsync(cancellationToken);
@@ -244,22 +255,54 @@ public sealed class ParticipantsController(
         var now = time.GetUtcNow();
         var reminderAt = await context.Invitations.Where(row => row.SurveyId == surveyId && row.RemindAt > now).MinAsync(row => row.RemindAt, cancellationToken);
 
-        return new ParticipantListResponse(
-            [.. page.Select(row => new ParticipantItem(
-                row.Participant.Id,
-                row.Participant.Email,
-                row.Participant.Name,
-                row.Participant.Language,
+        ParticipantItem Item(ListedParticipant row)
+        {
+            var person = row.Participant;
+            var response = responses.GetValueOrDefault(person.Id);
+            var unsubscribed = unsubscribedAt.TryGetValue(person.Email, out var at) ? at : (DateTimeOffset?)null;
+            var (kind, when) = Statuses[row.Rank] switch
+            {
+                "unsubscribed" => ("unsubscribed", unsubscribed),
+                "bounced" => ("bounced", person.BouncedAt),
+                _ => new (string Kind, DateTimeOffset? At)[]
+                {
+                    ("answered", response?.CompletedAt),
+                    ("started", response is { Status: not ResponseStatus.Complete } ? response.UpdatedAt : null),
+                    ("opened", person.OpenedAt),
+                    ("reminded", person.RemindedAt),
+                    ("sent", person.SentAt),
+                    ("invited", person.CreatedAt),
+                }.Where(entry => entry.At is not null).OrderByDescending(entry => entry.At).First(),
+            };
+            var place = response is { Status: not ResponseStatus.Complete } && pages.TryGetValue(response.SurveyVersionId, out var version) && version.Positions.TryGetValue(response.PageKey, out var position)
+                ? (Page: (int?)position + 1, Pages: (int?)version.Count)
+                : (Page: null, Pages: null);
+
+            return new ParticipantItem(
+                person.Id,
+                person.Email,
+                person.Name,
+                person.Language,
                 Statuses[row.Rank],
-                row.Participant.SentAt,
-                row.Participant.Reminders,
-                PersonalLink(links, row.Host, row.Participant.Token),
-                row.Participant.ExternalId,
-                PersonDetails.ReadFields(row.Participant.Fields),
-                new[] { activity.GetValueOrDefault(row.Participant.Id), row.Participant.OpenedAt, row.Participant.RemindedAt, row.Participant.SentAt, (DateTimeOffset?)row.Participant.CreatedAt }.Max(),
-                row.Participant.RemindedAt,
-                row.Participant.RemindersOff,
-                row.Participant.ContactId))],
+                person.SentAt,
+                person.Reminders,
+                PersonalLink(links, row.Host, person.Token),
+                person.ExternalId,
+                PersonDetails.ReadFields(person.Fields),
+                when,
+                person.RemindedAt,
+                person.RemindersOff,
+                person.ContactId,
+                person.CreatedAt,
+                kind,
+                person.BounceReason,
+                unsubscribed,
+                place.Page,
+                place.Pages);
+        }
+
+        return new ParticipantListResponse(
+            [.. page.Select(Item)],
             counts.Sum(count => count.Count),
             counts.ToDictionary(count => Statuses[count.Key], count => count.Count),
             reminderAt,
@@ -386,13 +429,14 @@ public sealed class ParticipantsController(
     /// </summary>
     private static readonly string[] Statuses = ["waiting", "link-only", "sent", "opened", "started", "answered", "bounced", "unsubscribed"];
 
-    /// <summary>Only the people a search, a status and a field choose (W35).</summary>
-    private static IQueryable<ListedParticipant> Filtered(IQueryable<ListedParticipant> rows, string? search, string? status, string? field)
+    /// <summary>Only the people a search (name, email, External ID or a field's value), a status and a field choose (W35).</summary>
+    private static IQueryable<ListedParticipant> Filtered(AskwerkDbContext context, IQueryable<ListedParticipant> rows, string? search, string? status, string? field)
     {
         if (!string.IsNullOrWhiteSpace(search))
         {
             var pattern = "%" + search.Trim().Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
-            rows = rows.Where(row => EF.Functions.ILike(row.Participant.Email, pattern) || EF.Functions.ILike(row.Participant.Name ?? "", pattern) || EF.Functions.ILike(row.Participant.ExternalId ?? "", pattern));
+            var inFields = context.Database.SqlQuery<Guid>($"SELECT id AS \"Value\" FROM participant WHERE EXISTS (SELECT 1 FROM jsonb_each_text(fields) AS field WHERE field.value ILIKE {pattern})");
+            rows = rows.Where(row => EF.Functions.ILike(row.Participant.Email, pattern) || EF.Functions.ILike(row.Participant.Name ?? "", pattern) || EF.Functions.ILike(row.Participant.ExternalId ?? "", pattern) || inFields.Contains(row.Participant.Id));
         }
 
         if (status == "not-answered")
@@ -540,7 +584,8 @@ public sealed record ParticipantCheckResponse(IReadOnlyList<ParticipantInput> Pa
 /// <param name="ContactIds">Contacts to invite as well (W35), with their fields.</param>
 /// <param name="SaveToContacts">Also keep the people in Contacts (W35); known ones get the new details.</param>
 /// <param name="ContactGroup">With SaveToContacts: the group they join.</param>
-public sealed record InviteRequest(IReadOnlyList<ParticipantInput>? Participants, DateTimeOffset? SendAt = null, DateOnly? Deadline = null, bool? Reminder = null, bool? Send = null, string? Host = null, IReadOnlyList<Guid>? ContactIds = null, bool? SaveToContacts = null, string? ContactGroup = null);
+/// <param name="ImportedFrom">The people came from an import (W35): the file's name, or empty for a pasted table.</param>
+public sealed record InviteRequest(IReadOnlyList<ParticipantInput>? Participants, DateTimeOffset? SendAt = null, DateOnly? Deadline = null, bool? Reminder = null, bool? Send = null, string? Host = null, IReadOnlyList<Guid>? ContactIds = null, bool? SaveToContacts = null, string? ContactGroup = null, string? ImportedFrom = null);
 
 /// <summary>What an invitation did.</summary>
 /// <param name="Invited">People added.</param>
@@ -562,7 +607,13 @@ public sealed record InvitedResponse(int Invited, int Skipped);
 /// <param name="RemindedAt">The last reminder (UTC).</param>
 /// <param name="RemindersOff">No more reminders for them (W35).</param>
 /// <param name="ContactId">Their contact, if any (W35).</param>
-public sealed record ParticipantItem(Guid Id, string Email, string? Name, string? Language, string Status, DateTimeOffset? SentAt, int Reminders, string Link, string? ExternalId = null, IReadOnlyDictionary<string, string>? Fields = null, DateTimeOffset? LastActivity = null, DateTimeOffset? RemindedAt = null, bool RemindersOff = false, Guid? ContactId = null);
+/// <param name="InvitedAt">When they were added (UTC, W35).</param>
+/// <param name="LastActivityKind">What the last activity was (W35): answered, started, opened, reminded, sent, invited, bounced or unsubscribed.</param>
+/// <param name="BounceReason">Bounced: mailbox-full, unknown-address or refused (W35).</param>
+/// <param name="UnsubscribedAt">When they unsubscribed (UTC, W35).</param>
+/// <param name="Page">Started: the page they are on, from 1 (W35).</param>
+/// <param name="Pages">Started: how many pages the survey has (W35).</param>
+public sealed record ParticipantItem(Guid Id, string Email, string? Name, string? Language, string Status, DateTimeOffset? SentAt, int Reminders, string Link, string? ExternalId = null, IReadOnlyDictionary<string, string>? Fields = null, DateTimeOffset? LastActivity = null, DateTimeOffset? RemindedAt = null, bool RemindersOff = false, Guid? ContactId = null, DateTimeOffset? InvitedAt = null, string? LastActivityKind = null, string? BounceReason = null, DateTimeOffset? UnsubscribedAt = null, int? Page = null, int? Pages = null);
 
 /// <summary>One page of the participants of a survey.</summary>
 /// <param name="Items">The page.</param>
@@ -611,4 +662,5 @@ public sealed record SendInvitationsPayload(Guid InvitationId, IReadOnlyList<Gui
 /// <param name="SurveyId">The survey.</param>
 /// <param name="InvitationId">Only this invitation's people; everyone invited when empty.</param>
 /// <param name="ParticipantIds">Only these people, when given.</param>
-public sealed record SendRemindersPayload(Guid SurveyId, Guid? InvitationId, IReadOnlyList<Guid>? ParticipantIds = null);
+/// <param name="Automatic">Planned by Askwerk (the automatic reminders, an invitation's reminder) rather than sent by hand (W35).</param>
+public sealed record SendRemindersPayload(Guid SurveyId, Guid? InvitationId, IReadOnlyList<Guid>? ParticipantIds = null, bool Automatic = false);

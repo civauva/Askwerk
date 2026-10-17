@@ -125,6 +125,19 @@
   color: var(--aw-error);
 }
 
+/* The one small action on a template card (W32): Use or Edit. */
+.admin__button--small {
+  height: 30px;
+  padding: 0 10px;
+  font-size: 12.5px;
+}
+
+.admin__error {
+  color: var(--aw-error);
+  font-size: 13px;
+  font-weight: 500;
+}
+
 .admin__button:disabled {
   opacity: 0.5;
   cursor: default;

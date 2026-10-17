@@ -39,9 +39,12 @@ describe("Share tab (AWK-29, W17 C)", () => {
     expect(tabs().getByRole("link", { name: "Share" }).getAttribute("aria-current")).toBe("page");
     expect(screen.getByText("https://surveys.acme.at/s/kz26b7mq")).toBeTruthy();
     expect(screen.getByRole("img", { name: /QR code/ })).toBeTruthy();
-    expect(screen.getByRole("textbox", { name: "Embed code" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Invite participants…" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Get embed code" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Invite people…" })).toBeTruthy();
+    expect(await screen.findByText(/^Personal links; each person answers once\. \d+ invited, 1 answered\.$/)).toBeTruthy();
     expect(bar().queryByRole("button", { name: "Share" })).toBeNull();
+    // The bar names the place; no second "Share" heading (W34).
+    expect(screen.queryByRole("heading", { level: 2, name: "Share" })).toBeNull();
     await expectNoAxeViolations(container);
   });
 

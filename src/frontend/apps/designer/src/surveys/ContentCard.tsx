@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { KeyResult, SurveyFront } from "@askwerk/app-client";
-import { createTranslator, type Locale, type ThemeTokens } from "@askwerk/schema";
+import { createTranslator, themePresets, type Locale, type ThemeTokens } from "@askwerk/schema";
 import { useState, type ReactNode } from "react";
 import { frontAssetUrl, LookStrip } from "../designer/look/FrontCard";
 import { surveysMessages } from "./messages";
@@ -36,9 +36,16 @@ function ago(locale: Locale, at: string, now: Date): string {
   return Math.abs(minutes) < 60 ? format.format(minutes, "minute") : Math.abs(minutes) < 1440 ? format.format(Math.round(minutes / 60), "hour") : format.format(Math.round(minutes / 1440), "day");
 }
 
+/** The name of a card's look (W32): one of the organisation's by its name, an Askwerk look in the reader's language. */
+export function lookNameOf(front: SurveyFront, locale: string): string {
+  const preset = front.lookPreset == null ? undefined : themePresets.find((each) => each.id === front.lookPreset);
+
+  return front.lookName ?? (preset === undefined ? "" : (preset.name[locale] ?? preset.name.en ?? preset.id));
+}
+
 type ContentCardProps = {
   front: SurveyFront;
-  /** The internal name, shown above the welcome title when it differs. */
+  /** The internal name: the title when the welcome page has none. */
   name: string;
   locale: Locale;
   organisation: string;
@@ -62,7 +69,7 @@ export function ContentCard({ front, name, locale, organisation, onOpen, openLab
   const lead = frontText(front.text, locale, front.defaultLanguage);
   const contents = front.contents ?? null;
   const answers = front.answers ?? null;
-  const strip = <LookStrip tokens={front.look as ThemeTokens} organisation={organisation} start={t("start")} headerAsset={front.headerImage ?? null} assetUrl={frontAssetUrl} />;
+  const strip = <LookStrip tokens={front.look as ThemeTokens} organisation={organisation} start={t("start")} headerAsset={front.headerImage ?? null} assetUrl={frontAssetUrl} lookName={lookNameOf(front, locale)} />;
   const counted = new Map<string, number>();
 
   for (const [type, count] of Object.entries(contents?.types ?? {})) {
@@ -85,7 +92,6 @@ export function ContentCard({ front, name, locale, organisation, onOpen, openLab
         </button>
       )}
       <div className="content-card__what">
-        {name !== title && <span className="content-card__name">{name}</span>}
         <h2>{title}</h2>
         {lead !== "" && <p className="content-card__lead">{lead}</p>}
         {show === "key" && contents !== null && (
@@ -126,6 +132,8 @@ export function ContentCard({ front, name, locale, organisation, onOpen, openLab
           shown={Math.min(shown, Math.max(0, (front.keys?.length ?? 1) - 1))}
           onShow={setShown}
           last={answers?.lastAt != null ? (Math.abs(Date.parse(answers.lastAt) - now.getTime()) < 60_000 ? t("justNow") : t("lastAnswer", { when: ago(locale, answers.lastAt, now) })) : null}
+          responses={total}
+          complete={total === 0 || answers === null ? 0 : Math.round((answers.complete / total) * 100)}
         />
       )}
       {show === "key" ? null : answers !== null ? (
@@ -145,7 +153,7 @@ export function ContentCard({ front, name, locale, organisation, onOpen, openLab
           </span>
         </div>
       ) : (
-        front.code != null && <div className="content-card__answers content-card__answers--none">{t("noAnswersYet")}</div>
+        front.code != null && <div className="content-card__answers content-card__answers--none">{front.publishedAt == null ? t("noAnswersPublish") : t("noAnswersYet")}</div>
       )}
       <div className="content-card__foot">{footer}</div>
     </li>
@@ -172,6 +180,8 @@ function KeyResultBox({
   shown,
   onShow,
   last,
+  responses,
+  complete,
 }: {
   t: ReturnType<typeof createTranslator<keyof (typeof surveysMessages)["en"]>>;
   locale: Locale;
@@ -180,6 +190,9 @@ function KeyResultBox({
   shown: number;
   onShow: (index: number) => void;
   last: string | null;
+  /** All responses and the share complete: the legend when everyone answered the key question. */
+  responses: number;
+  complete: number;
 }) {
   const key = keys[shown];
 
@@ -197,14 +210,14 @@ function KeyResultBox({
   return (
     <div className="content-card__key">
       <span className="content-card__key-top">
-        {key.auto ? (
-          <span className="content-card__auto">{t(key.type === "nps" || key.type === "rating" ? "autoRating" : "autoChoice")}</span>
-        ) : (
+        {!key.auto && (
           <span className="designer-key" aria-label={t("keyQuestion")} role="img">
             ★
           </span>
         )}
         <span className="content-card__key-question">{text}</span>
+        {/* Picked automatically (W38): said at the line's end, where the pager would be. */}
+        {key.auto && <span className="content-card__auto">{t(key.type === "nps" || key.type === "rating" ? "autoRating" : "autoChoice")}</span>}
         {keys.length > 1 && (
           <span className="content-card__pager">
             <button type="button" aria-label={t("previousKey")} disabled={shown === 0} onClick={() => onShow(shown - 1)}>
@@ -241,7 +254,15 @@ function KeyResultBox({
             ))}
           </span>
           <span className="content-card__legend">
-            <span>{key.answered === 1 ? t("answerOne") : t("answersCount", { count: key.answered })}</span>
+            <span>
+              {key.answered === responses
+                ? responses === 1
+                  ? t("responseCompleteOne", { share: complete })
+                  : t("responsesComplete", { count: responses, share: complete })
+                : key.answered === 1
+                  ? t("answerOne")
+                  : t("answersCount", { count: key.answered })}
+            </span>
             {last !== null && <span>{last}</span>}
           </span>
         </>

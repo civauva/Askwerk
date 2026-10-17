@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { ConfirmDialog } from "@askwerk/ui";
 import { createTranslator, type Question, type QuestionType } from "@askwerk/schema";
-import { memo, useCallback, useRef, useState, type ReactNode } from "react";
+import { memo, useCallback, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { DropLine, Lift, useMoves } from "./drag";
 import { designerMessages } from "./messages";
 import { rulesUsing } from "./logicModel";
 import { conditionsText } from "./logicText";
@@ -46,6 +47,19 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
     },
     [dispatch],
   );
+  // Drag a grip or press Alt+↑/↓ on it to move pages and questions (W34), as in the page list.
+  const main = useRef<HTMLElement>(null);
+  const moves = useMoves({ t, state, dispatch }, main);
+  const latestMoves = useRef(moves);
+  latestMoves.current = moves;
+  // Stable, so cards that did not change need not draw again.
+  const grip = useMemo<CardGrip>(
+    () => ({
+      onPointerDown: (event, questionId, label) => latestMoves.current.start(event, "question", questionId, label),
+      onKeyDown: (event, questionId) => latestMoves.current.onKeyDown(event, "question", questionId),
+    }),
+    [],
+  );
   const firstPage = definition.pages[0];
   const isEmpty = allQuestions(definition).length === 0;
 
@@ -65,8 +79,8 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
   const menu = <TypeMenu t={t} typeNames={typeNames} onPick={pick} onClose={() => setTarget(null)} />;
 
   return (
-    <main className={`designer-canvas${grid ? " designer-canvas--grid" : ""}`} aria-label={t("canvas")}>
-      <div className="designer-canvas__scroll">
+    <main ref={main} className={`designer-canvas${grid ? " designer-canvas--grid" : ""}`} aria-label={t("canvas")}>
+      <div className="designer-canvas__scroll" data-drag-scroll>
         {!state.settings && state.edge === "welcome" && <WelcomePage t={t} state={state} dispatch={dispatch} />}
         {!state.settings && state.edge === "end" && <ThankYouPage t={t} state={state} dispatch={dispatch} />}
         {!state.settings && (state.edge === "welcome" || state.edge === "end") ? null : (
@@ -93,9 +107,22 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
           definition.pages.map((page, pageIndex) => {
             const last = page.questions.at(-1)?.id ?? null;
             const title = displayText(page.title, language, definition);
+            const pageLabel = `${String(pageIndex + 1).padStart(2, "0")} · ${pageName(t, page, pageIndex, language, definition)}`;
 
             return (
-              <div key={page.id} className="designer-page">
+              <div key={page.id} className="designer-page" data-drop-kind="page" data-drop-id={page.id} data-lifted={moves.lifted(page.id) ? "true" : undefined}>
+                {moves.mark("page", page.id) === "before" && <DropLine />}
+                <div className="designer-page__head" data-drop-kind="page-start" data-drop-id={page.id}>
+                <button
+                  type="button"
+                  className="designer-grip"
+                  data-grip
+                  data-move={`page:${page.id}`}
+                  aria-label={t("movePageGrip", { number: pageIndex + 1 })}
+                  aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
+                  onPointerDown={(event) => moves.start(event, "page", page.id, pageLabel)}
+                  onKeyDown={(event) => moves.onKeyDown(event, "page", page.id)}
+                />
                 {state.selectedPageId === page.id ? (
                   <div className="designer-page__progress designer-page__progress--selected">
                     <span>{t("pageProgress", { number: pageIndex + 1, total: definition.pages.length })}</span>
@@ -138,11 +165,14 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
                     </span>
                   </button>
                 )}
+                </div>
+                {moves.mark("page-start", page.id) === "start" && <DropLine />}
                 <div className="designer-ruler" aria-hidden="true">
                   <i style={{ width: `${((pageIndex + 1) / definition.pages.length) * 100}%` }} />
                 </div>
                 {page.questions.map((question) => (
-                  <div key={question.id} className="designer-page__slot">
+                  <div key={question.id} className="designer-page__slot" data-drop-kind="question" data-drop-id={question.id}>
+                    {moves.mark("question", question.id) === "before" && <DropLine />}
                     <QuestionCard
                       t={t}
                       typeNames={typeNames}
@@ -153,7 +183,10 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
                       focus={question.id === focusId}
                       newId={newId}
                       onNextMissing={onNextMissing}
+                      lifted={moves.lifted(question.id)}
+                      grip={grip}
                     />
+                    {moves.mark("question", question.id) === "after" && <DropLine />}
                     {question.id === state.selectedQuestionId && question.id !== last && (
                       <div className="designer-insert">
                         <button type="button" aria-label={t("insertHere")} onClick={() => setTarget({ pageId: page.id, afterQuestionId: question.id })}>
@@ -171,6 +204,7 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
                   </button>
                   {isTarget(page.id, last) && menu}
                 </div>
+                {moves.mark("page", page.id) === "after" && <DropLine />}
               </div>
             );
           })}
@@ -199,6 +233,8 @@ export function Canvas({ t, typeNames, state, dispatch, newId, grid, onGridChang
         <i aria-hidden="true" />
         {t("grid")}
       </button>
+      <Lift drag={moves.drag} />
+      {moves.live}
     </main>
   );
 }
@@ -272,7 +308,16 @@ function ThankYouPage({ t, state, dispatch }: RegionProps) {
   );
 }
 
+/** The grip on a card: drag it, or Alt+↑/↓ on it (W34). */
+type CardGrip = {
+  onPointerDown: (event: PointerEvent<HTMLElement>, questionId: string, label: string) => void;
+  onKeyDown: (event: KeyboardEvent<HTMLElement>, questionId: string) => void;
+};
+
 type QuestionCardProps = RegionProps & {
+  /** The card is being dragged; its place shows as a faint outline. */
+  lifted: boolean;
+  grip: CardGrip;
   typeNames: Record<QuestionType, string>;
   question: Question;
   number: number;
@@ -305,6 +350,8 @@ const QuestionCard = memo(QuestionCardView, (before, after) => {
     before.question === after.question &&
     before.number === after.number &&
     before.focus === after.focus &&
+    before.lifted === after.lifted &&
+    before.grip === after.grip &&
     before.t === after.t &&
     before.typeNames === after.typeNames &&
     before.onNextMissing === after.onNextMissing &&
@@ -315,7 +362,7 @@ const QuestionCard = memo(QuestionCardView, (before, after) => {
   );
 });
 
-function QuestionCardView({ t, typeNames, state, dispatch, question, number, focus, newId, onNextMissing }: QuestionCardProps) {
+function QuestionCardView({ t, typeNames, state, dispatch, question, number, focus, newId, onNextMissing, lifted, grip }: QuestionCardProps) {
   const { definition, language } = state;
   const selected = question.id === state.selectedQuestionId;
   const own = textIn(question.text, language);
@@ -332,10 +379,23 @@ function QuestionCardView({ t, typeNames, state, dispatch, question, number, foc
     <article
       className={`designer-card${selected ? " designer-card--selected" : ""}${untranslated ? " designer-card--missing" : ""}`}
       aria-label={label}
+      data-lifted={lifted ? "true" : undefined}
       onClick={() => !selected && dispatch({ type: "select", questionId: question.id })}
     >
       <div className="designer-card__number">
-        <span>{label}</span>
+        <span>
+          <button
+            type="button"
+            className="designer-grip"
+            data-grip
+            data-move={`question:${question.id}`}
+            aria-label={t("moveQuestionGrip", { name: label })}
+            aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
+            onPointerDown={(event) => grip.onPointerDown(event, question.id, displayText(question.text, language, definition) ?? label)}
+            onKeyDown={(event) => grip.onKeyDown(event, question.id)}
+          />
+          {label}
+        </span>
         {untranslated && <span className="designer-badge">{t("translationMissing")}</span>}
         {!untranslated && question.required && <span>★ {t("required")}</span>}
       </div>

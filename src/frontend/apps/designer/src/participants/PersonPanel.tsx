@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { ApiError, type ParticipantDetail, type ParticipantsClient } from "@askwerk/app-client";
+import { ApiError, type ParticipantDetail, type ParticipantEvent, type ParticipantsClient, type ParticipantStatus } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, Dialog } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useState } from "react";
+import { dayTimeText, fieldLabel, shortLink } from "./peopleFormat";
 import { peopleMessages, type PeopleMessageKey } from "./peopleMessages";
 
-const historyKeys: Record<ParticipantDetail["history"][number]["kind"], PeopleMessageKey> = {
+const historyKeys: Record<ParticipantEvent["kind"], PeopleMessageKey> = {
   invited: "historyInvited",
   sent: "historySent",
   reminded: "historyReminded",
@@ -22,6 +23,8 @@ type PersonPanelProps = {
   participantId: string;
   locale: Locale;
   timeZone?: string;
+  /** The status the list shows, for its colour. */
+  status?: ParticipantStatus;
   /** The status the list shows, e.g. "Opened, not started". */
   statusText: string;
   writeClipboard: (text: string) => Promise<void>;
@@ -29,11 +32,32 @@ type PersonPanelProps = {
   onRemove: () => void;
 };
 
+/** What happened, in words (W35): where they came from, and whether a reminder was automatic. */
+function eventText(t: ReturnType<typeof createTranslator<PeopleMessageKey>>, entry: ParticipantEvent): string {
+  if (entry.kind === "invited" && entry.source != null) {
+    if (entry.source === "contacts") {
+      return t("historyInvitedContacts");
+    }
+
+    if (entry.source.startsWith("import:")) {
+      const file = entry.source.slice("import:".length);
+      return file === "" ? t("historyInvitedPasted") : t("historyInvitedImport", { file });
+    }
+  }
+
+  if (entry.kind === "reminded") {
+    const count = entry.count ?? 1;
+    return entry.automatic === true ? t("historyRemindedAuto", { count }) : entry.automatic === false ? t("historyRemindedManual", { count }) : t("historyReminded", { count });
+  }
+
+  return t(historyKeys[entry.kind]);
+}
+
 /**
- * One person (W35): email, name, language, External ID and fields to change; the personal link; what happened and the
- * next automatic reminder; a reminder now, no more reminders, remove.
+ * One person (W35): email, name, language, fields and External ID to change; the personal link; what happened and the
+ * next automatic reminder; a reminder now, no more reminders, remove, save.
  */
-export function PersonPanel({ client, surveyId, participantId, locale, timeZone, statusText, writeClipboard, onClose, onRemove }: PersonPanelProps) {
+export function PersonPanel({ client, surveyId, participantId, locale, timeZone, status, statusText, writeClipboard, onClose, onRemove }: PersonPanelProps) {
   const t = useMemo(() => createTranslator(peopleMessages, locale), [locale]);
   const id = useId();
   const [person, setPerson] = useState<ParticipantDetail | null>(null);
@@ -46,7 +70,7 @@ export function PersonPanel({ client, surveyId, participantId, locale, timeZone,
   const [notice, setNotice] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [changed, setChanged] = useState(false);
-  const dates = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", ...(timeZone === undefined ? {} : { timeZone }) });
+  const when = (at: string) => dayTimeText(locale, at, timeZone);
 
   const load = () =>
     client.detail(surveyId, participantId).then((detail) => {
@@ -100,18 +124,46 @@ export function PersonPanel({ client, surveyId, participantId, locale, timeZone,
       void load();
     });
 
+  const nextReminder = person === null ? 1 : Math.max(0, ...person.history.filter((entry) => entry.kind === "reminded").map((entry) => entry.count ?? 1)) + 1;
+
   return (
-    <Dialog title={person?.name ?? person?.email ?? t("participant")} kicker={t("participant")} onClose={() => onClose(changed)} className="person-panel">
+    <Dialog
+      title={person?.name ?? person?.email ?? t("participant")}
+      kicker={t("participant")}
+      onClose={() => onClose(changed)}
+      className="person-panel"
+      head={
+        <p className="person-panel__status" data-status={status}>
+          <i className="participants__dot" aria-hidden="true" />
+          {statusText}
+          {person?.contactId != null && ` · ${t("inContacts")}`}
+        </p>
+      }
+      footer={
+        person !== null && (
+          <>
+            <button type="button" className="participants__button" onClick={() => void remind()}>
+              {t("remindNow")}
+            </button>
+            <button type="button" className="participants__button" onClick={() => void toggleReminders()}>
+              {person.remindersOff ? t("remindersOn") : t("remindersOff")}
+            </button>
+            <button type="button" className="participants__button person-panel__remove" onClick={onRemove}>
+              {t("remove")}
+            </button>
+            <button type="button" className="participants__button participants__button--primary" onClick={save}>
+              {t("save")}
+            </button>
+          </>
+        )
+      }
+    >
       {person === null ? (
         <p role="status" aria-busy="true" className="participants__muted">
           …
         </p>
       ) : (
         <div className="person-panel__body">
-          <p className="person-panel__status">
-            {statusText}
-            {person.contactId !== null && ` · ${t("inContacts")}`}
-          </p>
           <div className="person-panel__form">
             <label htmlFor={`${id}-email`}>{t("email")}</label>
             <span>
@@ -132,37 +184,24 @@ export function PersonPanel({ client, surveyId, participantId, locale, timeZone,
               onChange={setLanguage}
               texts={{ choose: t("languageNone") }}
             />
+            {fields.map(([key, value], index) => (
+              <FieldRow key={key} id={`${id}-field-${index}`} label={fieldLabel(key)} value={value} onChange={(next) => setFields((current) => current.map((field, at) => (at === index ? [key, next] : field)))} />
+            ))}
             <label htmlFor={`${id}-external`}>{t("externalId")}</label>
             <span>
               <input id={`${id}-external`} className="designer-input person-panel__mono" value={externalId} aria-invalid={errors.externalId !== undefined} aria-describedby={`${id}-external-hint`} onChange={(event) => setExternalId(event.target.value)} />
-              <small id={`${id}-external-hint`} className="person-panel__hint">
+              <span id={`${id}-external-hint`} className="look-visually-hidden">
                 {t("externalIdHint")}
-              </small>
+              </span>
               {errors.externalId !== undefined && <span className="designer-error">{t(errors.externalId)}</span>}
-            </span>
-            {fields.map(([key, value], index) => (
-              <FieldRow
-                key={index}
-                id={`${id}-field-${index}`}
-                name={key}
-                value={value}
-                namePrompt={t("fieldName")}
-                onChange={(nextKey, nextValue) => setFields((current) => current.map((field, at) => (at === index ? [nextKey, nextValue] : field)))}
-              />
-            ))}
-            <span />
-            <span>
-              <button type="button" className="designer-link-button" onClick={() => setFields((current) => [...current, ["", ""]])}>
-                {t("addField")}
-              </button>
             </span>
           </div>
 
           <p className="person-panel__label">{t("personalLink")}</p>
           <div className="person-panel__link">
-            <code>{person.link}</code>
-            <button type="button" className="designer-button" onClick={() => void writeClipboard(person.link).then(() => setCopied(true), () => undefined)}>
-              {copied ? t("copied") : t("copyLink")}
+            <code>{shortLink(person.link)}</code>
+            <button type="button" className="participants__button participants__button--small" aria-label={copied ? t("copied") : t("copyLink")} onClick={() => void writeClipboard(person.link).then(() => setCopied(true), () => undefined)}>
+              {copied ? t("copied") : t("copy")}
             </button>
           </div>
 
@@ -170,14 +209,14 @@ export function PersonPanel({ client, surveyId, participantId, locale, timeZone,
           <ol className="person-panel__history">
             {person.history.map((entry, index) => (
               <li key={index} data-done="">
-                <span>{entry.kind === "reminded" ? t("historyReminded", { count: entry.count ?? 1 }) : t(historyKeys[entry.kind])}</span>
-                <time dateTime={entry.at}>{dates.format(new Date(entry.at))}</time>
+                <span>{eventText(t, entry)}</span>
+                <time dateTime={entry.at}>{when(entry.at)}</time>
               </li>
             ))}
             {person.nextReminderAt !== null && (
-              <li>
-                <span>{t("historyNext")}</span>
-                <time dateTime={person.nextReminderAt}>{dates.format(new Date(person.nextReminderAt))}</time>
+              <li data-next="">
+                <span>{t("historyNext", { count: nextReminder })}</span>
+                <time dateTime={person.nextReminderAt}>{when(person.nextReminderAt)}</time>
               </li>
             )}
           </ol>
@@ -187,39 +226,18 @@ export function PersonPanel({ client, surveyId, participantId, locale, timeZone,
               {notice}
             </p>
           )}
-          <div className="person-panel__actions">
-            <button type="button" className="designer-button" onClick={() => void remind()}>
-              {t("remindNow")}
-            </button>
-            <button type="button" className="designer-button" onClick={() => void toggleReminders()}>
-              {person.remindersOff ? t("remindersOn") : t("remindersOff")}
-            </button>
-            <span className="participants__grow" />
-            <button type="button" className="designer-button person-panel__remove" onClick={onRemove}>
-              {t("remove")}
-            </button>
-            <button type="button" className="designer-button designer-button--primary" onClick={save}>
-              {t("save")}
-            </button>
-          </div>
         </div>
       )}
     </Dialog>
   );
 }
 
-/** A field: its name (editable while new) and its value. */
-function FieldRow({ id, name, value, namePrompt, onChange }: { id: string; name: string; value: string; namePrompt: string; onChange: (name: string, value: string) => void }) {
-  const [editingName, setEditingName] = useState(name === "");
-
+/** A field and its value. */
+function FieldRow({ id, label, value, onChange }: { id: string; label: string; value: string; onChange: (value: string) => void }) {
   return (
     <>
-      {editingName ? (
-        <input className="designer-input" aria-label={namePrompt} placeholder={namePrompt} value={name} onChange={(event) => onChange(event.target.value, value)} onBlur={() => name !== "" && setEditingName(false)} />
-      ) : (
-        <label htmlFor={id}>{name}</label>
-      )}
-      <input id={id} className="designer-input" value={value} aria-label={editingName ? `${name || namePrompt}` : undefined} onChange={(event) => onChange(name, event.target.value)} />
+      <label htmlFor={id}>{label}</label>
+      <input id={id} className="designer-input" value={value} onChange={(event) => onChange(event.target.value)} />
     </>
   );
 }

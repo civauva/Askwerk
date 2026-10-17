@@ -2,6 +2,7 @@
 import { ApiError, webhookEvents, type WebhookDeliveryItem, type WebhookItem, type WebhooksClient } from "@askwerk/app-client";
 import { DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useState, type ReactNode } from "react";
+import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
 import type { ApiKeysMessageKey } from "./messages";
 
 type T = (key: ApiKeysMessageKey, values?: Record<string, string | number>) => string;
@@ -14,12 +15,14 @@ export function WebhooksPanel({
   writeClipboard,
   timeZone,
   dialog: Dialog,
+  makeConnection,
 }: {
   t: T;
   client: WebhooksClient;
   locale: string;
   writeClipboard: (text: string) => Promise<void>;
   timeZone: string | undefined;
+  makeConnection?: MakeConnection | undefined;
   dialog: (props: { title: string; onClose: () => void; children: ReactNode }) => ReactNode;
 }) {
   const [items, setItems] = useState<WebhookItem[] | null>(null);
@@ -84,6 +87,7 @@ export function WebhooksPanel({
               {t("testShort")}
             </button>
           )}
+          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="webhook" id={webhook.id} name={webhook.description ?? webhook.url} make={makeConnection} />}
           <button type="button" className="api-keys__revoke" aria-label={t("deliveriesOf", { url: webhook.url })} onClick={() => void openLog(webhook)}>
             {t("deliveriesShort")}
           </button>

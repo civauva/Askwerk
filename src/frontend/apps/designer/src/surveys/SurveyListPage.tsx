@@ -146,7 +146,17 @@ export function SurveyListPage({
         </span>
       ),
     },
-    { key: "status", header: t("status"), sortable: true, cell: (survey) => statusText(t, survey) },
+    {
+      key: "status",
+      header: t("status"),
+      sortable: true,
+      // A chip (W32): outlined, amber while a draft or changes wait.
+      cell: (survey) => (
+        <span className="surveys__status" data-draft={survey.status === "draft" || (survey.status === "published" && survey.hasChanges) ? "" : undefined}>
+          {statusText(t, survey)}
+        </span>
+      ),
+    },
     { key: "languages", header: t("languages"), cell: (survey) => survey.languages.map((language) => language.toUpperCase()).join(" ") },
     {
       key: "responses",
@@ -222,7 +232,6 @@ export function SurveyListPage({
         </div>
         {canCreate && !empty && (
           <button type="button" className="surveys__button surveys__button--primary" onClick={() => setCreating(true)}>
-            <span aria-hidden="true">+ </span>
             {t("newSurvey")}
           </button>
         )}
@@ -273,32 +282,35 @@ export function SurveyListPage({
                 </button>
               ))}
             </span>
-            {view === "cards" && (
-              <span className="view-show">
-                <span id="surveys-cards-show">{t("cardsShow")}</span>
-                <span className="view-switch view-switch--inline" role="group" aria-labelledby="surveys-cards-show">
-                  <button type="button" aria-pressed={show === "contents"} onClick={() => changeShow("contents")}>
-                    {t("showContents")}
-                  </button>
-                  <button type="button" aria-pressed={show === "key"} onClick={() => changeShow("key")}>
-                    {t("showKey")}
-                  </button>
+            {/* At the right end, also when the row wraps (W38): what the cards show, then List or Cards. */}
+            <span className="view-end">
+              {view === "cards" && (
+                <span className="view-show">
+                  <span id="surveys-cards-show">{t("cardsShow")}</span>
+                  <span className="view-switch view-switch--inline" role="group" aria-labelledby="surveys-cards-show">
+                    <button type="button" aria-pressed={show === "contents"} onClick={() => changeShow("contents")}>
+                      {t("showContents")}
+                    </button>
+                    <button type="button" aria-pressed={show === "key"} onClick={() => changeShow("key")}>
+                      {t("showKey")}
+                    </button>
+                  </span>
                 </span>
+              )}
+              <span className="view-switch view-switch--inline" role="group" aria-label={t("view")}>
+                <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>
+                  {t("viewList")}
+                </button>
+                <button type="button" aria-pressed={view === "cards"} onClick={() => changeView("cards")}>
+                  {t("viewCards")}
+                </button>
               </span>
-            )}
-            <span className="view-switch" role="group" aria-label={t("view")}>
-              <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>
-                {t("viewList")}
-              </button>
-              <button type="button" aria-pressed={view === "cards"} onClick={() => changeView("cards")}>
-                {t("viewCards")}
-              </button>
             </span>
           </div>
           {view === "list" ? (
             grid
           ) : (
-            <SurveyCards t={t} locale={locale} now={now()} show={show} list={list} organisation={organisation?.name ?? ""} count={count} page={page} size={size} onPage={setPage} onOpen={onOpen} onOpenResults={onOpenResults} />
+            <SurveyCards t={t} locale={locale} now={now()} show={show} list={list} organisation={organisation?.name ?? ""} count={count} page={page} size={size} onPage={setPage} onOpen={onOpen} />
           )}
         </>
       )}
@@ -321,7 +333,6 @@ function SurveyCards({
   size,
   onPage,
   onOpen,
-  onOpenResults,
 }: {
   t: Translate<SurveysMessageKey>;
   locale: Locale;
@@ -334,7 +345,6 @@ function SurveyCards({
   size: number;
   onPage: (page: number) => void;
   onOpen: (surveyId: string) => void;
-  onOpenResults: ((surveyId: string) => void) | undefined;
 }) {
   const total = Number(list.total);
   const from = (page - 1) * size + 1;
@@ -363,15 +373,12 @@ function SurveyCards({
                   <span className="front-card__chip" data-draft={survey.status === "draft" || survey.hasChanges ? "" : undefined}>
                     {statusText(t, survey)}
                   </span>
-                  <span>{survey.front.publishedAt != null ? t("publishedOn", { date: shortDate(locale, survey.front.publishedAt) }) : t("changedOn", { date: shortDate(locale, survey.updatedAt) })}</span>
+                  <span className="content-card__when">
+                    {survey.front.publishedAt != null ? t("publishedOn", { date: shortDate(locale, survey.front.publishedAt) }) : t("changedOn", { date: shortDate(locale, survey.updatedAt) })}
+                  </span>
                   <span className="grow" />
                   {survey.front.code != null && <span className="content-card__code">/s/{survey.front.code}</span>}
                   <span>{survey.languages.map((language) => language.toUpperCase()).join(" ")}</span>
-                  {onOpenResults !== undefined && survey.publishedVersion !== null && (
-                    <button type="button" className="surveys__count" onClick={() => onOpenResults(survey.id)}>
-                      {t("results")}
-                    </button>
-                  )}
                 </>
               }
             />
@@ -401,7 +408,7 @@ function shortDate(locale: Locale, at: string): string {
 function statusText(t: Translate<SurveysMessageKey>, survey: SurveyListItem): string {
   switch (survey.status) {
     case "published":
-      return survey.hasChanges ? t("statusChanged", { version: survey.publishedVersion ?? 0 }) : t("statusPublished", { version: survey.publishedVersion ?? 0 });
+      return survey.hasChanges ? t("statusChanged") : t("statusPublished", { version: survey.publishedVersion ?? 0 });
     case "closed":
       return t("statusClosed");
     case "archived":

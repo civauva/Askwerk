@@ -426,6 +426,23 @@ describe("Theme (AWK-17 step 3, W10 E)", () => {
     expect(document.querySelector(".run-message h1")).not.toBeNull();
   });
 
+  it("tells the designer's Preview where it is, for Page 2 of 2 in the stage bar (W32)", async () => {
+    const sent: unknown[] = [];
+    const parent = { postMessage: (message: unknown) => sent.push(message) };
+    Object.defineProperty(window, "parent", { value: parent, configurable: true });
+
+    try {
+      render(<Runner liveLook client={new FakeRunClient(sampleDefinition, null, "open", werkstatt)} surveyId="s1" initialLocale="en" reducedMotion />);
+      await screen.findByRole("heading", { level: 1, name: "Customer satisfaction 2026" });
+      expect(sent).toContainEqual({ type: "askwerk:preview-page", at: "welcome", pages: 2 });
+
+      act(() => window.dispatchEvent(new MessageEvent("message", { origin: window.location.origin, data: { type: "askwerk:goto", target: "yes-no" } })));
+      await waitFor(() => expect(sent).toContainEqual({ type: "askwerk:preview-page", at: 2, pages: 2 }));
+    } finally {
+      Object.defineProperty(window, "parent", { value: window, configurable: true });
+    }
+  });
+
   it("takes the look being edited from the designer in the preview, from its own origin only (W26)", async () => {
     render(<Runner liveLook client={new FakeRunClient(sampleDefinition, null, "open", werkstatt)} surveyId="s1" initialLocale="en" reducedMotion />);
     await screen.findByRole("heading", { level: 1, name: "Customer satisfaction 2026" });

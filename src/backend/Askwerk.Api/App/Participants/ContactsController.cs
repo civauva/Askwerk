@@ -49,6 +49,7 @@ public sealed class ContactsController(AskwerkDbContext context, IAuditWriter au
         {
             contact,
             Unsubscribed = context.Unsubscribes.Any(row => row.Email == contact.Email),
+            UnsubscribedAt = context.Unsubscribes.Where(row => row.Email == contact.Email).Min(row => (DateTimeOffset?)row.CreatedAt),
             Bounced = context.Participants.Any(row => row.BouncedAt != null && (row.ContactId == contact.Id || row.Email == contact.Email)),
         });
         var counts = new Dictionary<string, int>
@@ -90,6 +91,7 @@ public sealed class ContactsController(AskwerkDbContext context, IAuditWriter au
             {
                 row.contact,
                 row.Unsubscribed,
+                row.UnsubscribedAt,
                 row.Bounced,
                 Surveys = context.Participants.Count(participant => participant.ContactId == row.contact.Id),
                 Answered = context.Participants.Count(participant => participant.ContactId == row.contact.Id && context.Responses.Any(response => response.ParticipantId == participant.Id && response.Status == ResponseStatus.Complete)),
@@ -98,7 +100,7 @@ public sealed class ContactsController(AskwerkDbContext context, IAuditWriter au
             .ToListAsync(cancellationToken);
 
         return new ContactListResponse(
-            [.. page.Select(row => new ContactItem(row.contact.Id, row.contact.Email, row.contact.Name, row.contact.Language, row.contact.ExternalId, PersonDetails.ReadFields(row.contact.Fields), row.contact.Groups, row.Surveys, row.Answered, row.LastInvited, !row.Unsubscribed && !row.Bounced, row.Unsubscribed, row.Bounced))],
+            [.. page.Select(row => new ContactItem(row.contact.Id, row.contact.Email, row.contact.Name, row.contact.Language, row.contact.ExternalId, PersonDetails.ReadFields(row.contact.Fields), row.contact.Groups, row.Surveys, row.Answered, row.LastInvited, !row.Unsubscribed && !row.Bounced, row.Unsubscribed, row.Bounced, row.UnsubscribedAt))],
             matching,
             counts,
             [.. groups.Select(entry => new ContactGroup(entry.Name, entry.Count))],
@@ -348,9 +350,26 @@ public sealed class ContactsController(AskwerkDbContext context, IAuditWriter au
     /// <returns>The file.</returns>
     [HttpGet("contacts.csv")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Export(string? group, CancellationToken cancellationToken)
+    public Task<IActionResult> Export(string? group, CancellationToken cancellationToken) =>
+        ExportAsync(context.Contacts.Where(row => group == null || row.Groups.Contains(group)), cancellationToken);
+
+    /// <summary>The chosen contacts as CSV (W35), as the export of all.</summary>
+    /// <param name="selection">The chosen contacts.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>The file.</returns>
+    [HttpPost("contacts.csv")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public Task<IActionResult> ExportChosen(ContactSelection selection, CancellationToken cancellationToken)
     {
-        var contacts = await context.Contacts.Where(row => group == null || row.Groups.Contains(group)).OrderBy(row => row.Name ?? row.Email).ToListAsync(cancellationToken);
+        ArgumentNullException.ThrowIfNull(selection);
+        var ids = selection.ContactIds ?? [];
+
+        return ExportAsync(context.Contacts.Where(row => ids.Contains(row.Id)), cancellationToken);
+    }
+
+    private async Task<IActionResult> ExportAsync(IQueryable<Contact> chosen, CancellationToken cancellationToken)
+    {
+        var contacts = await chosen.OrderBy(row => row.Name ?? row.Email).ToListAsync(cancellationToken);
         var fields = contacts.Select(contact => PersonDetails.ReadFields(contact.Fields)).ToList();
         var keys = fields.SelectMany(each => each.Keys).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal).ToList();
         var csv = new StringBuilder(string.Join(',', ExportColumns.Concat(keys).Select(Field))).Append("\r\n");
@@ -447,7 +466,8 @@ public sealed record ContactInput(string? Email, string? Name, string? Language,
 /// <param name="Invitable">Neither unsubscribed nor bounced.</param>
 /// <param name="Unsubscribed">They asked for no more invitations.</param>
 /// <param name="Bounced">Their address was refused.</param>
-public sealed record ContactItem(Guid Id, string Email, string? Name, string? Language, string? ExternalId, IReadOnlyDictionary<string, string> Fields, IReadOnlyList<string> Groups, int Surveys, int Answered, DateTimeOffset? LastInvitedAt, bool Invitable, bool Unsubscribed, bool Bounced);
+/// <param name="UnsubscribedAt">When they unsubscribed (UTC).</param>
+public sealed record ContactItem(Guid Id, string Email, string? Name, string? Language, string? ExternalId, IReadOnlyDictionary<string, string> Fields, IReadOnlyList<string> Groups, int Surveys, int Answered, DateTimeOffset? LastInvitedAt, bool Invitable, bool Unsubscribed, bool Bounced, DateTimeOffset? UnsubscribedAt = null);
 
 /// <summary>A group and its size.</summary>
 /// <param name="Name">The group.</param>

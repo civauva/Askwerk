@@ -2,43 +2,46 @@
 import "./participants.css";
 import { ApiError, type AutoReminders, type ContactsClient, type ParticipantItem, type ParticipantList, type ParticipantsClient, type ParticipantSelection, type ParticipantStatus } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox, DataGrid, dataGridTexts, Menu, MenuItem, MenuLink, MenuSeparator, pageSizes, sortToParam, type DataGridColumn, type DataGridSort } from "@askwerk/ui";
+import { ComboBox, DataGrid, dataGridTexts, Menu, MenuItem, MenuLink, MenuSeparator, type DataGridColumn } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
-import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
 import { ContactsPicker } from "./ContactsPicker";
 import { ImportDialog } from "./ImportDialog";
 import { InviteDialog } from "./InviteDialog";
+import { dayText, fieldLabel, relativeDay, whenText } from "./peopleFormat";
 import { PersonPanel } from "./PersonPanel";
 import { peopleMessages, type PeopleMessageKey } from "./peopleMessages";
 
 type ParticipantsPanelProps = {
+  /** After each load, e.g. so the sidebar's count follows (W35). */
+  onLoaded?: () => void;
   client: ParticipantsClient;
   surveyId: string;
   locale: Locale;
   preview?: (language: string) => Promise<{ subject: string; text: string }>;
   writeClipboard?: (text: string) => Promise<void>;
   timeZone?: string;
-  /** Remembers the page size on this device. */
-  storage?: PreferenceStorage;
   /** The address book (W35): From contacts, and saving people there. */
   contacts?: ContactsClient;
   /** Saves a file, e.g. the chosen people as CSV. */
   saveFile?: (name: string, file: Blob) => void;
+  /** Today, for "today" and "yesterday". */
+  now?: () => Date;
 };
 
-const sizeKey = "askwerk.grid.participants.size";
+/** A page of 50, with ‹ › (W35). */
+const size = 50;
 
 /** Where each status stands in an invitation's life, for its trail: sent, opened, started, answered. */
 const progress: Record<ParticipantStatus, number> = { waiting: 0, "link-only": 0, sent: 1, opened: 2, started: 3, answered: 4, bounced: -1, unsubscribed: 0 };
 
-/** The status chips (W35): a status, or everyone who has not answered. */
-const chips: [string | null, PeopleMessageKey][] = [
-  [null, "all"],
-  ["not-answered", "notAnswered"],
-  ["started", "startedChip"],
-  ["answered", "answeredChip"],
-  ["bounced", "bouncedChip"],
-  ["unsubscribed", "unsubscribedChip"],
+/** The status chips (W35): a status, or everyone who has not answered; and what the chosen are "of". */
+const chips: [string | null, PeopleMessageKey, PeopleMessageKey][] = [
+  [null, "all", "ofAll"],
+  ["not-answered", "notAnswered", "ofNotAnswered"],
+  ["started", "startedChip", "ofStarted"],
+  ["answered", "answeredChip", "ofAnswered"],
+  ["bounced", "bouncedChip", "ofBounced"],
+  ["unsubscribed", "unsubscribedChip", "ofUnsubscribed"],
 ];
 
 /**
@@ -46,7 +49,7 @@ const chips: [string | null, PeopleMessageKey][] = [
  * the chosen get a reminder, the invitation again, an export or a contacts group; people come by typing, a file or
  * Contacts; one person opens with their fields and history; reminders go out by themselves.
  */
-export function ParticipantsPanel({ client, surveyId, locale, preview, writeClipboard = (text) => navigator.clipboard.writeText(text), timeZone, storage = browserStorage, contacts, saveFile = download }: ParticipantsPanelProps) {
+export function ParticipantsPanel({ client, surveyId, locale, onLoaded, preview, writeClipboard = (text) => navigator.clipboard.writeText(text), timeZone, contacts, saveFile = download, now = () => new Date() }: ParticipantsPanelProps) {
   const t = useMemo(() => createTranslator(peopleMessages, locale), [locale]);
   const id = useId();
   const [list, setList] = useState<ParticipantList | null>(null);
@@ -55,8 +58,6 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
   const [copied, setCopied] = useState<string | null>(null);
   const [adding, setAdding] = useState<"typed" | "file" | "contacts" | null>(null);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(() => [Number(storage.get(sizeKey))].find((value) => (pageSizes as readonly number[]).includes(value)) ?? 50);
-  const [sort, setSort] = useState<DataGridSort | undefined>(undefined);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [field, setField] = useState<{ key: string; value: string } | null>(null);
@@ -66,21 +67,24 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
   const [confirming, setConfirming] = useState(false);
   const [grouping, setGrouping] = useState<string | null>(null);
   const [opened, setOpened] = useState<ParticipantItem | null>(null);
-  const query = { ...(sort === undefined ? {} : { sort: sortToParam(sort) }), ...(search.trim() === "" ? {} : { search }), ...(status === null ? {} : { status }), ...(field === null ? {} : { field: `${field.key}:${field.value}` }) };
+  const query = { ...(search.trim() === "" ? {} : { search }), ...(status === null ? {} : { status }), ...(field === null ? {} : { field: `${field.key}:${field.value}` }) };
   const reload = useCallback(() => {
     setFailed(false);
 
-    return client.list(surveyId, { ...query, offset: (page - 1) * size, limit: size }).then(setList, () => setFailed(true));
+    return client.list(surveyId, { ...query, offset: (page - 1) * size, limit: size }).then((next) => {
+      setList(next);
+      onLoaded?.();
+    }, () => setFailed(true));
     // query is rebuilt from these each render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, surveyId, sort, page, size, search, status, field]);
+  }, [client, surveyId, page, search, status, field]);
 
   useEffect(() => {
     const timer = setTimeout(() => void reload(), 200);
     return () => clearTimeout(timer);
   }, [reload]);
 
-  const dates = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", ...(timeZone === undefined ? {} : { timeZone }) });
+  const day = (at: string) => dayText(locale, at, timeZone);
   const matching = list?.matching ?? list?.total ?? 0;
   const chosenCount = all ? matching : selected.size;
   const chosen = (): ParticipantSelection => (all ? { all: true } : { participantIds: [...selected] });
@@ -100,12 +104,25 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
     }, failure);
   };
   const fieldColumn = field?.key ?? list?.fieldKeys?.[0];
+  const closed = (item: ParticipantItem) => item.status === "bounced" || item.status === "unsubscribed";
+
+  /** The last activity with what it was (W35): "answered 3 Oct", "mailbox full · 2 Oct", "yesterday". */
+  const activity = (item: ParticipantItem) => {
+    if (item.lastActivity == null) {
+      return "—";
+    }
+
+    const date = relativeDay(locale, item.lastActivity, { today: t("today"), yesterday: t("yesterday") }, now(), timeZone);
+    const kinds: Partial<Record<NonNullable<ParticipantItem["lastActivityKind"]>, PeopleMessageKey>> = { answered: "activityAnswered", opened: "activityOpened", reminded: "activityReminded", sent: "activitySent", invited: "activityInvited" };
+    const kind = item.lastActivityKind == null ? undefined : kinds[item.lastActivityKind];
+
+    return item.lastActivityKind === "bounced" ? t("activityBounced", { reason: t(item.bounceReason ?? "refused"), date }) : kind === undefined ? date : t(kind, { date });
+  };
 
   const columns: DataGridColumn<ParticipantItem>[] = [
     {
       key: "name",
       header: t("person"),
-      sortable: true,
       phone: "title",
       cell: (item) => (
         <span className="participants__who">
@@ -115,41 +132,67 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
       ),
     },
     { key: "language", header: t("language"), cell: (item) => item.language?.toUpperCase() ?? "—" },
-    ...(fieldColumn === undefined ? [] : [{ key: `field-${fieldColumn}`, header: fieldColumn, cell: (item: ParticipantItem) => item.fields?.[fieldColumn] ?? "—" }]),
+    ...(fieldColumn === undefined ? [] : [{ key: `field-${fieldColumn}`, header: fieldLabel(fieldColumn), cell: (item: ParticipantItem) => item.fields?.[fieldColumn] ?? "—" }]),
     {
       key: "status",
       header: t("status"),
-      sortable: true,
       cell: (item) => (
         <span className="participants__status" data-status={item.status}>
-          <span>{t(item.status)}</span>
-          <span className="participants__trail" aria-hidden="true">
-            {[1, 2, 3, 4].map((step) => (
-              <i key={step} data-on={progress[item.status] >= step ? "" : undefined} data-bad={item.status === "bounced" && step === 1 ? "" : undefined} />
-            ))}
+          <span className="participants__state">
+            <i className="participants__dot" aria-hidden="true" />
+            {item.status === "started" && item.page != null && item.pages != null ? t("startedPage", { page: item.page, pages: item.pages }) : t(item.status)}
           </span>
+          {item.status !== "unsubscribed" && (
+            <span className="participants__trail" aria-hidden="true">
+              {[1, 2, 3, 4].map((step) => (
+                <i
+                  key={step}
+                  data-on={progress[item.status] >= step ? "" : undefined}
+                  data-done={item.status === "answered" && step === 4 ? "" : undefined}
+                  data-bad={item.status === "bounced" && step === 1 ? "" : undefined}
+                />
+              ))}
+            </span>
+          )}
         </span>
       ),
     },
-    { key: "sent", header: t("invitedOn"), sortable: true, cell: (item) => (item.sentAt === null ? "—" : dates.format(new Date(item.sentAt))) },
-    { key: "activity", header: t("lastActivity"), cell: (item) => (item.lastActivity == null ? "—" : dates.format(new Date(item.lastActivity))) },
-    { key: "reminders", header: t("reminders"), align: "end", cell: (item) => (item.reminders === 0 ? "0" : `${item.reminders}${item.remindedAt == null ? "" : ` · ${dates.format(new Date(item.remindedAt))}`}`) },
+    { key: "invited", header: t("invitedOn"), cell: (item) => <span className="participants__small">{item.invitedAt != null ? day(item.invitedAt) : item.sentAt != null ? day(item.sentAt) : "—"}</span> },
+    { key: "activity", header: t("lastActivity"), cell: (item) => <span className="participants__small">{activity(item)}</span> },
     {
-      key: "link",
+      key: "reminders",
+      header: t("reminders"),
+      cell: (item) => <span className="participants__small">{closed(item) ? "—" : item.reminders === 0 ? "0" : `${item.reminders}${item.remindedAt == null ? "" : ` · ${day(item.remindedAt)}`}`}</span>,
+    },
+    {
+      key: "action",
       header: t("link"),
-      cell: (item) => (
-        <button
-          type="button"
-          className="results-open participants__copy"
-          aria-label={t("copyLinkOf", { email: item.email })}
-          onClick={(event) => {
-            event.stopPropagation();
-            void writeClipboard(item.link).then(() => setCopied(item.id), () => undefined);
-          }}
-        >
-          {copied === item.id ? t("copied") : t("copyLink")}
-        </button>
-      ),
+      hideHeader: true,
+      cell: (item) =>
+        item.status === "unsubscribed" ? null : item.status === "bounced" ? (
+          <button
+            type="button"
+            className="participants__button participants__button--small"
+            onClick={(event) => {
+              event.stopPropagation();
+              setOpened(item);
+            }}
+          >
+            {t("fixEmail")}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="participants__button participants__button--small"
+            aria-label={t("copyLinkOf", { email: item.email })}
+            onClick={(event) => {
+              event.stopPropagation();
+              void writeClipboard(item.link).then(() => setCopied(item.id), () => undefined);
+            }}
+          >
+            {copied === item.id ? t("copied") : t("copyLink")}
+          </button>
+        ),
     },
   ];
 
@@ -165,6 +208,10 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
     { label: t("funnelAnswered", { share: share(count(["answered"])) }), value: count(["answered"]), last: true },
   ];
   const chipCount = (key: string | null) => (key === null ? total : key === "not-answered" ? total - count(["answered", "bounced", "unsubscribed"]) : (counts[key as ParticipantStatus] ?? 0));
+  // What the chosen are of (W35): the status shown; with all shown, "not answered" when none of the chosen has answered.
+  const chosenRows = (list?.items ?? []).filter((item) => selected.has(item.id));
+  const ofStatus = status ?? (!all && chosenRows.length > 0 && chosenRows.every((item) => !["answered", "bounced", "unsubscribed"].includes(item.status)) ? "not-answered" : null);
+  const [, , ofKey] = chips.find(([key]) => key === ofStatus) ?? chips[0]!;
 
   return (
     <div className="participants">
@@ -177,7 +224,7 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
         <Menu
           label={t("export")}
           trigger={(props) => (
-            <button type="button" className="designer-button" {...props}>
+            <button type="button" className="participants__button" {...props}>
               {t("export")} ▾
             </button>
           )}
@@ -190,7 +237,7 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
         <Menu
           label={t("addPeople")}
           trigger={(props) => (
-            <button type="button" className="designer-button designer-button--primary" {...props}>
+            <button type="button" className="participants__button participants__button--primary" {...props}>
               {t("addPeople")} ▾
             </button>
           )}
@@ -221,8 +268,16 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
             </div>
           ))}
           <div className="participants__side">
-            {count(["bounced"]) > 0 && <span data-bad="">{t("bouncedCount", { count: count(["bounced"]) })}</span>}
-            {count(["unsubscribed"]) > 0 && <span data-bad="">{t("unsubscribedCount", { count: count(["unsubscribed"]) })}</span>}
+            {count(["bounced"]) > 0 && (
+              <span>
+                <b>{count(["bounced"])}</b> {t("sideBounced")}
+              </span>
+            )}
+            {count(["unsubscribed"]) > 0 && (
+              <span>
+                <b>{count(["unsubscribed"])}</b> {t("sideUnsubscribed")}
+              </span>
+            )}
             {count(["waiting"]) > 0 && <span>{t("waitingCount", { count: count(["waiting"]) })}</span>}
           </div>
         </div>
@@ -258,8 +313,8 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
           </span>
           <span className="participants__grow" />
           {field !== null && (
-            <button type="button" className="participants__filter" aria-label={t("removeFilter", { filter: `${field.key}: ${field.value}` })} onClick={() => setField(null)}>
-              {field.key}: {field.value} ✕
+            <button type="button" className="participants__filter" aria-label={t("removeFilter", { filter: `${fieldLabel(field.key)}: ${field.value}` })} onClick={() => setField(null)}>
+              {fieldLabel(field.key)}: {field.value} ✕
             </button>
           )}
           {(list.fieldKeys?.length ?? 0) > 0 && filtering === null && (
@@ -272,11 +327,11 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
               <span id={`${id}-field`} className="look-visually-hidden">
                 {t("filterField")}
               </span>
-              <ComboBox labelledBy={`${id}-field`} options={(list.fieldKeys ?? []).map((key) => ({ value: key, label: key }))} value={filtering.key} onChange={(key) => setFiltering({ ...filtering, key })} texts={{ choose: t("filterField") }} />
+              <ComboBox labelledBy={`${id}-field`} options={(list.fieldKeys ?? []).map((key) => ({ value: key, label: fieldLabel(key) }))} value={filtering.key} onChange={(key) => setFiltering({ ...filtering, key })} texts={{ choose: t("filterField") }} />
               <input className="designer-input" aria-label={t("filterValue")} placeholder={t("filterValue")} value={filtering.value} onChange={(event) => setFiltering({ ...filtering, value: event.target.value })} />
               <button
                 type="button"
-                className="designer-button"
+                className="participants__button"
                 disabled={filtering.value.trim() === ""}
                 onClick={() => {
                   setField({ key: filtering.key, value: filtering.value.trim() });
@@ -303,22 +358,22 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
           columns={columns}
           rows={list?.items ?? null}
           rowKey={(item) => item.id}
-          sort={sort}
-          onSort={setSort}
           onOpen={setOpened}
           paging={{
             page,
             pageSize: size,
             total: matching,
+            compact: true,
+            ...(field === null ? {} : { of: total, note: t("fieldCount", { field: fieldLabel(field.key), count: matching }) }),
             onPage: setPage,
-            onPageSize: (next) => {
-              setSize(next);
-              storage.set(sizeKey, String(next));
-            },
+            onPageSize: () => undefined,
           }}
           selection={{
             selected,
             all,
+            boxed: true,
+            count: (chosenOnes) => t("chosen", { count: chosenOnes }),
+            context: t(ofKey, { count: chipCount(ofStatus) }),
             rowLabel: (item) => item.email,
             onChange: (next, nextAll) => {
               setSelected(next);
@@ -373,13 +428,7 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
       )}
 
       {list?.autoReminders != null && (
-        <ReminderBar
-          t={t}
-          id={id}
-          settings={list.autoReminders}
-          dates={new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", ...(timeZone === undefined ? {} : { timeZone }) })}
-          onChange={(on, days, max) => client.setAutoReminders(surveyId, on, days, max).then(() => reload(), failure)}
-        />
+        <ReminderBar t={t} id={id} settings={list.autoReminders} when={(at) => whenText(locale, at, timeZone)} onChange={(on, days, max) => client.setAutoReminders(surveyId, on, days, max).then(() => reload(), failure)} />
       )}
 
       {adding === "typed" && (
@@ -398,11 +447,12 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
         <ImportDialog
           locale={locale}
           mode="participants"
+          knownFields={list?.fieldKeys ?? []}
           read={(source) => client.table(surveyId, source)}
           check={(people) => client.checkPeople(surveyId, people)}
           onImport={(people, choice) =>
             client
-              .invite(surveyId, { participants: people, send: choice.sendNow, saveToContacts: choice.saveToContacts, ...(choice.group === "" ? {} : { contactGroup: choice.group }) })
+              .invite(surveyId, { participants: people, send: choice.sendNow, saveToContacts: choice.saveToContacts, importedFrom: choice.fileName ?? "", ...(choice.group === "" ? {} : { contactGroup: choice.group }) })
               .then(({ invited }) => t("imported", { count: invited }))
           }
           onClose={(done) => {
@@ -431,7 +481,8 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
           participantId={opened.id}
           locale={locale}
           {...(timeZone === undefined ? {} : { timeZone })}
-          statusText={t(opened.status)}
+          status={opened.status}
+          statusText={opened.status === "started" && opened.page != null && opened.pages != null ? t("startedPage", { page: opened.page, pages: opened.pages }) : t(opened.status)}
           writeClipboard={writeClipboard}
           onClose={(changed) => {
             setOpened(null);
@@ -448,45 +499,45 @@ export function ParticipantsPanel({ client, surveyId, locale, preview, writeClip
   );
 }
 
-/** Automatic reminders (W35): on or off, after how many days, at most how many, and the next one. */
-function ReminderBar({
-  t,
-  id,
-  settings,
-  dates,
-  onChange,
-}: {
-  t: ReturnType<typeof createTranslator<PeopleMessageKey>>;
-  id: string;
-  settings: AutoReminders;
-  dates: Intl.DateTimeFormat;
-  onChange: (on: boolean, days: number, max: number) => void;
-}) {
+/**
+ * Automatic reminders (W35), as one sentence: "Automatic reminders · after 7 days ▾ to people who have not answered,
+ * at most 2 ▾ · next: 23 Oct, 09:00 to 392 people", the switch before it and the reminder text after it.
+ */
+function ReminderBar({ t, id, settings, when, onChange }: { t: ReturnType<typeof createTranslator<PeopleMessageKey>>; id: string; settings: AutoReminders; when: (at: string) => string; onChange: (on: boolean, days: number, max: number) => void }) {
   return (
     <div className="participants__reminders">
-      <button type="button" role="switch" aria-checked={settings.on} className="aw-switch" onClick={() => onChange(!settings.on, settings.days, settings.max)}>
-        <b aria-hidden="true" />
-        {t("autoReminders")}
-      </button>
-      <span id={`${id}-after`}>{t("autoAfter")}</span>
-      <ComboBox
-        labelledBy={`${id}-after`}
-        options={[3, 5, 7, 10, 14].map((days) => ({ value: String(days), label: t("autoDays", { days }) }))}
-        value={String(settings.days)}
-        onChange={(days) => onChange(settings.on, Number(days), settings.max)}
-        texts={{ choose: t("autoDays", { days: settings.days }) }}
-      />
-      <span id={`${id}-most`}>{t("autoMost")}</span>
-      <ComboBox
-        labelledBy={`${id}-most`}
-        options={[1, 2, 3, 4, 5].map((max) => ({ value: String(max), label: String(max) }))}
-        value={String(settings.max)}
-        onChange={(max) => onChange(settings.on, settings.days, Number(max))}
-        texts={{ choose: String(settings.max) }}
-      />
-      {settings.on && <span className="participants__muted">{settings.nextAt === null ? t("autoNone") : t("autoNext", { when: dates.format(new Date(settings.nextAt)), count: settings.nextCount })}</span>}
-      <span className="participants__grow" />
-      <a className="designer-link-button" href="/messages">
+      <button type="button" role="switch" aria-checked={settings.on} aria-labelledby={`${id}-auto`} className="participants__switch" onClick={() => onChange(!settings.on, settings.days, settings.max)} />
+      <span className="participants__sentence">
+        <b id={`${id}-auto`}>{t("autoReminders")}</b>
+        {" · "}
+        <ComboBox
+          labelledBy={`${id}-auto`}
+          options={[3, 5, 7, 10, 14].map((days) => ({ value: String(days), label: t("autoDays", { days }) }))}
+          value={String(settings.days)}
+          onChange={(days) => onChange(settings.on, Number(days), settings.max)}
+          texts={{ choose: t("autoDays", { days: settings.days }) }}
+        />{" "}
+        <span id={`${id}-most`}>{t("autoMost")}</span>{" "}
+        <span id={`${id}-max`} className="look-visually-hidden">
+          {t("autoMax")}
+        </span>
+        <ComboBox
+          labelledBy={`${id}-max`}
+          options={[1, 2, 3, 4, 5].map((max) => ({ value: String(max), label: String(max) }))}
+          value={String(settings.max)}
+          onChange={(max) => onChange(settings.on, settings.days, Number(max))}
+          texts={{ choose: String(settings.max) }}
+        />
+        {settings.on && (
+          <>
+            {" · "}
+            <span className="participants__small">
+              {settings.nextAt === null ? t("autoNone") : settings.nextCount === 1 ? t("autoNextOne", { when: when(settings.nextAt) }) : t("autoNext", { when: when(settings.nextAt), count: settings.nextCount })}
+            </span>
+          </>
+        )}
+      </span>
+      <a className="participants__button participants__button--small" href="/messages">
         {t("editReminderText")}
       </a>
     </div>

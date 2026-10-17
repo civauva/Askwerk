@@ -76,8 +76,8 @@ export function FrontCard({ tokens, title, text, organisation, start, headerAsse
   );
 }
 
-/** The look as a strip (W32 card A): the page's colours, pattern, scene or picture, the organisation, Start. */
-export function LookStrip({ tokens, organisation, start, headerAsset = null, assetUrl }: Omit<FrontCardProps, "title" | "text">) {
+/** The look as a strip (W32 card A): the page's colours, pattern, scene or picture, the organisation, the look's name, Start. */
+export function LookStrip({ tokens, organisation, start, headerAsset = null, assetUrl, lookName = "" }: Omit<FrontCardProps, "title" | "text"> & { lookName?: string }) {
   const colours = tokens.mode === "dark" && tokens.darkColours !== undefined ? tokens.darkColours : tokens.colours;
   const pattern = tokens.decoration?.pattern ?? "none";
   const scene = pattern === "mountains";
@@ -97,6 +97,7 @@ export function LookStrip({ tokens, organisation, start, headerAsset = null, ass
       {pattern !== "none" && !scene && <div className={`lt-pattern lt-pattern--${pattern} fs-band`} />}
       {picture !== null && assetUrl !== undefined && <div className="fs-picture" style={{ backgroundImage: `url("${assetUrl(picture, 480)}")` }} />}
       <span className="fs-org">● {organisation}</span>
+      {lookName !== "" && <span className="fs-look">{lookName}</span>}
       <span className="fc-go fs-go">{start}</span>
     </div>
   );

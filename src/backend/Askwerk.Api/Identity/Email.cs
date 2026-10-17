@@ -47,7 +47,7 @@ public sealed class SmtpEmailSender : IEmailSender
         {
             await client.SendMailAsync(mail, cancellationToken);
         }
-        catch (SmtpFailedRecipientException exception) when (exception.StatusCode is SmtpStatusCode.MailboxUnavailable or SmtpStatusCode.MailboxNameNotAllowed or SmtpStatusCode.UserNotLocalTryAlternatePath)
+        catch (SmtpFailedRecipientException exception) when (exception.StatusCode is SmtpStatusCode.MailboxUnavailable or SmtpStatusCode.MailboxNameNotAllowed or SmtpStatusCode.UserNotLocalTryAlternatePath or SmtpStatusCode.ExceededStorageAllocation)
         {
             throw new EmailRejectedException(exception.Message);
         }

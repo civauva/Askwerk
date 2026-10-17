@@ -778,6 +778,73 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/templates/new": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** A new, empty template of the organisation's (W32 "New template"), ready to edit in the designer. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["NewTemplateRequest"];
+                    "text/json": components["schemas"]["NewTemplateRequest"];
+                    "application/*+json": components["schemas"]["NewTemplateRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TemplateEditResponse"];
+                        "application/json": components["schemas"]["TemplateEditResponse"];
+                        "text/json": components["schemas"]["TemplateEditResponse"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/templates/{id}": {
         parameters: {
             query?: never;
@@ -5039,7 +5106,32 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        /** The chosen contacts as CSV (W35), as the export of all. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactSelection"];
+                    "text/json": components["schemas"]["ContactSelection"];
+                    "application/*+json": components["schemas"]["ContactSelection"];
+                };
+            };
+            responses: {
+                /** @description The file. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -9262,6 +9354,87 @@ export interface paths {
         };
         trace?: never;
     };
+    "/api/app/connections/adopt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Makes a connection of an API key, OAuth client or webhook made before Connections ("Make a connection of it"):
+         *     named after it, its goals from what it may do.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ConnectionAdoption"];
+                    "text/json": components["schemas"]["ConnectionAdoption"];
+                    "application/*+json": components["schemas"]["ConnectionAdoption"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionView"];
+                        "application/json": components["schemas"]["ConnectionView"];
+                        "text/json": components["schemas"]["ConnectionView"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/connections/{id}/test": {
         parameters: {
             query?: never;
@@ -10692,6 +10865,16 @@ export interface components {
             /** @description Password. */
             password: string;
         };
+        /** @description What to make a connection of. */
+        ConnectionAdoption: {
+            /** @description api-key, oauth-client or webhook. */
+            kind: null | string;
+            /**
+             * Format: uuid
+             * @description Its id.
+             */
+            id: string;
+        };
         /** @description How the system calls Askwerk. */
         ConnectionCalls: {
             /** @description oauth or api-key. */
@@ -10737,10 +10920,48 @@ export interface components {
             /** @description The webhook's signing secret. */
             webhookSecret: null | string;
         };
+        /** @description One day of a connection: what went through, and what failed or was refused. */
+        ConnectionDay: {
+            /**
+             * Format: date
+             * @description The day (UTC).
+             */
+            day: string;
+            /**
+             * Format: int32
+             * @description Calls let in and events delivered.
+             */
+            ok: number | string;
+            /**
+             * Format: int32
+             * @description Calls refused and events that failed.
+             */
+            failed: number | string;
+        };
+        /** @description The last export the connection's key fetched. */
+        ConnectionExport: {
+            /**
+             * Format: date-time
+             * @description When it was ready.
+             */
+            at: string;
+            /**
+             * Format: int64
+             * @description Its size in bytes.
+             */
+            size: number | string;
+        };
         /** @description The organisation's connections. */
         ConnectionList: {
             /** @description Newest first. */
             items: components["schemas"]["ConnectionView"][];
+        };
+        /** @description How colleagues sign in, for a connection with the sign-in goal. */
+        ConnectionLogin: {
+            /** @description oidc, ldap or handover. */
+            kind: string;
+            /** @description The login's address. */
+            host: null | string;
         };
         /** @description Whether a connection is paused. */
         ConnectionPause: {
@@ -10796,7 +11017,7 @@ export interface components {
             matchBy: string;
             /** @description works, waiting (nothing yet), warning, failing or paused. */
             health: string;
-            /** @description Why warning or failing: credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused. */
+            /** @description Why warning or failing: calls-refused, credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused. */
             reason: null | string;
             /**
              * Format: date-time
@@ -10817,6 +11038,17 @@ export interface components {
              * @description Created (UTC).
              */
             createdAt: string;
+            /** @description The last 7 days, oldest first. */
+            days: components["schemas"]["ConnectionDay"][];
+            /**
+             * Format: int32
+             * @description Calls refused in the last 7 days.
+             */
+            refusedThisWeek: number | string;
+            lastExport: null | components["schemas"]["ConnectionExport"];
+            login: null | components["schemas"]["ConnectionLogin"];
+            /** @description The websites that may show its surveys, for the embed goal. */
+            sites: string[];
         };
         /** @description How Askwerk calls the system. */
         ConnectionWebhook: {
@@ -10846,6 +11078,16 @@ export interface components {
              * @description Since when every delivery failed.
              */
             failingSince: null | string;
+            /**
+             * Format: int32
+             * @description What the system answered to the last try.
+             */
+            lastStatus?: null | number | string;
+            /**
+             * Format: int32
+             * @description How long the last try took.
+             */
+            lastDurationMs?: null | number | string;
         };
         /** @description A new contact. */
         ContactCreated: {
@@ -10940,6 +11182,11 @@ export interface components {
             unsubscribed: boolean;
             /** @description Their address was refused. */
             bounced: boolean;
+            /**
+             * Format: date-time
+             * @description When they unsubscribed (UTC).
+             */
+            unsubscribedAt?: null | string;
         };
         /** @description One page of contacts. */
         ContactListResponse: {
@@ -11684,6 +11931,8 @@ export interface components {
             saveToContacts?: null | boolean;
             /** @description With SaveToContacts: the group they join. */
             contactGroup?: null | string;
+            /** @description The people came from an import (W35): the file's name, or empty for a pasted table. */
+            importedFrom?: null | string;
         };
         /** @description What an invitation link offers (W18 C). */
         JoinInvitationResponse: {
@@ -11891,6 +12140,13 @@ export interface components {
             answerInEmail: boolean;
             /** @description Askwerk's text, not changed by the organisation. */
             isDefault: boolean;
+        };
+        /** @description A new, empty template (W32). */
+        NewTemplateRequest: {
+            /** @description Its name. */
+            name: null | string;
+            /** @description Its language, de or en; en when not given. */
+            language: null | string;
         };
         /** @description Net Promoter Score. */
         NpsSummary: {
@@ -12128,6 +12384,10 @@ export interface components {
              * @description Reminded: how many reminders so far.
              */
             count: null | number | string;
+            /** @description Invited: where they came from, "import:" and the file's name or "contacts" (W35). */
+            source?: null | string;
+            /** @description Reminded: sent by the automatic reminders rather than by hand (W35). */
+            automatic?: null | boolean;
         };
         /** @description A person to invite. */
         ParticipantInput: {
@@ -12197,6 +12457,30 @@ export interface components {
              * @description Their contact, if any (W35).
              */
             contactId?: null | string;
+            /**
+             * Format: date-time
+             * @description When they were added (UTC, W35).
+             */
+            invitedAt?: null | string;
+            /** @description What the last activity was (W35): answered, started, opened, reminded, sent, invited, bounced or unsubscribed. */
+            lastActivityKind?: null | string;
+            /** @description Bounced: mailbox-full, unknown-address or refused (W35). */
+            bounceReason?: null | string;
+            /**
+             * Format: date-time
+             * @description When they unsubscribed (UTC, W35).
+             */
+            unsubscribedAt?: null | string;
+            /**
+             * Format: int32
+             * @description Started: the page they are on, from 1 (W35).
+             */
+            page?: null | number | string;
+            /**
+             * Format: int32
+             * @description Started: how many pages the survey has (W35).
+             */
+            pages?: null | number | string;
         };
         /** @description One page of the participants of a survey. */
         ParticipantListResponse: {
@@ -12704,6 +12988,7 @@ export interface components {
             responses: number | string;
             /** @description A question to show on the card. */
             preview: components["schemas"]["SamplePreview"];
+            front?: null | components["schemas"]["SurveyFront"];
         };
         /** @description A draft to save. */
         SaveDraftRequest: {
@@ -13160,6 +13445,10 @@ export interface components {
             publishedAt?: null | string;
             /** @description Surveys only: the key questions' results (W38), in survey order. */
             keys?: null | components["schemas"]["KeyResult"][];
+            /** @description The name of its look when that is one of the organisation's looks. */
+            lookName?: null | string;
+            /** @description The Askwerk look it is or started from ("konfetti"); the card names it in the reader's language. */
+            lookPreset?: null | string;
         };
         /** @description A link to the survey (AWK-7). */
         SurveyLinkResponse: {

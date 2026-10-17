@@ -130,9 +130,13 @@ public sealed class ParticipantPeopleController(
         var responses = await context.Responses.Where(row => row.ParticipantId == person.Id).OrderBy(row => row.StartedAt).ToListAsync(cancellationToken);
         var unsubscribedAt = await context.Unsubscribes.Where(row => row.Email == person.Email).Select(row => (DateTimeOffset?)row.CreatedAt).FirstOrDefaultAsync(cancellationToken);
         var links = await SurveyLinks.OfAsync(context, settings, Request, survey, cancellationToken);
-        var history = new List<ParticipantEvent> { new("invited", person.CreatedAt, null) };
+        var history = new List<ParticipantEvent> { new("invited", person.CreatedAt, null, invitation.Source) };
         history.AddRange(person.SentAt is { } sent ? [new ParticipantEvent("sent", sent, null)] : []);
-        history.AddRange(person.RemindedAt is { } reminded ? [new ParticipantEvent("reminded", reminded, person.Reminders)] : []);
+        // Each reminder with its number and whether it was automatic (W35); reminders from before the log, as one.
+        var log = person.ReadReminderLog();
+        history.AddRange(log.Count > 0
+            ? log.Select((reminder, index) => new ParticipantEvent("reminded", reminder.At, index + 1, Automatic: reminder.Automatic))
+            : person.RemindedAt is { } reminded ? [new ParticipantEvent("reminded", reminded, person.Reminders)] : []);
         history.AddRange(person.OpenedAt is { } opened ? [new ParticipantEvent("opened", opened, null)] : []);
         history.AddRange(responses.Select(response => new ParticipantEvent("started", response.StartedAt, null)));
         history.AddRange(responses.Where(response => response.CompletedAt is not null).Select(response => new ParticipantEvent("answered", response.CompletedAt!.Value, null)));
@@ -520,7 +524,9 @@ public sealed record CheckPeopleRequest(IReadOnlyList<ParticipantInput>? People)
 /// <param name="Kind">invited, sent, reminded, opened, started, answered, bounced or unsubscribed.</param>
 /// <param name="At">When (UTC).</param>
 /// <param name="Count">Reminded: how many reminders so far.</param>
-public sealed record ParticipantEvent(string Kind, DateTimeOffset At, int? Count);
+/// <param name="Source">Invited: where they came from, "import:" and the file's name or "contacts" (W35).</param>
+/// <param name="Automatic">Reminded: sent by the automatic reminders rather than by hand (W35).</param>
+public sealed record ParticipantEvent(string Kind, DateTimeOffset At, int? Count, string? Source = null, bool? Automatic = null);
 
 /// <summary>One person (W35).</summary>
 /// <param name="Id">The participant.</param>

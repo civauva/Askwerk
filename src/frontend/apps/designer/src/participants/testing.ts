@@ -4,9 +4,9 @@ import { ApiError, type ContactList, type ContactsClient, type InviteRequest, ty
 
 export const sampleList: ParticipantList = {
   items: [
-    { id: "p1", email: "anna@acme.at", name: "Anna Berger", language: "de", status: "answered", sentAt: "2026-10-14T08:00:00Z", reminders: 0, link: "https://surveys.acme.at/s/kz26b7mq?t=aaa", externalId: "CRM-1", fields: { department: "Sales" }, lastActivity: "2026-10-15T09:00:00Z" },
-    { id: "p2", email: "josef@acme.at", name: "Josef Huber", language: null, status: "started", sentAt: "2026-10-14T08:00:00Z", reminders: 1, link: "https://surveys.acme.at/s/kz26b7mq?t=bbb" },
-    { id: "p3", email: "old@acme.at", name: null, language: null, status: "bounced", sentAt: null, reminders: 0, link: "https://surveys.acme.at/s/kz26b7mq?t=ccc" },
+    { id: "p1", email: "anna@acme.at", name: "Anna Berger", language: "de", status: "answered", sentAt: "2026-10-14T08:00:00Z", reminders: 0, link: "https://surveys.acme.at/s/kz26b7mq?t=aaa", externalId: "CRM-1", fields: { department: "Sales" }, lastActivity: "2026-10-15T09:00:00Z", lastActivityKind: "answered", invitedAt: "2026-10-14T07:59:00Z" },
+    { id: "p2", email: "josef@acme.at", name: "Josef Huber", language: null, status: "started", sentAt: "2026-10-14T08:00:00Z", reminders: 1, link: "https://surveys.acme.at/s/kz26b7mq?t=bbb", remindedAt: "2026-10-21T08:00:00Z", lastActivity: "2026-10-16T10:00:00Z", lastActivityKind: "started", invitedAt: "2026-10-14T07:59:00Z", page: 2, pages: 4 },
+    { id: "p3", email: "old@acme.at", name: null, language: null, status: "bounced", sentAt: null, reminders: 0, link: "https://surveys.acme.at/s/kz26b7mq?t=ccc", lastActivity: "2026-10-14T08:00:00Z", lastActivityKind: "bounced", bounceReason: "mailbox-full", invitedAt: "2026-10-14T07:59:00Z" },
   ],
   total: 3,
   counts: { answered: 1, started: 1, bounced: 1 },
@@ -39,9 +39,9 @@ export const sampleDetail: ParticipantDetail = {
   remindersOff: false,
   contactId: null,
   history: [
-    { kind: "invited", at: "2026-10-14T07:59:00Z", count: null },
+    { kind: "invited", at: "2026-10-14T07:59:00Z", count: null, source: "import:customers-q4.csv" },
     { kind: "sent", at: "2026-10-14T08:00:00Z", count: null },
-    { kind: "reminded", at: "2026-10-21T08:00:00Z", count: 1 },
+    { kind: "reminded", at: "2026-10-21T08:00:00Z", count: 1, automatic: true },
   ],
   nextReminderAt: "2026-10-28T08:00:00Z",
   autoReminders: true,
@@ -156,7 +156,7 @@ export class FakeParticipantsClient implements ParticipantsClient {
 export const sampleContacts: ContactList = {
   items: [
     { id: "c1", email: "lena@acme.at", name: "Lena Gruber", language: "de", externalId: "CRM-10442", fields: { department: "Sales" }, groups: ["Key accounts"], surveys: 3, answered: 2, lastInvitedAt: "2026-10-02T08:00:00Z", invitable: true, unsubscribed: false, bounced: false },
-    { id: "c2", email: "anja@acme.at", name: "Anja Weber", language: "de", externalId: null, fields: {}, groups: [], surveys: 1, answered: 0, lastInvitedAt: null, invitable: false, unsubscribed: true, bounced: false },
+    { id: "c2", email: "anja@acme.at", name: "Anja Weber", language: "de", externalId: null, fields: {}, groups: [], surveys: 1, answered: 0, lastInvitedAt: null, invitable: false, unsubscribed: true, bounced: false, unsubscribedAt: "2026-10-04T08:00:00Z" },
   ],
   matching: 2,
   counts: { all: 2, invitable: 1, unsubscribed: 1, bounced: 0 },
@@ -177,5 +177,6 @@ export class FakeContactsClient implements ContactsClient {
   group = (ids: readonly string[], group: string, leave?: boolean) => (this.calls.push(["group", ids, group, leave]), Promise.resolve({ changed: ids.length }));
   import = (people: readonly ParticipantInput[], group: string | null) => (this.calls.push(["import", people, group]), Promise.resolve({ added: people.length, updated: 0, invalid: [] }));
   exportUrl = (group?: string) => `/api/app/contacts/contacts.csv${group ? `?group=${group}` : ""}`;
+  exportChosen = (ids: readonly string[]) => (this.calls.push(["exportChosen", ids]), Promise.resolve({ blob: new Blob(["email"]), fileName: "contacts.csv" }));
   table = (source: File | string) => (this.calls.push(["table", typeof source === "string" ? source : source.name]), Promise.resolve(sampleTable));
 }

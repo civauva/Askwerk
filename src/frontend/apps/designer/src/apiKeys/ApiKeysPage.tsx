@@ -2,6 +2,7 @@
 import "../designer/designer.css";
 import "./apiKeys.css";
 import { ApiError, apiKeyPresets, apiKeyScopes, type ApiKeyItem, type ApiKeysClient, type NewApiKey, type OAuthClientsClient, type WebhooksClient } from "@askwerk/app-client";
+import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
 import { OAuthClientsPanel } from "./OAuthClientsPanel";
 import { WebhooksPanel } from "./WebhooksPanel";
 import { createTranslator, type Locale } from "@askwerk/schema";
@@ -21,6 +22,8 @@ type ApiKeysPageProps = {
   writeClipboard?: (text: string) => Promise<void>;
   timeZone?: string;
   now?: () => Date;
+  /** "Make a connection of it" (W36); shown when given. */
+  makeConnection?: MakeConnection;
 };
 
 type Preset = "readResults" | "fullAccess";
@@ -31,7 +34,7 @@ const same = (a: readonly string[], b: readonly string[]) => a.length === b.leng
  * Organisation → API (AWK-25, W14 C and D), one screen: the organisation's keys for the Public API on the shared
  * grid, creating a key in two steps (the secret is shown once), and revoking one.
  */
-export function ApiKeysPage({ client, webhooks, oauthClients, locale, writeClipboard = (text) => navigator.clipboard.writeText(text), timeZone, now = () => new Date() }: ApiKeysPageProps) {
+export function ApiKeysPage({ client, webhooks, oauthClients, locale, makeConnection, writeClipboard = (text) => navigator.clipboard.writeText(text), timeZone, now = () => new Date() }: ApiKeysPageProps) {
   const t: T = useMemo(() => createTranslator(apiKeysMessages, locale), [locale]);
   const [keys, setKeys] = useState<ApiKeyItem[] | null>(null);
   const [state, setState] = useState<"loaded" | "failed" | "refused">("loaded");
@@ -72,9 +75,12 @@ export function ApiKeysPage({ client, webhooks, oauthClients, locale, writeClipb
       header: t("revoke"),
       align: "end",
       cell: (key) => (
-        <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: key.name })} onClick={() => setRevoking(key)}>
-          {t("revoke")}
-        </button>
+        <span className="api-keys__actions">
+          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="api-key" id={key.id} name={key.name} make={makeConnection} />}
+          <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: key.name })} onClick={() => setRevoking(key)}>
+            {t("revoke")}
+          </button>
+        </span>
       ),
     },
   ];
@@ -108,9 +114,9 @@ export function ApiKeysPage({ client, webhooks, oauthClients, locale, writeClipb
       {state === "refused" ? (
         <p role="alert">{t("notAllowed")}</p>
       ) : tab === "oauth" && oauthClients !== undefined ? (
-        <OAuthClientsPanel t={t} client={oauthClients} locale={locale} writeClipboard={writeClipboard} timeZone={timeZone} dialog={Dialog} />
+        <OAuthClientsPanel t={t} client={oauthClients} locale={locale} writeClipboard={writeClipboard} timeZone={timeZone} dialog={Dialog} makeConnection={makeConnection} />
       ) : tab === "webhooks" && webhooks !== undefined ? (
-        <WebhooksPanel t={t} client={webhooks} locale={locale} writeClipboard={writeClipboard} timeZone={timeZone} dialog={Dialog} />
+        <WebhooksPanel t={t} client={webhooks} locale={locale} writeClipboard={writeClipboard} timeZone={timeZone} dialog={Dialog} makeConnection={makeConnection} />
       ) : (
         <DataGrid
           label={t("keys")}

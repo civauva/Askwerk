@@ -690,6 +690,80 @@
   font-family: var(--aw-font-mono);
 }
 
+/* W35: a white box that clears the choice, the count in bold sans, what it is of, the actions at the end. */
+.aw-grid__bar--boxed {
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font: 400 13px/1.3 var(--aw-font);
+}
+
+.aw-grid__bar-box {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--aw-surface);
+}
+
+.aw-grid__bar--boxed .aw-grid__bar-count {
+  font: 600 13px/1.3 var(--aw-font);
+}
+
+.aw-grid__bar-context {
+  opacity: 0.7;
+}
+
+.aw-grid__bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.aw-grid__bar .aw-grid__bar-actions button {
+  padding: 5px 9px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: var(--aw-radius-control);
+  font: 600 12px/1.2 var(--aw-font);
+  white-space: nowrap;
+}
+
+.aw-grid__bar-actions input {
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: var(--aw-radius-control);
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  font: inherit;
+}
+
+/* W35: the table and its pager in one card. */
+.aw-grid__card {
+  overflow: hidden;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+}
+
+.aw-grid__card > .aw-grid__scroll {
+  border: 0;
+  border-radius: 0;
+}
+
+.aw-grid__footer--inside {
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--aw-graphite);
+}
+
+.aw-grid__page--small {
+  min-width: 0;
+  height: auto;
+  padding: 5px 9px;
+  font: 600 12px/1 var(--aw-font);
+}
+
 .aw-grid__bar-clear {
   margin-left: auto;
 }
@@ -923,6 +997,16 @@
 
 .aw-dialog__body > p {
   margin: 0;
+}
+
+.aw-dialog__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--aw-line);
+  background: color-mix(in srgb, var(--aw-ink) 2%, var(--aw-surface));
 }
 
 .aw-dialog__actions {

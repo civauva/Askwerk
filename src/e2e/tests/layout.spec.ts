@@ -4,7 +4,8 @@
 import { expect, test, type Page } from "@playwright/test";
 import { owner, readTwoFactorKey, totp } from "./owner";
 
-const lists = ["/", "/templates", "/members", "/domains", "/look", "/messages", "/organisation", "/sign-in-settings"];
+// Administration → Looks is laid out like a survey's Look (W32): settings column and stage, the full width and height.
+const lists = ["/", "/templates", "/members", "/domains", "/messages", "/organisation", "/sign-in-settings"];
 
 /** Where the page's content starts and how wide it may get, against the sidebar's right edge. */
 async function measure(page: Page) {

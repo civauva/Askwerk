@@ -36,10 +36,14 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   await page.getByRole("button", { name: "▦ Cards" }).click();
   await expect(page.getByRole("list", { name: "Templates" }).getByRole("listitem").first()).toBeVisible();
   await page.screenshot({ path: info.outputPath("templates-cards.png"), fullPage: true });
+  // A card has one action (Use or Edit); copying Askwerk's to ours is in the list.
+  await page.getByRole("button", { name: "☰ List" }).click();
   await page.getByRole("button", { name: "Copy NPS, short to our templates" }).click();
 
   const bar = page.getByRole("banner", { name: "Survey" });
   await expect(bar.getByText(/^Template ·/)).toBeVisible();
+  await expect(bar.getByText("Edits save by themselves · no publishing, no results")).toBeVisible();
+  await expect(page.getByRole("link", { name: "All templates" })).toBeVisible();
   await expect(bar.getByRole("button", { name: "Publish" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Share" })).toHaveCount(0);
   expect((await new AxeBuilder({ page }).exclude("iframe").analyze()).violations.map((violation) => violation.id)).toEqual([]);

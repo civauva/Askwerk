@@ -13,6 +13,8 @@ export type DataGridColumn<Row> = {
   readonly sortable?: boolean;
   /** On phones: the card's title, or left out; otherwise label and value. */
   readonly phone?: "title" | "hidden";
+  /** The header is for screen readers only (W35: the column of row actions shows no header). */
+  readonly hideHeader?: boolean;
 };
 
 export type DataGridSort = { readonly key: string; readonly descending: boolean };
@@ -24,6 +26,13 @@ export type DataGridPaging = {
   readonly total: number;
   readonly onPage: (page: number) => void;
   readonly onPageSize: (pageSize: number) => void;
+  /**
+   * W35: the pager inside the grid's card, the range and ‹ › only (no page numbers, no page size). "of" may name
+   * another number than the pages count (all, while a filter is on), and a note follows the range.
+   */
+  readonly compact?: boolean;
+  readonly of?: number;
+  readonly note?: string;
 };
 
 /**
@@ -38,6 +47,12 @@ export type DataGridSelection<Row> = {
   readonly rowLabel: (row: Row) => string;
   /** What the screen does with the chosen rows, shown in the bar. */
   readonly actions: ReactNode;
+  /** The count in the screen's own words ("3 chosen"); texts.selected otherwise. */
+  readonly count?: (count: number) => string;
+  /** Says more after the count, dimmed (W35: "· of 392 not answered"). */
+  readonly context?: ReactNode;
+  /** W35: a white box at the start clears the choice, the actions sit at the end as small outlined buttons, no Clear. */
+  readonly boxed?: boolean;
 };
 
 export type DataGridTexts = {
@@ -349,12 +364,20 @@ export function DataGrid<Row>({
   return (
     <div className={stickyFirst ? "aw-grid aw-grid--sticky" : "aw-grid"}>
       {selection !== undefined && (selection.all || selection.selected.size > 0) && (
-        <div role="region" className="aw-grid__bar" aria-label={texts.selected(selection.all ? total : selection.selected.size)}>
-          <span className="aw-grid__bar-count">{texts.selected(selection.all ? total : selection.selected.size)}</span>
-          {selection.actions}
-          <button type="button" className="aw-grid__bar-clear" onClick={() => selection.onChange(new Set(), false)}>
-            {texts.clear}
-          </button>
+        <div role="region" className={selection.boxed ? "aw-grid__bar aw-grid__bar--boxed" : "aw-grid__bar"} aria-label={(selection.count ?? texts.selected)(selection.all ? total : selection.selected.size)}>
+          {selection.boxed && <input type="checkbox" className="aw-grid__bar-box" aria-label={texts.clear} checked onChange={() => selection.onChange(new Set(), false)} />}
+          <span className="aw-grid__bar-count">{(selection.count ?? texts.selected)(selection.all ? total : selection.selected.size)}</span>
+          {selection.context !== undefined && <span className="aw-grid__bar-context">{selection.context}</span>}
+          {selection.boxed ? (
+            <span className="aw-grid__bar-actions">{selection.actions}</span>
+          ) : (
+            <>
+              {selection.actions}
+              <button type="button" className="aw-grid__bar-clear" onClick={() => selection.onChange(new Set(), false)}>
+                {texts.clear}
+              </button>
+            </>
+          )}
         </div>
       )}
       {selection !== undefined && keys.length > 0 && chosenOnPage === keys.length && total > keys.length && (
@@ -385,6 +408,7 @@ export function DataGrid<Row>({
           />
         </div>
       )}
+      <GridCard inside={paging?.compact === true} footer={paging !== undefined && rows !== null && <Pager id={id} paging={paging} texts={texts} />}>
       <div
         ref={scroller}
         className={windowed ? "aw-grid__scroll aw-grid__scroll--window" : "aw-grid__scroll"}
@@ -425,6 +449,8 @@ export function DataGrid<Row>({
                       >
                         {column.header}
                       </button>
+                    ) : column.hideHeader ? (
+                      <span className="aw-visually-hidden">{column.header}</span>
                     ) : (
                       column.header
                     )}
@@ -480,7 +506,7 @@ export function DataGrid<Row>({
         </table>
         {more !== undefined && <div ref={end} className="aw-grid__end" />}
       </div>
-      {paging !== undefined && rows !== null && <Pager id={id} paging={paging} texts={texts} />}
+      </GridCard>
       {more !== undefined && rows !== null && (
         <div className="aw-grid__footer">
           <span className="aw-grid__range" aria-live="polite">
@@ -523,11 +549,45 @@ function Checkbox({ label, checked, mixed = false, onChange }: { label: string; 
   return <input ref={box} type="checkbox" className="aw-grid__check" aria-label={label} checked={checked} onChange={(event) => onChange(event.target.checked)} />;
 }
 
+/** The table's card; with a compact pager (W35) the pager sits inside it, below the rows, else after it. */
+function GridCard({ inside, footer, children }: { inside: boolean; footer: ReactNode; children: ReactNode }) {
+  return inside ? (
+    <div className="aw-grid__card">
+      {children}
+      {footer}
+    </div>
+  ) : (
+    <>
+      {children}
+      {footer}
+    </>
+  );
+}
+
 function Pager({ id, paging, texts }: { id: string; paging: DataGridPaging; texts: DataGridTexts }) {
   const { page, pageSize, total, onPage, onPageSize } = paging;
   const count = Math.max(1, Math.ceil(total / pageSize));
   const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
+
+  if (paging.compact) {
+    return (
+      <div className="aw-grid__footer aw-grid__footer--inside">
+        <span className="aw-grid__range" aria-live="polite">
+          {texts.range(from, to, paging.of ?? total)}
+          {paging.note !== undefined && ` · ${paging.note}`}
+        </span>
+        <nav className="aw-grid__pages" aria-label={texts.pages}>
+          <button type="button" className="aw-grid__page aw-grid__page--small" aria-label={texts.previous} disabled={page <= 1} onClick={() => onPage(page - 1)}>
+            ‹
+          </button>
+          <button type="button" className="aw-grid__page aw-grid__page--small" aria-label={texts.next} disabled={page >= count} onClick={() => onPage(page + 1)}>
+            ›
+          </button>
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <div className="aw-grid__footer">

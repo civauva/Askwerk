@@ -190,6 +190,83 @@ public sealed class ConnectionsController(
         return StatusCode(StatusCodes.Status201Created, new CreatedConnection((await ViewsAsync([connection], cancellationToken))[0], credentials));
     }
 
+    /// <summary>
+    /// Makes a connection of an API key, OAuth client or webhook made before Connections ("Make a connection of it"):
+    /// named after it, its goals from what it may do.
+    /// </summary>
+    /// <param name="request">What to make it of.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>201 with the connection; 403; 404 not-found; 409 already-connected or connections-too-many.</returns>
+    [HttpPost("adopt")]
+    [ProducesResponseType<ConnectionView>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ConnectionProblem>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ConnectionProblem>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ConnectionProblem>(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> Adopt(ConnectionAdoption request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (await RefusedAsync(cancellationToken) is { } refused)
+        {
+            return refused;
+        }
+
+        if (await context.Connections.CountAsync(cancellationToken) >= Connection.MaxPerOrganisation)
+        {
+            return Conflict(new ConnectionProblem("connections-too-many"));
+        }
+
+        if (await context.Connections.AnyAsync(connection => connection.ApiKeyId == request.Id || connection.OAuthClientId == request.Id || connection.WebhookId == request.Id, cancellationToken))
+        {
+            return Conflict(new ConnectionProblem("already-connected"));
+        }
+
+        string? name = null;
+        string[] scopes = [];
+        Guid? keyId = null, clientId = null, webhookId = null;
+
+        switch (request.Kind)
+        {
+            case "api-key" when await context.ApiKeys.AsNoTracking().FirstOrDefaultAsync(key => key.Id == request.Id && key.RevokedAt == null, cancellationToken) is { } key:
+                (name, scopes, keyId) = (key.Name, key.Scopes, key.Id);
+                break;
+            case "oauth-client" when await context.OAuthClients.AsNoTracking().FirstOrDefaultAsync(client => client.Id == request.Id && client.RevokedAt == null, cancellationToken) is { } client:
+                (name, scopes, clientId) = (client.Name, client.Scopes, client.Id);
+                break;
+            case "webhook" when await context.Webhooks.AsNoTracking().FirstOrDefaultAsync(webhook => webhook.Id == request.Id, cancellationToken) is { } webhook:
+                (name, webhookId) = (webhook.Description ?? new Uri(webhook.Url).Host, webhook.Id);
+                break;
+            default:
+                return NotFound(new ConnectionProblem("not-found"));
+        }
+
+        // Goals from what it may do; a key that reads nothing of either still gets answers, the common case.
+        var goals = new List<string>();
+
+        if (webhookId is not null || scopes.Contains(ApiScopes.ResponsesRead))
+        {
+            goals.Add(ConnectionGoals.Answers);
+        }
+
+        if (scopes.Contains("participants:write"))
+        {
+            goals.Add(ConnectionGoals.People);
+        }
+
+        if (goals.Count == 0)
+        {
+            goals.Add(ConnectionGoals.Answers);
+        }
+        var now = time.GetUtcNow();
+        var connection = Connection.Create(Guid.CreateVersion7(now), User.TenantId()!.Value, name.Length > 100 ? name[..100] : name, goals, null, User.UserId()!.Value, now);
+        connection.Link(keyId, clientId, webhookId);
+        context.Connections.Add(connection);
+        await AuditAsync(connection.TenantId, "connection.created", "Connection", connection.Id, $"{connection.Name}: made of a {request.Kind}", cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return StatusCode(StatusCodes.Status201Created, (await ViewsAsync([connection], cancellationToken))[0]);
+    }
+
     /// <summary>Changes the name, how people are matched, the webhook's URL and events, or its surveys.</summary>
     /// <param name="id">The connection.</param>
     /// <param name="request">What changes.</param>
@@ -449,7 +526,42 @@ public sealed class ConnectionsController(
                 LastDelivered = group.Max(delivery => delivery.DeliveredAt),
             })
             .ToDictionaryAsync(row => row.WebhookId, cancellationToken);
+        var credentialIds = keyIds.Concat(clientIds).ToList();
+        var firstDay = DateOnly.FromDateTime(now.UtcDateTime).AddDays(-6);
+        var activity = await context.IntegrationActivities.AsNoTracking()
+            .Where(row => credentialIds.Contains(row.CredentialId) && row.Day >= firstDay)
+            .ToListAsync(cancellationToken);
+        var weekStart = new DateTimeOffset(firstDay.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+        var deliveryDays = await context.WebhookDeliveries.AsNoTracking()
+            .Where(delivery => webhookIds.Contains(delivery.WebhookId) && delivery.CreatedAt >= weekStart && delivery.Status != WebhookDeliveryStatus.Pending)
+            .Select(delivery => new { delivery.WebhookId, delivery.CreatedAt, Delivered = delivery.Status == WebhookDeliveryStatus.Delivered })
+            .ToListAsync(cancellationToken);
+        var lastTries = await context.WebhookDeliveries.AsNoTracking()
+            .Where(delivery => webhookIds.Contains(delivery.WebhookId) && delivery.Attempts > 0)
+            .GroupBy(delivery => delivery.WebhookId)
+            .Select(group => group.OrderByDescending(delivery => delivery.Id).Select(delivery => new { delivery.WebhookId, delivery.ResponseStatus, delivery.DurationMs }).First())
+            .ToDictionaryAsync(row => row.WebhookId, cancellationToken);
+        var exports = await context.DataExports.AsNoTracking()
+            .Where(export => export.RequestedByApiKeyId != null && keyIds.Contains(export.RequestedByApiKeyId.Value) && export.Status == Askwerk.Domain.Integrations.DataExportStatus.Ready)
+            .GroupBy(export => export.RequestedByApiKeyId!.Value)
+            .Select(group => group.OrderByDescending(export => export.FinishedAt).Select(export => new { KeyId = export.RequestedByApiKeyId!.Value, export.FinishedAt, export.Size }).First())
+            .ToDictionaryAsync(row => row.KeyId, cancellationToken);
         var surveyIds = hooks.Values.SelectMany(webhook => webhook.SurveyIds).Distinct().ToList();
+        var tenantId = User.TenantId();
+        var signIn = connections.Any(connection => connection.Goals.Contains(ConnectionGoals.SignIn))
+            ? await context.TenantSignIns.AsNoTracking().FirstOrDefaultAsync(row => row.TenantId == tenantId, cancellationToken)
+            : null;
+        var tenant = connections.Any(connection => connection.Goals.Contains(ConnectionGoals.Embed))
+            ? await context.Tenants.AsNoTracking().FirstOrDefaultAsync(row => row.Id == tenantId, cancellationToken)
+            : null;
+        var login = signIn switch
+        {
+            { OidcEnabled: true } => new ConnectionLogin("oidc", HostOf(signIn.OidcAuthority)),
+            { LdapEnabled: true } => new ConnectionLogin("ldap", signIn.LdapHost),
+            { HandoverEnabled: true } => new ConnectionLogin("handover", HostOf(signIn.HandoverIssuer)),
+            _ => null,
+        };
+        string[] sites = tenant is null ? [] : [.. tenant.EmbedOrigins.Concat(tenant.DesignerEmbedOrigins).Select(HostOf).OfType<string>().Distinct()];
         var surveys = await context.Surveys.AsNoTracking().Where(survey => surveyIds.Contains(survey.Id)).ToDictionaryAsync(survey => survey.Id, survey => survey.Title, cancellationToken);
 
         return [.. connections.Select(connection =>
@@ -471,7 +583,20 @@ public sealed class ConnectionsController(
                 delivered?.Failed ?? 0,
                 delivered?.LastDelivered,
                 webhook.FailingSince);
-            var (health, reason) = HealthOf(connection, calls, hook, webhook, now);
+            var credential = connection.ApiKeyId ?? connection.OAuthClientId;
+            var days = Enumerable.Range(0, 7).Select(offset =>
+            {
+                var day = firstDay.AddDays(offset);
+                var used = activity.Where(row => row.CredentialId == credential && row.Day == day).ToList();
+                var sent = deliveryDays.Where(row => row.WebhookId == connection.WebhookId && DateOnly.FromDateTime(row.CreatedAt.UtcDateTime) == day).ToList();
+
+                return new ConnectionDay(day, used.Sum(row => row.Calls) + sent.Count(row => row.Delivered), used.Sum(row => row.Refused) + sent.Count(row => !row.Delivered));
+            }).ToList();
+            var refused = activity.Where(row => row.CredentialId == credential).Sum(row => row.Refused);
+            var lastTry = connection.WebhookId is { } tried ? lastTries.GetValueOrDefault(tried) : null;
+            var export = connection.ApiKeyId is { } exporter ? exports.GetValueOrDefault(exporter) : null;
+            hook = hook is null ? null : hook with { LastStatus = lastTry?.ResponseStatus, LastDurationMs = lastTry?.DurationMs };
+            var (health, reason) = HealthOf(connection, calls, hook, webhook, refused, now);
             var lastActivity = new[] { calls?.LastCallAt, hook?.LastDeliveredAt }.Max();
 
             return new ConnectionView(
@@ -486,11 +611,16 @@ public sealed class ConnectionsController(
                 connection.PausedBy is { } by ? users.GetValueOrDefault(by) : null,
                 calls,
                 hook,
-                connection.CreatedAt);
+                connection.CreatedAt,
+                days,
+                refused,
+                export?.FinishedAt is { } exportedAt ? new ConnectionExport(exportedAt, export.Size ?? 0) : null,
+                connection.Goals.Contains(ConnectionGoals.SignIn) ? login : null,
+                connection.Goals.Contains(ConnectionGoals.Embed) ? sites : []);
         })];
     }
 
-    private static (string Health, string? Reason) HealthOf(Connection connection, ConnectionCalls? calls, ConnectionWebhook? hook, Webhook? webhook, DateTimeOffset now)
+    private static (string Health, string? Reason) HealthOf(Connection connection, ConnectionCalls? calls, ConnectionWebhook? hook, Webhook? webhook, int refused, DateTimeOffset now)
     {
         if (connection.PausedAt is not null)
         {
@@ -512,6 +642,11 @@ public sealed class ConnectionsController(
             return ("failing", "deliveries-failing");
         }
 
+        if (refused > 0)
+        {
+            return ("warning", "calls-refused");
+        }
+
         if (calls?.ExpiresAt is { } ends && ends - now <= ExpiryWarning)
         {
             return ("warning", "credentials-ending");
@@ -524,6 +659,8 @@ public sealed class ConnectionsController(
 
         return (calls?.LastCallAt ?? hook?.LastDeliveredAt) is null && (calls is not null || hook is not null) ? ("waiting", null) : ("works", null);
     }
+
+    private static string? HostOf(string? url) => Uri.TryCreate(url, UriKind.Absolute, out var parsed) ? parsed.Host : url;
 
     private BadRequestObjectResult Invalid(string field, string code) =>
         BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]> { [field] = [code] }));
@@ -577,6 +714,11 @@ public sealed record ConnectionRequest(
     IReadOnlyList<string>? Permissions = null,
     string? MatchBy = null);
 
+/// <summary>What to make a connection of.</summary>
+/// <param name="Kind">api-key, oauth-client or webhook.</param>
+/// <param name="Id">Its id.</param>
+public sealed record ConnectionAdoption(string? Kind, Guid Id);
+
 /// <summary>What changes; null keeps.</summary>
 /// <param name="Name">The name.</param>
 /// <param name="MatchBy">How people are matched.</param>
@@ -627,7 +769,25 @@ public sealed record ConnectionCalls(string SignIn, string Shown, IReadOnlyList<
 /// <param name="FailedThisWeek">Events that failed in the last 7 days.</param>
 /// <param name="LastDeliveredAt">The last delivered event (UTC).</param>
 /// <param name="FailingSince">Since when every delivery failed.</param>
-public sealed record ConnectionWebhook(string Url, IReadOnlyList<string> Events, IReadOnlyList<ConnectionSurvey> Surveys, int DeliveredThisWeek, int FailedThisWeek, DateTimeOffset? LastDeliveredAt, DateTimeOffset? FailingSince);
+/// <param name="LastStatus">What the system answered to the last try.</param>
+/// <param name="LastDurationMs">How long the last try took.</param>
+public sealed record ConnectionWebhook(string Url, IReadOnlyList<string> Events, IReadOnlyList<ConnectionSurvey> Surveys, int DeliveredThisWeek, int FailedThisWeek, DateTimeOffset? LastDeliveredAt, DateTimeOffset? FailingSince, int? LastStatus = null, int? LastDurationMs = null);
+
+/// <summary>One day of a connection: what went through, and what failed or was refused.</summary>
+/// <param name="Day">The day (UTC).</param>
+/// <param name="Ok">Calls let in and events delivered.</param>
+/// <param name="Failed">Calls refused and events that failed.</param>
+public sealed record ConnectionDay(DateOnly Day, int Ok, int Failed);
+
+/// <summary>How colleagues sign in, for a connection with the sign-in goal.</summary>
+/// <param name="Kind">oidc, ldap or handover.</param>
+/// <param name="Host">The login's address.</param>
+public sealed record ConnectionLogin(string Kind, string? Host);
+
+/// <summary>The last export the connection's key fetched.</summary>
+/// <param name="At">When it was ready.</param>
+/// <param name="Size">Its size in bytes.</param>
+public sealed record ConnectionExport(DateTimeOffset At, long Size);
 
 /// <summary>A connection as Connections shows it.</summary>
 /// <param name="Id">Its id.</param>
@@ -635,13 +795,18 @@ public sealed record ConnectionWebhook(string Url, IReadOnlyList<string> Events,
 /// <param name="Goals">What it is for.</param>
 /// <param name="MatchBy">How people are matched.</param>
 /// <param name="Health">works, waiting (nothing yet), warning, failing or paused.</param>
-/// <param name="Reason">Why warning or failing: credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused.</param>
+/// <param name="Reason">Why warning or failing: calls-refused, credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused.</param>
 /// <param name="LastActivityAt">The last call or delivery (UTC).</param>
 /// <param name="PausedAt">When it was paused.</param>
 /// <param name="PausedBy">Who paused it.</param>
 /// <param name="Calls">How it calls Askwerk; null when it does not.</param>
 /// <param name="Webhook">How Askwerk calls it; null when it does not.</param>
 /// <param name="CreatedAt">Created (UTC).</param>
+/// <param name="Days">The last 7 days, oldest first.</param>
+/// <param name="RefusedThisWeek">Calls refused in the last 7 days.</param>
+/// <param name="LastExport">The last export its key fetched.</param>
+/// <param name="Login">How colleagues sign in, for the sign-in goal; null when not set up.</param>
+/// <param name="Sites">The websites that may show its surveys, for the embed goal.</param>
 public sealed record ConnectionView(
     Guid Id,
     string Name,
@@ -654,4 +819,9 @@ public sealed record ConnectionView(
     string? PausedBy,
     ConnectionCalls? Calls,
     ConnectionWebhook? Webhook,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    IReadOnlyList<ConnectionDay> Days,
+    int RefusedThisWeek,
+    ConnectionExport? LastExport,
+    ConnectionLogin? Login,
+    IReadOnlyList<string> Sites);

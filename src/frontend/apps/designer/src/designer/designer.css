@@ -144,16 +144,6 @@
   padding: 3px 7px;
 }
 
-.designer-outline__grip::before {
-  content: "⋮⋮";
-}
-
-.designer-outline__grip {
-  color: var(--aw-line-strong);
-  font-size: 11px;
-  letter-spacing: -2px;
-  cursor: grab;
-}
 
 .designer-outline ul {
   list-style: none;
@@ -637,6 +627,12 @@
 
 .designer-note--error {
   color: var(--aw-error);
+}
+
+/* A switch's hint (W38): right under it, indented under its label. */
+.designer-inspector__panel .designer-note--switch {
+  margin: -6px 0 0 44px;
+  color: var(--aw-graphite);
 }
 
 
@@ -1360,19 +1356,10 @@
   gap: 12px;
 }
 
+/* The page on its stage (ZoomBox, stage.css). */
 .designer-preview__stage {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  background: var(--aw-paper);
   min-height: 0;
-}
-
-.designer-preview__stage iframe {
-  height: 100%;
-  border: 0;
-  border-inline: 1px solid var(--aw-line);
-  background: var(--aw-paper);
 }
 
 /* The survey's look in Survey settings (AWK-17 step 4a). */
@@ -1929,11 +1916,54 @@ button.designer-page__progress:hover {
   color: var(--aw-graphite);
 }
 
+/* Three equal cards (W34). */
 .designer-share__ways {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  margin-top: 16px;
+}
+
+.designer-share__ways > .designer-share {
+  grid-template-rows: auto auto 1fr;
+  align-items: start;
+}
+
+/* The link in a white box (W34), and buttons that look like buttons even when they are links. */
+.designer-share .designer-published__address code {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 6px;
+  font: 500 13.5px/1.3 var(--aw-font-mono);
+}
+
+.designer-share a.designer-button {
+  display: inline-flex;
+  align-items: center;
+  color: var(--aw-ink);
+  text-decoration: none;
+}
+
+.designer-share .designer-button--small {
+  padding: 6px 10px;
+  font-size: 12.5px;
+}
+
+.designer-share .designer-published__qr {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .designer-share__ways {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (max-width: 760px) {
@@ -1942,86 +1972,117 @@ button.designer-page__progress:hover {
   }
 }
 
-/* Dragging in the page list (W34): the dragged item fades to an outline, an accent line with a dot shows where it lands. */
+/* Moving pages and questions (W34), in the page list and on the canvas: a ⋮⋮ grip, the dragged item stays as a faint
+   dashed outline, a lifted copy follows the pointer, and an accent line with a dot shows where it lands. */
+.designer-grip::before {
+  content: "⋮⋮";
+}
+
+.designer-grip {
+  color: var(--aw-muted);
+  font-size: 11px;
+  letter-spacing: -2px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.designer-outline__page .designer-grip {
+  margin-right: 6px;
+}
+
+.designer-outline section.designer-outline__page {
+  overflow: visible;
+}
+
 .designer-outline__page[data-lifted],
-.designer-outline__question[data-lifted] {
-  opacity: 0.4;
+.designer-outline__question[data-lifted],
+.designer-card[data-lifted],
+.designer-page[data-lifted] {
+  opacity: 0.35;
   outline: 1px dashed var(--aw-line-strong);
+  outline-offset: -1px;
 }
 
-.designer-outline__page[data-drop],
-.designer-outline__question[data-drop] {
+.designer-drop {
+  height: 0;
+  border-top: 3px solid var(--aw-signal);
+  margin: 2px 4px;
   position: relative;
-}
-
-.designer-outline__page[data-drop]::after,
-.designer-outline__question[data-drop]::after {
-  content: "";
-  position: absolute;
-  left: 4px;
-  right: 4px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--aw-signal);
-  box-shadow: -4px 0 0 1px var(--aw-signal);
   pointer-events: none;
 }
 
-.designer-outline__page[data-drop="before"]::after,
-.designer-outline__question[data-drop="before"]::after {
-  top: -3px;
-}
-
-.designer-outline__page[data-drop="after"]::after,
-.designer-outline__question[data-drop="after"]::after {
-  bottom: -3px;
-}
-
-/* Zoom in the Preview (W33): the frame is drawn at its real width and scaled; the zoom sits at the stage's corner. */
-.designer-preview__stage {
-  position: relative;
-}
-
-.designer-preview__zoomed {
-  height: 100%;
-  overflow: hidden;
-}
-
-.designer-preview__zoomed iframe {
-  transform-origin: 0 0;
-}
-
-.designer-preview__zoom {
+.designer-drop::before {
+  content: "";
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  left: -6px;
+  top: -6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--aw-signal);
+}
+
+.designer-lift {
+  position: fixed;
+  z-index: 50;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 8px 12px;
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  transform: rotate(-1.5deg);
+  font-size: 13.5px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.designer-lift .designer-grip {
+  margin-right: 8px;
+}
+
+.designer-dragging,
+.designer-dragging * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+/* On the canvas the grip is a button before the card's number and the page's header. */
+button.designer-grip {
+  border: 0;
+  padding: 2px 4px;
+  margin-right: 4px;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: var(--aw-radius-control);
+}
+
+button.designer-grip:hover,
+button.designer-grip:focus-visible {
+  color: var(--aw-ink);
+  background: var(--aw-paper);
+}
+
+.designer-page__head {
+  display: flex;
+  align-items: center;
+  margin-bottom: -12px;
+}
+
+.designer-page__head > :last-child {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.designer-card__number > span:first-child {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid var(--aw-line-strong);
-  border-radius: var(--aw-radius-control);
-  background: var(--aw-surface);
-  box-shadow: var(--designer-shadow);
-  font: 600 12.5px/1 var(--aw-font-mono);
-}
-
-.designer-preview__zoom button {
-  border: 0;
-  background: transparent;
-  padding: 6px 10px;
-  font: inherit;
-  cursor: pointer;
-}
-
-.designer-preview__zoom button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-
-.designer-preview__zoom output {
-  min-width: 52px;
-  text-align: center;
 }
 
 /* Key questions (W38): a star in the accent colour. */

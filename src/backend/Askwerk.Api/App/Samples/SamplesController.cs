@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 using System.Security.Cryptography;
 using System.Text.Json;
+using Askwerk.Api.App.Surveys;
 using Askwerk.Api.App.Themes;
 using Askwerk.Api.Identity;
 using Askwerk.Application.Auditing;
@@ -51,7 +52,9 @@ public sealed class SamplesController(AskwerkDbContext context, IFileStorage sto
                 sample.Definition.Languages,
                 questions.Count(question => question.Type is not (QuestionType.TextBlock or QuestionType.Image)),
                 sample.Responses,
-                new SamplePreview(shown.Text, [.. (shown.Options ?? []).Take(4).Select(option => option.Label)]));
+                new SamplePreview(shown.Text, [.. (shown.Options ?? []).Take(4).Select(option => option.Label)]),
+                // A card like a template's (W32): its welcome page and what it asks, in its own look.
+                new SurveyFront(sample.Definition.Welcome?.Title ?? sample.Names, sample.Definition.Welcome?.Text ?? sample.Kind, sample.Definition.DefaultLanguage, SurveyThemes.ToJson(SampleSurveys.Looks[sample.Look]), Contents: SurveyFronts.Contents(sample.Definition), LookPreset: sample.Look));
         })]);
 
     /// <summary>
@@ -132,7 +135,8 @@ public sealed record SampleListResponse(IReadOnlyList<SampleResponse> Items);
 /// <param name="Questions">How many questions it has.</param>
 /// <param name="Responses">How many sample answers it comes with.</param>
 /// <param name="Preview">A question to show on the card.</param>
-public sealed record SampleResponse(string Id, TranslatedText Names, TranslatedText Kind, IReadOnlyDictionary<string, IReadOnlyList<string>> Features, string Look, JsonElement Tokens, IReadOnlyList<string> Languages, int Questions, int Responses, SamplePreview Preview);
+/// <param name="Front">The front page and contents a Templates card draws (W32).</param>
+public sealed record SampleResponse(string Id, TranslatedText Names, TranslatedText Kind, IReadOnlyDictionary<string, IReadOnlyList<string>> Features, string Look, JsonElement Tokens, IReadOnlyList<string> Languages, int Questions, int Responses, SamplePreview Preview, SurveyFront? Front = null);
 
 /// <summary>A question to show on a sample's card.</summary>
 /// <param name="Question">Its text per language.</param>

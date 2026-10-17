@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // The guides of the Developers hub (AWK-34): the documents in docs/, bundled with the app so they match this version.
 import authentication from "../../../../../../docs/api/authentication.md?raw";
+import crm from "../../../../../../docs/api/connect-a-crm.md?raw";
 import embed from "../../../../../../docs/api/embed.md?raw";
 import errors from "../../../../../../docs/api/errors.md?raw";
 import exports from "../../../../../../docs/api/exports.md?raw";
@@ -21,6 +22,7 @@ export type Guide = {
 };
 
 export const guides: readonly Guide[] = [
+  { id: "crm", title: "guideCrm", tag: "tagDataIn", summary: "guideCrmText", source: crm },
   { id: "responses", title: "guideResponses", tag: "tagDataOut", summary: "guideResponsesText", source: responses },
   { id: "exports", title: "guideExports", tag: "tagDataOut", summary: "guideExportsText", source: exports },
   { id: "webhooks", title: "guideWebhooks", tag: "tagEvents", summary: "guideWebhooksText", source: webhooks },

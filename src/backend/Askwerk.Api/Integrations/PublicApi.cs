@@ -235,6 +235,12 @@ public sealed class ApiKeyAuthenticationHandler(
 
         if (key is null || !key.Matches(secret) || !key.IsUsable(now))
         {
+            // The right secret of a paused, expired or revoked key: Connections counts it as a refused call (W36).
+            if (key is not null && key.Matches(secret))
+            {
+                await database.NoteIntegrationActivityAsync(key.TenantId, key.Id, refused: true, Context.RequestAborted);
+            }
+
             return AuthenticateResult.Fail("Unknown, revoked or expired API key.");
         }
 
@@ -246,6 +252,8 @@ public sealed class ApiKeyAuthenticationHandler(
         {
             return AuthenticateResult.Fail("The organisation is suspended.");
         }
+
+        await database.NoteIntegrationActivityAsync(key.TenantId, key.Id, refused: false, Context.RequestAborted);
 
         if (key.Used(now))
         {
@@ -279,6 +287,7 @@ public sealed class ApiKeyAuthenticationHandler(
             return AuthenticateResult.Fail("The organisation is suspended.");
         }
 
+        await database.NoteIntegrationActivityAsync(token.TenantId, token.ClientId, refused: false, Context.RequestAborted);
         var claims = new List<Claim> { new(PublicApi.ClientClaim, token.ClientId.ToString()), new(Sessions.TenantClaim, token.TenantId.ToString()) };
         claims.AddRange(token.Scopes.Select(scope => new Claim(PublicApi.ScopeClaim, scope)));
 
@@ -290,8 +299,16 @@ public sealed class ApiKeyAuthenticationHandler(
         PublicProblems.WriteAsync(Context, StatusCodes.Status401Unauthorized, "unauthorized");
 
     /// <inheritdoc />
-    protected override Task HandleForbiddenAsync(AuthenticationProperties properties) =>
-        PublicProblems.WriteAsync(Context, StatusCodes.Status403Forbidden, "scope-missing");
+    protected override async Task HandleForbiddenAsync(AuthenticationProperties properties)
+    {
+        // A call without the scope it needs is a refused call of its key or client (W36).
+        if ((Context.User.ApiKeyId() ?? Context.User.OAuthClientId()) is { } credential && Guid.TryParse(Context.User.FindFirstValue(Sessions.TenantClaim), out var tenantId))
+        {
+            await services.GetRequiredService<AskwerkDbContext>().NoteIntegrationActivityAsync(tenantId, credential, refused: true, Context.RequestAborted);
+        }
+
+        await PublicProblems.WriteAsync(Context, StatusCodes.Status403Forbidden, "scope-missing");
+    }
 }
 
 /// <summary>

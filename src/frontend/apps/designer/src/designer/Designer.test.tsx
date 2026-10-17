@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { expectNoAxeViolations } from "@askwerk/ui/testing";
-import { act, createEvent, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { ApiError } from "@askwerk/app-client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Designer } from "./Designer";
 import { FakeDesignerApi, sampleDefinition, sampleDraft, sequentialIds } from "./testing";
+import { dropLine, grab, lift, moveTo, placeAt, release } from "./dragTesting";
 
 afterEach(cleanup);
 
@@ -647,39 +648,111 @@ describe("Outline search and moving questions (M1)", () => {
     expect(document.activeElement).toBe(outline().getByRole("searchbox", { name: "Search questions" }));
   });
 
-  it("moves a question by dragging it onto another one", async () => {
+  it("lifts a dragged question, marks where it lands, before or after by the pointer, and drops it there (W34)", async () => {
     const { api } = await loaded();
-
-    fireEvent.dragStart(outline().getByRole("button", { name: "Age group AGE" }));
-    fireEvent.dragOver(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }));
-    fireEvent.drop(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }));
-
-    expect(outlineQuestions()).toEqual(["INTRO", "AGE", "SAT_1", "IMPROVE", "NPS", "BRANCH"]);
-    await waitFor(() => expect(api.saved.at(-1)?.pages[1]?.questions[0]?.variable).toBe("AGE"));
-  });
-
-  it("marks where a dragged question will land, before or after by the pointer, and drops it there (W34)", async () => {
-    await loaded();
     const age = outline().getByRole("button", { name: "Age group AGE" });
     const target = outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" });
-    target.getBoundingClientRect = () => ({ top: 100, height: 40, bottom: 140, left: 0, right: 200, width: 200, x: 0, y: 100, toJSON: () => ({}) });
+    placeAt(target, 100);
 
-    fireEvent.dragStart(age);
+    grab(age);
+    expect(lift()).toBeNull();
+    moveTo(110);
     expect(age.getAttribute("data-lifted")).toBe("true");
-    // jsdom's drag events leave clientY out, so it is set on the event.
-    const at = (kind: "dragOver" | "drop", y: number) => {
-      const event = createEvent[kind](target);
-      Object.defineProperty(event, "clientY", { value: y });
-      fireEvent(target, event);
-    };
-    at("dragOver", 110);
-    expect(target.getAttribute("data-drop")).toBe("before");
-    at("dragOver", 135);
-    expect(target.getAttribute("data-drop")).toBe("after");
-    at("drop", 135);
+    expect(lift()?.textContent).toBe("Age group");
+    expect(target.previousElementSibling).toBe(dropLine());
+    moveTo(135);
+    expect(target.nextElementSibling).toBe(dropLine());
+    release();
 
     expect(outlineQuestions()).toEqual(["INTRO", "SAT_1", "AGE", "IMPROVE", "NPS", "BRANCH"]);
-    expect(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }).getAttribute("data-drop")).toBeNull();
+    expect(dropLine()).toBeNull();
+    expect(lift()).toBeNull();
+    expect(screen.getByText("Moved to page 2, position 2.")).toBeTruthy();
+    await waitFor(() => expect(api.saved.at(-1)?.pages[1]?.questions.map((question) => question.variable)).toEqual(["SAT_1", "AGE", "IMPROVE", "NPS"]));
+  });
+
+  it("drops a question between pages, at the start of the next page (W34)", async () => {
+    const { api } = await loaded();
+    const heading = outline().getByRole("heading", { name: /About you/ });
+    placeAt(heading, 300, 24);
+
+    grab(outline().getByRole("button", { name: "Would you recommend us? NPS" }));
+    moveTo(310);
+    expect(heading.nextElementSibling).toBe(dropLine());
+    release();
+
+    await waitFor(() => expect(api.saved.at(-1)?.pages[2]?.questions.map((question) => question.variable)).toEqual(["NPS", "BRANCH", "AGE"]));
+  });
+
+  it("drops a question onto an empty page (W34)", async () => {
+    const { api } = await loaded();
+    fireEvent.click(outline().getByRole("button", { name: "+ Add page" }));
+    const empty = outline().getByRole("heading", { name: /^04/ });
+    placeAt(empty, 400, 24);
+
+    grab(outline().getByRole("button", { name: "Age group AGE" }));
+    moveTo(405);
+    release();
+
+    await waitFor(() => expect(api.saved.at(-1)?.pages[3]?.questions.map((question) => question.variable)).toEqual(["AGE"]));
+    expect(within(empty.closest("section")!).getByRole("button", { name: "Age group AGE" })).toBeTruthy();
+  });
+
+  it("cancels a drag with Escape: nothing moves (W34)", async () => {
+    await loaded();
+    const age = outline().getByRole("button", { name: "Age group AGE" });
+    placeAt(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }), 100);
+
+    grab(age);
+    moveTo(110);
+    expect(dropLine()).not.toBeNull();
+    fireEvent.keyDown(age, { key: "Escape" });
+    expect(dropLine()).toBeNull();
+    expect(lift()).toBeNull();
+    release();
+
+    expect(outlineQuestions()).toEqual(["INTRO", "SAT_1", "IMPROVE", "NPS", "BRANCH", "AGE"]);
+    expect(age.getAttribute("data-lifted")).toBeNull();
+    expect(screen.getByText("Move cancelled.")).toBeTruthy();
+  });
+
+  it("selects a question on a plain click, without a drag", async () => {
+    await loaded();
+    const age = outline().getByRole("button", { name: "Age group AGE" });
+
+    grab(age);
+    release();
+    fireEvent.click(age);
+
+    expect(age.getAttribute("aria-current")).toBe("true");
+    expect(dropLine()).toBeNull();
+  });
+
+  it("moves a question on the canvas by its grip, with the same lift and marker (W34)", async () => {
+    await loaded();
+    const canvas = within(screen.getByRole("main", { name: "Canvas" }));
+    const grip = canvas.getByRole("button", { name: /^Move .*AGE$/ });
+    const target = canvas.getByRole("article", { name: /SAT_1$/ });
+    placeAt(target, 100, 120);
+
+    grab(grip);
+    moveTo(120);
+    expect(lift()?.textContent).toBe("Age group");
+    expect(grip.closest("article")?.getAttribute("data-lifted")).toBe("true");
+    expect(target.previousElementSibling).toBe(dropLine());
+    release();
+
+    expect(outlineQuestions()).toEqual(["INTRO", "AGE", "SAT_1", "IMPROVE", "NPS", "BRANCH"]);
+  });
+
+  it("moves a question on the canvas with Alt and the arrows on its grip, keeping the focus there", async () => {
+    await loaded();
+    const canvas = within(screen.getByRole("main", { name: "Canvas" }));
+
+    fireEvent.keyDown(canvas.getByRole("button", { name: /^Move .*BRANCH$/ }), { key: "ArrowDown", altKey: true });
+
+    expect(outlineQuestions()).toEqual(["INTRO", "SAT_1", "IMPROVE", "NPS", "AGE", "BRANCH"]);
+    expect(document.activeElement).toBe(canvas.getByRole("button", { name: /^Move .*BRANCH$/ }));
   });
 
   it("moves the last question of a page to the start of the next page with Alt and the down arrow", async () => {

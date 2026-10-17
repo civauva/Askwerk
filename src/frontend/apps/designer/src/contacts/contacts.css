@@ -1,13 +1,14 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
-/* Contacts (W35): the organisation's address book; groups at the side, the list beside them. */
+/* Contacts (W35): the organisation's address book; groups at the side, the list beside them. Values as in the
+   approved mockup design/AWK-48-participants/w35-participants.html (?v=d). */
 .contacts {
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .contacts__title {
   margin: 0;
-  font: 700 32px/1.1 var(--aw-font-display);
+  font: 700 28px/1.15 var(--aw-font-display);
 }
 
 .contacts__work {
@@ -19,7 +20,7 @@
 
 .contacts__groups-nav {
   display: grid;
-  gap: 2px;
+  gap: 0;
   padding: 10px;
   background: var(--aw-surface);
   border: 1px solid var(--aw-line);
@@ -27,10 +28,15 @@
 }
 
 .contacts__groups-nav .import-map__title {
-  margin: 6px 6px 6px;
+  margin: 4px 6px 8px;
 }
 
-.contacts__groups-nav button {
+.contacts__groups-nav .import-map__title ~ .import-map__title {
+  margin-top: 14px;
+}
+
+.contacts__groups-nav button,
+.contacts__field {
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -38,9 +44,12 @@
   border: 0;
   border-radius: 6px;
   background: none;
-  font: 400 14px/1.3 var(--aw-font);
+  font: 400 14px/1.45 var(--aw-font);
   color: var(--aw-graphite);
   text-align: left;
+}
+
+.contacts__groups-nav button {
   cursor: pointer;
 }
 
@@ -50,15 +59,24 @@
   font-weight: 600;
 }
 
+.contacts__groups-nav button.contacts__new-group {
+  color: var(--aw-signal);
+}
+
+.contacts__naming {
+  padding: 2px 4px;
+}
+
+.contacts__naming .designer-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
 .contacts__groups-nav small {
   font: 500 11px/1.4 var(--aw-font-mono);
   color: var(--aw-muted);
-}
-
-.contacts__field {
-  padding: 4px 10px;
-  font-size: 13px;
-  color: var(--aw-graphite);
 }
 
 .contacts__list {
@@ -69,6 +87,7 @@
 
 .contacts__mono {
   font: 500 12px/1.2 var(--aw-font-mono);
+  white-space: nowrap;
 }
 
 .contacts__groups {
@@ -93,13 +112,33 @@
   color: #9a5b00;
 }
 
+/* Nine columns fit at 1280 px: cells may wrap instead of widening the table. */
+.contacts .aw-grid__table th,
+.contacts .aw-grid__table td {
+  max-width: none;
+  padding-left: 7px;
+  padding-right: 7px;
+  white-space: normal;
+}
+
+.contacts .aw-grid__table th {
+  line-height: 1.3;
+}
+
+.contacts .aw-grid__table td .participants__who {
+  min-width: 96px;
+}
+
+.contacts .aw-grid__table td .participants__who span {
+  overflow-wrap: anywhere;
+}
+
+.contacts .contacts__tag {
+  white-space: normal;
+}
+
 @media (max-width: 900px) {
   .contacts__work {
     grid-template-columns: 1fr;
   }
-}
-
-.contacts a.designer-button {
-  color: var(--aw-ink);
-  text-decoration: none;
 }

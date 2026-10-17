@@ -3,7 +3,7 @@ import { ApiError, type ConnectionCredentials, type ConnectionItem, type Connect
 import type { Locale } from "@askwerk/schema";
 import { ConfirmDialog, Dialog } from "@askwerk/ui";
 import { useId, useState } from "react";
-import { CodeTabs, Credentials, eventKeys, goalKeys, Health, permissionKeys, setupOf, type T } from "./parts";
+import { CodeTabs, Credentials, eventOptions, goalKeys, Health, permissionKeys, setupOf, type T } from "./parts";
 
 type ConnectionPanelProps = {
   t: T;
@@ -74,7 +74,7 @@ export function ConnectionPanel({ t, client, connection: first, locale, baseUrl,
                 <input id={`${id}-url`} className="designer-input connection-mono" type="url" value={url} aria-invalid={error !== null} onChange={(event) => setUrl(event.target.value)} />
                 {error !== null && <span className="designer-error">{error}</span>}
                 <small className="connection-muted">
-                  {webhook.events.map((event) => t(eventKeys.find(([each]) => each === event)?.[1] ?? "eventResponse")).join(" · ")} · {webhook.surveys.length === 0 ? t("allSurveysShort") : webhook.surveys.map((survey) => survey.title).join(", ")}
+                  {eventOptions.filter((option) => option.events.some((event) => webhook.events.includes(event))).map((option) => t(option.label)).join(" · ")} · {webhook.surveys.length === 0 ? t("allSurveys") : webhook.surveys.map((survey) => survey.title).join(", ")}
                 </small>
               </span>
             </>

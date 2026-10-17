@@ -212,6 +212,13 @@ public sealed class WebhookDelivery
         return new() { Id = id, TenantId = webhook.TenantId, WebhookId = webhook.Id, EventId = eventId, EventType = eventType, Payload = payload, Status = WebhookDeliveryStatus.Pending, CreatedAt = now };
     }
 
+    /// <summary>Gets how long the last try took until the answer, in milliseconds (W36).</summary>
+    public int? DurationMs { get; private set; }
+
+    /// <summary>Notes how long a try took.</summary>
+    /// <param name="milliseconds">Until the answer, or the failure.</param>
+    public void Took(int milliseconds) => DurationMs = milliseconds;
+
     /// <summary>Notes a successful try.</summary>
     /// <param name="status">The 2xx status.</param>
     /// <param name="now">When.</param>

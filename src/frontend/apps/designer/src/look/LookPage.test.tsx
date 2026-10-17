@@ -19,7 +19,7 @@ async function shown(client = new FakeThemesClient(), locale: "de" | "en" = "en"
 const list = () => within(screen.getByRole("navigation", { name: "Themes" }));
 const editor = () => within(screen.getByRole("region", { name: "Theme" }));
 
-describe("Look of surveys (AWK-17, W10 A): stupid simple", () => {
+describe("Administration → Looks (AWK-17, W10 A, W32): stupid simple", () => {
   it("starts an organisation without themes from a preset, which becomes the default", async () => {
     const { client } = await shown(new FakeThemesClient([]));
 
@@ -144,10 +144,28 @@ describe("Look of surveys (AWK-17, W10 A): stupid simple", () => {
     await waitFor(() => expect(client.calls).toContainEqual(["create", "Warm 2", themePresets[2]!.tokens]));
   });
 
+  it("shows the preview on a stage like a survey's Look: Phone, Tablet, Desktop, zoom and Ctrl + scroll (W32)", async () => {
+    await shown();
+    const preview = within(screen.getByRole("region", { name: "Preview" }));
+    const page = () => screen.getByRole("region", { name: "Preview" }).querySelector(".look-preview")!.parentElement!;
+
+    expect(preview.getByRole("button", { name: "Desktop" }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(preview.getByRole("button", { name: "Phone" }));
+    expect(page().style.width).toBe("390px");
+    fireEvent.click(preview.getByRole("button", { name: "Zoom in" }));
+    expect(preview.getByText("125 %")).toBeTruthy();
+    const wheel = new WheelEvent("wheel", { deltaY: 100, ctrlKey: true, cancelable: true, bubbles: true });
+    preview.getByRole("region", { name: "Zoom" }).dispatchEvent(wheel);
+    expect(wheel.defaultPrevented).toBe(true);
+    expect(await preview.findByText("114 %")).toBeTruthy();
+    fireEvent.click(preview.getByRole("button", { name: "Fit" }));
+    expect(preview.getByText("100 %")).toBeTruthy();
+  });
+
   it("speaks German", async () => {
     await shown(new FakeThemesClient(), "de");
 
-    expect(screen.getByRole("heading", { level: 1, name: "Aussehen der Umfragen" })).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Looks" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Mehr" })).toBeTruthy();
   });
 

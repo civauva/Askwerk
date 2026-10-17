@@ -22,6 +22,10 @@ export type SurveyFront<TTokens = unknown> = {
   publishedAt?: string | null;
   /** Surveys: the key questions' results (W38), in survey order. */
   keys?: KeyResult[] | null;
+  /** The name of its look when that is one of the organisation's looks (W32). */
+  lookName?: string | null;
+  /** The Askwerk look it is or started from ("konfetti"), named in the reader's language (W32). */
+  lookPreset?: string | null;
 };
 /**
  * A key question's result on a card (W38). value: NPS score, average of a scale, or the top option's share in percent;
@@ -73,6 +77,8 @@ export type SampleSurvey<TTokens = unknown> = {
   questions: number;
   responses: number;
   preview: { question: Record<string, string>; choices: Record<string, string>[] };
+  /** The front page and contents a Templates card draws (W32). */
+  front?: SurveyFront<TTokens> | null;
 };
 /** The definition stays opaque here; packages/schema types it. */
 export type SurveyDraftResponse<TDefinition = unknown> = {
@@ -154,6 +160,8 @@ export interface SurveysClient {
   editTemplate(templateId: string): Promise<TemplateEdit>;
   /** Copies one of Askwerk's templates to the organisation's, ready to edit (W32). */
   copyTemplate(templateId: string, language: string): Promise<TemplateEdit>;
+  /** A new, empty template of the organisation's (W32), ready to edit; 400 name-required at the field. */
+  newTemplate(name: string, language: string): Promise<TemplateEdit>;
   /** The bar's status and the tabs' counts (AWK-29); every member reads it. */
   summary(surveyId: string): Promise<SurveySummary>;
   /** The survey's menu (W17 D); editors only, 403 role-not-allowed otherwise. */
@@ -210,6 +218,7 @@ export function createSurveysClient(options: AppClientOptions): SurveysClient {
     deleteTemplate: (templateId) => request("DELETE", `/api/app/templates/${encodeURIComponent(templateId)}`),
     editTemplate: (templateId) => request<TemplateEdit>("POST", `/api/app/templates/${encodeURIComponent(templateId)}/edit`),
     copyTemplate: (templateId, language) => request<TemplateEdit>("POST", `/api/app/templates/${encodeURIComponent(templateId)}/copy`, { language }),
+    newTemplate: (name, language) => request<TemplateEdit>("POST", "/api/app/templates/new", { name, language }),
     summary: (surveyId) => request<SurveySummary>("GET", `${at(surveyId)}/summary`),
     rename: (surveyId, title) => request("PUT", `${at(surveyId)}/title`, { title }),
     duplicate: (surveyId, title) => request<{ id: string }>("POST", `${at(surveyId)}/duplicate`, { title }).then((created) => created.id),

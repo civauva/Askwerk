@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { Page, Question } from "@askwerk/schema";
 import { ConfirmDialog } from "@askwerk/ui";
-import { useEffect, useRef, useState, type KeyboardEvent, type DragEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { DropLine, Lift, useMoves } from "./drag";
 import { displayText, textIn, type RegionProps } from "./text";
 
 /** A page's title in the language shown, or "Page n" when it has none. */
@@ -33,28 +34,9 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
   const { definition, language, selectedQuestionId } = state;
   const [query, setQuery] = useState("");
   const search = useRef<HTMLInputElement>(null);
-  const dragging = useRef<string | null>(null);
-  const draggingPage = useRef<string | null>(null);
-  // Where a dragged item would land (W34): before or after the item under the pointer; the dragged one fades.
-  const [over, setOver] = useState<{ id: string; after: boolean } | null>(null);
-  const [lifted, setLifted] = useState<string | null>(null);
-  const endDrag = () => {
-    setOver(null);
-    setLifted(null);
-  };
-  const aim = (event: DragEvent<HTMLElement>, id: string) => {
-    event.preventDefault();
-    const box = event.currentTarget.getBoundingClientRect();
-    const after = event.clientY > box.top + box.height / 2;
-
-    if (over?.id !== id || over.after !== after) {
-      setOver({ id, after });
-    }
-  };
-  const dropMark = (id: string) => (over?.id === id ? (over.after ? "after" : "before") : undefined);
-  const refocus = useRef<string | null>(null);
-  const refocusPage = useRef<string | null>(null);
   const list = useRef<HTMLElement>(null);
+  // Drag or Alt+↑/↓ to move pages and questions (W34); the moved item keeps the focus and the move is announced.
+  const moves = useMoves({ t, state, dispatch }, list);
   const needle = query.trim().toLowerCase();
   const matches = (question: Question) =>
     needle === "" ||
@@ -78,81 +60,8 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  useEffect(() => {
-    if (refocus.current !== null) {
-      list.current?.querySelector<HTMLButtonElement>(`[data-question-id="${refocus.current}"]`)?.focus();
-      refocus.current = null;
-    }
-
-    if (refocusPage.current !== null) {
-      list.current?.querySelector<HTMLButtonElement>(`[data-page-id="${refocusPage.current}"]`)?.focus();
-      refocusPage.current = null;
-    }
-  });
-
-  /** Alt+↓ / Alt+↑ on a page: one place down or up (W23), so pages move without dragging. */
-  function onPageKeyDown(event: KeyboardEvent<HTMLButtonElement>, pageIndex: number, pageId: string) {
-    if (!event.altKey || (event.key !== "ArrowDown" && event.key !== "ArrowUp")) {
-      return;
-    }
-
-    event.preventDefault();
-    const toIndex = pageIndex + (event.key === "ArrowDown" ? 1 : -1);
-
-    if (toIndex >= 0 && toIndex < definition.pages.length) {
-      refocusPage.current = pageId;
-      dispatch({ type: "movePage", pageId, toIndex });
-    }
-  }
-
   const welcomeOn = definition.welcome?.enabled !== false;
   const rules = definition.pages.reduce((count, page) => count + (page.showWhen === undefined ? 0 : 1) + (page.after === undefined ? 0 : 1) + page.questions.filter((question) => question.showWhen !== undefined).length, 0);
-
-  /** Moves before or after the target question, on the target's page. */
-  function dropOn(target: Question, after: boolean) {
-    const moving = dragging.current;
-    dragging.current = null;
-    endDrag();
-    const page = definition.pages.find((each) => each.questions.some((question) => question.id === target.id));
-
-    if (moving === null || moving === target.id || page === undefined) {
-      return;
-    }
-
-    const toIndex = page.questions.filter((question) => question.id !== moving).findIndex((question) => question.id === target.id) + (after ? 1 : 0);
-    dispatch({ type: "moveQuestion", questionId: moving, toPageId: page.id, toIndex });
-  }
-
-  /** Alt+↓ / Alt+↑: one step within the page, or across to the neighbouring page. */
-  function onQuestionKeyDown(event: KeyboardEvent<HTMLButtonElement>, question: Question) {
-    if (!event.altKey || (event.key !== "ArrowDown" && event.key !== "ArrowUp")) {
-      return;
-    }
-
-    event.preventDefault();
-    const pageIndex = definition.pages.findIndex((page) => page.questions.includes(question));
-    const page = definition.pages[pageIndex]!;
-    const index = page.questions.indexOf(question);
-    const down = event.key === "ArrowDown";
-    const next = definition.pages[pageIndex + 1];
-    const previous = definition.pages[pageIndex - 1];
-    let move: { toPageId: string; toIndex: number } | undefined;
-
-    if (down && index < page.questions.length - 1) {
-      move = { toPageId: page.id, toIndex: index + 1 };
-    } else if (down && next !== undefined) {
-      move = { toPageId: next.id, toIndex: 0 };
-    } else if (!down && index > 0) {
-      move = { toPageId: page.id, toIndex: index - 1 };
-    } else if (!down && previous !== undefined) {
-      move = { toPageId: previous.id, toIndex: previous.questions.length };
-    }
-
-    if (move !== undefined) {
-      refocus.current = question.id;
-      dispatch({ type: "moveQuestion", questionId: question.id, ...move });
-    }
-  }
 
   return (
     <nav ref={list} className="designer-outline" aria-label={t("outline")}>
@@ -174,69 +83,47 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
           return null;
         }
 
+        const number = String(pageIndex + 1).padStart(2, "0");
+        const name = pageName(t, page, pageIndex, language, definition);
+
         return (
-          <section key={page.id} className="designer-outline__page" aria-labelledby={`outline-page-${page.id}`}>
-            <h2 id={`outline-page-${page.id}`} className="designer-outline__page-title">
+          <section key={page.id} className="designer-outline__page" aria-labelledby={`outline-page-${page.id}`} data-drop-kind="page" data-drop-id={page.id}>
+            {moves.mark("page", page.id) === "before" && <DropLine />}
+            <h2 id={`outline-page-${page.id}`} className="designer-outline__page-title" data-drop-kind="page-start" data-drop-id={page.id}>
               <button
                 type="button"
                 className="designer-outline__page"
-                data-page-id={page.id}
-                draggable
-                data-drop={dropMark(page.id)}
-                data-lifted={lifted === page.id ? "true" : undefined}
+                data-move={`page:${page.id}`}
+                data-lifted={moves.lifted(page.id) ? "true" : undefined}
                 aria-current={state.selectedPageId === page.id ? "true" : undefined}
                 aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
                 onClick={() => dispatch({ type: "selectPage", pageId: page.id })}
-                onKeyDown={(event) => onPageKeyDown(event, pageIndex, page.id)}
-                onDragStart={() => {
-                  draggingPage.current = page.id;
-                  setLifted(page.id);
-                }}
-                onDragOver={(event) => draggingPage.current !== null && aim(event, page.id)}
-                onDragEnd={endDrag}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  const moving = draggingPage.current;
-                  const after = over?.after === true;
-                  draggingPage.current = null;
-                  endDrag();
-
-                  if (moving !== null && moving !== page.id) {
-                    const from = definition.pages.findIndex((each) => each.id === moving);
-                    const target = pageIndex + (after ? 1 : 0) - (from < pageIndex ? 1 : 0);
-                    dispatch({ type: "movePage", pageId: moving, toIndex: target });
-                  }
-                }}
+                onKeyDown={(event) => moves.onKeyDown(event, "page", page.id)}
+                onPointerDown={(event) => moves.start(event, "page", page.id, `${number} · ${name}`)}
               >
-                {String(pageIndex + 1).padStart(2, "0")} · {pageName(t, page, pageIndex, language, definition)}
+                <span className="designer-grip" data-grip aria-hidden="true" />
+                {number} · {name}
               </button>
               <span>{page.questions.length}</span>
             </h2>
+            {moves.mark("page-start", page.id) === "start" && <DropLine />}
             <ul>
               {shown.map((question) => (
-                <li key={question.id}>
+                <li key={question.id} data-drop-kind="question" data-drop-id={question.id}>
+                  {moves.mark("question", question.id) === "before" && <DropLine />}
                   <button
                     type="button"
                     className="designer-outline__question"
                     data-question-id={question.id}
-                    draggable
-                    data-drop={dropMark(question.id)}
-                    data-lifted={lifted === question.id ? "true" : undefined}
+                    data-move={`question:${question.id}`}
+                    data-lifted={moves.lifted(question.id) ? "true" : undefined}
                     aria-current={question.id === selectedQuestionId ? "true" : undefined}
+                    aria-keyshortcuts="Alt+ArrowUp Alt+ArrowDown"
                     onClick={() => dispatch({ type: "select", questionId: question.id })}
-                    onKeyDown={(event) => onQuestionKeyDown(event, question)}
-                    onDragStart={() => {
-                      dragging.current = question.id;
-                      setLifted(question.id);
-                    }}
-                    onDragOver={(event) => dragging.current !== null && aim(event, question.id)}
-                    onDragEnd={endDrag}
-                    onDrop={(event) => {
-                      event.preventDefault();
-                      dropOn(question, over?.after === true);
-                    }}
+                    onKeyDown={(event) => moves.onKeyDown(event, "question", question.id)}
+                    onPointerDown={(event) => moves.start(event, "question", question.id, displayText(question.text, language, definition) ?? t("untitled"))}
                   >
-                    <span className="designer-outline__grip" aria-hidden="true" />
+                    <span className="designer-grip" data-grip aria-hidden="true" />
                     <span className="designer-outline__label">
                       {displayText(question.text, language, definition) ?? t("untitled")}
                       {textIn(question.text, language) === undefined && textIn(question.text, definition.defaultLanguage) !== undefined && (
@@ -258,9 +145,11 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
                       {question.variable}
                     </code>
                   </button>
+                  {moves.mark("question", question.id) === "after" && <DropLine />}
                 </li>
               ))}
             </ul>
+            {moves.mark("page", page.id) === "after" && <DropLine />}
           </section>
         );
       })}
@@ -274,6 +163,8 @@ export function Outline({ t, state, dispatch, newId }: OutlineProps) {
         <span>{t("allRules")}</span>
         <span className="designer-outline__edge-state">{rules}</span>
       </button>
+      <Lift drag={moves.drag} />
+      {moves.live}
     </nav>
   );
 }
