@@ -14,6 +14,7 @@ public sealed class Participant
     {
         Email = "";
         Token = "";
+        Fields = "{}";
     }
 
     /// <summary>Stable id.</summary>
@@ -58,6 +59,18 @@ public sealed class Participant
     /// <summary>Last reminder (UTC).</summary>
     public DateTimeOffset? RemindedAt { get; private set; }
 
+    /// <summary>Their id in another system (W35); matches them before the email does.</summary>
+    public string? ExternalId { get; private set; }
+
+    /// <summary>Further fields as a JSON object of texts (W35), e.g. {"department":"Sales"}; placeholders in messages.</summary>
+    public string Fields { get; private set; }
+
+    /// <summary>The contact they came from or were saved as (W35), if any.</summary>
+    public Guid? ContactId { get; private set; }
+
+    /// <summary>No more reminders for them (W35), chosen by hand.</summary>
+    public bool RemindersOff { get; private set; }
+
     /// <summary>A new participant with a fresh token.</summary>
     public static Participant Add(Guid id, Guid tenantId, Guid surveyId, Guid invitationId, string email, string? name, string? language, DateTimeOffset now) => new()
     {
@@ -71,6 +84,35 @@ public sealed class Participant
         Token = RandomNumberGenerator.GetString("abcdefghijklmnopqrstuvwxyz0123456789", 32),
         CreatedAt = now,
     };
+
+    /// <summary>A new participant with their details (W35): External ID, fields, and the contact they came from.</summary>
+    public static Participant Add(Guid id, Guid tenantId, Guid surveyId, Guid invitationId, PersonDetails details, Guid? contactId, DateTimeOffset now)
+    {
+        ArgumentNullException.ThrowIfNull(details);
+        var participant = Add(id, tenantId, surveyId, invitationId, details.Email, details.Name, details.Language, now);
+        participant.ExternalId = details.ExternalId;
+        participant.Fields = details.FieldsJson;
+        participant.ContactId = contactId;
+
+        return participant;
+    }
+
+    /// <summary>Changes their details (W35); their link stays the same.</summary>
+    public void Change(PersonDetails details)
+    {
+        ArgumentNullException.ThrowIfNull(details);
+        Email = details.Email;
+        Name = details.Name;
+        Language = details.Language;
+        ExternalId = details.ExternalId;
+        Fields = details.FieldsJson;
+    }
+
+    /// <summary>Links them to a contact (W35).</summary>
+    public void LinkContact(Guid contactId) => ContactId = contactId;
+
+    /// <summary>Turns reminders for them off or on again (W35).</summary>
+    public void SetRemindersOff(bool off) => RemindersOff = off;
 
     /// <summary>The invitation went out.</summary>
     public void Sent(DateTimeOffset now) => SentAt = now;

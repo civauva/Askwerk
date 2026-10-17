@@ -200,6 +200,32 @@ public sealed class Survey
     /// <summary>Gets a value indicating whether a browser that finished may not answer again (AWK-29, W24); on by default.</summary>
     public bool OneResponsePerPerson { get; private set; } = true;
 
+    /// <summary>Gets whether participants who have not answered are reminded by themselves (W35).</summary>
+    public bool AutoReminders { get; private set; }
+
+    /// <summary>Gets the days after the invitation, or the last reminder, before the next reminder (W35).</summary>
+    public int ReminderDays { get; private set; } = 7;
+
+    /// <summary>Gets how many reminders a person gets at most (W35).</summary>
+    public int ReminderMax { get; private set; } = 2;
+
+    /// <summary>Gets a number that changes with the reminder settings, so a job planned for older ones does nothing (W35).</summary>
+    public int ReminderRevision { get; private set; }
+
+    /// <summary>Sets the automatic reminders (W35): on or off, after how many days (1 to 60), at most how many (1 to 5).</summary>
+    /// <param name="on">On or off.</param>
+    /// <param name="days">Days between the invitation or last reminder and the next.</param>
+    /// <param name="max">Reminders per person at most.</param>
+    /// <param name="now">The time.</param>
+    public void SetAutoReminders(bool on, int days, int max, DateTimeOffset now)
+    {
+        AutoReminders = on;
+        ReminderDays = Math.Clamp(days, 1, 60);
+        ReminderMax = Math.Clamp(max, 1, 5);
+        ReminderRevision++;
+        UpdatedAt = now;
+    }
+
     /// <summary>Sets or removes the closing date.</summary>
     /// <param name="closesAt">A moment in the future, or null for none.</param>
     /// <param name="now">The time.</param>

@@ -1,0 +1,273 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W35 Participants, rich. ?v=a: the Participants page (funnel, filters, table, bulk actions, automatic reminders);
+     ?v=b: import with column mapping and checks; ?v=c: one person (fields, history, link); ?v=d: Contacts, the
+     organisation's address book. -->
+<html lang="en"><head><meta charset="utf-8"><title>W35 Participants</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; min-height: 900px; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: 232px; background: var(--aw-surface); border-right: 1px solid var(--aw-line); padding: 18px 12px; }
+  .logo { font: 700 21px/1 var(--aw-font-display); margin: 2px 8px 16px; } .logo span { color: var(--aw-signal); }
+  .org { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 1px solid var(--aw-line-strong); border-radius: 8px; font-weight: 600; font-size: 13.5px; }
+  .org i { width: 24px; height: 24px; border-radius: 6px; background: var(--aw-ink); color: #fff; display: grid; place-items: center; font: 600 9.5px/1 var(--aw-font-mono); font-style: normal; }
+  .grp { margin: 16px 8px 4px; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; color: var(--aw-muted); }
+  .nav { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 6px; font-size: 14px; color: var(--aw-graphite); } .nav.on { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .nav small { font: 500 11px/1.4 var(--aw-font-mono); color: var(--aw-muted); }
+  .head { position: fixed; left: 232px; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 32px; border-bottom: 1px solid var(--aw-line); background: var(--aw-surface); z-index: 2; }
+  .crumb { font: 400 20px/1.2 var(--aw-font-display); color: var(--aw-graphite); } .sep { color: var(--aw-muted); font-size: 20px; } .place { font: 700 20px/1.2 var(--aw-font-display); }
+  .main { margin-left: 232px; padding: 84px 32px 40px; max-width: 1264px; }
+  h1 { margin: 0; font: 700 28px/1.15 var(--aw-font-display); }
+  .lead { margin: 4px 0 0; color: var(--aw-graphite); font-size: 13.5px; }
+  .grow { flex: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border: 1px solid var(--aw-line-strong); border-radius: var(--aw-radius-control); background: var(--aw-surface); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; } .btn.small { padding: 5px 9px; font-size: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border: 1px solid var(--aw-line-strong); border-radius: 16px; background: var(--aw-surface); font-weight: 600; font-size: 12.5px; white-space: nowrap; } .chip.on { background: var(--aw-ink); border-color: var(--aw-ink); color: var(--aw-paper); }
+  .tag { display: inline-flex; padding: 2px 7px; border-radius: 999px; font-size: 11.5px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); white-space: nowrap; }
+  .search { width: 260px; height: 36px; border: 1px solid var(--aw-line-strong); border-radius: 6px; background: var(--aw-surface); padding: 0 12px; display: flex; align-items: center; color: var(--aw-muted); font-size: 13px; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; }
+  .note { position: absolute; z-index: 9; max-width: 300px; padding: 8px 11px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .mono { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--aw-muted); }
+  /* funnel */
+  .funnel { display: grid; grid-template-columns: repeat(5, 1fr) auto; gap: 0; margin: 18px 0 14px; overflow: hidden; }
+  .step { padding: 12px 16px; border-right: 1px solid var(--aw-line); }
+  .step b { display: block; font: 700 24px/1 var(--aw-font-display); } .step span { font-size: 12px; color: var(--aw-graphite); }
+  .step .bar { height: 5px; margin-top: 8px; border-radius: 3px; background: var(--aw-line); overflow: hidden; } .step .bar i { display: block; height: 100%; background: var(--aw-ink); }
+  .step.last .bar i { background: #2f6f4f; }
+  .side-stats { padding: 12px 16px; display: grid; gap: 4px; font-size: 12px; color: var(--aw-graphite); align-content: center; }
+  .side-stats b { color: #b3261e; }
+  .tools { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .bulk { flex-wrap: wrap; }
+  /* table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--aw-muted); padding: 10px 10px; border-bottom: 1px solid var(--aw-line); white-space: nowrap; }
+  td { padding: 9px 10px; border-bottom: 1px solid var(--aw-line); vertical-align: middle; }
+  tr.sel td { background: color-mix(in srgb, var(--aw-signal) 6%, var(--aw-surface)); }
+  .box { width: 15px; height: 15px; border: 1.5px solid var(--aw-line-strong); border-radius: 3px; display: inline-block; vertical-align: middle; } .box.on { background: var(--aw-ink); border-color: var(--aw-ink); }
+  .who b { display: block; font-weight: 600; } .who span { font-size: 12px; color: var(--aw-graphite); }
+  .st { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; } .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .trail { display: inline-flex; gap: 3px; } .trail i { width: 14px; height: 4px; border-radius: 2px; background: var(--aw-line); } .trail i.on { background: var(--aw-ink); } .trail i.done { background: #2f6f4f; } .trail i.bad { background: #b3261e; }
+  .muted { color: var(--aw-graphite); font-size: 12px; }
+  .bulk { display: flex; align-items: center; gap: 8px; padding: 9px 12px; margin-bottom: 10px; border-radius: 8px; background: var(--aw-ink); color: var(--aw-paper); font-size: 13px; }
+  .bulk .btn { background: transparent; color: var(--aw-paper); border-color: rgb(255 255 255 / 35%); }
+  .menu { position: absolute; z-index: 5; width: 260px; padding: 6px; background: var(--aw-surface); border: 1px solid var(--aw-line-strong); border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+  .menu div { padding: 8px 10px; border-radius: 6px; font-size: 13px; } .menu div small { display: block; color: var(--aw-graphite); font-size: 11.5px; } .menu div.hl { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); }
+  .reminders { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; padding: 12px 16px; margin-top: 14px; }
+  .sw { width: 34px; height: 20px; border-radius: 10px; background: var(--aw-ink); position: relative; display: inline-block; vertical-align: middle; } .sw::after { content: ""; position: absolute; top: 2px; left: 16px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+  .field { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border: 1px solid var(--aw-line-strong); border-radius: 6px; font-weight: 600; font-size: 13px; background: var(--aw-surface); }
+  /* dialog */
+  .scrim { position: fixed; inset: 0; background: rgb(26 25 23 / 35%); z-index: 6; }
+  .dialog { position: fixed; z-index: 7; left: 50%; top: 70px; transform: translateX(-50%); width: 900px; background: var(--aw-surface); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,.25); overflow: hidden; }
+  .dialog header { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--aw-line); }
+  .dialog header h2 { margin: 0; font: 700 20px/1.2 var(--aw-font-display); }
+  .steps { display: flex; gap: 6px; font-size: 12.5px; color: var(--aw-graphite); } .steps span { padding: 4px 10px; border-radius: 999px; } .steps .on { background: var(--aw-ink); color: var(--aw-paper); font-weight: 600; } .steps .done { color: #2f6f4f; font-weight: 600; }
+  .dialog .body { padding: 18px 22px; display: grid; gap: 14px; }
+  .map { display: grid; grid-template-columns: 1fr 24px 1fr 1.4fr; gap: 8px 10px; align-items: center; font-size: 13px; }
+  .map .col { font: 500 12px/1.2 var(--aw-font-mono); padding: 7px 9px; background: color-mix(in srgb, var(--aw-ink) 5%, var(--aw-surface)); border-radius: 6px; }
+  .map .sample { color: var(--aw-graphite); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pick { display: flex; justify-content: space-between; padding: 7px 9px; border: 1px solid var(--aw-line-strong); border-radius: 6px; background: var(--aw-surface); font-weight: 600; }
+  .checks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .check { padding: 10px 12px; border: 1px solid var(--aw-line); border-radius: 8px; font-size: 12.5px; } .check b { display: block; font: 700 20px/1.1 var(--aw-font-display); }
+  .check.ok b { color: #2f6f4f; } .check.warn b { color: #9a5b00; } .check.bad b { color: #b3261e; }
+  .dialog footer { display: flex; align-items: center; gap: 10px; padding: 14px 22px; border-top: 1px solid var(--aw-line); background: color-mix(in srgb, var(--aw-ink) 2%, var(--aw-surface)); }
+  .radio { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; } .radio i { width: 15px; height: 15px; border: 1.5px solid var(--aw-line-strong); border-radius: 50%; margin-top: 2px; flex: none; } .radio i.on { border: 5px solid var(--aw-ink); }
+  /* person panel */
+  .drawer { position: fixed; z-index: 7; right: 0; top: 0; bottom: 0; width: 460px; background: var(--aw-surface); border-left: 1px solid var(--aw-line); box-shadow: -12px 0 30px rgba(0,0,0,.12); display: flex; flex-direction: column; }
+  .drawer header { padding: 18px 22px; border-bottom: 1px solid var(--aw-line); display: grid; gap: 4px; } .drawer header h2 { margin: 0; font: 700 22px/1.2 var(--aw-font-display); }
+  .drawer .body { padding: 16px 22px; display: grid; gap: 14px; overflow: auto; }
+  .form { display: grid; grid-template-columns: 110px 1fr; gap: 8px 12px; align-items: center; font-size: 13px; }
+  .inp { padding: 7px 9px; border: 1px solid var(--aw-line-strong); border-radius: 6px; }
+  .timeline { display: grid; gap: 0; } .tl { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; padding: 7px 0; font-size: 13px; position: relative; }
+  .tl::before { content: ""; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--aw-line); } .tl:first-child::before { top: 14px; } .tl:last-child::before { bottom: calc(100% - 14px); }
+  .tl i { width: 12px; height: 12px; border-radius: 50%; background: var(--aw-surface); border: 2px solid var(--aw-ink); margin-top: 3px; position: relative; z-index: 1; margin-left: 1px; } .tl i.done { background: #2f6f4f; border-color: #2f6f4f; }
+  .link { display: flex; gap: 8px; align-items: center; } .link code { flex: 1; font: 500 12px/1 var(--aw-font-mono); padding: 9px 10px; background: color-mix(in srgb, var(--aw-ink) 5%, var(--aw-surface)); border-radius: 6px; }
+  body:not(.a):not(.b):not(.c) #part, body:not(.d) #contacts, body:not(.b) .dlg, body:not(.c) .drw { display: none; }
+</style></head>
+<body>
+<div class="side">
+  <div class="logo">Ask<span>werk</span></div>
+  <div class="org"><i>AG</i>Acme GmbH</div>
+  <div id="sideSurvey">
+    <div class="nav" style="margin-top:12px">‹ All surveys</div>
+    <div class="grp">CREATE</div><div class="nav">Questions</div><div class="nav">Look</div>
+    <div class="grp">COLLECT</div><div class="nav">Share</div><div class="nav on">Participants <small>640</small></div>
+    <div class="grp">ANALYSE</div><div class="nav">Results <small>248</small></div>
+  </div>
+  <div id="sideOrg" style="display:none">
+    <div class="nav" style="margin-top:12px">Surveys</div><div class="nav">Templates</div>
+    <div class="grp">ADMINISTRATION</div><div class="nav">Organisation</div><div class="nav">Members</div><div class="nav on">Contacts <small>1,284</small></div><div class="nav">Messages</div><div class="nav">Look of surveys</div><div class="nav">Domains</div>
+  </div>
+</div>
+
+<!-- ============ Participants ============ -->
+<div id="part">
+  <header class="head"><span class="crumb">Customer satisfaction 2026</span><span class="sep">›</span><span class="place">Participants</span><span class="tag">Published · v3</span><span class="grow"></span><span class="btn">Preview ▾</span><span class="btn primary">Share</span></header>
+  <main class="main">
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <div><h1>Participants</h1><p class="lead">Everyone invited by email, with their own link. Answers by link only count in Results, not here.</p></div>
+      <span class="grow"></span>
+      <span class="btn" id="exportBtn">Export ▾</span>
+      <span class="btn primary" id="addBtn">+ Add people ▾</span>
+    </div>
+
+    <div class="card funnel">
+      <div class="step"><b>640</b><span>invited</span><div class="bar"><i style="width:100%"></i></div></div>
+      <div class="step"><b>628</b><span>sent · 98 %</span><div class="bar"><i style="width:98%"></i></div></div>
+      <div class="step"><b>412</b><span>opened · 64 %</span><div class="bar"><i style="width:64%"></i></div></div>
+      <div class="step"><b>281</b><span>started · 44 %</span><div class="bar"><i style="width:44%"></i></div></div>
+      <div class="step last"><b>248</b><span>answered · 39 %</span><div class="bar"><i style="width:39%"></i></div></div>
+      <div class="side-stats"><span><b>6</b> bounced</span><span><b>3</b> unsubscribed</span><span>12 waiting to be sent</span></div>
+    </div>
+
+    <div class="tools">
+      <span class="search">Search name, email, field…</span>
+      <span class="chip on">All 640</span><span class="chip">Not answered 392</span><span class="chip">Started 33</span><span class="chip">Answered 248</span><span class="chip">Bounced 6</span><span class="chip">Unsubscribed 3</span>
+      <span class="grow"></span>
+      <span class="chip">Department: Sales ✕</span><span class="chip">+ Filter</span>
+    </div>
+
+    <div class="bulk"><span class="box on" style="border-color:#fff;background:#fff"></span><b>3 chosen</b><span style="opacity:.7">· of 392 not answered</span><span class="grow"></span><span class="btn small">Remind now</span><span class="btn small">Send invitation again</span><span class="btn small">Export chosen</span><span class="btn small">Add to contacts group</span><span class="btn small">Remove</span></div>
+
+    <div class="card" style="overflow:hidden">
+      <table>
+        <tr><th style="width:34px"><span class="box"></span></th><th>Person</th><th>Language</th><th>Department</th><th>Status</th><th>Invited</th><th>Last activity</th><th>Reminders</th><th></th></tr>
+        <tr><td><span class="box"></span></td><td class="who"><b>Lena Gruber</b><span>lena.gruber@example.at · CRM-10442</span></td><td>DE</td><td>Sales</td><td><span class="st"><span class="dot" style="background:#2f6f4f"></span>Answered</span><br><span class="trail"><i class="on"></i><i class="on"></i><i class="on"></i><i class="done"></i></span></td><td class="muted">2 Oct</td><td class="muted">answered 3 Oct</td><td class="muted">0</td><td><span class="btn small">Link</span></td></tr>
+        <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>Thomas Huber</b><span>t.huber@example.com · CRM-10871</span></td><td>DE</td><td>Sales</td><td><span class="st"><span class="dot" style="background:#9a5b00"></span>Opened, not started</span><br><span class="trail"><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td class="muted">2 Oct</td><td class="muted">opened 9 Oct</td><td class="muted">1 · 9 Oct</td><td><span class="btn small">Link</span></td></tr>
+        <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>Sarah Novak</b><span>sarah.novak@example.org</span></td><td>EN</td><td>Sales</td><td><span class="st"><span class="dot" style="background:var(--aw-ink)"></span>Started · page 2 of 4</span><br><span class="trail"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td class="muted">2 Oct</td><td class="muted">yesterday</td><td class="muted">1 · 9 Oct</td><td><span class="btn small">Link</span></td></tr>
+        <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>—</b><span>m.pichler@example.at</span></td><td>DE</td><td>Sales</td><td><span class="st"><span class="dot" style="background:var(--aw-line-strong)"></span>Sent, not opened</span><br><span class="trail"><i class="on"></i><i></i><i></i><i></i></span></td><td class="muted">2 Oct</td><td class="muted">sent 2 Oct</td><td class="muted">2 · 16 Oct</td><td><span class="btn small">Link</span></td></tr>
+        <tr><td><span class="box"></span></td><td class="who"><b>Jakob Steiner</b><span>jakob@steiner.example</span></td><td>DE</td><td>Sales</td><td><span class="st"><span class="dot" style="background:#b3261e"></span>Bounced</span><br><span class="trail"><i class="bad"></i><i></i><i></i><i></i></span></td><td class="muted">2 Oct</td><td class="muted">mailbox full · 2 Oct</td><td class="muted">—</td><td><span class="btn small">Fix email</span></td></tr>
+        <tr><td><span class="box"></span></td><td class="who"><b>Anja Weber</b><span>anja.weber@example.de</span></td><td>DE</td><td>Sales</td><td><span class="st"><span class="dot" style="background:var(--aw-muted)"></span>Unsubscribed</span></td><td class="muted">2 Oct</td><td class="muted">4 Oct</td><td class="muted">—</td><td></td></tr>
+      </table>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:12.5px;color:var(--aw-graphite)">1–50 of 640 · Sales: 86<span class="grow"></span><span class="btn small">‹</span><span class="btn small">›</span></div>
+    </div>
+
+    <div class="card reminders">
+      <span class="sw"></span>
+      <span><b>Automatic reminders</b> · <span class="field">after 7 days ▾</span> to people who have not answered, at most <span class="field">2 ▾</span> · <span class="muted">next: 23 Oct, 09:00 to 392 people</span></span>
+      <span class="btn small">Edit the reminder text</span>
+    </div>
+  </main>
+  <div class="menu" style="left:1140px;top:160px;display:none" id="addMenu">
+    <div class="hl"><b>Type or paste</b><small>Emails, one per line; "Name &lt;email&gt;" works too</small></div>
+    <div><b>Import a file</b><small>CSV or a pasted table: map the columns</small></div>
+    <div><b>From contacts</b><small>Choose people or a group from the address book</small></div>
+  </div>
+</div>
+
+<!-- Import dialog -->
+<div class="scrim dlg"></div>
+<div class="dialog dlg">
+  <header><h2>Import people</h2><span class="steps"><span class="done">✓ File</span><span class="on">2 Columns</span><span>3 Check</span><span>4 Invite</span></span><span class="grow"></span><span class="muted">customers-q4.csv · 214 rows</span></header>
+  <div class="body">
+    <span class="mono">Which column is what</span>
+    <div class="map">
+      <span class="mono" style="color:var(--aw-graphite)">In the file</span><span></span><span class="mono" style="color:var(--aw-graphite)">Becomes</span><span class="mono" style="color:var(--aw-graphite)">First rows</span>
+      <span class="col">E-Mail-Adresse</span><span>→</span><span class="pick">Email · required <span>▾</span></span><span class="sample">lena.gruber@example.at, t.huber@example.com, …</span>
+      <span class="col">Vorname</span><span>→</span><span class="pick">First name <span>▾</span></span><span class="sample">Lena, Thomas, Sarah, …</span>
+      <span class="col">Nachname</span><span>→</span><span class="pick">Last name <span>▾</span></span><span class="sample">Gruber, Huber, Novak, …</span>
+      <span class="col">Sprache</span><span>→</span><span class="pick">Language <span>▾</span></span><span class="sample">de, de, en, …</span>
+      <span class="col">Abteilung</span><span>→</span><span class="pick">Field: Department (new) <span>▾</span></span><span class="sample">Sales, Sales, Service, …</span>
+      <span class="col">Kundennummer</span><span>→</span><span class="pick">External ID · matches people <span>▾</span></span><span class="sample">10442, 10871, 11003, …</span>
+      <span class="col">Notiz</span><span>→</span><span class="pick" style="color:var(--aw-muted)">Leave out <span>▾</span></span><span class="sample">VIP, , call first, …</span>
+    </div>
+    <span class="mono" style="margin-top:4px">What the check found</span>
+    <div class="checks">
+      <div class="check ok"><b>201</b>will be added</div>
+      <div class="check warn"><b>9</b>already invited (same External ID or email) · skipped</div>
+      <div class="check bad"><b>2</b>emails not valid · <u>show</u></div>
+      <div class="check warn"><b>2</b>unsubscribed earlier · skipped</div>
+    </div>
+    <div style="display:grid;gap:8px">
+      <span class="mono">Then</span>
+      <span class="radio"><i class="on"></i><span><b>Send the invitations now</b><br><span class="muted">In each person's language; the invitation text from Messages.</span></span></span>
+      <span class="radio"><i></i><span><b>Add them, send later</b><br><span class="muted">They wait; send to all or the chosen ones when you are ready.</span></span></span>
+      <span class="radio"><i></i><span><b>Also save them in Contacts</b> <span class="tag">group: Customers Q4</span></span></span>
+    </div>
+  </div>
+  <footer><span class="btn">‹ Back</span><span class="grow"></span><span class="muted">Fields become placeholders: {department}; the External ID links answers to your system</span><span class="btn primary">Import 201 people</span></footer>
+</div>
+
+<!-- Person panel -->
+<div class="scrim drw"></div>
+<aside class="drawer drw">
+  <header><span class="mono">Participant</span><h2>Thomas Huber</h2><span class="st"><span class="dot" style="background:#9a5b00"></span>Opened, not started · in Contacts</span></header>
+  <div class="body">
+    <div class="form">
+      <span class="muted">Email</span><span class="inp">t.huber@example.com</span>
+      <span class="muted">Name</span><span class="inp">Thomas Huber</span>
+      <span class="muted">Language</span><span class="inp">Deutsch ▾</span>
+      <span class="muted">Department</span><span class="inp">Sales</span>
+      <span class="muted">External ID</span><span class="inp" style="font-family:var(--aw-font-mono)">CRM-10871</span>
+    </div>
+    <span class="mono">Personal link</span>
+    <div class="link"><code>surveys.acme.at/s/k7m2pqzr?t=4hX…</code><span class="btn small">Copy</span></div>
+    <span class="mono">History</span>
+    <div class="timeline">
+      <div class="tl"><i class="done"></i><span>Invited · added by import “customers-q4.csv”</span><span class="muted">2 Oct 09:14</span></div>
+      <div class="tl"><i class="done"></i><span>Invitation sent</span><span class="muted">2 Oct 09:15</span></div>
+      <div class="tl"><i class="done"></i><span>Reminder 1 sent (automatic)</span><span class="muted">9 Oct 09:00</span></div>
+      <div class="tl"><i class="done"></i><span>Opened the survey</span><span class="muted">9 Oct 11:32</span></div>
+      <div class="tl"><i></i><span class="muted">Next: reminder 2 (automatic)</span><span class="muted">16 Oct 09:00</span></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;padding:14px 22px;border-top:1px solid var(--aw-line)"><span class="btn">Send reminder now</span><span class="btn">No more reminders</span><span class="grow"></span><span class="btn" style="color:#b3261e">Remove</span><span class="btn primary">Save</span></div>
+</aside>
+
+<!-- ============ Contacts ============ -->
+<div id="contacts">
+  <header class="head"><span class="place">Contacts</span><span class="grow"></span></header>
+  <main class="main">
+    <div style="display:flex;align-items:flex-start;gap:10px">
+      <div><h1>Contacts</h1><p class="lead">The organisation's address book: invite the same people to many surveys, keep their fields, respect who unsubscribed.</p></div>
+      <span class="grow"></span><span class="btn">Export</span><span class="btn">Import</span><span class="btn primary">+ Add contact</span>
+    </div>
+    <div style="display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;margin-top:18px">
+      <div class="card" style="padding:10px;align-self:start">
+        <span class="mono" style="display:block;margin:4px 6px 8px">Groups</span>
+        <div class="nav on">All contacts <small>1,284</small></div>
+        <div class="nav">Customers Q4 <small>201</small></div>
+        <div class="nav">Key accounts <small>48</small></div>
+        <div class="nav">Staff <small>312</small></div>
+        <div class="nav">Event Vienna 2026 <small>530</small></div>
+        <div class="nav" style="color:var(--aw-signal)">+ New group</div>
+        <span class="mono" style="display:block;margin:14px 6px 8px">Fields</span>
+        <div class="nav">External ID</div><div class="nav">Department</div><div class="nav">Region</div>
+      </div>
+      <div>
+        <div class="tools"><span class="search">Search contacts…</span><span class="chip on">All</span><span class="chip">Can be invited 1,251</span><span class="chip">Unsubscribed 21</span><span class="chip">Bounced 12</span><span class="grow"></span></div>
+        <div class="bulk"><span class="box on" style="border-color:#fff;background:#fff"></span><b>48 chosen</b><span style="opacity:.7">· group Key accounts</span><span class="grow"></span><span class="btn small">Invite to a survey…</span><span class="btn small">Add to group</span><span class="btn small">Export</span><span class="btn small">Remove</span></div>
+        <div class="card" style="overflow:hidden">
+          <table>
+            <tr><th style="width:34px"><span class="box on"></span></th><th>Person</th><th>External ID</th><th>Language</th><th>Groups</th><th>Department</th><th>Surveys</th><th>Last invited</th><th>Can be invited</th></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>Lena Gruber</b><span>lena.gruber@example.at</span></td><td style="font:500 12px var(--aw-font-mono)">CRM-10442</td><td>DE</td><td><span class="tag">Key accounts</span> <span class="tag">Customers Q4</span></td><td>Sales</td><td class="muted">3 · answered 3</td><td class="muted">2 Oct</td><td>Yes</td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>Thomas Huber</b><span>t.huber@example.com</span></td><td style="font:500 12px var(--aw-font-mono)">CRM-10871</td><td>DE</td><td><span class="tag">Key accounts</span></td><td>Sales</td><td class="muted">2 · answered 1</td><td class="muted">2 Oct</td><td>Yes</td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td class="who"><b>Sarah Novak</b><span>sarah.novak@example.org</span></td><td style="font:500 12px var(--aw-font-mono)">CRM-11003</td><td>EN</td><td><span class="tag">Key accounts</span> <span class="tag">Event Vienna 2026</span></td><td>Service</td><td class="muted">4 · answered 2</td><td class="muted">2 Oct</td><td>Yes</td></tr>
+            <tr><td><span class="box"></span></td><td class="who"><b>Anja Weber</b><span>anja.weber@example.de</span></td><td style="font:500 12px var(--aw-font-mono)">CRM-11210</td><td>DE</td><td><span class="tag">Customers Q4</span></td><td>Sales</td><td class="muted">1 · answered 0</td><td class="muted">2 Oct</td><td style="color:#b3261e">No · unsubscribed 4 Oct</td></tr>
+            <tr><td><span class="box"></span></td><td class="who"><b>Jakob Steiner</b><span>jakob@steiner.example</span></td><td style="font:500 12px var(--aw-font-mono)">HR-0077</td><td>DE</td><td><span class="tag">Staff</span></td><td>IT</td><td class="muted">2 · answered 1</td><td class="muted">2 Oct</td><td style="color:#9a5b00">Check · bounced</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="note" id="note"></div>
+<script>
+const v = new URLSearchParams(location.search).get("v") || "a";
+document.body.className = v;
+if (v === "d") { document.getElementById("sideSurvey").style.display = "none"; document.getElementById("sideOrg").style.display = "block"; }
+if (v === "a") document.getElementById("addMenu").style.display = "block";
+const notes = {
+  a: ["right:24px;top:300px", "<b>Participants:</b> the funnel says where people stop; filters by status and by any field; choose people for reminders, a new invitation, export or a contacts group. Add people by typing, a file or Contacts. Automatic reminders below, with the next date and how many."],
+  b: ["right:24px;top:760px", "<b>Import:</b> CSV or a pasted table (from Excel). Askwerk guesses the columns; extra columns become fields, usable as placeholders. The check shows what is added and what is skipped before anything is sent."],
+  c: ["left:260px;top:300px", "<b>One person:</b> fields to edit, the personal link, and the history: invited, sent, reminded, opened, answered, and the next automatic reminder."],
+  d: ["right:24px;top:560px", "<b>Contacts:</b> each with an optional External ID that links to your CRM or HR system and wins over the email when matching. The organisation's address book. Groups, fields, who can be invited (unsubscribed and bounced are kept out everywhere), how many surveys each person was invited to, and Invite to a survey."],
+};
+const n = document.getElementById("note"); n.style.cssText = notes[v][0]; n.innerHTML = notes[v][1];
+</script>
+</body></html>

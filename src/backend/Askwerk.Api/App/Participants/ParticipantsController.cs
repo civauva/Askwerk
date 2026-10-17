@@ -136,15 +136,40 @@ public sealed class ParticipantsController(
             return Problem(StatusCodes.Status409Conflict, "email-not-set-up");
         }
 
-        var check = await CheckAsync(surveyId, new ParsedList([.. (request.Participants ?? [])
-            .Select(person => new ListedPerson((person.Email ?? "").Trim().ToLowerInvariant(), person.Name, person.Language))
-            .Where(person => ParticipantList.IsAddress(person.Email))
-            .DistinctBy(person => person.Email)], 0, []), cancellationToken);
+        // From the address book (W35): the chosen contacts, with their fields.
+        var inputs = (request.Participants ?? []).ToList();
+
+        if (request.ContactIds is { Count: > 0 } contactIds)
+        {
+            inputs.AddRange((await context.Contacts.Where(row => contactIds.Contains(row.Id)).ToListAsync(cancellationToken))
+                .Select(contact => new ParticipantInput(contact.Email, contact.Name, contact.Language, contact.ExternalId, PersonDetails.ReadFields(contact.Fields))));
+        }
+
+        var check = await CheckPeopleAsync(surveyId, inputs, cancellationToken);
         var now = time.GetUtcNow();
         var invitation = Invitation.Create(Guid.CreateVersion7(now), survey.TenantId, survey.Id, send, request.SendAt, request.Deadline, request.Reminder ?? true, request.Host, User.UserId()!.Value, now);
         context.Invitations.Add(invitation);
-        context.Participants.AddRange(check.Participants.Select(person =>
-            Participant.Add(Guid.CreateVersion7(now), survey.TenantId, survey.Id, invitation.Id, person.Email!, person.Name, person.Language, now)));
+        var contacts = await ContactBook.MatchAsync(context, check.Participants, cancellationToken);
+
+        foreach (var person in check.Participants)
+        {
+            var details = person.Details();
+            var contact = contacts.Find(details);
+
+            if (contact is null && request.SaveToContacts == true)
+            {
+                contact = Contact.Create(Guid.CreateVersion7(now), survey.TenantId, details, request.ContactGroup is { } group ? [group] : null, now);
+                context.Contacts.Add(contact);
+                contacts.Add(contact);
+            }
+            else if (contact is not null && request.SaveToContacts == true)
+            {
+                contact.Merge(details, now);
+                contact.Join(request.ContactGroup is { } group ? [group] : [], now);
+            }
+
+            context.Participants.Add(Participant.Add(Guid.CreateVersion7(now), survey.TenantId, survey.Id, invitation.Id, details, contact?.Id, now));
+        }
 
         if (send && check.Participants.Count > 0)
         {
@@ -160,7 +185,7 @@ public sealed class ParticipantsController(
             new AuditContent(now, survey.TenantId, AuditActorKind.User, User.UserId().ToString(), "participants.invited", "Survey", survey.Id.ToString(), $"{check.Participants.Count} invited", trace.CurrentTraceId),
             cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        var skipped = (request.Participants?.Count ?? 0) - check.Participants.Count;
+        var skipped = inputs.Count - check.Participants.Count;
 
         return StatusCode(StatusCodes.Status202Accepted, new InvitedResponse(check.Participants.Count, skipped));
     }
@@ -171,11 +196,14 @@ public sealed class ParticipantsController(
     /// <param name="offset">Rows to skip.</param>
     /// <param name="limit">Rows per page, at most 100; 50 when empty.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
+    /// <param name="search">Part of the name, email or External ID (W35).</param>
+    /// <param name="status">One status, or not-answered for all who have not answered (W35).</param>
+    /// <param name="field">A field and its value, key:value (W35).</param>
     /// <returns>One page of participants with their status and personal link, the number of all, the counts, and the next planned reminder.</returns>
     [HttpGet("participants")]
     [ProducesResponseType<ParticipantListResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ParticipantListResponse>> List(Guid surveyId, string? sort, int offset, int? limit, CancellationToken cancellationToken)
+    public async Task<ActionResult<ParticipantListResponse>> List(Guid surveyId, string? sort, int offset, int? limit, CancellationToken cancellationToken, string? search = null, string? status = null, string? field = null)
     {
         if (await SurveyAsync(surveyId, cancellationToken) is not { } survey)
         {
@@ -200,7 +228,18 @@ public sealed class ParticipantsController(
                 : 1,
             });
         var counts = await rows.GroupBy(row => row.Rank).Select(group => new { group.Key, Count = group.Count() }).ToListAsync(cancellationToken);
-        var page = await Sorted(rows, sort).Skip(Math.Max(0, offset)).Take(Math.Clamp(limit ?? DefaultLimit, 1, MaxLimit)).ToListAsync(cancellationToken);
+        var shown = Filtered(rows, search, status, field);
+        var matching = await shown.CountAsync(cancellationToken);
+        var page = await Sorted(shown, sort).Skip(Math.Max(0, offset)).Take(Math.Clamp(limit ?? DefaultLimit, 1, MaxLimit)).ToListAsync(cancellationToken);
+        var pageIds = page.Select(row => row.Participant.Id).ToList();
+        var activity = await context.Responses
+            .Where(response => response.ParticipantId != null && pageIds.Contains(response.ParticipantId.Value))
+            .GroupBy(response => response.ParticipantId!.Value)
+            .Select(group => new { Id = group.Key, At = group.Max(response => response.UpdatedAt) })
+            .ToDictionaryAsync(row => row.Id, row => row.At, cancellationToken);
+        var fieldKeys = await context.Database
+            .SqlQuery<string>($"SELECT DISTINCT jsonb_object_keys(fields) AS \"Value\" FROM participant WHERE survey_id = {surveyId} ORDER BY 1")
+            .ToListAsync(cancellationToken);
         var links = await SurveyLinks.OfAsync(context, settings, Request, survey, cancellationToken);
         var now = time.GetUtcNow();
         var reminderAt = await context.Invitations.Where(row => row.SurveyId == surveyId && row.RemindAt > now).MinAsync(row => row.RemindAt, cancellationToken);
@@ -214,10 +253,19 @@ public sealed class ParticipantsController(
                 Statuses[row.Rank],
                 row.Participant.SentAt,
                 row.Participant.Reminders,
-                PersonalLink(links, row.Host, row.Participant.Token)))],
+                PersonalLink(links, row.Host, row.Participant.Token),
+                row.Participant.ExternalId,
+                PersonDetails.ReadFields(row.Participant.Fields),
+                new[] { activity.GetValueOrDefault(row.Participant.Id), row.Participant.OpenedAt, row.Participant.RemindedAt, row.Participant.SentAt, (DateTimeOffset?)row.Participant.CreatedAt }.Max(),
+                row.Participant.RemindedAt,
+                row.Participant.RemindersOff,
+                row.Participant.ContactId))],
             counts.Sum(count => count.Count),
             counts.ToDictionary(count => Statuses[count.Key], count => count.Count),
-            reminderAt);
+            reminderAt,
+            matching,
+            fieldKeys,
+            await AutoReminders.SettingsAsync(context, survey, time.GetUtcNow(), cancellationToken));
     }
 
     /// <summary>Reminds those invited who have not answered, now (W12 D: Send reminder now; W13 C: the chosen ones).</summary>
@@ -338,6 +386,33 @@ public sealed class ParticipantsController(
     /// </summary>
     private static readonly string[] Statuses = ["waiting", "link-only", "sent", "opened", "started", "answered", "bounced", "unsubscribed"];
 
+    /// <summary>Only the people a search, a status and a field choose (W35).</summary>
+    private static IQueryable<ListedParticipant> Filtered(IQueryable<ListedParticipant> rows, string? search, string? status, string? field)
+    {
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var pattern = "%" + search.Trim().Replace("\\", "\\\\", StringComparison.Ordinal).Replace("%", "\\%", StringComparison.Ordinal).Replace("_", "\\_", StringComparison.Ordinal) + "%";
+            rows = rows.Where(row => EF.Functions.ILike(row.Participant.Email, pattern) || EF.Functions.ILike(row.Participant.Name ?? "", pattern) || EF.Functions.ILike(row.Participant.ExternalId ?? "", pattern));
+        }
+
+        if (status == "not-answered")
+        {
+            rows = rows.Where(row => row.Rank < 5);
+        }
+        else if (Array.IndexOf(Statuses, status) is var rank and >= 0)
+        {
+            rows = rows.Where(row => row.Rank == rank);
+        }
+
+        if (field?.Split(':', 2) is [{ Length: > 0 } key, var value])
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(new Dictionary<string, string> { [PersonDetails.FieldKey(key)] = value });
+            rows = rows.Where(row => EF.Functions.JsonContains(row.Participant.Fields, json));
+        }
+
+        return rows;
+    }
+
     /// <summary>The page's order; ties go by id, so pages never overlap.</summary>
     private static IQueryable<ListedParticipant> Sorted(IQueryable<ListedParticipant> rows, string? sort)
     {
@@ -358,18 +433,54 @@ public sealed class ParticipantsController(
     }
 
     /// <summary>The people of a list who are new to this survey and have not unsubscribed.</summary>
-    private async Task<ParticipantCheckResponse> CheckAsync(Guid surveyId, ParsedList list, CancellationToken cancellationToken)
+    private Task<ParticipantCheckResponse> CheckAsync(Guid surveyId, ParsedList list, CancellationToken cancellationToken) =>
+        CheckPeopleAsync(surveyId, [.. list.People.Select(person => new ParticipantInput(person.Email, person.Name, person.Language))], cancellationToken, list.Duplicates, [.. list.Invalid.Select(problem => new ListLine(problem.Line, problem.Text))]);
+
+    /// <summary>
+    /// The people who are new to this survey and have not unsubscribed (W35): the same External ID, else the same
+    /// email, counts as already invited; a person twice in the list counts once.
+    /// </summary>
+    internal async Task<ParticipantCheckResponse> CheckPeopleAsync(Guid surveyId, IReadOnlyList<ParticipantInput> people, CancellationToken cancellationToken, int duplicates = 0, IReadOnlyList<ListLine>? invalid = null)
     {
-        var emails = list.People.Select(person => person.Email).ToList();
-        var invited = (await context.Participants.Where(row => row.SurveyId == surveyId && emails.Contains(row.Email)).Select(row => row.Email).ToListAsync(cancellationToken)).ToHashSet(StringComparer.Ordinal);
+        var lines = (invalid ?? []).ToList();
+        var valid = new List<ParticipantInput>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var (person, index) in people.Select((person, index) => (person, index)))
+        {
+            var email = (person.Email ?? "").Trim().ToLowerInvariant();
+
+            if (!ParticipantList.IsAddress(email))
+            {
+                lines.Add(new ListLine(index + 1, person.Email ?? ""));
+            }
+            else if (!seen.Add(email) || (person.ExternalId is { Length: > 0 } id && !seen.Add("#" + id.Trim())))
+            {
+                duplicates++;
+            }
+            else
+            {
+                valid.Add(person with { Email = email });
+            }
+        }
+
+        var emails = valid.Select(person => person.Email!).ToList();
+        var ids = valid.Where(person => !string.IsNullOrWhiteSpace(person.ExternalId)).Select(person => person.ExternalId!.Trim()).ToList();
+        var known = await context.Participants
+            .Where(row => row.SurveyId == surveyId && (emails.Contains(row.Email) || (row.ExternalId != null && ids.Contains(row.ExternalId))))
+            .Select(row => new { row.Email, row.ExternalId })
+            .ToListAsync(cancellationToken);
+        var knownEmails = known.Select(row => row.Email).ToHashSet(StringComparer.Ordinal);
+        var knownIds = known.Where(row => row.ExternalId != null).Select(row => row.ExternalId!).ToHashSet(StringComparer.Ordinal);
         var unsubscribed = (await context.Unsubscribes.Where(row => emails.Contains(row.Email)).Select(row => row.Email).ToListAsync(cancellationToken)).ToHashSet(StringComparer.Ordinal);
+        bool Invited(ParticipantInput person) => knownEmails.Contains(person.Email!) || (person.ExternalId is { Length: > 0 } id && knownIds.Contains(id.Trim()));
 
         return new ParticipantCheckResponse(
-            [.. list.People.Where(person => !invited.Contains(person.Email) && !unsubscribed.Contains(person.Email)).Select(person => new ParticipantInput(person.Email, person.Name, person.Language))],
-            list.Duplicates,
-            invited.Count,
-            unsubscribed.Count,
-            [.. list.Invalid.Select(problem => new ListLine(problem.Line, problem.Text))]);
+            [.. valid.Where(person => !Invited(person) && !unsubscribed.Contains(person.Email!))],
+            duplicates,
+            valid.Count(Invited),
+            valid.Count(person => unsubscribed.Contains(person.Email!)),
+            lines);
     }
 
     private Task<Survey?> SurveyAsync(Guid surveyId, CancellationToken cancellationToken) =>
@@ -398,7 +509,13 @@ public sealed record ParticipantCheckRequest(string? Text);
 /// <param name="Email">The address.</param>
 /// <param name="Name">For {name}.</param>
 /// <param name="Language">Their language, e.g. de.</param>
-public sealed record ParticipantInput(string? Email, string? Name, string? Language);
+/// <param name="ExternalId">Their id in another system (W35); matches them before the email.</param>
+/// <param name="Fields">Further fields (W35), e.g. department; placeholders in messages.</param>
+public sealed record ParticipantInput(string? Email, string? Name, string? Language, string? ExternalId = null, IReadOnlyDictionary<string, string>? Fields = null)
+{
+    /// <summary>The cleaned-up details.</summary>
+    public PersonDetails Details() => new(Email ?? "", Name, Language is { Length: 2 } ? Language : null, ExternalId, Fields);
+}
 
 /// <summary>A line that is not an address.</summary>
 /// <param name="Line">1-based.</param>
@@ -420,7 +537,10 @@ public sealed record ParticipantCheckResponse(IReadOnlyList<ParticipantInput> Pa
 /// <param name="Reminder">One reminder three days before the deadline to those who have not answered (default true).</param>
 /// <param name="Send">Send emails (default true); false makes personal links only.</param>
 /// <param name="Host">The address for the links; the primary one when empty.</param>
-public sealed record InviteRequest(IReadOnlyList<ParticipantInput>? Participants, DateTimeOffset? SendAt = null, DateOnly? Deadline = null, bool? Reminder = null, bool? Send = null, string? Host = null);
+/// <param name="ContactIds">Contacts to invite as well (W35), with their fields.</param>
+/// <param name="SaveToContacts">Also keep the people in Contacts (W35); known ones get the new details.</param>
+/// <param name="ContactGroup">With SaveToContacts: the group they join.</param>
+public sealed record InviteRequest(IReadOnlyList<ParticipantInput>? Participants, DateTimeOffset? SendAt = null, DateOnly? Deadline = null, bool? Reminder = null, bool? Send = null, string? Host = null, IReadOnlyList<Guid>? ContactIds = null, bool? SaveToContacts = null, string? ContactGroup = null);
 
 /// <summary>What an invitation did.</summary>
 /// <param name="Invited">People added.</param>
@@ -436,14 +556,23 @@ public sealed record InvitedResponse(int Invited, int Skipped);
 /// <param name="SentAt">Invitation sent (UTC).</param>
 /// <param name="Reminders">Reminders sent.</param>
 /// <param name="Link">Their personal link.</param>
-public sealed record ParticipantItem(Guid Id, string Email, string? Name, string? Language, string Status, DateTimeOffset? SentAt, int Reminders, string Link);
+/// <param name="ExternalId">Their id in another system (W35).</param>
+/// <param name="Fields">Their further fields (W35).</param>
+/// <param name="LastActivity">The last thing that happened: answering, opening, a reminder, the invitation (W35).</param>
+/// <param name="RemindedAt">The last reminder (UTC).</param>
+/// <param name="RemindersOff">No more reminders for them (W35).</param>
+/// <param name="ContactId">Their contact, if any (W35).</param>
+public sealed record ParticipantItem(Guid Id, string Email, string? Name, string? Language, string Status, DateTimeOffset? SentAt, int Reminders, string Link, string? ExternalId = null, IReadOnlyDictionary<string, string>? Fields = null, DateTimeOffset? LastActivity = null, DateTimeOffset? RemindedAt = null, bool RemindersOff = false, Guid? ContactId = null);
 
 /// <summary>One page of the participants of a survey.</summary>
 /// <param name="Items">The page.</param>
 /// <param name="Total">How many participants the survey has.</param>
 /// <param name="Counts">How many per status.</param>
 /// <param name="ReminderAt">The next planned reminder (UTC).</param>
-public sealed record ParticipantListResponse(IReadOnlyList<ParticipantItem> Items, int Total, IReadOnlyDictionary<string, int> Counts, DateTimeOffset? ReminderAt);
+/// <param name="Matching">How many the search and filters choose (W35); the pages count these.</param>
+/// <param name="FieldKeys">The fields the survey's participants have (W35), to filter by.</param>
+/// <param name="AutoReminders">The automatic reminders (W35) and the next one.</param>
+public sealed record ParticipantListResponse(IReadOnlyList<ParticipantItem> Items, int Total, IReadOnlyDictionary<string, int> Counts, DateTimeOffset? ReminderAt, int Matching = 0, IReadOnlyList<string>? FieldKeys = null, AutoReminderSettings? AutoReminders = null);
 
 /// <summary>A participant with what the list needs to show and sort it.</summary>
 public sealed class ListedParticipant
@@ -475,7 +604,8 @@ public sealed record ParticipantProblem(string Code, string? TraceId);
 
 /// <summary>Payload of a send-invitations job.</summary>
 /// <param name="InvitationId">The invitation.</param>
-public sealed record SendInvitationsPayload(Guid InvitationId);
+/// <param name="ParticipantIds">Again to these people only (W35), whichever invitation they came with.</param>
+public sealed record SendInvitationsPayload(Guid InvitationId, IReadOnlyList<Guid>? ParticipantIds = null);
 
 /// <summary>Payload of a send-reminders job.</summary>
 /// <param name="SurveyId">The survey.</param>

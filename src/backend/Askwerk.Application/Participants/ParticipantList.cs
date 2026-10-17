@@ -86,6 +86,55 @@ public static partial class ParticipantList
             .Select(item => (item.Line, Text: string.Join(", ", item.Row), Email: Cell(item.Row, email) ?? "", Name: Cell(item.Row, name), Language: Cell(item.Row, language))));
     }
 
+    /// <summary>A file as a table (W35): every row, the header first; .xlsx as Excel, anything else as CSV.</summary>
+    /// <param name="fileName">Its name.</param>
+    /// <param name="content">Its bytes.</param>
+    /// <returns>The rows; empty when nothing can be read.</returns>
+    public static IReadOnlyList<IReadOnlyList<string>> ReadTable(string fileName, byte[] content)
+    {
+        ArgumentNullException.ThrowIfNull(fileName);
+
+        return Trimmed(fileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ? ReadExcel(content) : ReadCsv(content));
+    }
+
+    /// <summary>A pasted table (W35): cells split by tabs, as Excel copies them, else read as CSV.</summary>
+    /// <param name="text">The pasted text, the header first.</param>
+    /// <returns>The rows.</returns>
+    public static IReadOnlyList<IReadOnlyList<string>> ReadPasted(string? text)
+    {
+        var pasted = (text ?? "").ReplaceLineEndings("\n");
+
+        return Trimmed(pasted.Contains('\t', StringComparison.Ordinal)
+            ? [.. pasted.Split('\n').Select(line => line.Split('\t').ToList())]
+            : ReadCsv(Encoding.UTF8.GetBytes(pasted)));
+    }
+
+    /// <summary>
+    /// What a column most likely holds (W35), from its header in English or German: email, name, firstName,
+    /// lastName, language, externalId, or field for anything else.
+    /// </summary>
+    /// <param name="header">The column's header.</param>
+    /// <returns>The guess.</returns>
+    public static string Guess(string header)
+    {
+        ArgumentNullException.ThrowIfNull(header);
+        var cell = header.Trim().ToLowerInvariant().Replace("_", " ", StringComparison.Ordinal);
+        var bare = cell.Replace(" ", "", StringComparison.Ordinal).Replace("-", "", StringComparison.Ordinal);
+        bool Is(params string[] names) => names.Contains(cell) || names.Contains(bare);
+
+        return Is([.. EmailHeaders, "emailadresse"]) ? "email"
+            : Is("first name", "firstname", "given name", "vorname") ? "firstName"
+            : Is("last name", "lastname", "surname", "family name", "nachname", "familienname") ? "lastName"
+            : Is(NameHeaders) ? "name"
+            : Is(LanguageHeaders) ? "language"
+            : Is("external id", "externalid", "external", "crm id", "crmid", "externe id", "externeid", "kundennummer", "customer number", "customerno", "customer no", "personalnummer", "employee id") ? "externalId"
+            : "field";
+    }
+
+    /// <summary>Rows without the empty ones at the end.</summary>
+    private static List<IReadOnlyList<string>> Trimmed(List<List<string>> rows) =>
+        [.. rows.Select(row => (IReadOnlyList<string>)[.. row.Select(cell => cell.Trim())]).Where(row => row.Any(cell => cell.Length > 0))];
+
     /// <summary>Whether a text is an email address worth sending to.</summary>
     public static bool IsAddress(string email) => email.Length <= 254 && Address().IsMatch(email);
 

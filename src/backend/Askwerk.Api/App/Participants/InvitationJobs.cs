@@ -51,7 +51,7 @@ public abstract class InvitationJob(AskwerkDbContext context, EmailSettingsProvi
             var message = await MessageComposer.ComposeAsync(
                 context,
                 baseAddress.TrimEnd('/'),
-                new MessageFor(kind, survey, person.Language, person.Name ?? "", link, invitation.Deadline, $"{new Uri(link).GetLeftPart(UriPartial.Authority)}/s/u/{person.Token}"),
+                new MessageFor(kind, survey, person.Language, person.Name ?? "", link, invitation.Deadline, $"{new Uri(link).GetLeftPart(UriPartial.Authority)}/s/u/{person.Token}", Fields: PersonDetails.ReadFields(person.Fields), ExternalId: person.ExternalId),
                 cancellationToken);
 
             try
@@ -82,6 +82,19 @@ public sealed class SendInvitationsJob(AskwerkDbContext context, EmailSettingsPr
     public override async Task RunAsync(string payload, CancellationToken cancellationToken)
     {
         var work = JsonSerializer.Deserialize<SendInvitationsPayload>(payload, JsonSerializerOptions.Web)!;
+
+        // Again to the chosen people (W35), whichever invitation they came with.
+        if (work.ParticipantIds is { Count: > 0 } chosen)
+        {
+            var again = await context.Participants.Where(row => chosen.Contains(row.Id) && row.BouncedAt == null).OrderBy(row => row.Email).ToListAsync(cancellationToken);
+            var surveyIds = again.Select(row => row.SurveyId).Distinct().ToList();
+            var first = await context.Surveys.SingleAsync(row => row.Id == surveyIds.Single(), cancellationToken);
+            var theirs = await context.Invitations.Where(row => row.SurveyId == first.Id).ToDictionaryAsync(row => row.Id, cancellationToken);
+
+            await SendAsync(MessageKind.Invitation, first, again, theirs, person => person.Sent(time.GetUtcNow()), cancellationToken);
+            return;
+        }
+
         var invitation = await context.Invitations.SingleAsync(row => row.Id == work.InvitationId, cancellationToken);
         var survey = await context.Surveys.SingleAsync(row => row.Id == invitation.SurveyId, cancellationToken);
         var people = await context.Participants.Where(row => row.InvitationId == invitation.Id && row.SentAt == null && row.BouncedAt == null).OrderBy(row => row.Email).ToListAsync(cancellationToken);

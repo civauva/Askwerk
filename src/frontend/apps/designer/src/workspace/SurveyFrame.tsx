@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import type { ParticipantsClient, SurveysClient, SurveySummary } from "@askwerk/app-client";
+import type { ContactsClient, ParticipantsClient, SurveysClient, SurveySummary } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -191,17 +191,28 @@ export function SharePage({ participants, preview, writeClipboard = (text) => na
 
 type ParticipantsPageProps = WorkspaceNavigation & {
   participants: ParticipantsClient;
+  /** The address book (W35): From contacts, and saving people there. */
+  contacts?: ContactsClient;
+  saveFile?: (name: string, file: Blob) => void;
   preview?: (language: string) => Promise<{ subject: string; text: string }>;
   timeZone?: string;
 };
 
 /** The Participants tab (W17 E): who was invited and what happened. */
-export function ParticipantsPage({ participants, preview, timeZone, ...navigation }: ParticipantsPageProps) {
+export function ParticipantsPage({ participants, contacts, saveFile, preview, timeZone, ...navigation }: ParticipantsPageProps) {
   return (
     <SurveyFrame {...navigation} active="participants">
       {() => (
         <main className="survey-page survey-page--wide">
-          <ParticipantsPanel client={participants} surveyId={navigation.surveyId} locale={navigation.locale} {...(preview === undefined ? {} : { preview })} {...(timeZone === undefined ? {} : { timeZone })} />
+          <ParticipantsPanel
+            client={participants}
+            surveyId={navigation.surveyId}
+            locale={navigation.locale}
+            {...(contacts === undefined ? {} : { contacts })}
+            {...(saveFile === undefined ? {} : { saveFile })}
+            {...(preview === undefined ? {} : { preview })}
+            {...(timeZone === undefined ? {} : { timeZone })}
+          />
         </main>
       )}
     </SurveyFrame>

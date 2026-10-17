@@ -63,7 +63,7 @@ describe("Participants tab (AWK-29, W17 E)", () => {
     );
 
     const grid = await screen.findByRole("grid", { name: "Participants" });
-    await within(grid).findByText("anna@acme.at");
+    await within(grid).findByText("anna@acme.at · CRM-1");
     expect(tabs().getByRole("link", { name: "Participants 640" }).getAttribute("aria-current")).toBe("page");
     fireEvent.click(tabs().getByRole("link", { name: "Results 248" }));
     expect(onTab).toHaveBeenCalledWith("results");

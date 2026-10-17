@@ -59,6 +59,7 @@ builder.Services.AddSingleton<Askwerk.Api.App.Jobs.JobRunner>();
 builder.Services.AddHostedService<Askwerk.Api.App.Jobs.JobService>();
 builder.Services.AddScoped<Askwerk.Api.App.Jobs.IJobHandler, Askwerk.Api.App.Participants.SendInvitationsJob>();
 builder.Services.AddScoped<Askwerk.Api.App.Jobs.IJobHandler, Askwerk.Api.App.Participants.SendRemindersJob>();
+builder.Services.AddScoped<Askwerk.Api.App.Jobs.IJobHandler, Askwerk.Api.App.Participants.AutoRemindersJob>();
 
 // Result exports (AWK-24): one exporter per format.
 builder.Services.AddSingleton<IExporter, XlsxExporter>();

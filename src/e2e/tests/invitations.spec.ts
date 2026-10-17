@@ -30,7 +30,8 @@ test("an owner invites with personal links, the answer shows with the person, an
   expect((await page.request.post(`/api/app/surveys/${id}/publish`)).ok()).toBe(true);
 
   await page.goto(`/surveys/${id}/participants`);
-  await page.getByRole("button", { name: "Invite more…" }).click();
+  await page.getByRole("button", { name: /^\+ Add people/ }).click();
+  await page.getByRole("menuitem", { name: /^Type or paste/ }).click();
   const dialog = page.getByRole("dialog", { name: "Invite participants" });
   await dialog.getByRole("textbox", { name: "Addresses, one per line" }).fill("anna.berger@acme.example\nnot-an-address");
   await expect(dialog.getByText("1 new · not an address: line 2 “not-an-address”")).toBeVisible();

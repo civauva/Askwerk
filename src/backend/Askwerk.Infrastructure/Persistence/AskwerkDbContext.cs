@@ -87,6 +87,9 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
     /// <summary>People invited to surveys (AWK-7).</summary>
     public DbSet<Askwerk.Domain.Participants.Participant> Participants => Set<Askwerk.Domain.Participants.Participant>();
 
+    /// <summary>The organisations' address books (W35).</summary>
+    public DbSet<Askwerk.Domain.Participants.Contact> Contacts => Set<Askwerk.Domain.Participants.Contact>();
+
     /// <summary>Sendings to lists of participants (AWK-7).</summary>
     public DbSet<Askwerk.Domain.Participants.Invitation> Invitations => Set<Askwerk.Domain.Participants.Invitation>();
 
@@ -494,6 +497,10 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             survey.Property(row => row.LookBase).HasColumnName("look_base").HasMaxLength(80);
             survey.Property(row => row.ClosesAt).HasColumnName("closes_at");
             survey.Property(row => row.OneResponsePerPerson).HasColumnName("one_response_per_person");
+            survey.Property(row => row.AutoReminders).HasColumnName("auto_reminders");
+            survey.Property(row => row.ReminderDays).HasColumnName("reminder_days").HasDefaultValue(7);
+            survey.Property(row => row.ReminderMax).HasColumnName("reminder_max").HasDefaultValue(2);
+            survey.Property(row => row.ReminderRevision).HasColumnName("reminder_revision");
             survey.HasOne<Theme>().WithMany().HasForeignKey(row => row.ThemeId).OnDelete(DeleteBehavior.SetNull);
             survey.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
             survey.HasOne<User>().WithMany().HasForeignKey(row => row.CreatedBy).OnDelete(DeleteBehavior.Restrict);
@@ -734,10 +741,35 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             participant.Property(row => row.BouncedAt).HasColumnName("bounced_at");
             participant.Property(row => row.Reminders).HasColumnName("reminders");
             participant.Property(row => row.RemindedAt).HasColumnName("reminded_at");
+            participant.Property(row => row.ExternalId).HasColumnName("external_id").HasMaxLength(200);
+            participant.Property(row => row.Fields).HasColumnName("fields").HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
+            participant.Property(row => row.ContactId).HasColumnName("contact_id");
+            participant.Property(row => row.RemindersOff).HasColumnName("reminders_off");
+            participant.HasOne<Askwerk.Domain.Participants.Contact>().WithMany().HasForeignKey(row => row.ContactId).OnDelete(DeleteBehavior.SetNull);
+            participant.HasIndex(row => new { row.SurveyId, row.ExternalId });
             participant.HasOne<Survey>().WithMany().HasForeignKey(row => row.SurveyId).OnDelete(DeleteBehavior.Restrict);
             participant.HasOne<Askwerk.Domain.Participants.Invitation>().WithMany().HasForeignKey(row => row.InvitationId).OnDelete(DeleteBehavior.Restrict);
             participant.HasIndex(row => row.Token).IsUnique();
             participant.HasIndex(row => new { row.SurveyId, row.Email }).IsUnique();
+        });
+
+        modelBuilder.Entity<Askwerk.Domain.Participants.Contact>(contact =>
+        {
+            contact.ToTable("contact");
+            contact.HasKey(row => row.Id);
+            contact.Property(row => row.Id).HasColumnName("id").ValueGeneratedNever();
+            contact.Property(row => row.TenantId).HasColumnName("tenant_id");
+            contact.Property(row => row.Email).HasColumnName("email").HasMaxLength(254);
+            contact.Property(row => row.Name).HasColumnName("name").HasMaxLength(200);
+            contact.Property(row => row.Language).HasColumnName("language").HasMaxLength(16);
+            contact.Property(row => row.ExternalId).HasColumnName("external_id").HasMaxLength(200);
+            contact.Property(row => row.Fields).HasColumnName("fields").HasColumnType("jsonb").HasDefaultValueSql("'{}'::jsonb");
+            contact.Property(row => row.Groups).HasColumnName("groups").HasDefaultValueSql("'{}'");
+            contact.Property(row => row.CreatedAt).HasColumnName("created_at");
+            contact.Property(row => row.UpdatedAt).HasColumnName("updated_at");
+            contact.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
+            contact.HasIndex(row => new { row.TenantId, row.Email }).IsUnique();
+            contact.HasIndex(row => new { row.TenantId, row.ExternalId }).IsUnique().HasFilter("external_id IS NOT NULL");
         });
 
         modelBuilder.Entity<Askwerk.Domain.Participants.Unsubscribe>(unsubscribe =>

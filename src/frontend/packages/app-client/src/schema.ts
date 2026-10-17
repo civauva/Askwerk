@@ -4598,6 +4598,1081 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The contacts a page at a time, by name, with their groups, how many surveys they were invited to and answered, and the group and state counts. */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Part of the name, email or External ID. */
+                    search?: string;
+                    /** @description Only this group. */
+                    group?: string;
+                    /** @description invitable, unsubscribed or bounced. */
+                    state?: string;
+                    /** @description Rows to skip. */
+                    offset?: number | string;
+                    /** @description Rows per page, at most 100. */
+                    limit?: number | string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description One page. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactListResponse"];
+                        "application/json": components["schemas"]["ContactListResponse"];
+                        "text/json": components["schemas"]["ContactListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Adds a contact. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactInput"];
+                    "text/json": components["schemas"]["ContactInput"];
+                    "application/*+json": components["schemas"]["ContactInput"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactCreated"];
+                        "application/json": components["schemas"]["ContactCreated"];
+                        "text/json": components["schemas"]["ContactCreated"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Changes a contact: details and groups. */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The contact. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactInput"];
+                    "text/json": components["schemas"]["ContactInput"];
+                    "application/*+json": components["schemas"]["ContactInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Removes the chosen contacts; their participants in surveys stay, without the link to them. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactSelection"];
+                    "text/json": components["schemas"]["ContactSelection"];
+                    "application/*+json": components["schemas"]["ContactSelection"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactsChanged"];
+                        "application/json": components["schemas"]["ContactsChanged"];
+                        "text/json": components["schemas"]["ContactsChanged"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Puts the chosen contacts into a group, or takes them out of it. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactGroupRequest"];
+                    "text/json": components["schemas"]["ContactGroupRequest"];
+                    "application/*+json": components["schemas"]["ContactGroupRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactsChanged"];
+                        "application/json": components["schemas"]["ContactsChanged"];
+                        "text/json": components["schemas"]["ContactsChanged"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** A pasted table (W35): cells split by tabs as Excel copies them, else CSV; the header first. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description The pasted text. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParticipantCheckRequest"];
+                    "application/*+json": components["schemas"]["ParticipantCheckRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PeopleTable"];
+                        "application/json": components["schemas"]["PeopleTable"];
+                        "text/json": components["schemas"]["PeopleTable"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Imports people into Contacts (W35): by External ID, then email; known ones get the new details, new ones are added; all join the group. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ContactImportRequest"];
+                    "text/json": components["schemas"]["ContactImportRequest"];
+                    "application/*+json": components["schemas"]["ContactImportRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactsImported"];
+                        "application/json": components["schemas"]["ContactsImported"];
+                        "text/json": components["schemas"]["ContactsImported"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/contacts/contacts.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The contacts as CSV: email, name, language, External ID, groups and each field; one group or all. UTF-8 with a byte order mark. */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Only this group. */
+                    group?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The file. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/table": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** A pasted table (W35): cells split by tabs as Excel copies them, else CSV; the header first. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParticipantCheckRequest"];
+                    "application/*+json": components["schemas"]["ParticipantCheckRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PeopleTable"];
+                        "application/json": components["schemas"]["PeopleTable"];
+                        "text/json": components["schemas"]["PeopleTable"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/check-people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Checks mapped people (W35 import step 3): who is new, already invited (External ID or email), unsubscribed, a duplicate or no address. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CheckPeopleRequest"];
+                    "text/json": components["schemas"]["CheckPeopleRequest"];
+                    "application/*+json": components["schemas"]["CheckPeopleRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantCheckResponse"];
+                        "application/json": components["schemas"]["ParticipantCheckResponse"];
+                        "text/json": components["schemas"]["ParticipantCheckResponse"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/{participantId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One person (W35): their details, personal link and history. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                    /** @description The participant. */
+                    participantId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantDetail"];
+                        "application/json": components["schemas"]["ParticipantDetail"];
+                        "text/json": components["schemas"]["ParticipantDetail"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        /** Changes a person (W35): email, name, language, External ID and fields; their link stays the same. */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                    /** @description The participant. */
+                    participantId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParticipantInput"];
+                    "text/json": components["schemas"]["ParticipantInput"];
+                    "application/*+json": components["schemas"]["ParticipantInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/{participantId}/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** No more reminders for a person, or reminders again (W35). */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                    /** @description The participant. */
+                    participantId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RemindersOffRequest"];
+                    "text/json": components["schemas"]["RemindersOffRequest"];
+                    "application/*+json": components["schemas"]["RemindersOffRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** The invitation again to the chosen people (W35), sent before or not. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParticipantSelection"];
+                    "text/json": components["schemas"]["ParticipantSelection"];
+                    "application/*+json": components["schemas"]["ParticipantSelection"];
+                };
+            };
+            responses: {
+                /** @description Accepted */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Puts the chosen people into Contacts, in a group (W35); known contacts get their new details. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SaveToContactsRequest"];
+                    "text/json": components["schemas"]["SaveToContactsRequest"];
+                    "application/*+json": components["schemas"]["SaveToContactsRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ContactsSavedResponse"];
+                        "application/json": components["schemas"]["ContactsSavedResponse"];
+                        "text/json": components["schemas"]["ContactsSavedResponse"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/participants.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Every participant as CSV (W35): email, name, language, External ID, status, dates, reminders, link and each field;
+         *     the same search and filters as the list. UTF-8 with a byte order mark, for Excel.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description As in the list. */
+                    search?: string;
+                    /** @description As in the list. */
+                    status?: string;
+                    /** @description As in the list. */
+                    field?: string;
+                };
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** The chosen participants as CSV (W35). */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParticipantSelection"];
+                    "text/json": components["schemas"]["ParticipantSelection"];
+                    "application/*+json": components["schemas"]["ParticipantSelection"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/surveys/{surveyId}/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** The automatic reminders (W35): on or off, after how many days (1 to 60), at most how many (1 to 5). */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The survey. */
+                    surveyId: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AutoRemindersRequest"];
+                    "text/json": components["schemas"]["AutoRemindersRequest"];
+                    "application/*+json": components["schemas"]["AutoRemindersRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["AutoReminderSettings"];
+                        "application/json": components["schemas"]["AutoReminderSettings"];
+                        "text/json": components["schemas"]["AutoReminderSettings"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParticipantProblem"];
+                        "application/json": components["schemas"]["ParticipantProblem"];
+                        "text/json": components["schemas"]["ParticipantProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/surveys/{surveyId}/participants/check": {
         parameters: {
             query?: never;
@@ -4769,6 +5844,12 @@ export interface paths {
                     offset?: number | string;
                     /** @description Rows per page, at most 100; 50 when empty. */
                     limit?: number | string;
+                    /** @description Part of the name, email or External ID (W35). */
+                    search?: string;
+                    /** @description One status, or not-answered for all who have not answered (W35). */
+                    status?: string;
+                    /** @description A field and its value, key:value (W35). */
+                    field?: string;
                 };
                 header?: never;
                 path: {
@@ -9032,6 +10113,46 @@ export interface components {
              */
             brokenAtSequence: null | number | string;
         };
+        /** @description The automatic reminders of a survey (W35). */
+        AutoReminderSettings: {
+            /** @description Whether they are on. */
+            on: boolean;
+            /**
+             * Format: int32
+             * @description Days after the invitation or the last reminder.
+             */
+            days: number | string;
+            /**
+             * Format: int32
+             * @description Reminders per person at most.
+             */
+            max: number | string;
+            /**
+             * Format: date-time
+             * @description The next automatic reminder (UTC), if anyone is due.
+             */
+            nextAt: null | string;
+            /**
+             * Format: int32
+             * @description How many get it.
+             */
+            nextCount: number | string;
+        };
+        /** @description The automatic reminders to set. */
+        AutoRemindersRequest: {
+            /** @description On or off. */
+            on: boolean;
+            /**
+             * Format: int32
+             * @description After how many days; unchanged when empty.
+             */
+            days?: null | number | string;
+            /**
+             * Format: int32
+             * @description At most how many; unchanged when empty.
+             */
+            max?: null | number | string;
+        };
         /** @description The installation's settings to save (AWK-39). */
         ChangeInstallationRequest: {
             /** @description Its name. */
@@ -9073,10 +10194,173 @@ export interface components {
             /** @description owner, admin, editor, analyst or viewer. */
             role: null | string;
         };
+        /** @description People to check. */
+        CheckPeopleRequest: {
+            /** @description As the column mapping made them. */
+            people: null | components["schemas"]["ParticipantInput"][];
+        };
         /** @description The current password, to confirm a sensitive change. */
         ConfirmPasswordRequest: {
             /** @description Password. */
             password: string;
+        };
+        /** @description A new contact. */
+        ContactCreated: {
+            /**
+             * Format: uuid
+             * @description Its id.
+             */
+            id: string;
+        };
+        /** @description A group and its size. */
+        ContactGroup: {
+            /** @description The group. */
+            name: string;
+            /**
+             * Format: int32
+             * @description Contacts in it.
+             */
+            count: number | string;
+        };
+        /** @description Contacts into or out of a group. */
+        ContactGroupRequest: {
+            /** @description The chosen ones. */
+            contactIds: null | string[];
+            /** @description The group. */
+            group: null | string;
+            /** @description Take them out instead. */
+            leave?: null | boolean;
+        };
+        /** @description People to import into Contacts. */
+        ContactImportRequest: {
+            /** @description As the column mapping made them. */
+            people: null | components["schemas"]["ParticipantInput"][];
+            /** @description The group they join, if any. */
+            group?: null | string;
+        };
+        /** @description A contact to add or change. */
+        ContactInput: {
+            /** @description The address. */
+            email: null | string;
+            /** @description The name. */
+            name: null | string;
+            /** @description E.g. de. */
+            language: null | string;
+            /** @description Their id in another system. */
+            externalId?: null | string;
+            /** @description Further fields. */
+            fields?: null | {
+                [key: string]: string;
+            };
+            /** @description Their groups; unchanged when empty on a change. */
+            groups?: null | string[];
+        };
+        /** @description One contact in the list. */
+        ContactItem: {
+            /**
+             * Format: uuid
+             * @description The contact.
+             */
+            id: string;
+            /** @description The address. */
+            email: string;
+            /** @description The name. */
+            name: null | string;
+            /** @description The language. */
+            language: null | string;
+            /** @description Their id in another system. */
+            externalId: null | string;
+            /** @description Further fields. */
+            fields: {
+                [key: string]: string;
+            };
+            /** @description Their groups. */
+            groups: string[];
+            /**
+             * Format: int32
+             * @description Surveys they were invited to.
+             */
+            surveys: number | string;
+            /**
+             * Format: int32
+             * @description Surveys they answered.
+             */
+            answered: number | string;
+            /**
+             * Format: date-time
+             * @description The last invitation (UTC).
+             */
+            lastInvitedAt: null | string;
+            /** @description Neither unsubscribed nor bounced. */
+            invitable: boolean;
+            /** @description They asked for no more invitations. */
+            unsubscribed: boolean;
+            /** @description Their address was refused. */
+            bounced: boolean;
+        };
+        /** @description One page of contacts. */
+        ContactListResponse: {
+            /** @description The page. */
+            items: components["schemas"]["ContactItem"][];
+            /**
+             * Format: int32
+             * @description How many the search and filters choose.
+             */
+            matching: number | string;
+            /** @description all, invitable, unsubscribed, bounced. */
+            counts: {
+                [key: string]: number | string;
+            };
+            /** @description Every group with its size. */
+            groups: components["schemas"]["ContactGroup"][];
+            /** @description The fields contacts have. */
+            fieldKeys: string[];
+        };
+        /** @description What a change to many contacts did. */
+        ContactsChanged: {
+            /**
+             * Format: int32
+             * @description Contacts removed.
+             */
+            removed: number | string;
+            /**
+             * Format: int32
+             * @description Contacts changed.
+             */
+            changed: number | string;
+        };
+        /** @description Chosen contacts. */
+        ContactSelection: {
+            /** @description The chosen ones. */
+            contactIds: null | string[];
+        };
+        /** @description What an import into Contacts did. */
+        ContactsImported: {
+            /**
+             * Format: int32
+             * @description New contacts.
+             */
+            added: number | string;
+            /**
+             * Format: int32
+             * @description Known contacts with new details.
+             */
+            updated: number | string;
+            /** @description Lines that are no address. */
+            invalid: components["schemas"]["ListLine"][];
+        };
+        /** @description What saving to Contacts did. */
+        ContactsSavedResponse: {
+            /**
+             * Format: int32
+             * @description New contacts.
+             */
+            added: number | string;
+            /**
+             * Format: int32
+             * @description Known contacts with new details.
+             */
+            updated: number | string;
         };
         /** @description A copy of one of Askwerk's templates (W32). */
         CopyTemplateRequest: {
@@ -9744,6 +11028,12 @@ export interface components {
             send?: null | boolean;
             /** @description The address for the links; the primary one when empty. */
             host?: null | string;
+            /** @description Contacts to invite as well (W35), with their fields. */
+            contactIds?: null | string[];
+            /** @description Also keep the people in Contacts (W35); known ones get the new details. */
+            saveToContacts?: null | boolean;
+            /** @description With SaveToContacts: the group they join. */
+            contactGroup?: null | string;
         };
         /** @description What an invitation link offers (W18 C). */
         JoinInvitationResponse: {
@@ -10136,6 +11426,59 @@ export interface components {
             /** @description Lines that are not addresses. */
             invalid: components["schemas"]["ListLine"][];
         };
+        /** @description One person (W35). */
+        ParticipantDetail: {
+            /**
+             * Format: uuid
+             * @description The participant.
+             */
+            id: string;
+            /** @description The address. */
+            email: string;
+            /** @description The name. */
+            name: null | string;
+            /** @description The language. */
+            language: null | string;
+            /** @description Their id in another system. */
+            externalId: null | string;
+            /** @description Further fields. */
+            fields: {
+                [key: string]: string;
+            };
+            /** @description The personal link. */
+            link: string;
+            /** @description No more reminders. */
+            remindersOff: boolean;
+            /**
+             * Format: uuid
+             * @description Their contact, if any.
+             */
+            contactId: null | string;
+            /** @description What happened, oldest first. */
+            history: components["schemas"]["ParticipantEvent"][];
+            /**
+             * Format: date-time
+             * @description The next automatic reminder for them (UTC), if any.
+             */
+            nextReminderAt: null | string;
+            /** @description Whether the survey reminds by itself. */
+            autoReminders: boolean;
+        };
+        /** @description One thing that happened to a person (W35). */
+        ParticipantEvent: {
+            /** @description invited, sent, reminded, opened, started, answered, bounced or unsubscribed. */
+            kind: string;
+            /**
+             * Format: date-time
+             * @description When (UTC).
+             */
+            at: string;
+            /**
+             * Format: int32
+             * @description Reminded: how many reminders so far.
+             */
+            count: null | number | string;
+        };
         /** @description A person to invite. */
         ParticipantInput: {
             /** @description The address. */
@@ -10144,6 +11487,12 @@ export interface components {
             name: null | string;
             /** @description Their language, e.g. de. */
             language: null | string;
+            /** @description Their id in another system (W35); matches them before the email. */
+            externalId?: null | string;
+            /** @description Further fields (W35), e.g. department; placeholders in messages. */
+            fields?: null | {
+                [key: string]: string;
+            };
         };
         /** @description A participant in the list. */
         ParticipantItem: {
@@ -10172,6 +11521,32 @@ export interface components {
             reminders: number | string;
             /** @description Their personal link. */
             link: string;
+            /** @description Their id in another system (W35). */
+            externalId?: null | string;
+            /** @description Their further fields (W35). */
+            fields?: null | {
+                [key: string]: string;
+            };
+            /**
+             * Format: date-time
+             * @description The last thing that happened: answering, opening, a reminder, the invitation (W35).
+             */
+            lastActivity?: null | string;
+            /**
+             * Format: date-time
+             * @description The last reminder (UTC).
+             */
+            remindedAt?: null | string;
+            /**
+             * @description No more reminders for them (W35).
+             * @default false
+             */
+            remindersOff: boolean;
+            /**
+             * Format: uuid
+             * @description Their contact, if any (W35).
+             */
+            contactId?: null | string;
         };
         /** @description One page of the participants of a survey. */
         ParticipantListResponse: {
@@ -10191,6 +11566,15 @@ export interface components {
              * @description The next planned reminder (UTC).
              */
             reminderAt: null | string;
+            /**
+             * Format: int32
+             * @description How many the search and filters choose (W35); the pages count these.
+             * @default 0
+             */
+            matching: number | string;
+            /** @description The fields the survey's participants have (W35), to filter by. */
+            fieldKeys?: null | string[];
+            autoReminders?: null | components["schemas"]["AutoReminderSettings"];
         };
         /** @description Why an invitation was refused. */
         ParticipantProblem: {
@@ -10246,6 +11630,17 @@ export interface components {
         PasswordResetStateResponse: {
             /** @description True with email settings. */
             available: boolean;
+        };
+        /** @description A list read as a table (W35). */
+        PeopleTable: {
+            /** @description The file's name, if it was a file. */
+            fileName: null | string;
+            /** @description The header of each column. */
+            columns: string[];
+            /** @description What each column most likely holds: email, name, firstName, lastName, language, externalId or field. */
+            guesses: string[];
+            /** @description Every row after the header, as wide as the table. */
+            rows: string[][];
         };
         /** @description Language and theme. */
         PreferencesRequest: {
@@ -10341,6 +11736,11 @@ export interface components {
         RecoveryRequest: {
             /** @description The code. */
             code: string;
+        };
+        /** @description Reminders off or on again. */
+        RemindersOffRequest: {
+            /** @description True for no more reminders. */
+            off: boolean;
         };
         /** @description What removing an organisation's data takes away (AWK-39). */
         RemovalCounts: {
@@ -10690,6 +12090,15 @@ export interface components {
             name: null | string;
             /** @description The tokens (packages/schema format). */
             tokens: components["schemas"]["JsonElement"];
+        };
+        /** @description Chosen participants into Contacts. */
+        SaveToContactsRequest: {
+            /** @description The chosen ones. */
+            participantIds: null | string[];
+            /** @description Every participant instead. */
+            all?: null | boolean;
+            /** @description The group they join, if any. */
+            group?: null | string;
         };
         /** @description What the client should show after a sign-in step. */
         SessionResponse: {

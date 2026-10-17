@@ -79,11 +79,16 @@ public sealed class MessagesController(AskwerkDbContext context, IAuditWriter au
         var subject = request.Subject ?? new TranslatedText(new Dictionary<string, string>());
         var body = request.Body ?? new TranslatedText(new Dictionary<string, string>());
 
+        // The fields people have in this organisation are placeholders too (W35).
+        var fields = await context.Database
+            .SqlQuery<string>($"SELECT DISTINCT jsonb_object_keys(fields) AS \"Value\" FROM participant UNION SELECT DISTINCT jsonb_object_keys(fields) FROM contact")
+            .ToListAsync(cancellationToken);
+
         foreach (var (field, text) in new[] { ("subject", subject), ("body", body) })
         {
             foreach (var (language, value) in text)
             {
-                if (Placeholders.Unknown(value).Any())
+                if (Placeholders.Unknown(value, fields).Any())
                 {
                     ModelState.AddModelError($"{field}.{language}", "placeholder-unknown");
                 }

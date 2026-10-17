@@ -5961,6 +5961,1513 @@
         }
       }
     },
+    "/api/app/contacts": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "The contacts a page at a time, by name, with their groups, how many surveys they were invited to and answered, and the group and state counts.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Part of the name, email or External ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "description": "Only this group.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "invitable, unsubscribed or bounced.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Rows to skip.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Rows per page, at most 100.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Adds a contact.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactCreated"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactCreated"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactCreated"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/{id}": {
+      "put": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Changes a contact: details and groups.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The contact.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/remove": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Removes the chosen contacts; their participants in surveys stay, without the link to them.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/groups": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Puts the chosen contacts into a group, or takes them out of it.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactGroupRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactGroupRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactGroupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsChanged"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/table": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "A pasted table (W35): cells split by tabs as Excel copies them, else CSV; the header first.",
+        "requestBody": {
+          "description": "The pasted text.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantCheckRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/import": {
+      "post": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "Imports people into Contacts (W35): by External ID, then email; known ones get the new details, new ones are added; all join the group.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactImportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactImportRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsImported"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsImported"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsImported"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/contacts/contacts.csv": {
+      "get": {
+        "tags": [
+          "Contacts"
+        ],
+        "summary": "The contacts as CSV: email, name, language, External ID, groups and each field; one group or all. UTF-8 with a byte order mark.",
+        "parameters": [
+          {
+            "name": "group",
+            "in": "query",
+            "description": "Only this group.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file."
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/table": {
+      "post": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "A pasted table (W35): cells split by tabs as Excel copies them, else CSV; the header first.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantCheckRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeopleTable"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/check-people": {
+      "post": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "Checks mapped people (W35 import step 3): who is new, already invited (External ID or email), unsubscribed, a duplicate or no address.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckPeopleRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckPeopleRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckPeopleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantCheckResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantCheckResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantCheckResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/{participantId}": {
+      "get": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "One person (W35): their details, personal link and history.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The participant.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantDetail"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantDetail"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "Changes a person (W35): email, name, language, External ID and fields; their link stays the same.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The participant.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantInput"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantInput"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/{participantId}/reminders": {
+      "put": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "No more reminders for a person, or reminders again (W35).",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The participant.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemindersOffRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemindersOffRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/RemindersOffRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/resend": {
+      "post": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "The invitation again to the chosen people (W35), sent before or not.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants/contacts": {
+      "post": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "Puts the chosen people into Contacts, in a group (W35); known contacts get their new details.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveToContactsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveToContactsRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveToContactsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsSavedResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsSavedResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactsSavedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/participants.csv": {
+      "get": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "Every participant as CSV (W35): email, name, language, External ID, status, dates, reminders, link and each field;\r\nthe same search and filters as the list. UTF-8 with a byte order mark, for Excel.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "As in the list.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "As in the list.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "As in the list.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "The chosen participants as CSV (W35).",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantSelection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/surveys/{surveyId}/reminders": {
+      "put": {
+        "tags": [
+          "ParticipantPeople"
+        ],
+        "summary": "The automatic reminders (W35): on or off, after how many days (1 to 60), at most how many (1 to 5).",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoRemindersRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoRemindersRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoRemindersRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoReminderSettings"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoReminderSettings"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoReminderSettings"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/surveys/{surveyId}/participants/check": {
       "post": {
         "tags": [
@@ -6231,6 +7738,30 @@
                 "string"
               ],
               "format": "int32"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Part of the name, email or External ID (W35).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "One status, or not-answered for all who have not answered (W35).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "description": "A field and its value, key:value (W35).",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -11839,6 +13370,91 @@
         },
         "description": "Result of an audit chain check."
       },
+      "AutoReminderSettings": {
+        "required": [
+          "on",
+          "days",
+          "max",
+          "nextAt",
+          "nextCount"
+        ],
+        "type": "object",
+        "properties": {
+          "on": {
+            "type": "boolean",
+            "description": "Whether they are on."
+          },
+          "days": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Days after the invitation or the last reminder.",
+            "format": "int32"
+          },
+          "max": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Reminders per person at most.",
+            "format": "int32"
+          },
+          "nextAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The next automatic reminder (UTC), if anyone is due.",
+            "format": "date-time"
+          },
+          "nextCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many get it.",
+            "format": "int32"
+          }
+        },
+        "description": "The automatic reminders of a survey (W35)."
+      },
+      "AutoRemindersRequest": {
+        "required": [
+          "on"
+        ],
+        "type": "object",
+        "properties": {
+          "on": {
+            "type": "boolean",
+            "description": "On or off."
+          },
+          "days": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "After how many days; unchanged when empty.",
+            "format": "int32"
+          },
+          "max": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "At most how many; unchanged when empty.",
+            "format": "int32"
+          }
+        },
+        "description": "The automatic reminders to set."
+      },
       "ChangeInstallationRequest": {
         "required": [
           "name",
@@ -11972,6 +13588,25 @@
         },
         "description": "A new role."
       },
+      "CheckPeopleRequest": {
+        "required": [
+          "people"
+        ],
+        "type": "object",
+        "properties": {
+          "people": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ParticipantInput"
+            },
+            "description": "As the column mapping made them."
+          }
+        },
+        "description": "People to check."
+      },
       "ConfirmPasswordRequest": {
         "required": [
           "password"
@@ -11984,6 +13619,433 @@
           }
         },
         "description": "The current password, to confirm a sensitive change."
+      },
+      "ContactCreated": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Its id.",
+            "format": "uuid"
+          }
+        },
+        "description": "A new contact."
+      },
+      "ContactGroup": {
+        "required": [
+          "name",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The group."
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Contacts in it.",
+            "format": "int32"
+          }
+        },
+        "description": "A group and its size."
+      },
+      "ContactGroupRequest": {
+        "required": [
+          "contactIds",
+          "group"
+        ],
+        "type": "object",
+        "properties": {
+          "contactIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The chosen ones."
+          },
+          "group": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The group."
+          },
+          "leave": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Take them out instead."
+          }
+        },
+        "description": "Contacts into or out of a group."
+      },
+      "ContactImportRequest": {
+        "required": [
+          "people"
+        ],
+        "type": "object",
+        "properties": {
+          "people": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ParticipantInput"
+            },
+            "description": "As the column mapping made them."
+          },
+          "group": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The group they join, if any."
+          }
+        },
+        "description": "People to import into Contacts."
+      },
+      "ContactInput": {
+        "required": [
+          "email",
+          "name",
+          "language"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The address."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The name."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "E.g. de."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in another system."
+          },
+          "fields": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields."
+          },
+          "groups": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "Their groups; unchanged when empty on a change."
+          }
+        },
+        "description": "A contact to add or change."
+      },
+      "ContactItem": {
+        "required": [
+          "id",
+          "email",
+          "name",
+          "language",
+          "externalId",
+          "fields",
+          "groups",
+          "surveys",
+          "answered",
+          "lastInvitedAt",
+          "invitable",
+          "unsubscribed",
+          "bounced"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The contact.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The address."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The name."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The language."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in another system."
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields."
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Their groups."
+          },
+          "surveys": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Surveys they were invited to.",
+            "format": "int32"
+          },
+          "answered": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Surveys they answered.",
+            "format": "int32"
+          },
+          "lastInvitedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last invitation (UTC).",
+            "format": "date-time"
+          },
+          "invitable": {
+            "type": "boolean",
+            "description": "Neither unsubscribed nor bounced."
+          },
+          "unsubscribed": {
+            "type": "boolean",
+            "description": "They asked for no more invitations."
+          },
+          "bounced": {
+            "type": "boolean",
+            "description": "Their address was refused."
+          }
+        },
+        "description": "One contact in the list."
+      },
+      "ContactListResponse": {
+        "required": [
+          "items",
+          "matching",
+          "counts",
+          "groups",
+          "fieldKeys"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactItem"
+            },
+            "description": "The page."
+          },
+          "matching": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many the search and filters choose.",
+            "format": "int32"
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            },
+            "description": "all, invitable, unsubscribed, bounced."
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactGroup"
+            },
+            "description": "Every group with its size."
+          },
+          "fieldKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The fields contacts have."
+          }
+        },
+        "description": "One page of contacts."
+      },
+      "ContactsChanged": {
+        "required": [
+          "removed",
+          "changed"
+        ],
+        "type": "object",
+        "properties": {
+          "removed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Contacts removed.",
+            "format": "int32"
+          },
+          "changed": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Contacts changed.",
+            "format": "int32"
+          }
+        },
+        "description": "What a change to many contacts did."
+      },
+      "ContactSelection": {
+        "required": [
+          "contactIds"
+        ],
+        "type": "object",
+        "properties": {
+          "contactIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The chosen ones."
+          }
+        },
+        "description": "Chosen contacts."
+      },
+      "ContactsImported": {
+        "required": [
+          "added",
+          "updated",
+          "invalid"
+        ],
+        "type": "object",
+        "properties": {
+          "added": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "New contacts.",
+            "format": "int32"
+          },
+          "updated": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known contacts with new details.",
+            "format": "int32"
+          },
+          "invalid": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ListLine"
+            },
+            "description": "Lines that are no address."
+          }
+        },
+        "description": "What an import into Contacts did."
+      },
+      "ContactsSavedResponse": {
+        "required": [
+          "added",
+          "updated"
+        ],
+        "type": "object",
+        "properties": {
+          "added": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "New contacts.",
+            "format": "int32"
+          },
+          "updated": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known contacts with new details.",
+            "format": "int32"
+          }
+        },
+        "description": "What saving to Contacts did."
       },
       "CopyTemplateRequest": {
         "required": [
@@ -13616,6 +15678,31 @@
               "string"
             ],
             "description": "The address for the links; the primary one when empty."
+          },
+          "contactIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Contacts to invite as well (W35), with their fields."
+          },
+          "saveToContacts": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Also keep the people in Contacts (W35); known ones get the new details."
+          },
+          "contactGroup": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "With SaveToContacts: the group they join."
           }
         },
         "description": "An invitation to send."
@@ -14535,6 +16622,128 @@
         },
         "description": "Who a list would invite."
       },
+      "ParticipantDetail": {
+        "required": [
+          "id",
+          "email",
+          "name",
+          "language",
+          "externalId",
+          "fields",
+          "link",
+          "remindersOff",
+          "contactId",
+          "history",
+          "nextReminderAt",
+          "autoReminders"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The participant.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The address."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The name."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The language."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in another system."
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields."
+          },
+          "link": {
+            "type": "string",
+            "description": "The personal link."
+          },
+          "remindersOff": {
+            "type": "boolean",
+            "description": "No more reminders."
+          },
+          "contactId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their contact, if any.",
+            "format": "uuid"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantEvent"
+            },
+            "description": "What happened, oldest first."
+          },
+          "nextReminderAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The next automatic reminder for them (UTC), if any.",
+            "format": "date-time"
+          },
+          "autoReminders": {
+            "type": "boolean",
+            "description": "Whether the survey reminds by itself."
+          }
+        },
+        "description": "One person (W35)."
+      },
+      "ParticipantEvent": {
+        "required": [
+          "kind",
+          "at",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "invited, sent, reminded, opened, started, answered, bounced or unsubscribed."
+          },
+          "at": {
+            "type": "string",
+            "description": "When (UTC).",
+            "format": "date-time"
+          },
+          "count": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "description": "Reminded: how many reminders so far.",
+            "format": "int32"
+          }
+        },
+        "description": "One thing that happened to a person (W35)."
+      },
       "ParticipantInput": {
         "required": [
           "email",
@@ -14563,6 +16772,23 @@
               "string"
             ],
             "description": "Their language, e.g. de."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in another system (W35); matches them before the email."
+          },
+          "fields": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields (W35), e.g. department; placeholders in messages."
           }
         },
         "description": "A person to invite."
@@ -14627,6 +16853,52 @@
           "link": {
             "type": "string",
             "description": "Their personal link."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in another system (W35)."
+          },
+          "fields": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Their further fields (W35)."
+          },
+          "lastActivity": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last thing that happened: answering, opening, a reminder, the invitation (W35).",
+            "format": "date-time"
+          },
+          "remindedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last reminder (UTC).",
+            "format": "date-time"
+          },
+          "remindersOff": {
+            "type": "boolean",
+            "description": "No more reminders for them (W35).",
+            "default": false
+          },
+          "contactId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their contact, if any (W35).",
+            "format": "uuid"
           }
         },
         "description": "A participant in the list."
@@ -14675,6 +16947,37 @@
             ],
             "description": "The next planned reminder (UTC).",
             "format": "date-time"
+          },
+          "matching": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "How many the search and filters choose (W35); the pages count these.",
+            "format": "int32",
+            "default": 0
+          },
+          "fieldKeys": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "The fields the survey\u0027s participants have (W35), to filter by."
+          },
+          "autoReminders": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "The automatic reminders (W35) and the next one.",
+                "$ref": "#/components/schemas/AutoReminderSettings"
+              }
+            ]
           }
         },
         "description": "One page of the participants of a survey."
@@ -14824,6 +17127,49 @@
           }
         },
         "description": "Whether reset by email is possible."
+      },
+      "PeopleTable": {
+        "required": [
+          "fileName",
+          "columns",
+          "guesses",
+          "rows"
+        ],
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The file\u0027s name, if it was a file."
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The header of each column."
+          },
+          "guesses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "What each column most likely holds: email, name, firstName, lastName, language, externalId or field."
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Every row after the header, as wide as the table."
+          }
+        },
+        "description": "A list read as a table (W35)."
       },
       "PreferencesRequest": {
         "required": [
@@ -15143,6 +17489,19 @@
           }
         },
         "description": "A recovery code."
+      },
+      "RemindersOffRequest": {
+        "required": [
+          "off"
+        ],
+        "type": "object",
+        "properties": {
+          "off": {
+            "type": "boolean",
+            "description": "True for no more reminders."
+          }
+        },
+        "description": "Reminders off or on again."
       },
       "RemovalCounts": {
         "required": [
@@ -15999,6 +18358,40 @@
           }
         },
         "description": "A theme to save."
+      },
+      "SaveToContactsRequest": {
+        "required": [
+          "participantIds"
+        ],
+        "type": "object",
+        "properties": {
+          "participantIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The chosen ones."
+          },
+          "all": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Every participant instead."
+          },
+          "group": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The group they join, if any."
+          }
+        },
+        "description": "Chosen participants into Contacts."
       },
       "SessionResponse": {
         "required": [
@@ -18270,6 +20663,12 @@
     },
     {
       "name": "Results"
+    },
+    {
+      "name": "Contacts"
+    },
+    {
+      "name": "ParticipantPeople"
     },
     {
       "name": "Participants"

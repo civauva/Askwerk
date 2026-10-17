@@ -1311,6 +1311,71 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.ToTable("message_template", (string)null);
                 });
 
+            modelBuilder.Entity("Askwerk.Domain.Participants.Contact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("ExternalId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("external_id");
+
+                    b.Property<string>("Fields")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("fields")
+                        .HasDefaultValueSql("'{}'::jsonb");
+
+                    b.PrimitiveCollection<string[]>("Groups")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text[]")
+                        .HasColumnName("groups")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.Property<string>("Language")
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)")
+                        .HasColumnName("language");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "Email")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId", "ExternalId")
+                        .IsUnique()
+                        .HasFilter("external_id IS NOT NULL");
+
+                    b.ToTable("contact", (string)null);
+                });
+
             modelBuilder.Entity("Askwerk.Domain.Participants.Invitation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1371,6 +1436,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("bounced_at");
 
+                    b.Property<Guid?>("ContactId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("contact_id");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -1380,6 +1449,18 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasMaxLength(254)
                         .HasColumnType("character varying(254)")
                         .HasColumnName("email");
+
+                    b.Property<string>("ExternalId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("external_id");
+
+                    b.Property<string>("Fields")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("fields")
+                        .HasDefaultValueSql("'{}'::jsonb");
 
                     b.Property<Guid>("InvitationId")
                         .HasColumnType("uuid")
@@ -1407,6 +1488,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("reminders");
 
+                    b.Property<bool>("RemindersOff")
+                        .HasColumnType("boolean")
+                        .HasColumnName("reminders_off");
+
                     b.Property<DateTimeOffset?>("SentAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("sent_at");
@@ -1427,6 +1512,8 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContactId");
+
                     b.HasIndex("InvitationId");
 
                     b.HasIndex("Token")
@@ -1434,6 +1521,8 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SurveyId", "Email")
                         .IsUnique();
+
+                    b.HasIndex("SurveyId", "ExternalId");
 
                     b.ToTable("participant", (string)null);
                 });
@@ -1530,6 +1619,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(32)")
                         .HasColumnName("anonymity_mode");
 
+                    b.Property<bool>("AutoReminders")
+                        .HasColumnType("boolean")
+                        .HasColumnName("auto_reminders");
+
                     b.Property<DateTimeOffset?>("ClosesAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("closes_at");
@@ -1586,6 +1679,22 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.Property<int?>("PublishedVersion")
                         .HasColumnType("integer")
                         .HasColumnName("published_version");
+
+                    b.Property<int>("ReminderDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(7)
+                        .HasColumnName("reminder_days");
+
+                    b.Property<int>("ReminderMax")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(2)
+                        .HasColumnName("reminder_max");
+
+                    b.Property<int>("ReminderRevision")
+                        .HasColumnType("integer")
+                        .HasColumnName("reminder_revision");
 
                     b.Property<string>("Settings")
                         .ValueGeneratedOnAdd()
@@ -2352,6 +2461,15 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Askwerk.Domain.Participants.Contact", b =>
+                {
+                    b.HasOne("Askwerk.Domain.Identity.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Askwerk.Domain.Participants.Invitation", b =>
                 {
                     b.HasOne("Askwerk.Domain.Surveys.Survey", null)
@@ -2363,6 +2481,11 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Askwerk.Domain.Participants.Participant", b =>
                 {
+                    b.HasOne("Askwerk.Domain.Participants.Contact", null)
+                        .WithMany()
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Askwerk.Domain.Participants.Invitation", null)
                         .WithMany()
                         .HasForeignKey("InvitationId")

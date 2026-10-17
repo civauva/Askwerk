@@ -91,22 +91,34 @@ public sealed class MessageTemplate
 public static partial class Placeholders
 {
     /// <summary>Every placeholder Askwerk fills in.</summary>
-    public static readonly IReadOnlyList<string> Known = ["name", "link", "deadline", "duration", "organisation", "survey"];
+    public static readonly IReadOnlyList<string> Known = ["name", "link", "deadline", "duration", "organisation", "survey", "external_id"];
 
     /// <summary>Placeholders in a text that Askwerk does not know, e.g. "frist" for {frist}.</summary>
     /// <param name="text">A subject or body.</param>
+    /// <param name="fields">The people's fields that are placeholders too (W35), e.g. department.</param>
     /// <returns>The unknown names.</returns>
-    public static IEnumerable<string> Unknown(string text) =>
-        Placeholder().Matches(text ?? "").Select(match => match.Groups[1].Value).Where(name => !Known.Contains(name)).Distinct();
+    public static IEnumerable<string> Unknown(string text, IEnumerable<string>? fields = null)
+    {
+        var allowed = (fields ?? []).ToHashSet(StringComparer.Ordinal);
+
+        return Placeholder().Matches(text ?? "").Select(match => match.Groups[1].Value).Where(name => !Known.Contains(name) && !allowed.Contains(name)).Distinct();
+    }
 
     /// <summary>The text with every known placeholder replaced.</summary>
     /// <param name="text">A subject or body.</param>
     /// <param name="values">Values by placeholder name.</param>
     /// <returns>The filled-in text.</returns>
-    public static string Fill(string text, IReadOnlyDictionary<string, string> values) =>
-        Placeholder().Replace(text ?? "", match => values.TryGetValue(match.Groups[1].Value, out var value) ? value : match.Value);
+    public static string Fill(string text, IReadOnlyDictionary<string, string> values) => Fill(text, values, blankOthers: false);
 
-    [GeneratedRegex(@"\{([a-zA-Z]+)\}")]
+    /// <summary>The text with every placeholder replaced; a field the person does not have becomes empty when asked (W35).</summary>
+    /// <param name="text">A subject or body.</param>
+    /// <param name="values">Values by placeholder name.</param>
+    /// <param name="blankOthers">Replace placeholders without a value by nothing.</param>
+    /// <returns>The filled-in text.</returns>
+    public static string Fill(string text, IReadOnlyDictionary<string, string> values, bool blankOthers) =>
+        Placeholder().Replace(text ?? "", match => values.TryGetValue(match.Groups[1].Value, out var value) ? value : blankOthers ? "" : match.Value);
+
+    [GeneratedRegex(@"\{([a-zA-Z][a-zA-Z0-9_]*)\}")]
     private static partial Regex Placeholder();
 }
 

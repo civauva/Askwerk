@@ -20,6 +20,8 @@ namespace Askwerk.Api.App.Messages;
 /// <param name="Subject">Texts not saved yet, for the preview.</param>
 /// <param name="Body">Texts not saved yet, for the preview.</param>
 /// <param name="AnswerInEmail">Not saved yet, for the preview.</param>
+/// <param name="Fields">The person's further fields (W35), placeholders such as {department}.</param>
+/// <param name="ExternalId">The person's id in another system (W35), for {external_id}.</param>
 public sealed record MessageFor(
     MessageKind Kind,
     Survey Survey,
@@ -30,7 +32,9 @@ public sealed record MessageFor(
     string? Unsubscribe,
     TranslatedText? Subject = null,
     TranslatedText? Body = null,
-    bool? AnswerInEmail = null);
+    bool? AnswerInEmail = null,
+    IReadOnlyDictionary<string, string>? Fields = null,
+    string? ExternalId = null);
 
 /// <summary>
 /// Composes the organisation's messages for a survey (AWK-17 step 6, AWK-7): the stored or default texts with their
@@ -66,7 +70,15 @@ public static class MessageComposer
         var link = message.Link;
         var answerable = definition.Pages.SelectMany(page => page.Questions).Where(question => question.Type is not (QuestionType.TextBlock or QuestionType.Image)).ToList();
         var minutes = Math.Max(1, (int)Math.Round(answerable.Count * 0.3));
-        var values = new Dictionary<string, string>
+        // The person's fields first (W35), so the built-in placeholders win over a field of the same name.
+        var values = new Dictionary<string, string>(message.Fields ?? new Dictionary<string, string>(), StringComparer.Ordinal);
+
+        if (message.ExternalId is { } externalId)
+        {
+            values["external_id"] = externalId;
+        }
+
+        foreach (var (key, value) in new Dictionary<string, string>
         {
             ["name"] = message.Name,
             ["link"] = link,
@@ -74,13 +86,17 @@ public static class MessageComposer
             ["duration"] = german ? (minutes == 1 ? "1 Minute" : $"{minutes} Minuten") : (minutes == 1 ? "1 minute" : $"{minutes} minutes"),
             ["organisation"] = organisation,
             ["survey"] = In(definition.Welcome?.Title, language, survey.Title),
-        };
+        })
+        {
+            values[key] = value;
+        }
+
         var theme = await SurveyThemes.EffectiveAsync(context, survey, cancellationToken);
         var asset = (string id, int width) => $"{baseAddress}/api/app/run/{survey.Id}/assets/{id}?w={width}";
         var header = definition.HeaderImage is { } own ? own.Asset : theme.Layout is ThemeLayout.HeaderImage or ThemeLayout.SplitImage ? theme.HeaderImage?.Asset : null;
         var content = new EmailContent(
-            Placeholders.Fill(subject, values),
-            Placeholders.Fill(body, values),
+            Placeholders.Fill(subject, values, blankOthers: true),
+            Placeholders.Fill(body, values, blankOthers: true),
             link,
             german ? "Umfrage starten" : "Start the survey",
             organisation,

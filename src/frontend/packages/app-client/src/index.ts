@@ -9,6 +9,7 @@ export * from "./messages";
 export * from "./oauthClients";
 export * from "./organisation";
 export * from "./participants";
+export * from "./contacts";
 export * from "./results";
 export * from "./run";
 export * from "./surveys";

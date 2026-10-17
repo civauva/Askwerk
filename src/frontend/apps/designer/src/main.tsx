@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import "@askwerk/ui/tokens.css";
 import "./styles.css";
-import { createApiKeysClient, createAuthClient, createDevelopersClient, createInstallationClient, createOrganisationClient, createDomainsClient, createMembersClient, createMessagesClient, createSignInSettingsClient, createOAuthClientsClient, createParticipantsClient, createResultsClient, createSurveysClient, createThemesClient, createWebhooksClient, type SurveysClient } from "@askwerk/app-client";
+import { createApiKeysClient, createAuthClient, createContactsClient, createDevelopersClient, createInstallationClient, createOrganisationClient, createDomainsClient, createMembersClient, createMessagesClient, createSignInSettingsClient, createOAuthClientsClient, createParticipantsClient, createResultsClient, createSurveysClient, createThemesClient, createWebhooksClient, type SurveysClient } from "@askwerk/app-client";
 import { pickLocale } from "@askwerk/schema";
 import { beaconTransport, createTelemetry, installGlobalErrorHandlers, observeWebVitals } from "@askwerk/telemetry";
 import { StrictMode, useEffect, useState, type ReactNode } from "react";
@@ -19,6 +19,7 @@ import { DomainsPage } from "./domains/DomainsPage";
 import { EmbeddedApp } from "./embed/EmbeddedApp";
 import { LookPage } from "./look/LookPage";
 import { MembersPage } from "./members/MembersPage";
+import { ContactsPage } from "./contacts/ContactsPage";
 import { SignInPage } from "./members/SignInPage";
 import { MessagesPage } from "./messages/MessagesPage";
 import { ResultsPage } from "./results/ResultsPage";
@@ -37,6 +38,7 @@ const messages = createMessagesClient({ telemetry });
 const results = createResultsClient({ telemetry });
 const domains = createDomainsClient({ telemetry });
 const participants = createParticipantsClient({ telemetry });
+const contacts = createContactsClient({ telemetry });
 const apiKeys = createApiKeysClient({ telemetry });
 const developers = createDevelopersClient({ telemetry });
 const organisation = createOrganisationClient({ telemetry });
@@ -102,7 +104,7 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
 
     // Analysts and viewers read a survey's Results and Participants; only editors get the editor and Share (AWK-27, W17).
     if (view === "participants") {
-      return inSurvey(<ParticipantsPage key={id} {...navigation} participants={participants} preview={preview} />);
+      return inSurvey(<ParticipantsPage key={id} {...navigation} participants={participants} contacts={contacts} preview={preview} />);
     }
 
     if (view === "survey-settings") {
@@ -176,6 +178,10 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
         <DomainsPage client={domains} locale={locale} />
       )
     );
+  }
+
+  if (path === "/contacts") {
+    return shell(<ContactsPage client={contacts} participants={participants} surveys={surveys} locale={locale} canEdit={canEditSurveys(me)} />);
   }
 
   if (path === "/members") {
