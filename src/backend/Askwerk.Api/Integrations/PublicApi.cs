@@ -55,6 +55,12 @@ public static class PublicApi
     /// <summary>Policy: the key may manage webhooks (AWK-32).</summary>
     public const string WebhooksManage = "scope:webhooks:manage";
 
+    /// <summary>The policy for reading participants (W36).</summary>
+    public const string ParticipantsRead = "scope:participants:read";
+
+    /// <summary>The policy for adding and inviting participants (W36).</summary>
+    public const string ParticipantsWrite = "scope:participants:write";
+
     /// <summary>Policy: the key may provision users (AWK-12).</summary>
     public const string UsersManage = "scope:users:manage";
 
@@ -96,6 +102,8 @@ public static class PublicApi
             .AddPolicy(SurveysRead, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "surveys:read"))
             .AddPolicy(ResponsesRead, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "responses:read"))
             .AddPolicy(Integration, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration))
+            .AddPolicy(ParticipantsRead, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "participants:read"))
+            .AddPolicy(ParticipantsWrite, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "participants:write"))
             .AddPolicy(WebhooksManage, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "webhooks:manage"))
             .AddPolicy(UsersManage, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "users:manage"));
     }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import "@askwerk/ui/tokens.css";
 import "./styles.css";
-import { createApiKeysClient, createAuthClient, createContactsClient, createDevelopersClient, createInstallationClient, createOrganisationClient, createDomainsClient, createMembersClient, createMessagesClient, createSignInSettingsClient, createOAuthClientsClient, createParticipantsClient, createResultsClient, createSurveysClient, createThemesClient, createWebhooksClient, type SurveysClient } from "@askwerk/app-client";
+import { createApiKeysClient, createAuthClient, createConnectionsClient, createContactsClient, createDevelopersClient, createInstallationClient, createOrganisationClient, createDomainsClient, createMembersClient, createMessagesClient, createSignInSettingsClient, createOAuthClientsClient, createParticipantsClient, createResultsClient, createSurveysClient, createThemesClient, createWebhooksClient, type SurveysClient } from "@askwerk/app-client";
 import { pickLocale } from "@askwerk/schema";
 import { beaconTransport, createTelemetry, installGlobalErrorHandlers, observeWebVitals } from "@askwerk/telemetry";
 import { StrictMode, useEffect, useState, type ReactNode } from "react";
@@ -19,6 +19,7 @@ import { DomainsPage } from "./domains/DomainsPage";
 import { EmbeddedApp } from "./embed/EmbeddedApp";
 import { LookPage } from "./look/LookPage";
 import { MembersPage } from "./members/MembersPage";
+import { ConnectionsPage } from "./connections/ConnectionsPage";
 import { ContactsPage } from "./contacts/ContactsPage";
 import { SignInPage } from "./members/SignInPage";
 import { MessagesPage } from "./messages/MessagesPage";
@@ -39,6 +40,7 @@ const results = createResultsClient({ telemetry });
 const domains = createDomainsClient({ telemetry });
 const participants = createParticipantsClient({ telemetry });
 const contacts = createContactsClient({ telemetry });
+const connections = createConnectionsClient({ telemetry });
 const apiKeys = createApiKeysClient({ telemetry });
 const developers = createDevelopersClient({ telemetry });
 const organisation = createOrganisationClient({ telemetry });
@@ -182,6 +184,10 @@ function Pages({ me, locale, path, onNavigate, onSwitched, shell }: HomeProps & 
 
   if (path === "/contacts") {
     return shell(<ContactsPage client={contacts} participants={participants} surveys={surveys} locale={locale} canEdit={canEditSurveys(me)} />);
+  }
+
+  if (path === "/connections") {
+    return shell(<ConnectionsPage client={connections} surveys={surveys} locale={locale} onNavigate={onNavigate} writeClipboard={(text) => navigator.clipboard.writeText(text)} />);
   }
 
   if (path === "/members") {

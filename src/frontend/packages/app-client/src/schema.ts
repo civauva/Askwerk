@@ -8977,6 +8977,494 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/connections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The organisation's connections, newest first, with whether each works. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionList"];
+                        "application/json": components["schemas"]["ConnectionList"];
+                        "text/json": components["schemas"]["ConnectionList"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Connects a system: sets up what its goals need and returns the secrets, in this answer only. Answers with a URL
+         *     get a webhook; people, or answers without a URL, get an OAuth client or API key with the chosen permissions.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ConnectionRequest"];
+                    "text/json": components["schemas"]["ConnectionRequest"];
+                    "application/*+json": components["schemas"]["ConnectionRequest"];
+                };
+            };
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["CreatedConnection"];
+                        "application/json": components["schemas"]["CreatedConnection"];
+                        "text/json": components["schemas"]["CreatedConnection"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/connections/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** One connection. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionView"];
+                        "application/json": components["schemas"]["ConnectionView"];
+                        "text/json": components["schemas"]["ConnectionView"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Removes the connection: its key or client is revoked and its webhook deleted. */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Changes the name, how people are matched, the webhook's URL and events, or its surveys. */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ConnectionChange"];
+                    "text/json": components["schemas"]["ConnectionChange"];
+                    "application/*+json": components["schemas"]["ConnectionChange"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionView"];
+                        "application/json": components["schemas"]["ConnectionView"];
+                        "text/json": components["schemas"]["ConnectionView"];
+                    };
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/api/app/connections/{id}/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sends a test event to the connection's webhook. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Accepted */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/connections/{id}/secrets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** New secrets for the connection: the old ones stop working at once. Shown in this answer only. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionCredentials"];
+                        "application/json": components["schemas"]["ConnectionCredentials"];
+                        "text/json": components["schemas"]["ConnectionCredentials"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/connections/{id}/paused": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Pauses the connection, both directions, or lets it work again. */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The connection. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ConnectionPause"];
+                    "text/json": components["schemas"]["ConnectionPause"];
+                    "application/*+json": components["schemas"]["ConnectionPause"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionView"];
+                        "application/json": components["schemas"]["ConnectionView"];
+                        "text/json": components["schemas"]["ConnectionView"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ConnectionProblem"];
+                        "application/json": components["schemas"]["ConnectionProblem"];
+                        "text/json": components["schemas"]["ConnectionProblem"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/audit/verify": {
         parameters: {
             query?: never;
@@ -10204,6 +10692,161 @@ export interface components {
             /** @description Password. */
             password: string;
         };
+        /** @description How the system calls Askwerk. */
+        ConnectionCalls: {
+            /** @description oauth or api-key. */
+            signIn: string;
+            /** @description The client id, or the key's first characters. */
+            shown: string;
+            /** @description people, results, surveys. */
+            permissions: string[];
+            /**
+             * Format: date-time
+             * @description Its last call or token (UTC).
+             */
+            lastCallAt: null | string;
+            /**
+             * Format: date-time
+             * @description When it ends; never when empty.
+             */
+            expiresAt: null | string;
+            /** @description Whether it was revoked elsewhere. */
+            revoked: boolean;
+        };
+        /** @description What changes; null keeps. */
+        ConnectionChange: {
+            /** @description The name. */
+            name?: null | string;
+            /** @description How people are matched. */
+            matchBy?: null | string;
+            /** @description The webhook's URL. */
+            webhookUrl?: null | string;
+            /** @description The webhook's events. */
+            events?: null | string[];
+            /** @description The webhook's surveys; empty for all. */
+            surveyIds?: null | string[];
+        };
+        /** @description The secrets of a connection, shown once; null where it has none. */
+        ConnectionCredentials: {
+            /** @description The OAuth client id. */
+            clientId: null | string;
+            /** @description The OAuth client secret. */
+            clientSecret: null | string;
+            /** @description The API key. */
+            apiKey: null | string;
+            /** @description The webhook's signing secret. */
+            webhookSecret: null | string;
+        };
+        /** @description The organisation's connections. */
+        ConnectionList: {
+            /** @description Newest first. */
+            items: components["schemas"]["ConnectionView"][];
+        };
+        /** @description Whether a connection is paused. */
+        ConnectionPause: {
+            /** @description True to pause. */
+            paused: boolean;
+        };
+        /** @description Why a connection change was refused. */
+        ConnectionProblem: {
+            /** @description role-not-allowed, connection-not-found, connections-too-many, webhooks-too-many, no-webhook or connection-paused. */
+            code: string;
+        };
+        /** @description Connect a system: what the wizard collected. */
+        ConnectionRequest: {
+            /** @description What it is called. */
+            name: null | string;
+            /** @description answers, people, sign-in, embed. */
+            goals: null | string[];
+            /** @description Where answers go; without it the system reads them. */
+            webhookUrl?: null | string;
+            /** @description The webhook's events; response.completed when empty. */
+            events?: null | string[];
+            /** @description The webhook's surveys; all, also new ones, when empty. */
+            surveyIds?: null | string[];
+            /** @description oauth or api-key, when it calls Askwerk. */
+            signIn?: null | string;
+            /** @description people, results, surveys. */
+            permissions?: null | string[];
+            /** @description external-id (then email) or email. */
+            matchBy?: null | string;
+        };
+        /** @description A survey a webhook is limited to. */
+        ConnectionSurvey: {
+            /**
+             * Format: uuid
+             * @description The survey.
+             */
+            id: string;
+            /** @description Its title. */
+            title: string;
+        };
+        /** @description A connection as Connections shows it. */
+        ConnectionView: {
+            /**
+             * Format: uuid
+             * @description Its id.
+             */
+            id: string;
+            /** @description What it is called. */
+            name: string;
+            /** @description What it is for. */
+            goals: string[];
+            /** @description How people are matched. */
+            matchBy: string;
+            /** @description works, waiting (nothing yet), warning, failing or paused. */
+            health: string;
+            /** @description Why warning or failing: credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused. */
+            reason: null | string;
+            /**
+             * Format: date-time
+             * @description The last call or delivery (UTC).
+             */
+            lastActivityAt: null | string;
+            /**
+             * Format: date-time
+             * @description When it was paused.
+             */
+            pausedAt: null | string;
+            /** @description Who paused it. */
+            pausedBy: null | string;
+            calls: null | components["schemas"]["ConnectionCalls"];
+            webhook: null | components["schemas"]["ConnectionWebhook"];
+            /**
+             * Format: date-time
+             * @description Created (UTC).
+             */
+            createdAt: string;
+        };
+        /** @description How Askwerk calls the system. */
+        ConnectionWebhook: {
+            /** @description Where events go. */
+            url: string;
+            /** @description The events. */
+            events: string[];
+            /** @description The surveys; all when empty. */
+            surveys: components["schemas"]["ConnectionSurvey"][];
+            /**
+             * Format: int32
+             * @description Events delivered in the last 7 days.
+             */
+            deliveredThisWeek: number | string;
+            /**
+             * Format: int32
+             * @description Events that failed in the last 7 days.
+             */
+            failedThisWeek: number | string;
+            /**
+             * Format: date-time
+             * @description The last delivered event (UTC).
+             */
+            lastDeliveredAt: null | string;
+            /**
+             * Format: date-time
+             * @description Since when every delivery failed.
+             */
+            failingSince: null | string;
+        };
         /** @description A new contact. */
         ContactCreated: {
             /**
@@ -10395,6 +11038,13 @@ export interface components {
              * @description Its id, to withdraw it.
              */
             id: string;
+        };
+        /** @description A connection just created, with its secrets. */
+        CreatedConnection: {
+            /** @description The connection. */
+            connection: components["schemas"]["ConnectionView"];
+            /** @description Its secrets, shown this once. */
+            credentials: components["schemas"]["ConnectionCredentials"];
         };
         /** @description A client just created, with its secret. */
         CreatedOAuthClient: {

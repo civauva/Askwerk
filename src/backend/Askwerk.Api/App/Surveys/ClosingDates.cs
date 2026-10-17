@@ -59,6 +59,6 @@ public sealed class CloseSurveyJob(AskwerkDbContext context, IAuditWriter audit,
         await audit.WriteAsync(
             new AuditContent(now, survey.TenantId, AuditActorKind.System, null, "survey.closed", "Survey", survey.Id.ToString(), JsonSerializer.Serialize(new { reason = "closing-date", closesAt = survey.ClosesAt }), trace.CurrentTraceId),
             cancellationToken);
-        await WebhookService.RaiseAsync(context, survey.TenantId, "survey.closed", new { surveyId = survey.Id }, now, cancellationToken);
+        await WebhookService.RaiseAsync(context, survey.TenantId, "survey.closed", new { surveyId = survey.Id }, now, cancellationToken, survey.Id);
     }
 }

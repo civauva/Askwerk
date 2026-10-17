@@ -55,6 +55,9 @@ public sealed class OAuthClient
     /// <summary>Gets when it last got a token.</summary>
     public DateTimeOffset? LastUsedAt { get; private set; }
 
+    /// <summary>Paused with its connection (W36); it gets no tokens and its tokens fail while paused.</summary>
+    public DateTimeOffset? PausedAt { get; private set; }
+
     /// <summary>Creates a client and its secret (acs_…), which is shown only once.</summary>
     /// <param name="id">New id.</param>
     /// <param name="tenantId">The organisation.</param>
@@ -109,11 +112,26 @@ public sealed class OAuthClient
     /// <summary>Whether it may get tokens now.</summary>
     /// <param name="now">The current time.</param>
     /// <returns>True when neither revoked nor expired.</returns>
-    public bool IsUsable(DateTimeOffset now) => RevokedAt is null && (ExpiresAt is null || now < ExpiresAt);
+    public bool IsUsable(DateTimeOffset now) => RevokedAt is null && PausedAt is null && (ExpiresAt is null || now < ExpiresAt);
 
     /// <summary>Revokes it; its tokens stop working at once.</summary>
     /// <param name="now">When.</param>
     public void Revoke(DateTimeOffset now) => RevokedAt ??= now;
+
+    /// <summary>Pauses the client, or lets it work again (W36).</summary>
+    /// <param name="paused">Whether it is paused.</param>
+    /// <param name="now">Now.</param>
+    public void Pause(bool paused, DateTimeOffset now) => PausedAt = paused ? PausedAt ?? now : null;
+
+    /// <summary>Gives the client a new secret; the old one gets no more tokens (W36).</summary>
+    /// <returns>The new secret, shown once.</returns>
+    public string NewSecret()
+    {
+        var secret = "acs_" + RandomNumberGenerator.GetString(Alphabet, 44);
+        SecretHash = Hashes.Of(secret);
+
+        return secret;
+    }
 }
 
 /// <summary>An access token of an OAuth client (C32 B): opaque, stored as its hash, 15 minutes long.</summary>

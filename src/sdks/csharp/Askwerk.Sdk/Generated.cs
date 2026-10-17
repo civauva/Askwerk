@@ -260,6 +260,74 @@ public sealed class PublicExportRequest
     public PublicExportFilter? Filter { get; init; }
 }
 
+/// <summary>What the call did.</summary>
+public sealed class PublicInvited
+{
+    /// <summary>New people.</summary>
+    [JsonPropertyName("invited")]
+    public int Invited { get; init; }
+
+    /// <summary>Known people with new details.</summary>
+    [JsonPropertyName("updated")]
+    public int Updated { get; init; }
+
+    /// <summary>Not an address, or unsubscribed.</summary>
+    [JsonPropertyName("skipped")]
+    public int Skipped { get; init; }
+
+    /// <summary>The invited and updated people.</summary>
+    [JsonPropertyName("participants")]
+    public IReadOnlyList<PublicInvitedPerson> Participants { get; init; } = [];
+}
+
+/// <summary>A person after the call.</summary>
+public sealed class PublicInvitedPerson
+{
+    /// <summary>The participant.</summary>
+    [JsonPropertyName("id")]
+    public Guid Id { get; init; }
+
+    /// <summary>The address.</summary>
+    [JsonPropertyName("email")]
+    public string Email { get; init; } = "";
+
+    /// <summary>Their id in the other system.</summary>
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; init; }
+
+    /// <summary>invited or updated.</summary>
+    [JsonPropertyName("result")]
+    public string Result { get; init; } = "";
+
+    /// <summary>Their personal link.</summary>
+    [JsonPropertyName("link")]
+    public string Link { get; init; } = "";
+}
+
+/// <summary>People to add or update.</summary>
+public sealed class PublicInviteRequest
+{
+    /// <summary>At most 1000.</summary>
+    [JsonPropertyName("participants")]
+    public IReadOnlyList<PublicPerson>? Participants { get; init; }
+
+    /// <summary>Send invitation emails to new people (default true); false makes links only.</summary>
+    [JsonPropertyName("send")]
+    public bool? Send { get; init; }
+
+    /// <summary>When to send (UTC); now when empty.</summary>
+    [JsonPropertyName("sendAt")]
+    public DateTimeOffset? SendAt { get; init; }
+
+    /// <summary>"Answer by"; two weeks after sending when empty.</summary>
+    [JsonPropertyName("deadline")]
+    public string? Deadline { get; init; }
+
+    /// <summary>One reminder before the deadline (default true).</summary>
+    [JsonPropertyName("reminder")]
+    public bool? Reminder { get; init; }
+}
+
 /// <summary>Who answered.</summary>
 public sealed class PublicParticipant
 {
@@ -270,6 +338,42 @@ public sealed class PublicParticipant
     /// <summary>The host system's user id, when a host product named the respondent (AWK-13).</summary>
     [JsonPropertyName("externalId")]
     public string? ExternalId { get; init; }
+}
+
+/// <summary>One page of participants.</summary>
+public sealed class PublicParticipantPage
+{
+    /// <summary>Oldest first.</summary>
+    [JsonPropertyName("items")]
+    public IReadOnlyList<PublicParticipant> Items { get; init; } = [];
+
+    /// <summary>Pass as cursor for the next page; null on the last.</summary>
+    [JsonPropertyName("nextCursor")]
+    public string? NextCursor { get; init; }
+}
+
+/// <summary>A person from the other system.</summary>
+public sealed class PublicPerson
+{
+    /// <summary>Their address.</summary>
+    [JsonPropertyName("email")]
+    public string? Email { get; init; }
+
+    /// <summary>Their name, for {name}.</summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    /// <summary>Their language, e.g. de.</summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; init; }
+
+    /// <summary>Their id in the other system; finds them again when the address changes.</summary>
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; init; }
+
+    /// <summary>Further fields, e.g. department; placeholders in messages.</summary>
+    [JsonPropertyName("fields")]
+    public string? Fields { get; init; }
 }
 
 /// <summary>A response in long format.</summary>
@@ -753,4 +857,29 @@ public sealed partial class UsersApi
     /// <remarks>Scope users:manage. PUT with active true lets them in again.</remarks>
     public Task DeactivateAsync(string externalId, CancellationToken cancellationToken = default) =>
         _t.SendAsync(HttpMethod.Delete, $"/api/v1/users/{externalId}", [], null, null, cancellationToken);
+}
+
+/// <summary>Participants in the Public API.</summary>
+public sealed partial class ParticipantsApi
+{
+    private readonly Transport _t;
+
+    internal ParticipantsApi(Transport transport)
+    {
+        _t = transport;
+    }
+
+    /// <summary>Lists a survey's participants with their status and personal link, oldest first.</summary>
+    /// <remarks>Scope participants:read. Pages on a cursor: pass nextCursor as cursor until it is null.</remarks>
+    public Task<PublicParticipantPage> ListAsync(Guid surveyId, string? externalId = null, int? limit = null, string? cursor = null, CancellationToken cancellationToken = default) =>
+        _t.SendAsync<PublicParticipantPage>(HttpMethod.Get, $"/api/v1/surveys/{surveyId}/participants", [("externalId", externalId), ("limit", limit), ("cursor", cursor)], null, null, cancellationToken);
+
+    /// <summary>Every item of ListAsync, page after page.</summary>
+    public IAsyncEnumerable<PublicParticipant> ListAllAsync(Guid surveyId, string? externalId = null, int? limit = null, CancellationToken cancellationToken = default) =>
+        Transport.ByCursorAsync(cursor => ListAsync(surveyId, externalId, limit, cursor, cancellationToken: cancellationToken), page => page.Items, page => page.NextCursor, cancellationToken);
+
+    /// <summary>Adds or updates people and invites the new ones.</summary>
+    /// <remarks>Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails.</remarks>
+    public Task<PublicInvited> InviteAsync(Guid surveyId, PublicInviteRequest body, CancellationToken cancellationToken = default) =>
+        _t.SendAsync<PublicInvited>(HttpMethod.Post, $"/api/v1/surveys/{surveyId}/participants", [], body, null, cancellationToken);
 }

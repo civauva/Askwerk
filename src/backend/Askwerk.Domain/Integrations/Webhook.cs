@@ -54,6 +54,9 @@ public sealed class Webhook
     /// <summary>Gets when it was created (UTC).</summary>
     public DateTimeOffset CreatedAt { get; private set; }
 
+    /// <summary>Gets the surveys whose events it gets (W36); all surveys, also new ones, when empty.</summary>
+    public Guid[] SurveyIds { get; private set; } = [];
+
     /// <summary>Whether a URL may receive events: https, or http://localhost when allowed (development).</summary>
     /// <param name="url">The URL.</param>
     /// <param name="allowLocalhost">Allow http://localhost.</param>
@@ -95,6 +98,19 @@ public sealed class Webhook
             }
         }
     }
+
+    /// <summary>Limits it to the events of some surveys; all surveys when empty (W36).</summary>
+    /// <param name="surveyIds">The surveys.</param>
+    public void ForSurveys(IEnumerable<Guid> surveyIds) => SurveyIds = [.. surveyIds.Distinct()];
+
+    /// <summary>Whether it gets an event of a survey; events of no survey always.</summary>
+    /// <param name="surveyId">The survey of the event.</param>
+    /// <returns>True when it does.</returns>
+    public bool Covers(Guid? surveyId) => surveyId is not { } survey || SurveyIds.Length == 0 || SurveyIds.Contains(survey);
+
+    /// <summary>Changes the signing secret (W36).</summary>
+    /// <param name="secretProtected">The new secret, encrypted.</param>
+    public void NewSecret(string secretProtected) => SecretProtected = secretProtected;
 
     /// <summary>Notes a delivered event.</summary>
     public void Delivered() => FailingSince = null;

@@ -1083,6 +1083,209 @@
         }
       }
     },
+    "/api/v1/surveys/{surveyId}/participants": {
+      "get": {
+        "tags": [
+          "PublicParticipants"
+        ],
+        "summary": "Lists a survey\u0027s participants with their status and personal link, oldest first.",
+        "description": "Scope participants:read. Pages on a cursor: pass nextCursor as cursor until it is null.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "externalId",
+            "in": "query",
+            "description": "Only the person with this External ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "People per page, at most 100; 50 when empty.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Where the page starts, from the previous page\u0027s nextCursor.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of participants.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicParticipantPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks participants:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "PublicParticipants"
+        ],
+        "summary": "Adds or updates people and invites the new ones.",
+        "description": "Scope participants:write. Known people (same External ID, else same email) get the new details and keep their\r\nlink; unsubscribed addresses are skipped. send false makes personal links only, without emails.",
+        "parameters": [
+          {
+            "name": "surveyId",
+            "in": "path",
+            "description": "The survey.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicInviteRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicInviteRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Invited; emails are on their way.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicInvited"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "too-many-people or people-required.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks participants:write.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "survey-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "not-published or email-not-set-up.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
     "/api/v1/surveys/{surveyId}/exports": {
       "post": {
         "tags": [
@@ -1856,6 +2059,138 @@
         },
         "description": "An export to start."
       },
+      "PublicInvited": {
+        "required": [
+          "invited",
+          "updated",
+          "skipped",
+          "participants"
+        ],
+        "type": "object",
+        "properties": {
+          "invited": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "New people.",
+            "format": "int32"
+          },
+          "updated": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Known people with new details.",
+            "format": "int32"
+          },
+          "skipped": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Not an address, or unsubscribed.",
+            "format": "int32"
+          },
+          "participants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicInvitedPerson"
+            },
+            "description": "The invited and updated people."
+          }
+        },
+        "description": "What the call did."
+      },
+      "PublicInvitedPerson": {
+        "required": [
+          "id",
+          "email",
+          "externalId",
+          "result",
+          "link"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The participant.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "The address."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in the other system."
+          },
+          "result": {
+            "type": "string",
+            "description": "invited or updated."
+          },
+          "link": {
+            "type": "string",
+            "description": "Their personal link."
+          }
+        },
+        "description": "A person after the call."
+      },
+      "PublicInviteRequest": {
+        "required": [
+          "participants"
+        ],
+        "type": "object",
+        "properties": {
+          "participants": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/PublicPerson"
+            },
+            "description": "At most 1000."
+          },
+          "send": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Send invitation emails to new people (default true); false makes links only."
+          },
+          "sendAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When to send (UTC); now when empty.",
+            "format": "date-time"
+          },
+          "deadline": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "\u0022Answer by\u0022; two weeks after sending when empty.",
+            "format": "date"
+          },
+          "reminder": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "One reminder before the deadline (default true)."
+          }
+        },
+        "description": "People to add or update."
+      },
       "PublicParticipant": {
         "required": [
           "email",
@@ -1879,6 +2214,77 @@
           }
         },
         "description": "Who answered."
+      },
+      "PublicParticipantPage": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicParticipant"
+            },
+            "description": "Oldest first."
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Pass as cursor for the next page; null on the last."
+          }
+        },
+        "description": "One page of participants."
+      },
+      "PublicPerson": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their address."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their name, for {name}."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their language, e.g. de."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in the other system; finds them again when the address changes."
+          },
+          "fields": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields, e.g. department; placeholders in messages."
+          }
+        },
+        "description": "A person from the other system."
       },
       "PublicResponse": {
         "required": [
@@ -2566,6 +2972,9 @@
     },
     {
       "name": "PublicResponses"
+    },
+    {
+      "name": "PublicParticipants"
     },
     {
       "name": "PublicExports"

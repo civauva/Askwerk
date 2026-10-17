@@ -37,6 +37,7 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
       "Organisation",
       "Members",
       "Contacts",
+      "Connections",
       "Sign-in",
       "Look of surveys",
       "Messages",

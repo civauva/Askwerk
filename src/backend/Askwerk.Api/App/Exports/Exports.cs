@@ -247,7 +247,8 @@ public sealed class PrepareExportJob(AskwerkDbContext context, ExportWriter writ
             "export.completed",
             new { exportId = export.Id, surveyId = export.SurveyId, format = export.Format, file = new { name = fileName, size = file.Length, url = $"{baseAddress}/api/v1/exports/{export.Id}/file" } },
             now,
-            cancellationToken);
+            cancellationToken,
+            export.SurveyId);
         JobRunner.Enqueue(context, export.TenantId, DeleteExportJob.JobKind, new ExportJobPayload(export.Id), export.ExpiresAt!.Value, now);
         var (kind, id) = new ExportActor(export.RequestedByUserId, export.RequestedByApiKeyId).Audit;
         var details = JsonSerializer.Serialize(new { format = export.Format, options = JsonDocument.Parse(export.Options).RootElement, export.Total });

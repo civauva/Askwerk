@@ -154,12 +154,74 @@ export interface PublicExportRequest {
   filter?: PublicExportFilter | null;
 }
 
+/** What the call did. */
+export interface PublicInvited {
+  /** New people. */
+  invited: number;
+  /** Known people with new details. */
+  updated: number;
+  /** Not an address, or unsubscribed. */
+  skipped: number;
+  /** The invited and updated people. */
+  participants: PublicInvitedPerson[];
+}
+
+/** A person after the call. */
+export interface PublicInvitedPerson {
+  /** The participant. */
+  id: string;
+  /** The address. */
+  email: string;
+  /** Their id in the other system. */
+  externalId: string | null;
+  /** invited or updated. */
+  result: string;
+  /** Their personal link. */
+  link: string;
+}
+
+/** People to add or update. */
+export interface PublicInviteRequest {
+  /** At most 1000. */
+  participants: PublicPerson[] | null;
+  /** Send invitation emails to new people (default true); false makes links only. */
+  send?: boolean | null;
+  /** When to send (UTC); now when empty. */
+  sendAt?: string | null;
+  /** "Answer by"; two weeks after sending when empty. */
+  deadline?: string | null;
+  /** One reminder before the deadline (default true). */
+  reminder?: boolean | null;
+}
+
 /** Who answered. */
 export interface PublicParticipant {
   /** The invited address; null for an anonymous link. */
   email: string | null;
   /** The host system's user id, when a host product named the respondent (AWK-13). */
   externalId: string | null;
+}
+
+/** One page of participants. */
+export interface PublicParticipantPage {
+  /** Oldest first. */
+  items: PublicParticipant[];
+  /** Pass as cursor for the next page; null on the last. */
+  nextCursor: string | null;
+}
+
+/** A person from the other system. */
+export interface PublicPerson {
+  /** Their address. */
+  email: string | null;
+  /** Their name, for {name}. */
+  name?: string | null;
+  /** Their language, e.g. de. */
+  language?: string | null;
+  /** Their id in the other system; finds them again when the address changes. */
+  externalId?: string | null;
+  /** Further fields, e.g. department; placeholders in messages. */
+  fields?: string | null;
 }
 
 /** A response in long format. */
@@ -500,5 +562,29 @@ export class UsersApi {
   /** Deactivates a user: out of the organisation, sessions ended; never deleted, their responses stay. Scope users:manage. PUT with active true lets them in again. */
   deactivate(externalId: string): Promise<void> {
     return this.#t.request("DELETE", `/api/v1/users/${encodeURIComponent(externalId)}`, {  }) as Promise<void>;
+  }
+}
+
+/** Participants in the Public API. */
+export class ParticipantsApi {
+  readonly #t: Transport;
+
+  constructor(transport: Transport) {
+    this.#t = transport;
+  }
+
+  /** Lists a survey's participants with their status and personal link, oldest first. Scope participants:read. Pages on a cursor: pass nextCursor as cursor until it is null. */
+  list(surveyId: string, options: { externalId?: string; limit?: number; cursor?: string } = {}): Promise<PublicParticipantPage> {
+    return this.#t.request("GET", `/api/v1/surveys/${encodeURIComponent(surveyId)}/participants`, { query: { externalId: options.externalId, limit: options.limit, cursor: options.cursor } }) as Promise<PublicParticipantPage>;
+  }
+
+  /** Every item of list, page after page. */
+  listAll(surveyId: string, options: { externalId?: string; limit?: number } = {}): AsyncIterable<PublicParticipant> {
+    return this.#t.byCursor((cursor) => this.list(surveyId, { ...options, cursor }));
+  }
+
+  /** Adds or updates people and invites the new ones. Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails. */
+  invite(surveyId: string, body: PublicInviteRequest): Promise<PublicInvited> {
+    return this.#t.request("POST", `/api/v1/surveys/${encodeURIComponent(surveyId)}/participants`, { body }) as Promise<PublicInvited>;
   }
 }

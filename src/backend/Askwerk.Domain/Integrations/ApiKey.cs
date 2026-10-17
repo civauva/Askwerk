@@ -77,6 +77,9 @@ public sealed class ApiKey
     /// <summary>Last call with the key (UTC).</summary>
     public DateTimeOffset? LastUsedAt { get; private set; }
 
+    /// <summary>Paused with its connection (W36); calls fail while paused.</summary>
+    public DateTimeOffset? PausedAt { get; private set; }
+
     /// <summary>What the list shows of the key: its first eight characters.</summary>
     public string Shown => Prefix[..8] + "…";
 
@@ -134,11 +137,27 @@ public sealed class ApiKey
     /// <summary>Whether calls may use the key now.</summary>
     /// <param name="now">Now.</param>
     /// <returns>False once revoked or expired.</returns>
-    public bool IsUsable(DateTimeOffset now) => RevokedAt is null && (ExpiresAt is null || now < ExpiresAt);
+    public bool IsUsable(DateTimeOffset now) => RevokedAt is null && PausedAt is null && (ExpiresAt is null || now < ExpiresAt);
 
     /// <summary>Stops the key at once.</summary>
     /// <param name="now">Now.</param>
     public void Revoke(DateTimeOffset now) => RevokedAt ??= now;
+
+    /// <summary>Pauses the key, or lets it work again (W36).</summary>
+    /// <param name="paused">Whether it is paused.</param>
+    /// <param name="now">Now.</param>
+    public void Pause(bool paused, DateTimeOffset now) => PausedAt = paused ? PausedAt ?? now : null;
+
+    /// <summary>Gives the key a new secret; the old one stops working at once (W36).</summary>
+    /// <returns>The new secret, shown once.</returns>
+    public string NewSecret()
+    {
+        var secret = "awk_" + RandomNumberGenerator.GetString(Alphabet, 44);
+        Prefix = secret[..12];
+        SecretHash = Hash(secret);
+
+        return secret;
+    }
 
     /// <summary>Notes a call; the last use is written at most once a minute.</summary>
     /// <param name="now">Now.</param>

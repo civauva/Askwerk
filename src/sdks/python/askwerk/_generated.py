@@ -170,6 +170,49 @@ class PublicExportRequest(TypedDict):
     """filter"""
 
 
+class PublicInvited(TypedDict):
+    """What the call did."""
+
+    invited: int
+    """New people."""
+    updated: int
+    """Known people with new details."""
+    skipped: int
+    """Not an address, or unsubscribed."""
+    participants: list["PublicInvitedPerson"]
+    """The invited and updated people."""
+
+
+class PublicInvitedPerson(TypedDict):
+    """A person after the call."""
+
+    id: str
+    """The participant."""
+    email: str
+    """The address."""
+    externalId: str | None
+    """Their id in the other system."""
+    result: str
+    """invited or updated."""
+    link: str
+    """Their personal link."""
+
+
+class PublicInviteRequest(TypedDict):
+    """People to add or update."""
+
+    participants: list["PublicPerson"] | None
+    """At most 1000."""
+    send: NotRequired[bool | None]
+    """Send invitation emails to new people (default true); false makes links only."""
+    sendAt: NotRequired[str | None]
+    """When to send (UTC); now when empty."""
+    deadline: NotRequired[str | None]
+    """"Answer by"; two weeks after sending when empty."""
+    reminder: NotRequired[bool | None]
+    """One reminder before the deadline (default true)."""
+
+
 class PublicParticipant(TypedDict):
     """Who answered."""
 
@@ -177,6 +220,30 @@ class PublicParticipant(TypedDict):
     """The invited address; null for an anonymous link."""
     externalId: str | None
     """The host system's user id, when a host product named the respondent (AWK-13)."""
+
+
+class PublicParticipantPage(TypedDict):
+    """One page of participants."""
+
+    items: list["PublicParticipant"]
+    """Oldest first."""
+    nextCursor: str | None
+    """Pass as cursor for the next page; null on the last."""
+
+
+class PublicPerson(TypedDict):
+    """A person from the other system."""
+
+    email: str | None
+    """Their address."""
+    name: NotRequired[str | None]
+    """Their name, for {name}."""
+    language: NotRequired[str | None]
+    """Their language, e.g. de."""
+    externalId: NotRequired[str | None]
+    """Their id in the other system; finds them again when the address changes."""
+    fields: NotRequired[str | None]
+    """Further fields, e.g. department; placeholders in messages."""
 
 
 class PublicResponse(TypedDict):
@@ -503,3 +570,22 @@ class UsersApi:
     def deactivate(self, external_id: str) -> None:
         """Deactivates a user: out of the organisation, sessions ended; never deleted, their responses stay. Scope users:manage. PUT with active true lets them in again."""
         return self._t.request("DELETE", f"/api/v1/users/{external_id}")  # type: ignore[no-any-return]
+
+
+class ParticipantsApi:
+    """Participants in the Public API."""
+
+    def __init__(self, transport: Transport) -> None:
+        self._t = transport
+
+    def list(self, survey_id: str, *, external_id: str | None = None, limit: int | None = None, cursor: str | None = None) -> PublicParticipantPage:
+        """Lists a survey's participants with their status and personal link, oldest first. Scope participants:read. Pages on a cursor: pass nextCursor as cursor until it is null."""
+        return self._t.request("GET", f"/api/v1/surveys/{survey_id}/participants", query={"externalId": external_id, "limit": limit, "cursor": cursor})  # type: ignore[no-any-return]
+
+    def list_all(self, survey_id: str, *, external_id: str | None = None, limit: int | None = None) -> Iterator[PublicParticipant]:
+        """Every item of list, page after page."""
+        return self._t.by_cursor(lambda cursor: self.list(survey_id, external_id=external_id, limit=limit, cursor=cursor))  # type: ignore[no-any-return]
+
+    def invite(self, survey_id: str, body: "PublicInviteRequest") -> PublicInvited:
+        """Adds or updates people and invites the new ones. Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails."""
+        return self._t.request("POST", f"/api/v1/surveys/{survey_id}/participants", body=body)  # type: ignore[no-any-return]

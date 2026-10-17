@@ -11716,6 +11716,701 @@
         }
       }
     },
+    "/api/app/connections": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "The organisation\u0027s connections, newest first, with whether each works.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionList"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionList"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Connects a system: sets up what its goals need and returns the secrets, in this answer only. Answers with a URL\r\nget a webhook; people, or answers without a URL, get an OAuth client or API key with the chosen permissions.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedConnection"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedConnection"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedConnection"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/connections/{id}": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "One connection.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Changes the name, how people are matched, the webhook\u0027s URL and events, or its surveys.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionChange"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionChange"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Removes the connection: its key or client is revoked and its webhook deleted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/connections/{id}/test": {
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Sends a test event to the connection\u0027s webhook.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/connections/{id}/secrets": {
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "New secrets for the connection: the old ones stop working at once. Shown in this answer only.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionCredentials"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionCredentials"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionCredentials"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/connections/{id}/paused": {
+      "put": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Pauses the connection, both directions, or lets it work again.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The connection.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionPause"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionPause"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionPause"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionProblem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/audit/verify": {
       "get": {
         "tags": [
@@ -13620,6 +14315,451 @@
         },
         "description": "The current password, to confirm a sensitive change."
       },
+      "ConnectionCalls": {
+        "required": [
+          "signIn",
+          "shown",
+          "permissions",
+          "lastCallAt",
+          "expiresAt",
+          "revoked"
+        ],
+        "type": "object",
+        "properties": {
+          "signIn": {
+            "type": "string",
+            "description": "oauth or api-key."
+          },
+          "shown": {
+            "type": "string",
+            "description": "The client id, or the key\u0027s first characters."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "people, results, surveys."
+          },
+          "lastCallAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Its last call or token (UTC).",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When it ends; never when empty.",
+            "format": "date-time"
+          },
+          "revoked": {
+            "type": "boolean",
+            "description": "Whether it was revoked elsewhere."
+          }
+        },
+        "description": "How the system calls Askwerk."
+      },
+      "ConnectionChange": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The name."
+          },
+          "matchBy": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "How people are matched."
+          },
+          "webhookUrl": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The webhook\u0027s URL."
+          },
+          "events": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "The webhook\u0027s events."
+          },
+          "surveyIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The webhook\u0027s surveys; empty for all."
+          }
+        },
+        "description": "What changes; null keeps."
+      },
+      "ConnectionCredentials": {
+        "required": [
+          "clientId",
+          "clientSecret",
+          "apiKey",
+          "webhookSecret"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The OAuth client id."
+          },
+          "clientSecret": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The OAuth client secret."
+          },
+          "apiKey": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The API key."
+          },
+          "webhookSecret": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The webhook\u0027s signing secret."
+          }
+        },
+        "description": "The secrets of a connection, shown once; null where it has none."
+      },
+      "ConnectionList": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionView"
+            },
+            "description": "Newest first."
+          }
+        },
+        "description": "The organisation\u0027s connections."
+      },
+      "ConnectionPause": {
+        "required": [
+          "paused"
+        ],
+        "type": "object",
+        "properties": {
+          "paused": {
+            "type": "boolean",
+            "description": "True to pause."
+          }
+        },
+        "description": "Whether a connection is paused."
+      },
+      "ConnectionProblem": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "role-not-allowed, connection-not-found, connections-too-many, webhooks-too-many, no-webhook or connection-paused."
+          }
+        },
+        "description": "Why a connection change was refused."
+      },
+      "ConnectionRequest": {
+        "required": [
+          "name",
+          "goals"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "What it is called."
+          },
+          "goals": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "answers, people, sign-in, embed."
+          },
+          "webhookUrl": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Where answers go; without it the system reads them."
+          },
+          "events": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "The webhook\u0027s events; response.completed when empty."
+          },
+          "surveyIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The webhook\u0027s surveys; all, also new ones, when empty."
+          },
+          "signIn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "oauth or api-key, when it calls Askwerk."
+          },
+          "permissions": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "people, results, surveys."
+          },
+          "matchBy": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "external-id (then email) or email."
+          }
+        },
+        "description": "Connect a system: what the wizard collected."
+      },
+      "ConnectionSurvey": {
+        "required": [
+          "id",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The survey.",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "Its title."
+          }
+        },
+        "description": "A survey a webhook is limited to."
+      },
+      "ConnectionView": {
+        "required": [
+          "id",
+          "name",
+          "goals",
+          "matchBy",
+          "health",
+          "reason",
+          "lastActivityAt",
+          "pausedAt",
+          "pausedBy",
+          "calls",
+          "webhook",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Its id.",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "What it is called."
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "What it is for."
+          },
+          "matchBy": {
+            "type": "string",
+            "description": "How people are matched."
+          },
+          "health": {
+            "type": "string",
+            "description": "works, waiting (nothing yet), warning, failing or paused."
+          },
+          "reason": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Why warning or failing: credentials-ending, credentials-ended, deliveries-failed, deliveries-failing, webhook-paused."
+          },
+          "lastActivityAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last call or delivery (UTC).",
+            "format": "date-time"
+          },
+          "pausedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "When it was paused.",
+            "format": "date-time"
+          },
+          "pausedBy": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Who paused it."
+          },
+          "calls": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "How it calls Askwerk; null when it does not.",
+                "$ref": "#/components/schemas/ConnectionCalls"
+              }
+            ]
+          },
+          "webhook": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "description": "How Askwerk calls it; null when it does not.",
+                "$ref": "#/components/schemas/ConnectionWebhook"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Created (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "A connection as Connections shows it."
+      },
+      "ConnectionWebhook": {
+        "required": [
+          "url",
+          "events",
+          "surveys",
+          "deliveredThisWeek",
+          "failedThisWeek",
+          "lastDeliveredAt",
+          "failingSince"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Where events go."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The events."
+          },
+          "surveys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionSurvey"
+            },
+            "description": "The surveys; all when empty."
+          },
+          "deliveredThisWeek": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Events delivered in the last 7 days.",
+            "format": "int32"
+          },
+          "failedThisWeek": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Events that failed in the last 7 days.",
+            "format": "int32"
+          },
+          "lastDeliveredAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "The last delivered event (UTC).",
+            "format": "date-time"
+          },
+          "failingSince": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Since when every delivery failed.",
+            "format": "date-time"
+          }
+        },
+        "description": "How Askwerk calls the system."
+      },
       "ContactCreated": {
         "required": [
           "id"
@@ -14140,6 +15280,24 @@
           }
         },
         "description": "A new approval."
+      },
+      "CreatedConnection": {
+        "required": [
+          "connection",
+          "credentials"
+        ],
+        "type": "object",
+        "properties": {
+          "connection": {
+            "description": "The connection.",
+            "$ref": "#/components/schemas/ConnectionView"
+          },
+          "credentials": {
+            "description": "Its secrets, shown this once.",
+            "$ref": "#/components/schemas/ConnectionCredentials"
+          }
+        },
+        "description": "A connection just created, with its secrets."
       },
       "CreatedOAuthClient": {
         "required": [
@@ -20705,6 +21863,9 @@
     },
     {
       "name": "Developers"
+    },
+    {
+      "name": "Connections"
     },
     {
       "name": "AuditVerification"

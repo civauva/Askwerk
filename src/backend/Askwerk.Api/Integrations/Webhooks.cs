@@ -191,11 +191,14 @@ public sealed class WebhookService(AskwerkDbContext context, ISecretProtector se
     /// <param name="data">The event's data.</param>
     /// <param name="now">When it happened.</param>
     /// <param name="cancellationToken">Cancels the query.</param>
+    /// <param name="surveyId">The survey it is about; webhooks for other surveys do not get it (W36).</param>
     /// <returns>When queued.</returns>
-    public static async Task RaiseAsync(AskwerkDbContext context, Guid tenantId, string type, object data, DateTimeOffset now, CancellationToken cancellationToken)
+    public static async Task RaiseAsync(AskwerkDbContext context, Guid tenantId, string type, object data, DateTimeOffset now, CancellationToken cancellationToken, Guid? surveyId = null)
     {
         ArgumentNullException.ThrowIfNull(context);
-        var webhooks = await context.Webhooks.Where(webhook => webhook.TenantId == tenantId && webhook.Active && webhook.Subscribed.Contains(type)).ToListAsync(cancellationToken);
+        var webhooks = (await context.Webhooks.Where(webhook => webhook.TenantId == tenantId && webhook.Active && webhook.Subscribed.Contains(type)).ToListAsync(cancellationToken))
+            .Where(webhook => webhook.Covers(surveyId))
+            .ToList();
 
         if (webhooks.Count == 0)
         {

@@ -10,7 +10,7 @@ import { initialsOf } from "../account/ProfileMenu";
 import { shellMessages, type ShellMessageKey } from "./messages";
 
 /** A place in the sidebar (AWK-38, W29). */
-export type Place = "surveys" | "templates" | "organisation" | "members" | "contacts" | "sign-in" | "look" | "messages" | "domains" | "developers" | "organisations" | "administrators" | "installation";
+export type Place = "surveys" | "templates" | "organisation" | "members" | "contacts" | "connections" | "sign-in" | "look" | "messages" | "domains" | "developers" | "organisations" | "administrators" | "installation";
 
 /** Where each place lives. */
 export const placePaths: Record<Place, string> = {
@@ -19,6 +19,7 @@ export const placePaths: Record<Place, string> = {
   organisation: "/organisation",
   members: "/members",
   contacts: "/contacts",
+  connections: "/connections",
   "sign-in": "/sign-in-settings",
   look: "/look",
   messages: "/messages",
@@ -64,6 +65,7 @@ const icons = {
   organisation: icon(<path d="M4 21V4h10v17M14 9h6v12M3 21h18M7 8h3M7 12h3M7 16h3" />),
   members: icon(<><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M21.5 20a6.5 6.5 0 0 0-4.5-6.2" /></>),
   contacts: icon(<><rect x="5" y="3" width="14" height="18" rx="1" /><circle cx="12" cy="10" r="2.6" /><path d="M8 17a4 4 0 0 1 8 0M3 7h2M3 12h2M3 17h2" /></>),
+  connections: icon(<><circle cx="6" cy="12" r="3" /><circle cx="18" cy="6" r="3" /><circle cx="18" cy="18" r="3" /><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4" /></>),
   signIn: icon(<><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></>),
   look: icon(<><circle cx="12" cy="12" r="8" /><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor" /></>),
   messages: icon(<><rect x="3" y="5" width="18" height="14" rx="1" /><path d="M3 6l9 7 9-7" /></>),
@@ -128,6 +130,7 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
   const administration: Item[] = [
     ...(manager ? [{ place: "organisation", label: "organisation", icon: icons.organisation } as Item, { place: "members", label: "members", icon: icons.members } as Item] : []),
     { place: "contacts", label: "contacts", icon: icons.contacts },
+    ...(manager ? [{ place: "connections", label: "connections", icon: icons.connections } as Item] : []),
     ...(current?.role === "owner" ? [{ place: "sign-in", label: "signIn", icon: icons.signIn } as Item] : []),
     ...(manager
       ? [{ place: "look", label: "look", icon: icons.look } as Item, { place: "messages", label: "messages", icon: icons.messages } as Item, { place: "domains", label: "domains", icon: icons.domains } as Item]

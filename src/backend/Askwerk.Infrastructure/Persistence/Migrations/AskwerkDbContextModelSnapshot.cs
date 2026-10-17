@@ -896,6 +896,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
+                    b.Property<DateTimeOffset?>("PausedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paused_at");
+
                     b.Property<string>("Prefix")
                         .IsRequired()
                         .HasMaxLength(12)
@@ -929,6 +933,74 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("api_key", (string)null);
+                });
+
+            modelBuilder.Entity("Askwerk.Domain.Integrations.Connection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("ApiKeyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("api_key_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.PrimitiveCollection<string[]>("Goals")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("goals");
+
+                    b.Property<string>("MatchBy")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("match_by");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid?>("OAuthClientId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("oauth_client_id");
+
+                    b.Property<DateTimeOffset?>("PausedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paused_at");
+
+                    b.Property<Guid?>("PausedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("paused_by");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<Guid?>("WebhookId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("webhook_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiKeyId");
+
+                    b.HasIndex("OAuthClientId");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("WebhookId");
+
+                    b.ToTable("connection", (string)null);
                 });
 
             modelBuilder.Entity("Askwerk.Domain.Integrations.DataExport", b =>
@@ -1066,6 +1138,10 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
+                    b.Property<DateTimeOffset?>("PausedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paused_at");
+
                     b.Property<DateTimeOffset?>("RevokedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("revoked_at");
@@ -1129,6 +1205,11 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text[]")
                         .HasColumnName("events");
+
+                    b.PrimitiveCollection<Guid[]>("SurveyIds")
+                        .IsRequired()
+                        .HasColumnType("uuid[]")
+                        .HasColumnName("survey_ids");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid")
@@ -2418,6 +2499,30 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Askwerk.Domain.Integrations.Connection", b =>
+                {
+                    b.HasOne("Askwerk.Domain.Integrations.ApiKey", null)
+                        .WithMany()
+                        .HasForeignKey("ApiKeyId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Askwerk.Domain.Integrations.OAuthClient", null)
+                        .WithMany()
+                        .HasForeignKey("OAuthClientId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Askwerk.Domain.Identity.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Askwerk.Domain.Integrations.Webhook", null)
+                        .WithMany()
+                        .HasForeignKey("WebhookId")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("Askwerk.Domain.Integrations.DataExport", b =>

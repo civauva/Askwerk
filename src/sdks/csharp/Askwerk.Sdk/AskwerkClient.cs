@@ -27,6 +27,7 @@ public sealed class AskwerkClient : IDisposable
         Exports = new ExportsApi(transport);
         Webhooks = new WebhooksApi(transport);
         Users = new UsersApi(transport);
+        Participants = new ParticipantsApi(transport);
     }
 
     /// <summary>Gets the surveys.</summary>
@@ -43,6 +44,9 @@ public sealed class AskwerkClient : IDisposable
 
     /// <summary>Gets the provisioned users (scope users:manage).</summary>
     public UsersApi Users { get; }
+
+    /// <summary>Gets a survey's participants (scopes participants:read and participants:write).</summary>
+    public ParticipantsApi Participants { get; }
 
     /// <inheritdoc/>
     public void Dispose() => _owned?.Dispose();

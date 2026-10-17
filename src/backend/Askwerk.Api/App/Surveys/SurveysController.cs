@@ -898,7 +898,7 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
         var fingerprint = SurveyApproval.FingerprintOf(draft.Definition);
         var approved = await context.SurveyApprovals.AnyAsync(approval => approval.SurveyId == survey.Id && approval.Fingerprint == fingerprint, cancellationToken);
         await AuditAsync(survey, "survey.published", cancellationToken, JsonSerializer.Serialize(new { version = draft.Number, fingerprint, approved }));
-        await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, survey.TenantId, "survey.published", new { surveyId = survey.Id, version = draft.Number }, now, cancellationToken);
+        await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, survey.TenantId, "survey.published", new { surveyId = survey.Id, version = draft.Number }, now, cancellationToken, survey.Id);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         context.SurveyVersions.Add(next);
         await context.SaveChangesAsync(cancellationToken);
@@ -995,7 +995,7 @@ public sealed class SurveysController(AskwerkDbContext context, IAuditWriter aud
 
         if (action == "survey.closed")
         {
-            await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, survey.TenantId, "survey.closed", new { surveyId = survey.Id }, time.GetUtcNow(), cancellationToken);
+            await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, survey.TenantId, "survey.closed", new { surveyId = survey.Id }, time.GetUtcNow(), cancellationToken, survey.Id);
         }
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

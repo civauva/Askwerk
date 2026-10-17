@@ -38,10 +38,10 @@ public sealed class PublicApiContractTests
         var document = JsonNode.Parse(await client.GetStringAsync(new Uri("/api/v1/openapi.json", UriKind.Relative), TestContext.Current.CancellationToken))!;
         var paths = document["paths"]!.AsObject().Select(path => path.Key).Order(StringComparer.Ordinal);
 
-        // AWK-25 (W14 part 2) and AWK-32 (C32 A webhooks, B the token endpoint): these, and nothing else, are public.
+        // AWK-25 (W14 part 2), AWK-32 (C32 A webhooks, B the token endpoint) and AWK-49 (W36 participants): these, and nothing else, are public.
         Assert.Equal(
             [
-                "/api/v1/exports/{exportId}", "/api/v1/exports/{exportId}/file", "/api/v1/oauth/token", "/api/v1/surveys", "/api/v1/surveys/{surveyId}", "/api/v1/surveys/{surveyId}/codebook", "/api/v1/surveys/{surveyId}/exports", "/api/v1/surveys/{surveyId}/responses", "/api/v1/users", "/api/v1/users/{externalId}",
+                "/api/v1/exports/{exportId}", "/api/v1/exports/{exportId}/file", "/api/v1/oauth/token", "/api/v1/surveys", "/api/v1/surveys/{surveyId}", "/api/v1/surveys/{surveyId}/codebook", "/api/v1/surveys/{surveyId}/exports", "/api/v1/surveys/{surveyId}/participants", "/api/v1/surveys/{surveyId}/responses", "/api/v1/users", "/api/v1/users/{externalId}",
                 "/api/v1/webhooks", "/api/v1/webhooks/{id}", "/api/v1/webhooks/{id}/deliveries", "/api/v1/webhooks/{id}/deliveries/{deliveryId}/replay",
             ],
             paths);

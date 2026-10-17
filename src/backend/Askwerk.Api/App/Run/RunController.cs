@@ -356,7 +356,7 @@ public sealed class RunController(AskwerkDbContext context, DbSessionContext ses
         }
 
         response.Complete(time.GetUtcNow());
-        await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, response.TenantId, "response.completed", new { surveyId, responseId = response.Id, version = version.Number, completedAt = time.GetUtcNow() }, time.GetUtcNow(), cancellationToken);
+        await Askwerk.Api.Integrations.WebhookService.RaiseAsync(context, response.TenantId, "response.completed", new { surveyId, responseId = response.Id, version = version.Number, completedAt = time.GetUtcNow() }, time.GetUtcNow(), cancellationToken, surveyId);
         await context.SaveChangesAsync(cancellationToken);
 
         // One response per person (W24): the browser keeps its finished response a year, so it is not asked again.

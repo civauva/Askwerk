@@ -41,6 +41,7 @@ askwerk = Askwerk("https://surveys.example.org", api_key=os.environ["ASKWERK_KEY
 | Codebook | `responses.codebook` | `Responses.CodebookAsync` | `responses.codebook` |
 | Exports | `exports.start`, `get`, `waitUntilReady`, `download` | `Exports.StartAsync`, `GetAsync`, `WaitUntilReadyAsync`, `DownloadAsync` | `exports.start`, `get`, `wait_until_ready`, `download` |
 | Webhooks | `webhooks.list`, `create`, `update`, `delete`, `deliveries`, `deliveriesAll`, `replay` | the same, with `Async` | the same, in snake_case |
+| Participants (participants:read, participants:write) | `participants.list`, `listAll`, `invite` | `Participants.ListAsync`, `ListAllAsync`, `InviteAsync` | `participants.list`, `list_all`, `invite` |
 | Provisioned users (users:manage) | `users.list`, `listAll`, `put`, `deactivate` | `Users.ListAsync`, `ListAllAsync`, `PutAsync`, `DeactivateAsync` | `users.list`, `list_all`, `put`, `deactivate` |
 | Webhook signatures | `verifyWebhook(secret, header, body)` | `AskwerkWebhooks.Verify(secret, header, body)` | `verify_webhook(secret, header, body)` |
 

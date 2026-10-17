@@ -42,6 +42,9 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
     /// <summary>Gets the organisations' webhooks (AWK-32).</summary>
     public DbSet<Webhook> Webhooks => Set<Webhook>();
 
+    /// <summary>The organisation's connections to other systems (W36).</summary>
+    public DbSet<Connection> Connections => Set<Connection>();
+
     /// <summary>Gets the webhooks' deliveries (AWK-32).</summary>
     public DbSet<WebhookDelivery> WebhookDeliveries => Set<WebhookDelivery>();
 
@@ -277,6 +280,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             client.Property(row => row.CreatedBy).HasColumnName("created_by");
             client.Property(row => row.CreatedAt).HasColumnName("created_at");
             client.Property(row => row.LastUsedAt).HasColumnName("last_used_at");
+            client.Property(row => row.PausedAt).HasColumnName("paused_at");
             client.HasIndex(row => row.ClientId).IsUnique();
         });
 
@@ -309,6 +313,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             webhook.Property(row => row.PausedAt).HasColumnName("paused_at");
             webhook.Property(row => row.FailingSince).HasColumnName("failing_since");
             webhook.Property(row => row.CreatedAt).HasColumnName("created_at");
+            webhook.Property(row => row.SurveyIds).HasColumnName("survey_ids");
             webhook.HasIndex(row => row.TenantId);
         });
 
@@ -799,10 +804,34 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             key.Property(row => row.CreatedBy).HasColumnName("created_by");
             key.Property(row => row.CreatedAt).HasColumnName("created_at");
             key.Property(row => row.LastUsedAt).HasColumnName("last_used_at");
+            key.Property(row => row.PausedAt).HasColumnName("paused_at");
             key.Ignore(row => row.Shown);
             key.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
             key.HasIndex(row => row.Prefix).IsUnique();
             key.HasIndex(row => row.TenantId);
+        });
+
+        modelBuilder.Entity<Connection>(connection =>
+        {
+            connection.ToTable("connection");
+            connection.HasKey(row => row.Id);
+            connection.Property(row => row.Id).HasColumnName("id").ValueGeneratedNever();
+            connection.Property(row => row.TenantId).HasColumnName("tenant_id");
+            connection.Property(row => row.Name).HasColumnName("name").HasMaxLength(100);
+            connection.Property(row => row.Goals).HasColumnName("goals");
+            connection.Property(row => row.MatchBy).HasColumnName("match_by").HasMaxLength(20);
+            connection.Property(row => row.ApiKeyId).HasColumnName("api_key_id");
+            connection.Property(row => row.OAuthClientId).HasColumnName("oauth_client_id");
+            connection.Property(row => row.WebhookId).HasColumnName("webhook_id");
+            connection.Property(row => row.PausedAt).HasColumnName("paused_at");
+            connection.Property(row => row.PausedBy).HasColumnName("paused_by");
+            connection.Property(row => row.CreatedBy).HasColumnName("created_by");
+            connection.Property(row => row.CreatedAt).HasColumnName("created_at");
+            connection.HasOne<Tenant>().WithMany().HasForeignKey(row => row.TenantId).OnDelete(DeleteBehavior.Restrict);
+            connection.HasOne<Askwerk.Domain.Integrations.ApiKey>().WithMany().HasForeignKey(row => row.ApiKeyId).OnDelete(DeleteBehavior.SetNull);
+            connection.HasOne<OAuthClient>().WithMany().HasForeignKey(row => row.OAuthClientId).OnDelete(DeleteBehavior.SetNull);
+            connection.HasOne<Webhook>().WithMany().HasForeignKey(row => row.WebhookId).OnDelete(DeleteBehavior.SetNull);
+            connection.HasIndex(row => row.TenantId);
         });
 
         modelBuilder.Entity<Askwerk.Domain.Integrations.DataExport>(export =>
