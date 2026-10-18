@@ -29,14 +29,19 @@ test("a click on a part of the preview opens its settings, and the language menu
   await frame.locator(".run-welcome").click({ position: { x: 8, y: 8 } });
   await expect(settings.getByRole("tab", { name: "Pages" })).toHaveAttribute("aria-selected", "true");
 
-  // The buttons still move through the survey; their label opens their settings.
+  // Try walks through the survey; back in Edit, Next opens the buttons' settings (W46 A).
+  const stage = page.getByRole("complementary", { name: "Preview" });
+  await stage.getByRole("button", { name: "Try" }).click();
   await frame.getByRole("button", { name: "Start the survey" }).click();
   await expect(frame.locator(".run-q").first()).toBeVisible();
-  await frame.locator(".run-nav").hover();
-  await expect(frame.locator(".run-look-label")).toHaveText(/edit here/);
+  await expect(frame.getByRole("button", { name: "Back" })).toBeVisible();
+  await stage.getByRole("button", { name: "Edit" }).click();
+  await frame.getByRole("button", { name: "Next" }).hover();
+  await expect(frame.locator(".run-look-label")).toHaveText(/click to edit/);
   await page.screenshot({ path: info.outputPath("look-pick-buttons.png") });
-  await frame.locator(".run-look-label").click();
+  await frame.getByRole("button", { name: "Next" }).click();
   await expect(settings.getByRole("button", { name: /^Buttons/ })).toHaveAttribute("aria-expanded", "true");
+  await expect(frame.locator(".run-q").first()).toBeVisible();
 
   // Components is open now; opening Choices takes the preview to a page with choices.
   await settings.getByRole("button", { name: /^Choices/ }).click();
@@ -45,6 +50,14 @@ test("a click on a part of the preview opens its settings, and the language menu
   await frame.locator(".run-choice").first().click();
   await expect(settings.getByRole("button", { name: /^Choices/ })).toHaveAttribute("aria-expanded", "true");
   await page.screenshot({ path: info.outputPath("look-pick-choices.png") });
+
+  // The option groups as even tracks or menus, and the picture panel (W46 B2, B).
+  await page.screenshot({ path: info.outputPath("look-options.png") });
+  await settings.getByRole("tab", { name: "Style" }).click();
+  await settings.getByRole("button", { name: "Picture", exact: true }).click();
+  await expect(settings.getByRole("region", { name: "Picture" })).toBeVisible();
+  await page.screenshot({ path: info.outputPath("look-picture.png") });
+  await settings.getByRole("button", { name: "Done" }).click();
 
   // Administration → Looks: the card opens its colour under More.
   await page.goto("/look");

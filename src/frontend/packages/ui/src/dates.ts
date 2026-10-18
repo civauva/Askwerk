@@ -42,6 +42,13 @@ export function formatDate(value: string, locale: string): string {
   return new Intl.DateTimeFormat(region(locale), { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" }).format(toDate(value));
 }
 
+/** How a date is typed in the locale, shown as the field's placeholder (W46 A, AWK-72): "dd.mm.yyyy", "TT.MM.JJJJ". */
+export function datePattern(locale: string): string {
+  const [day, month, year] = locale.startsWith("de") ? ["TT", "MM", "JJJJ"] : ["dd", "mm", "yyyy"];
+
+  return formatDate("2026-12-31", locale).replace("31", day).replace("12", month).replace("2026", year);
+}
+
 /** The ISO date as a Date at midnight UTC. */
 export function toDate(value: string): Date {
   const [year, month, day] = value.split("-").map(Number);

@@ -20,8 +20,6 @@ export const lookParts: readonly (readonly [selector: string, pick: LookPick])[]
   [".run", { area: "colours" }],
 ];
 
-/** Buttons that move through the survey (Start, Next, Back, Send) keep working, so the preview can be walked through. */
-const moves = ".run-button";
 
 export function pickAt(target: Element | null): { element: Element; pick: LookPick } | null {
   for (const [selector, pick] of lookParts) {
@@ -38,9 +36,9 @@ export function pickAt(target: Element | null): { element: Element; pick: LookPi
 const key = (pick: LookPick) => (pick.part === undefined ? pick.area : `${pick.area}/${pick.part}`);
 
 /**
- * Turns the preview into a map of its parts: pointing outlines a part and names it; a click sends it to the editor
- * instead of answering. The buttons that move through the survey still move it; their label is the way to their
- * settings. Labels come from the editor, in its language. Returns a function that stops it.
+ * Turns the preview into a map of its parts (Edit, W46 A): pointing outlines a part and names it; a click on it or
+ * its label sends it to the editor instead of answering, Next included. Try in the editor turns this off, and the
+ * preview is the survey. Labels come from the editor, in its language. Returns a function that stops it.
  */
 export function startPicking(labels: Readonly<Record<string, string>>, onPick: (pick: LookPick) => void): () => void {
   const style = document.createElement("style");
@@ -105,12 +103,6 @@ export function startPicking(labels: Readonly<Record<string, string>>, onPick: (
       return;
     }
 
-    if (target.closest(moves) !== null) {
-      clear();
-
-      return;
-    }
-
     const found = pickAt(target);
     event.preventDefault();
     event.stopPropagation();
@@ -120,10 +112,8 @@ export function startPicking(labels: Readonly<Record<string, string>>, onPick: (
     }
   };
   const block = (event: Event) => {
-    if ((event.target as Element).closest(moves) === null) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   document.addEventListener("mouseover", over, true);
@@ -131,6 +121,7 @@ export function startPicking(labels: Readonly<Record<string, string>>, onPick: (
   document.documentElement.addEventListener("mouseleave", clear);
   document.addEventListener("click", click, true);
   document.addEventListener("mousedown", block, true);
+  document.addEventListener("submit", block, true);
 
   return () => {
     clear();
@@ -139,5 +130,6 @@ export function startPicking(labels: Readonly<Record<string, string>>, onPick: (
     document.documentElement.removeEventListener("mouseleave", clear);
     document.removeEventListener("click", click, true);
     document.removeEventListener("mousedown", block, true);
+    document.removeEventListener("submit", block, true);
   };
 }

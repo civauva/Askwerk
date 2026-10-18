@@ -351,7 +351,7 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
           onLayout={(layout) => dispatch({ type: "setLayout", layout })}
           onHeaderImage={(asset) => dispatch({ type: "setHeaderImage", asset })}
           onHeaderAlt={(language, value) => dispatch({ type: "setHeaderAlt", language, value })}
-          renderPreview={(frame, onFrameLoad, lookSaves) => (
+          renderPreview={(frame, onFrameLoad, lookSaves, mode) => (
             <PreviewPanel
               t={t}
               surveyId={draft.surveyId}
@@ -375,6 +375,7 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
                 ...(previewEmail !== undefined && { email: () => previewEmail(draft.surveyId, state.language) }),
                 pdf: pdfUrl(draft.surveyId, state.language),
                 saves: saves + lookSaves,
+                ...(mode !== undefined && { mode: { ...mode, labels: { group: lt("previewMode"), edit: lt("previewEdit"), try: lt("previewTry") } } }),
               }}
             />
           )}

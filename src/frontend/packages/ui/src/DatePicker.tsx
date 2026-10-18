@@ -2,7 +2,8 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { useDismiss } from "./dismiss";
 // Icons: Lucide "calendar" and "clock" (ISC licence), as agents/ui-design-system.md asks.
-import { addDays, addMonths, formatDate, fromDate, parseDate, parseTime, toDate } from "./dates";
+import { addDays, addMonths, formatDate, fromDate, parseDate, parseTime, toDate, datePattern } from "./dates";
+import { Icon } from "./RowTools";
 
 export type DatePickerTexts = {
   readonly openCalendar: string;
@@ -135,6 +136,7 @@ export function DatePicker({ id, value, onChange, locale, texts, min, max, descr
           id={id}
           className="aw-field aw-date__input"
           inputMode="numeric"
+          placeholder={datePattern(locale)}
           autoComplete="off"
           value={text}
           aria-invalid={invalid || undefined}
@@ -146,7 +148,7 @@ export function DatePicker({ id, value, onChange, locale, texts, min, max, descr
         <button
           ref={opener}
           type="button"
-          className="aw-field aw-date__open"
+          className="aw-date__open"
           aria-label={texts.openCalendar}
           aria-haspopup="dialog"
           aria-expanded={open}
@@ -155,10 +157,7 @@ export function DatePicker({ id, value, onChange, locale, texts, min, max, descr
             setOpen(!open);
           }}
         >
-          <svg className="aw-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="18" rx="2" />
-            <path d="M16 2v4M8 2v4M3 10h18" />
-          </svg>
+          <Icon name="calendar" size={19} />
         </button>
       </span>
       {invalid && (
@@ -304,7 +303,7 @@ export function TimeField({ id, value, onChange, texts, minuteStep = 15, describ
         <button
           ref={opener}
           type="button"
-          className="aw-field aw-date__open"
+          className="aw-date__open"
           aria-label={texts.chooseTime}
           aria-haspopup="listbox"
           aria-expanded={open}

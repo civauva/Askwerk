@@ -73,7 +73,8 @@ test("an editor sets up the welcome page and tries the draft in a side panel", a
   await page.getByRole("button", { name: "Use the look Panorama" }).click();
   const panorama = page.frameLocator('iframe[title="Survey preview"]');
   await expect(panorama.locator(".run[data-pattern='mountains'][data-panel='frosted']")).toBeVisible();
-  // The buttons in the preview beside Look still move through the survey (W44 A).
+  // Try (W46 A): the preview beside Look works like the survey.
+  await page.getByRole("complementary", { name: "Preview" }).getByRole("button", { name: "Try" }).click();
   await panorama.getByRole("button", { name: "Start the survey" }).click();
   await expect(panorama.locator(".run-overtitle__title")).toHaveText("Customer satisfaction 2026");
   await page.screenshot({ path: info.outputPath("look-panorama.png") });

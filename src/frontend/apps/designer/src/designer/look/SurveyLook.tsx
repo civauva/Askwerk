@@ -2,7 +2,7 @@
 import type { SurveyLook as StoredLook } from "@askwerk/app-client";
 import { ApiError } from "@askwerk/app-client";
 import { checkTheme, contrastRatio, createTranslator, themePresets, type Locale, type SurveyDefinition, type ThemeIssue, type ThemeTag, type ThemeTokens } from "@askwerk/schema";
-import { Dialog, DialogActions, Menu, MenuItem, Switch, Tabs } from "@askwerk/ui";
+import { Dialog, DialogActions, Menu, MenuItem, Switch, Tabs, ComboBox } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import type { ThemeChoice } from "../api";
 import { changesBetween, darkColoursFor, getAt, presetOf, resetPaths, setAt, type LookPath } from "./lookEditing";
@@ -203,7 +203,7 @@ export type SurveyLookProps = {
   onHeaderImage: (asset: string | null) => void;
   onHeaderAlt: (language: string, value: string) => void;
   /** The one Preview panel, docked beside the settings; Look sends the look being edited to its frame (W26). */
-  renderPreview: (frame: RefObject<HTMLIFrameElement | null>, onFrameLoad: () => void, saves: number) => ReactNode;
+  renderPreview: (frame: RefObject<HTMLIFrameElement | null>, onFrameLoad: () => void, saves: number, mode?: { value: "edit" | "try"; onChange: (mode: "edit" | "try") => void }) => ReactNode;
 };
 
 /**
@@ -256,6 +256,9 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
   // parts: a click on one opens its settings here (W44 A, AWK-69).
   const [picked, setPicked] = useState<Picked | null>(null);
   const viewing = useShellView();
+  // Edit or Try (W46 A, AWK-72): a click in the preview opens a part's settings, or the preview is the survey.
+  const [mode, setMode] = useState<"edit" | "try">("edit");
+  const picking = viewing.view === "advanced" && mode === "edit";
   const pickLabels = useMemo(() => {
     const labels: Record<string, string> = {};
 
@@ -263,13 +266,19 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
       labels[area.id] = t("clickToEdit", { part: t(area.label) });
 
       for (const part of area.parts ?? []) {
-        // The buttons move through the survey in the preview; their label is the way to their settings.
-        labels[`${area.id}/${part.id}`] = t(part.id === "buttons" ? "editHere" : "clickToEdit", { part: t(part.label) });
+        labels[`${area.id}/${part.id}`] = t("clickToEdit", { part: t(part.label) });
       }
     }
 
     return labels;
   }, [t]);
+
+  // Switching between Edit and Try tells the preview at once.
+  useEffect(() => {
+    post(picking ? { type: "askwerk:pick-mode", labels: pickLabels } : { type: "askwerk:pick-mode", off: true });
+    // post reads the frame when called.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [picking, pickLabels]);
 
   useEffect(() => {
     const received = (event: MessageEvent) => {
@@ -282,8 +291,8 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
       if (data?.type === "askwerk:preview-ready" && tokens !== null) {
         post({ type: "askwerk:look", tokens });
 
-        // In Simple only Style shows, so parts are not picked from the preview (W45).
-        if (viewing.view === "advanced") {
+        // In Simple only Style shows, so parts are not picked from the preview (W45); in Try nothing is.
+        if (picking) {
           post({ type: "askwerk:pick-mode", labels: pickLabels });
         }
       } else if (data?.type === "askwerk:pick" && typeof data.area === "string") {
@@ -383,7 +392,7 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
           )
         }
       />
-      {renderPreview(frame, () => post({ type: "askwerk:look", tokens }), saves)}
+      {renderPreview(frame, () => post({ type: "askwerk:look", tokens }), saves, viewing.view === "advanced" ? { value: mode, onChange: setMode } : undefined)}
     </main>
   );
 }
@@ -769,7 +778,21 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
   const image = tokens.background?.kind !== "colour" ? tokens.background?.image : undefined;
   const background = image !== undefined || pattern === "mountains" ? "picture" : pattern !== "none" ? "pattern" : "colour";
   const withPicture = (asset: string) =>
-    onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], { kind: "image-overlay", image: { asset }, fit: "cover", overlay: tokens.colours.background, overlayOpacity: 0.8 }));
+    onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], { kind: "image-overlay", image: { asset }, fit: "cover", overlay: tokens.colours.background, overlayOpacity: tokens.background?.overlayOpacity ?? 0.8 }));
+  // The picture panel (W46 B, AWK-72): Askwerk's pictures, your own with the rules, and how calm it is under the text.
+  const [choosing, setChoosing] = useState(false);
+  const [pictureError, setPictureError] = useState(false);
+  const upload = (chosen: File) => {
+    setPictureError(false);
+
+    if (!["image/png", "image/jpeg", "image/webp"].includes(chosen.type) || chosen.size > 5 * 1024 * 1024) {
+      setPictureError(true);
+
+      return;
+    }
+
+    void api.uploadImage(chosen).then(withPicture, () => setPictureError(true));
+  };
 
   return (
     <>
@@ -826,9 +849,67 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
             on={background === "picture"}
             label={t("bgPicture")}
             picture={<i className="sl-tile__fill sl-tile__fill--picture" style={image !== undefined ? { backgroundImage: `url("${api.assetUrl(image.asset, 240)}")` } : undefined} />}
-            onClick={() => (image !== undefined ? withPicture(image.asset) : background !== "picture" && file.current?.click())}
+            onClick={() => setChoosing((open) => !open)}
           />
         </div>
+        {choosing && (
+          <div className="sl-picture" role="region" aria-label={t("bgPicture")}>
+            <span className="sl-picture__head">{t("pictureAskwerk")}</span>
+            <div className="sl-picture__gallery">
+              <button
+                type="button"
+                className="sl-picture__item sl-picture__item--mountains"
+                aria-pressed={pattern === "mountains"}
+                aria-label={t("pictureMountains")}
+                onClick={() => onChange(setAt(setAt(tokens, ["background"], undefined), ["decoration"], { pattern: "mountains" }))}
+              />
+              {image !== undefined && (
+                <button type="button" className="sl-picture__item" aria-pressed={true} aria-label={t("pictureOwn")} style={{ backgroundImage: `url("${api.assetUrl(image.asset, 240)}")` }} onClick={() => withPicture(image.asset)} />
+              )}
+            </div>
+            <span className="sl-picture__head">{t("pictureOwn")}</span>
+            <div
+              className="sl-picture__drop"
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                const dropped = event.dataTransfer.files[0];
+
+                if (dropped !== undefined) {
+                  upload(dropped);
+                }
+              }}
+            >
+              {t("pictureDrop")}{" "}
+              <button type="button" className="sl-link" onClick={() => file.current?.click()}>
+                {t("pictureChoose")}
+              </button>
+              <span className="sl-picture__rules">{t("pictureRules")}</span>
+            </div>
+            {pictureError && (
+              <p className="sl-picture__error" role="alert">
+                {t("pictureFailed")}
+              </p>
+            )}
+            {image !== undefined && (
+              <label className="sl-picture__calm">
+                <span>{t("pictureCalm")}</span>
+                <span className="sl-picture__value">{Math.round((tokens.background?.overlayOpacity ?? 0.8) * 100)} %</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={95}
+                  step={5}
+                  value={Math.round((tokens.background?.overlayOpacity ?? 0.8) * 100)}
+                  onChange={(event) => onChange(setAt(tokens, ["background", "overlayOpacity"], Number(event.target.value) / 100))}
+                />
+              </label>
+            )}
+            <button type="button" className="designer-button sl-small sl-picture__done" onClick={() => setChoosing(false)}>
+              {t("pictureDone")}
+            </button>
+          </div>
+        )}
         <input
           ref={file}
           type="file"
@@ -841,7 +922,7 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
             event.target.value = "";
 
             if (chosen !== undefined) {
-              void api.uploadImage(chosen).then(withPicture);
+              upload(chosen);
             }
           }}
         />
@@ -1076,17 +1157,36 @@ function FieldControl({ t, field, tokens, definition, language, api, onChange, o
   }
 }
 
+/**
+ * A choice in Look (W46 B2, AWK-72): up to three short options as a soft track split evenly across the row, the chosen
+ * one on a raised white thumb; four or more, or a word too long for a third of the row, as a menu. Never a second row
+ * and nothing cut off.
+ */
 function Segment({ label, value, options, onChange }: { label: string; value: string; options: readonly (readonly [string, string])[]; onChange: (value: string) => void }) {
+  const id = useId();
+
   return (
     <div className="sl-field">
-      <span className="sl-field__label">{label}</span>
-      <span className="designer-segment sl-segment" role="group" aria-label={label}>
-        {options.map(([optionValue, optionLabel]) => (
-          <button key={optionValue} type="button" aria-pressed={optionValue === value} onClick={() => onChange(optionValue)}>
-            {optionLabel}
-          </button>
-        ))}
+      <span className="sl-field__label" id={`${id}-label`}>
+        {label}
       </span>
+      {options.length <= 3 && options.every(([, optionLabel]) => optionLabel.length <= 8) ? (
+        <span className="sl-track" role="group" aria-label={label}>
+          {options.map(([optionValue, optionLabel]) => (
+            <button key={optionValue} type="button" aria-pressed={optionValue === value} onClick={() => onChange(optionValue)}>
+              {optionLabel}
+            </button>
+          ))}
+        </span>
+      ) : (
+        <ComboBox
+          labelledBy={`${id}-label`}
+          options={options.map(([optionValue, optionLabel]) => ({ value: optionValue, label: optionLabel }))}
+          value={value}
+          onChange={onChange}
+          texts={{ choose: label, search: label, results: (shown) => String(shown), noResults: "" }}
+        />
+      )}
     </div>
   );
 }

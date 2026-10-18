@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W46 (AWK-72): ?s=options (option groups in Look) | ?s=try (Edit or Try in the preview, Back on page 1) | ?s=date (date field). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W46 Look controls</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8; --accent: #b4532a;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; width: 1440px; background: #dedad2; color: var(--ink); font: 400 14px/1.45 var(--font); }
+  h1.sheet { margin: 0 0 6px; font: 700 24px/1.2 var(--display); } p.intro { margin: 0 0 16px; color: var(--graphite); font-size: 13px; max-width: 1180px; }
+  .row { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; }
+  .opt h2 { margin: 0 0 2px; font: 700 17px/1.2 var(--display); } .opt p { margin: 0 0 8px; font-size: 13px; color: var(--graphite); max-width: 430px; min-height: 54px; }
+  .panel { width: 340px; background: #fff; border: 1px solid var(--line-strong); }
+  .part { padding: 10px 16px; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; font-size: 14px; } .part small { color: var(--muted); font-size: 12px; }
+  .fields { padding: 10px 16px 14px; display: grid; gap: 12px; border-bottom: 1px solid var(--line); }
+  .f { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: start; font-size: 13px; color: var(--graphite); } .f > span:first-child { padding-top: 5px; }
+  /* today */
+  .today { display: flex; flex-wrap: wrap; border: 1px solid var(--line-strong); } .today b { padding: 5px 10px; font: 600 12px var(--mono); } .today .on { background: var(--ink); color: #fff; }
+  /* A radio list */
+  .ra { display: grid; gap: 2px; } .ra label { display: flex; align-items: center; gap: 8px; padding: 3px 0; color: var(--ink); } .ra i { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid #9a948a; display: inline-grid; place-items: center; } .ra .on i { border-color: var(--ink); } .ra .on i::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+  /* B soft track */
+  .tb { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 2px; border-radius: 8px; background: var(--soft); } .tb span { padding: 5px 10px; border-radius: 6px; font: 600 12.5px var(--font); color: var(--graphite); } .tb .on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+  .sel { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--ink); background: #fff; }
+  /* C chips */
+  .ch { display: flex; flex-wrap: wrap; gap: 6px; } .ch span { padding: 4px 11px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 12.5px; color: var(--ink); background: #fff; } .ch .on { border-color: var(--ink); background: var(--ink); color: #fff; }
+  .frame { position: relative; background: var(--paper); border: 1px solid var(--line-strong); overflow: hidden; }
+  .stagebar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--line); font-size: 12.5px; }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 4px 10px; font: 600 12px var(--mono); } .seg .on { background: var(--ink); color: #fff; }
+  .mode { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--soft); } .mode span { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px; font: 600 12.5px var(--font); color: var(--graphite); } .mode .on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+  svg.i { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .stage { background: repeating-conic-gradient(#eeece8 0 25%, #f5f3ef 0 50%) 0 0 / 22px 22px; padding: 18px 26px; height: 380px; }
+  .page { background: #fffaf3; border-radius: 10px; padding: 22px 26px; }
+  .q { font: 600 18px Georgia, serif; margin: 0 0 12px; }
+  .c { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 1px solid #e3d3c0; border-radius: 8px; margin-bottom: 8px; background: #fff; } .c i { width: 16px; height: 16px; border: 2px solid #9a948a; border-radius: 50%; }
+  .nav { display: flex; align-items: center; gap: 12px; margin-top: 14px; } .nav .grow { flex: 1; } .nav small { color: var(--muted); }
+  .b { padding: 10px 18px; border-radius: 8px; font-weight: 600; } .b.pri { background: var(--accent); color: #fff; } .b.sec { border: 1px solid var(--accent); color: var(--accent); background: #fff; }
+  .hover { outline: 2px dashed var(--signal); outline-offset: 4px; position: relative; } .lab { position: absolute; top: -12px; right: 4px; padding: 2px 8px; background: var(--signal); color: #fff; font: 600 11.5px var(--font); border-radius: 5px; white-space: nowrap; }
+  .banner { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); padding: 6px 12px; background: var(--ink); color: #fff; border-radius: 999px; font-size: 12.5px; display: flex; gap: 10px; } .banner u { color: #ffb38f; }
+  .datebox { width: 260px; display: flex; align-items: center; border: 1px solid #cfc7ba; border-radius: 8px; background: #fff; padding: 0 10px; height: 44px; } .datebox span { flex: 1; color: var(--muted); } .datebox svg { width: 19px; height: 19px; color: var(--graphite); }
+  .dateold { display: flex; gap: 6px; } .dateold .in { width: 150px; height: 38px; border: 1px solid #cfc7ba; background: #fff; } .dateold .btn { width: 38px; height: 38px; border: 1px solid #cfc7ba; display: grid; place-items: center; background: #fff; } .dateold svg { width: 13px; height: 13px; }
+  .cal { width: 260px; margin-top: 6px; padding: 10px; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; box-shadow: 0 8px 20px rgba(0,0,0,.12); font-size: 12px; } .cal .gr { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; } .cal .gr span { padding: 5px 0; border-radius: 6px; } .cal .gr .on { background: var(--accent); color: #fff; font-weight: 600; } .cal .hd { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
+  .dq { font: 600 17px Georgia, serif; margin: 0 0 10px; } .dq em { color: var(--signal); font-style: normal; }
+
+  /* B variants */
+  .f > .tb { justify-self: start; }
+  .tb-eq { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 2px; border-radius: 8px; background: var(--soft); width: 100%; } .tb-eq span { padding: 5px 4px; border-radius: 6px; font: 600 12px var(--font); color: var(--graphite); text-align: center; white-space: nowrap; } .tb-eq .on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+  .tb-col { display: inline-grid; gap: 2px; padding: 2px; border-radius: 8px; background: var(--soft); } .tb-col span { padding: 5px 12px; border-radius: 6px; font: 600 12.5px var(--font); color: var(--graphite); } .tb-col .on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+  .stack { display: grid; gap: 6px; } .stack .f { grid-template-columns: 1fr; gap: 6px; } .stack .f > span:first-child { padding-top: 0; }
+
+  /* picture */
+  .tiles3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; } .tile { border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px; text-align: center; font-size: 12px; background: #fff; } .tile.on { border: 2px solid var(--ink); font-weight: 600; } .tile i { display: block; height: 26px; border-radius: 4px; margin-bottom: 4px; }
+  .pic { margin-top: 8px; display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: #fbfaf8; }
+  .pic img, .pic .th { width: 64px; height: 42px; border-radius: 5px; background: linear-gradient(180deg, #c97b5a, #6f6386); }
+  .pic .acts { display: flex; gap: 6px; flex-wrap: wrap; } .pic .acts span { padding: 4px 9px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-weight: 600; font-size: 12px; }
+  .rule { margin-top: 6px; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+  .pop { width: 300px; padding: 12px; background: #fff; border: 1px solid var(--line-strong); border-radius: 10px; box-shadow: 0 10px 26px rgba(0,0,0,.14); font-size: 12.5px; }
+  .pop h4 { margin: 0 0 8px; font: 500 10.5px var(--mono); letter-spacing: .08em; color: var(--muted); }
+  .gal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; } .gal span { height: 46px; border-radius: 6px; } .gal .on { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .drop { border: 1.5px dashed var(--line-strong); border-radius: 8px; padding: 12px; text-align: center; color: var(--graphite); }
+  .drop b { color: var(--signal); }
+  .sl { display: grid; grid-template-columns: 1fr auto; gap: 4px; align-items: center; margin-top: 10px; } .sl .bar { height: 4px; background: var(--soft); border-radius: 2px; position: relative; } .sl .bar::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 70%; background: var(--ink); border-radius: 2px; }
+</style>
+</head>
+<body>
+<script>
+const s = new URLSearchParams(location.search).get("s") || "options";
+const cal = '<svg class="i" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>';
+const pen = '<svg class="i" viewBox="0 0 24 24"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>';
+const play = '<svg class="i" viewBox="0 0 24 24"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
+const groups = [["Style", ["Filled", "Outline", "Soft"], 0], ["Width", ["Natural", "Wide", "Full"], 1], ["Place", ["Back left", "Both right", "Centred"], 0]];
+const choices = [["Style", ["Boxes", "Pills", "Underline", "Tiles"], 0]];
+const panel = (draw) => `<div class="panel"><div class="part">▸ Question text<small>S</small></div><div class="part">▾ Choices<small>Boxes</small></div><div class="fields">${choices.map(([l, o, on]) => `<div class="f"><span>${l}</span>${draw(o, on)}</div>`).join("")}</div><div class="part">▾ Buttons<small>Filled</small></div><div class="fields">${groups.map(([l, o, on]) => `<div class="f"><span>${l}</span>${draw(o, on)}</div>`).join("")}</div></div>`;
+const opt = (title, note, inner) => `<div class="opt"><h2>${title}</h2><p>${note}</p>${inner}</div>`;
+let html = "";
+if (s === "options") {
+  html = `<h1 class="sheet">W46 · AWK-72 · Option groups in Look</h1><p class="intro">Every choice in Parts and Pages (and the same control in Administration → Looks). Today: black mono blocks that break into rows and lose their frame.</p><div class="row">`
+    + opt("Today", "Wraps into ragged rows; the chosen block is a heavy black slab.", panel((o, on) => `<span class="today">${o.map((x, i) => `<b class="${i === on ? "on" : ""}">${x}</b>`).join("")}</span>`))
+    + opt("A · A short list of radios", "One option per line with a small radio; calm, never wraps oddly, reads like a form. Takes more height.", panel((o, on) => `<span class="ra">${o.map((x, i) => `<label class="${i === on ? "on" : ""}"><i></i>${x}</label>`).join("")}</span>`))
+    + opt("B · A soft track, a menu when long", "Up to three short options as a soft track with a white raised thumb (like the language switch); four or more, or long words, become a small menu.", panel((o, on) => o.length > 3 ? `<span class="sel">${o[on]}<span>▾</span></span>` : `<span class="tb">${o.map((x, i) => `<span class="${i === on ? "on" : ""}">${x}</span>`).join("")}</span>`))
+    + opt("C · Chips", "Rounded chips that wrap with even gaps; the chosen one dark. Compact, all options visible.", panel((o, on) => `<span class="ch">${o.map((x, i) => `<span class="${i === on ? "on" : ""}">${x}</span>`).join("")}</span>`))
+    + `</div>`;
+}
+if (s === "try") {
+  const page = (hoverNext, back) => `<div class="page"><p class="q">How did you travel here?</p><div class="c"><i></i>Car</div><div class="c"><i></i>Train and bus</div><div class="nav">${back ? '<span class="b sec">Back</span>' : ""}<span class="grow"></span><small>Saved with every Next</small><span class="b pri ${hoverNext ? "hover" : ""}">${hoverNext ? '<span class="lab">Buttons · click to edit</span>' : ""}Next</span></div></div>`;
+  html = `<h1 class="sheet">W46 · AWK-72 · Edit or Try in the preview</h1><p class="intro">The preview beside Look either edits (a click on any part, Next included, opens its settings) or works like the survey (answers, Next, Back). Page 1 gets Back to the welcome page whenever the survey has one, for respondents too, so Back and its placement can be seen and set.</p><div class="row">`
+    + opt("A · A switch in the preview's bar", "Edit (default) | Try. Edit: everything outlines and opens its settings, Next too. Try: the preview is the survey. The switch stays where the Web/Email/PDF tabs are.",
+      `<div class="frame" style="width:680px"><div class="stagebar"><span class="seg"><span class="on">Web</span><span>Email</span><span>PDF</span></span><span style="flex:1"></span><span class="mode"><span class="on">${pen}Edit</span><span>${play}Try</span></span></div><div class="stage">${page(true, true)}</div></div>`)
+    + opt("B · Try as a temporary mode", "A \"Try it\" button in the bar; while trying, a pill over the preview says so and offers to go back to editing. Edit is the normal state.",
+      `<div class="frame" style="width:680px"><div class="stagebar"><span class="seg"><span class="on">Web</span><span>Email</span><span>PDF</span></span><span style="flex:1"></span><span class="mode"><span>${play}Try it</span></span></div><div class="stage" style="position:relative;padding-top:46px">${page(false, true)}<div class="banner">Trying the survey: clicks answer · <u>Back to editing</u></div></div></div>`)
+    + `</div>`;
+}
+if (s === "date") {
+  html = `<h1 class="sheet">W46 · AWK-72 · The date field</h1><p class="intro">Today: a field and a separate small square with a tiny icon. Both options use the Lucide calendar icon at 19 px and the theme's corners; typing a date still works.</p><div class="row">`
+    + opt("Today", "Two boxes of different heights, a 13 px icon.", `<div class="frame" style="padding:20px;width:330px;background:#fffaf3"><p class="dq">1. When did you stay with us? <em>*</em></p><div class="dateold"><span class="in"></span><span class="btn">${cal}</span></div></div>`)
+    + opt("A · The icon inside the field", "One field as wide as a date needs; the calendar icon at its right end opens the calendar; the placeholder shows the format.", `<div class="frame" style="padding:20px;width:330px;background:#fffaf3"><p class="dq">1. When did you stay with us? <em>*</em></p><div class="datebox"><span>dd.mm.yyyy</span>${cal}</div><div class="cal"><div class="hd"><span>‹</span><span>October 2026</span><span>›</span></div><div class="gr">${["M","T","W","T","F","S","S"].map((d) => `<span style="color:#8a877f">${d}</span>`).join("")}${"<span></span>".repeat(3)}${Array.from({length: 31}, (_, i) => `<span class="${i === 14 ? "on" : ""}">${i + 1}</span>`).join("")}</div></div></div>`)
+    + opt("B · The calendar first", "The field is a button that opens the calendar (with the icon at the left); typing stays possible in the opened panel. Best on phones.", `<div class="frame" style="padding:20px;width:330px;background:#fffaf3"><p class="dq">1. When did you stay with us? <em>*</em></p><div class="datebox" style="gap:8px">${cal}<span>Choose a date</span><span style="flex:none">▾</span></div></div>`)
+    + `</div>`;
+}
+if (s === "trackb") {
+  const fits = (o) => o.length <= 3 && o.join("").length <= 22;
+  const panelStack = (draw) => `<div class="panel"><div class="part">▾ Choices<small>Boxes</small></div><div class="fields stack">${choices.map(([l, o, on]) => `<div class="f"><span>${l}</span>${draw(o, on)}</div>`).join("")}</div><div class="part">▾ Buttons<small>Filled</small></div><div class="fields stack">${groups.map(([l, o, on]) => `<div class="f"><span>${l}</span>${draw(o, on)}</div>`).join("")}</div></div>`;
+  const track = (o, on) => `<span class="tb">${o.map((x, i) => `<span class="${i === on ? "on" : ""}">${x}</span>`).join("")}</span>`;
+  const menu = (o, on) => `<span class="sel">${o[on]}<span>▾</span></span>`;
+  html = `<h1 class="sheet">W46 · AWK-72 · Option groups, variants of B</h1><p class="intro">The soft track without grey left over: it never wraps. Each variant decides differently what happens when the options do not fit one line.</p><div class="row">`
+    + opt("B1 · Fits on one line, else a menu", "A track only when all options fit on one line beside the label; otherwise a menu (here Place and Choices style). Never a second row.", panel((o, on) => fits(o) ? track(o, on) : menu(o, on)))
+    + opt("B2 · Equal segments, full width", "The track fills the row and splits it evenly, so it ends where the panel ends; four or more options become a menu.", panel((o, on) => o.length <= 3 ? `<span class="tb-eq">${o.map((x, i) => `<span class="${i === on ? "on" : ""}">${x}</span>`).join("")}</span>` : menu(o, on)))
+    + opt("B3 · Label above, track below", "The label sits above its track, so the track has the panel's full width: three or four options fit on one line, equal width.", panelStack((o, on) => `<span class="tb-eq">${o.map((x, i) => `<span class="${i === on ? "on" : ""}">${x}</span>`).join("")}</span>`))
+    + `</div>`;
+}
+if (s === "picture") {
+  const tiles = `<div class="tiles3"><div class="tile"><i style="background:#f4efe9"></i>Colour</div><div class="tile"><i style="background:#f4efe9;background-image:radial-gradient(#e7b13c 3px,transparent 4px),radial-gradient(#c3401f 3px,transparent 4px);background-size:22px 22px;background-position:4px 6px,14px 14px"></i>Pattern</div><div class="tile on"><i style="background:linear-gradient(180deg,#c97b5a,#6f6386)"></i>Picture</div></div>`;
+  const rules = '<p class="rule">JPG, PNG or WebP · up to 5 MB · landscape, at least 2000 × 1300 px looks sharp on large screens. The picture is darkened or lightened under the text so it stays readable.</p>';
+  html = `<h1 class="sheet">W46 · AWK-72 · Choosing the background picture</h1><p class="intro">Today "Picture" opens a file dialog only when no picture is set; once one is (Panorama's mountains), there is no way to change it and nothing says what a good picture is.</p><div class="row">`
+    + opt("A · The picture under the tiles", "With Picture chosen, a row shows the current picture with Change…, Askwerk's pictures and Remove; the rules sit beneath it.", `<div class="panel" style="padding:12px 16px"><div style="font-size:13px;color:var(--graphite);margin-bottom:6px">Background</div>${tiles}<div class="pic"><span class="th"></span><div><b style="font-size:12.5px">Mountains</b><div class="acts" style="margin-top:6px"><span>Upload…</span><span>Askwerk's</span><span>Remove</span></div></div></div>${rules}</div>`)
+    + opt("B · A picture panel", "Picture opens a small panel: Askwerk's pictures, your own (drop or choose a file) with the rules, and how strongly the picture is calmed under the text.", `<div style="display:flex;gap:12px;align-items:flex-start"><div class="panel" style="padding:12px 16px;width:300px"><div style="font-size:13px;color:var(--graphite);margin-bottom:6px">Background</div>${tiles}</div><div class="pop"><h4>ASKWERK'S PICTURES</h4><div class="gal"><span class="on" style="background:linear-gradient(180deg,#c97b5a,#6f6386)"></span><span style="background:linear-gradient(180deg,#9ec5d8,#3f6f8a)"></span><span style="background:linear-gradient(180deg,#d9c8a7,#7a6a4f)"></span></div><h4>YOUR OWN</h4><div class="drop">Drop a picture here or <b>choose a file</b><div class="rule" style="margin-top:6px">JPG, PNG or WebP · up to 5 MB · landscape, 2000 × 1300 px or more</div></div><div class="sl"><span style="font-size:12px;color:var(--graphite)">Calm under the text</span><span style="font:500 11px var(--mono)">70 %</span><span class="bar" style="grid-column:1/-1"></span></div></div></div>`)
+    + `</div>`;
+}
+document.body.innerHTML = html;
+</script>
+</body>
+</html>

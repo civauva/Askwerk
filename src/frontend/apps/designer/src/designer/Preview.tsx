@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import { Menu, MenuItem } from "@askwerk/ui";
+import { Menu, MenuItem, Icon } from "@askwerk/ui";
 import { useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import { DeviceSwitch, deviceWidth, ZoomBox, type Device } from "./ZoomBox";
 /** The texts the preview needs; the designer's and the results' translators both have them. */
@@ -74,6 +74,8 @@ export type PreviewViews = {
   readonly pdf: string;
   /** Changes after each save, so the email and PDF are drawn again. */
   readonly saves: number;
+  /** Beside Look (W46 A, AWK-72): a click in the preview edits the look, or the preview works like the survey. */
+  readonly mode?: { readonly value: "edit" | "try"; readonly onChange: (mode: "edit" | "try") => void; readonly labels: { readonly group: string; readonly edit: string; readonly try: string } };
 };
 
 /** Where the runner in the frame is, as it tells the Preview (W32): a page of so many, the welcome or the end. */
@@ -182,6 +184,18 @@ export function PreviewPanel({
             {" · "}
             <button type="button" className="aw-stage__link" aria-current={place?.at === "end" ? "page" : undefined} onClick={() => goto("end")}>
               {views.labels.thanks}
+            </button>
+          </span>
+        )}
+        {views?.mode !== undefined && view === "web" && (
+          <span className="aw-stage__mode" role="group" aria-label={views.mode.labels.group}>
+            <button type="button" aria-pressed={views.mode.value === "edit"} onClick={() => views.mode?.onChange("edit")}>
+              <Icon name="square-pen" size={14} />
+              {views.mode.labels.edit}
+            </button>
+            <button type="button" aria-pressed={views.mode.value === "try"} onClick={() => views.mode?.onChange("try")}>
+              <Icon name="play" size={14} />
+              {views.mode.labels.try}
             </button>
           </span>
         )}

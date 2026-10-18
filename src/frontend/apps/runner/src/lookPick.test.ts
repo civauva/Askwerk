@@ -22,26 +22,26 @@ describe("lookPick (W44 A, AWK-69): the preview as a map of its parts", () => {
     expect(at(".run")).toEqual({ area: "colours" });
   });
 
-  it("lets the buttons move through the survey, and opens their settings from their label", () => {
+  it("edits the buttons too, from a click on them or on their label (W46 A: Try moves through the survey)", () => {
     document.body.innerHTML = `<div class="run"><main class="run-main"><div class="run-nav"><button class="run-button" id="next">Next</button></div></main></div>`;
     const picks: unknown[] = [];
     let moved = 0;
     const next = document.getElementById("next")!;
     next.addEventListener("click", () => moved++);
-    const stop = startPicking({ "components/buttons": "✎ Buttons · edit here" }, (pick) => picks.push(pick));
+    const stop = startPicking({ "components/buttons": "Buttons · click to edit" }, (pick) => picks.push(pick));
 
     next.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
     const label = document.querySelector<HTMLElement>(".run-look-label")!;
-    expect(label.textContent).toBe("✎ Buttons · edit here");
     label.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
     expect(document.querySelector(".run-look-label")).toBe(label);
     label.click();
-    expect(picks).toEqual([{ area: "components", part: "buttons" }]);
+    next.click();
 
+    expect(picks).toEqual([{ area: "components", part: "buttons" }, { area: "components", part: "buttons" }]);
+    expect(moved).toBe(0);
+    stop();
     next.click();
     expect(moved).toBe(1);
-    expect(picks).toHaveLength(1);
-    stop();
   });
 
   it("sends a click to the editor instead of answering, and stops when asked", () => {

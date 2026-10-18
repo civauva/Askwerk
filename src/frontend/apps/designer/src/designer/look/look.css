@@ -767,27 +767,31 @@
   background: linear-gradient(#d98b73, #5d8597) center / cover;
 }
 
-/* Density (W32 .seg). */
+/* Density (W32 .seg), as a soft track since W46 B2. */
 .sl-seg {
-  display: inline-flex;
-  border: 1px solid var(--aw-line-strong);
-  border-radius: var(--aw-radius-control);
-  overflow: hidden;
-  background: var(--aw-surface);
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
 }
 
 .sl-seg button {
   border: 0;
+  border-radius: 6px;
   background: transparent;
-  padding: 7px 11px;
-  color: var(--aw-ink);
-  font: 600 12px/1 var(--aw-font-mono);
+  padding: 5px 12px;
+  color: var(--aw-graphite);
+  font: 600 12px/1.2 var(--aw-font);
   cursor: pointer;
 }
 
 .sl-seg button[aria-pressed="true"] {
-  background: var(--aw-ink);
-  color: var(--aw-paper);
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--aw-ink) 18%, transparent);
 }
 
 /* The gallery in its dialog (W33). */
@@ -1448,4 +1452,132 @@
     animation: none;
     box-shadow: inset 3px 0 0 var(--aw-signal);
   }
+}
+
+/* A choice in Look (W46 B2, AWK-72): a soft track split evenly across the row. */
+.sl-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 2px;
+  width: 100%;
+  padding: 2px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+}
+
+.sl-track button {
+  min-width: 0;
+  padding: 5px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--aw-graphite);
+  font: 600 12px/1.2 var(--aw-font);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.sl-track button[aria-pressed="true"] {
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--aw-ink) 18%, transparent);
+}
+
+.sl-track button:focus-visible {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: 1px;
+}
+
+.sl-field .aw-combo {
+  width: 100%;
+}
+
+/* The picture panel (W46 B, AWK-72): Askwerk's pictures, your own with the rules, calm under the text. */
+.sl-picture {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 10px;
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--aw-ink) 12%, transparent);
+  font-size: 12.5px;
+}
+
+.sl-picture__head {
+  font: 500 10.5px/1.3 var(--aw-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aw-muted);
+}
+
+.sl-picture__gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.sl-picture__item {
+  height: 46px;
+  border: 0;
+  border-radius: 6px;
+  background: center / cover no-repeat;
+  cursor: pointer;
+}
+
+.sl-picture__item--mountains {
+  background-image: linear-gradient(180deg, #c97b5a, #6f6386);
+}
+
+.sl-picture__item[aria-pressed="true"] {
+  outline: 2px solid var(--aw-ink);
+  outline-offset: 2px;
+}
+
+.sl-picture__drop {
+  display: block;
+  padding: 12px;
+  border: 1.5px dashed var(--aw-line-strong);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--aw-graphite);
+}
+
+.sl-picture__rules {
+  display: block;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--aw-muted);
+}
+
+.sl-picture__error {
+  margin: 0;
+  color: var(--aw-error);
+}
+
+.sl-picture__calm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px;
+  align-items: center;
+  color: var(--aw-graphite);
+}
+
+.sl-picture__calm input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--aw-ink);
+}
+
+.sl-picture__value {
+  font: 500 11px/1 var(--aw-font-mono);
+}
+
+.sl-picture__done {
+  justify-self: end;
 }

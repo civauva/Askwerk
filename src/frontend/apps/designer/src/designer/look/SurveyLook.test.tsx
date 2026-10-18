@@ -32,6 +32,12 @@ async function pick(name: string) {
   await waitFor(() => expect(screen.queryByRole("dialog", { name: "Choose from gallery" })).toBeNull());
 }
 
+/** Picks an option of a choice shown as a menu (W46 B2): open it by its label, then click the option. */
+function choose(label: string, option: string) {
+  fireEvent.click(areas().getByRole("button", { name: new RegExp(`^${label}( |$)`) }));
+  fireEvent.click(screen.getByRole("option", { name: option }));
+}
+
 /** Opens a tab of the settings, then a folded area and one of its parts. */
 function open(tab: "Parts" | "Pages", area: string, part?: string) {
   fireEvent.click(areas().getByRole("tab", { name: tab }));
@@ -111,7 +117,7 @@ describe("Create → Look: make it yours (W26 B)", () => {
     await pick("Werkstatt");
 
     open("Parts", "Colours");
-    fireEvent.click(areas().getByRole("group", { name: "Mode" }).querySelector("button:nth-child(2)")!);
+    choose("Mode", "Dark");
 
     await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.mode).toBe("dark"), saved);
     expect(checkTheme(api.lookCalls.at(-1)!.tokens)).toEqual([]);
@@ -135,7 +141,7 @@ describe("Create → Look: make it yours (W26 B)", () => {
     await pick("Atelier");
 
     open("Pages", "Pages");
-    fireEvent.click(areas().getByRole("button", { name: "One at a time" }));
+    choose("Questions", "One at a time");
     await waitFor(() => expect(api.saved.at(-1)?.layout).toBe("one-at-a-time"));
     open("Pages", "Logo, header & background");
     fireEvent.change(areas().getByLabelText("Header picture file"), { target: { files: [new File([new Uint8Array([137, 80])], "shop.png", { type: "image/png" })] } });
@@ -186,7 +192,7 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
     expect(areas().getByText(/^Readable everywhere · text \d+\.\d : 1 · buttons \d+\.\d : 1$/)).toBeTruthy();
     expect(areas().getByText("for this survey")).toBeTruthy();
     expect(areas().queryByText("All colours")).toBeNull();
-    expect(areas().queryByRole("group", { name: "Mode" })).toBeNull();
+    expect(areas().queryByRole("button", { name: /^Mode( |$)/ })).toBeNull();
   });
 
   it("changes accent, type and background from the Style tab, a picture uploaded on the spot", async () => {
@@ -203,6 +209,26 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
     expect(api.lookCalls.at(-1)?.tokens.colours.accent).toBe("#1f5f8b");
     expect(api.lookCalls.at(-1)?.tokens.fonts.heading.family).toBe("IBM Plex Serif");
     expect(areas().getByRole("button", { name: "Picture" }).getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("chooses the background picture in its panel: Askwerk's, or your own within the rules, calmed under the text (W46 B)", async () => {
+    const { api } = await openLook();
+
+    fireEvent.click(areas().getByRole("button", { name: "Picture" }));
+    const panel = within(areas().getByRole("region", { name: "Picture" }));
+    expect(panel.getByText("JPG, PNG or WebP · up to 5 MB · landscape, 2000 × 1300 px or more")).toBeTruthy();
+    fireEvent.click(panel.getByRole("button", { name: "Mountains" }));
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.decoration?.pattern).toBe("mountains"), saved);
+
+    fireEvent.change(areas().getByLabelText("Background picture file"), { target: { files: [new File([new Uint8Array([1])], "notes.gif", { type: "image/gif" })] } });
+    expect(panel.getByRole("alert").textContent).toBe("Not used: a JPG, PNG or WebP of up to 5 MB, please.");
+    fireEvent.change(areas().getByLabelText("Background picture file"), { target: { files: [new File([new Uint8Array([137, 80])], "hall.png", { type: "image/png" })] } });
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.background?.image?.asset).toBe("a1"), saved);
+
+    fireEvent.change(panel.getByRole("slider", { name: /Calm under the text/ }), { target: { value: "60" } });
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.background?.overlayOpacity).toBe(0.6), saved);
+    fireEvent.click(panel.getByRole("button", { name: "Done" }));
+    expect(areas().queryByRole("region", { name: "Picture" })).toBeNull();
   });
 
   it("zooms the page out and back, also with Ctrl + scroll, and shows a tablet width", async () => {
@@ -264,6 +290,13 @@ describe("Create → Look: click a part of the preview to edit it (W44 A, AWK-69
 
     await act(async () => from({ type: "askwerk:pick", area: "header" }));
     await waitFor(() => expect(areas().getByRole("tab", { name: "Pages" }).getAttribute("aria-selected")).toBe("true"));
+
+    // Try (W46 A): the preview is the survey; Edit picks again.
+    fireEvent.click(preview.getByRole("button", { name: "Try" }));
+    await waitFor(() => expect(sent).toContainEqual({ type: "askwerk:pick-mode", off: true }));
+    expect(preview.getByRole("button", { name: "Try" }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(preview.getByRole("button", { name: "Edit" }));
+    await waitFor(() => expect(sent.filter((message) => (message as { type?: string; labels?: unknown }).type === "askwerk:pick-mode" && (message as { labels?: unknown }).labels !== undefined).length).toBeGreaterThan(1));
 
     // Only the preview beside the settings may pick.
     await act(async () => window.dispatchEvent(new MessageEvent("message", { data: { type: "askwerk:pick", area: "components", part: "buttons" }, origin: "https://elsewhere.example", source: frame.contentWindow })));

@@ -622,3 +622,54 @@
     box-shadow: inset 3px 0 0 var(--aw-signal);
   }
 }
+
+/* A choice (W46 B2, AWK-72): up to three options as a soft track split evenly; the radios stay for keyboards and
+   screen readers, the chosen one on a raised white thumb. */
+.look-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+}
+
+.look-track .look-choice__option {
+  position: relative;
+  min-width: 0;
+}
+
+.look-track .look-choice__option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.look-track .look-choice__option span {
+  display: block;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--aw-graphite);
+  font: 600 12.5px/1.2 var(--aw-font);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.look-track .look-choice__option input:checked + span {
+  background: var(--aw-surface);
+  color: var(--aw-ink);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--aw-ink) 18%, transparent);
+  outline: 0;
+}
+
+.look-track .look-choice__option input:focus-visible + span {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: 1px;
+}

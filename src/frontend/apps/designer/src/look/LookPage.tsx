@@ -459,8 +459,18 @@ function Choice<V extends string>({ t, legend, value, options, onChange }: { t: 
 
   return (
     <fieldset className="look-group look-choice" data-field={legend}>
-      <legend>{t(legend)}</legend>
-      <div className="look-choice__options">
+      <legend id={`${name}-legend`}>{t(legend)}</legend>
+      {/* W46 B2: up to three options as an even track, four or more as a menu. */}
+      {options.length > 3 ? (
+        <ComboBox
+          labelledBy={`${name}-legend`}
+          options={options.map(([option, label]) => ({ value: option, label: t(label) }))}
+          value={value}
+          onChange={(next) => onChange(next as V)}
+          texts={{ choose: t(legend), search: t(legend), results: (shown) => String(shown), noResults: "" }}
+        />
+      ) : (
+      <div className="look-choice__options look-track">
         {options.map(([option, label]) => (
           <label key={option} className="look-choice__option">
             <input type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} />
@@ -468,6 +478,7 @@ function Choice<V extends string>({ t, legend, value, options, onChange }: { t: 
           </label>
         ))}
       </div>
+      )}
     </fieldset>
   );
 }

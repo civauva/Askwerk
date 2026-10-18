@@ -294,23 +294,49 @@
   padding: 0 4px;
 }
 
+/* One field with its icon inside (W46 A, AWK-72): the calendar or clock at the right end opens the picker. */
 .aw-date__row {
-  display: flex;
-  gap: 6px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .aw-date__input {
-  width: 9.5rem;
+  width: 11.5rem;
+  padding-right: 40px;
 }
 
 .aw-time__input {
-  width: 6rem;
+  width: 8rem;
+  padding-right: 40px;
 }
 
 .aw-date__open {
-  width: 40px;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
   padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--aw-graphite);
   cursor: pointer;
+}
+
+.aw-date__open:hover,
+.aw-date__open[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--aw-ink) 7%, transparent);
+  color: var(--aw-ink);
+}
+
+.aw-date__open:focus-visible {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: 0;
 }
 
 .aw-date__head {

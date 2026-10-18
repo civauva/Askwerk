@@ -121,6 +121,7 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
   const summary = useRef<HTMLDivElement>(null);
   // With the welcome page switched off, the response starts with the first page saved, not on opening the link.
   const started = useRef(false);
+  const backToWelcome = useRef(false);
   const uiLanguage = language === "de" ? "de" : "en";
   const t = createTranslator(runnerMessages, uiLanguage);
 
@@ -220,11 +221,11 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
 
     let stop: (() => void) | null = null;
     const received = (event: MessageEvent) => {
-      const data = event.data as { type?: string; labels?: Record<string, string> } | null;
+      const data = event.data as { type?: string; labels?: Record<string, string>; off?: boolean } | null;
 
-      if (event.origin === window.location.origin && data?.type === "askwerk:pick-mode" && data.labels !== undefined) {
+      if (event.origin === window.location.origin && data?.type === "askwerk:pick-mode") {
         stop?.();
-        stop = startPicking(data.labels, (pick) => window.parent.postMessage({ type: "askwerk:pick", ...pick }, window.location.origin));
+        stop = data.labels !== undefined ? startPicking(data.labels, (pick) => window.parent.postMessage({ type: "askwerk:pick", ...pick }, window.location.origin)) : null;
       }
     };
     window.addEventListener("message", received);
@@ -353,6 +354,14 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
   }
 
   async function start() {
+    // Back from the first page (W46, AWK-72) returned to the welcome page; Start goes on with the same response.
+    if (backToWelcome.current) {
+      backToWelcome.current = false;
+      setScreen({ kind: "answering", page: 0, step: 0 });
+
+      return;
+    }
+
     try {
       const response = await client.start(surveyId, language);
       started.current = true;
@@ -535,6 +544,11 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
           <div className="run-nav">
             {pageIndex > 0 ? (
               <button type="button" className="run-button" onClick={() => setScreen({ kind: "answering", page: pageIndex - 1, step: 0 })}>
+                {t("back")}
+              </button>
+            ) : survey.welcome?.enabled !== false ? (
+              // The first page goes back to the welcome page when there is one (W46, AWK-72).
+              <button type="button" className="run-button" onClick={() => ((backToWelcome.current = true), setScreen({ kind: "welcome" }))}>
                 {t("back")}
               </button>
             ) : (
