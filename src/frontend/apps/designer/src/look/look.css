@@ -568,3 +568,8 @@
     min-height: 480px;
   }
 }
+
+/* Administration → Messages is a settings page (W32 round 2, E): 1,200 px. */
+.look--settings {
+  max-width: var(--aw-page-settings);
+}

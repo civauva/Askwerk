@@ -68,9 +68,11 @@ body {
 }
 
 /* One layout language (W31): every page starts 32 px after the sidebar and 28 px below the bar, left-aligned.
-   Lists and cards up to 1,200 px, forms up to 720 px; only canvases (Questions, Look, Results) use the full width. */
+   Lists and cards up to 1,600 px (W32 round 2, E), settings pages up to 1,200 px, forms up to 720 px; only canvases
+   (Questions, Look, Results) use the full width. */
 :root {
-  --aw-page-list: 1200px;
+  --aw-page-list: 1600px;
+  --aw-page-settings: 1200px;
   --aw-page-form: 720px;
   --aw-page-pad: 28px 32px 64px;
   --aw-bar-height: 56px;

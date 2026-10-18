@@ -1,11 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// One layout language (AWK-41, W31): every page starts 32 px after the sidebar, left-aligned, at most 1,200 px for
-// lists and 720 px for forms; the breadcrumb names the survey; the question inspector never scrolls sideways.
+// One layout language (AWK-41, W31; W32 round 2, E): every page starts 32 px after the sidebar, left-aligned, at most
+// 1,600 px for lists, 1,200 px for settings and 720 px for forms; the breadcrumb names the survey; the question inspector never scrolls sideways.
 import { expect, test, type Page } from "@playwright/test";
 import { owner, readTwoFactorKey, totp } from "./owner";
 
 // Administration → Looks is laid out like a survey's Look (W32): settings column and stage, the full width and height.
-const lists = ["/", "/templates", "/members", "/domains", "/messages", "/organisation", "/sign-in-settings"];
+const widths: Record<string, string> = {
+  "/": "1600px",
+  "/templates": "1600px",
+  "/members": "1600px",
+  "/domains": "1600px",
+  "/messages": "1200px",
+  "/organisation": "1200px",
+  "/sign-in-settings": "760px",
+};
 
 /** Where the page's content starts and how wide it may get, against the sidebar's right edge. */
 async function measure(page: Page) {
@@ -28,10 +36,10 @@ test("every page starts at the same place, survey pages show a breadcrumb, and t
   await page.getByRole("button", { name: "Confirm", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Surveys" })).toBeVisible();
 
-  for (const path of lists) {
+  for (const [path, maxWidth] of Object.entries(widths)) {
     await page.goto(path);
     await expect(page.locator("main").first()).toBeVisible();
-    expect({ path, ...(await measure(page)) }).toEqual({ path, left: 0, padding: "32px", top: "28px", maxWidth: "1200px", margin: "0px" });
+    expect({ path, ...(await measure(page)) }).toEqual({ path, left: 0, padding: "32px", top: "28px", maxWidth, margin: "0px" });
   }
 
   // A survey with a picture choice: its pages, the breadcrumb, and the inspector.
@@ -52,7 +60,7 @@ test("every page starts at the same place, survey pages show a breadcrumb, and t
 
   await page.goto(`/surveys/${id}/share`);
   await expect(page.locator("main").first()).toBeVisible();
-  expect(await measure(page)).toEqual({ left: 0, padding: "32px", top: "28px", maxWidth: "1200px", margin: "0px" });
+  expect(await measure(page)).toEqual({ left: 0, padding: "32px", top: "28px", maxWidth: "1600px", margin: "0px" });
   await page.getByRole("navigation", { name: "You are here" }).getByRole("link", { name: "Layout check" }).click();
   await expect(page.getByRole("navigation", { name: "Outline" })).toBeVisible();
 

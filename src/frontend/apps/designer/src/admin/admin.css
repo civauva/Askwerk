@@ -2,7 +2,7 @@
 /* Administration pages (AWK-38, W29): Organisation and This Askwerk. */
 .admin {
   box-sizing: content-box;
-  max-width: var(--aw-page-list);
+  max-width: var(--aw-page-settings);
   margin: 0;
   padding: var(--aw-page-pad);
   color: var(--aw-ink);

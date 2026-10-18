@@ -40,7 +40,7 @@ export function SignInPage({ client, locale, writeClipboard = (text) => navigato
 
   if (state === "refused" || state === "failed") {
     return (
-      <main className="members" lang={locale}>
+      <main className="members sign-in-settings" lang={locale}>
         <PageBar path={[{ place: "administration" }]} title={t("title")} />
         <h1>{t("title")}</h1>
         <p role="alert">{t(state === "refused" ? "notAllowed" : "failed")}</p>
@@ -49,7 +49,7 @@ export function SignInPage({ client, locale, writeClipboard = (text) => navigato
   }
 
   if (draft === null || saved === null) {
-    return <main className="members" lang={locale} aria-busy="true" />;
+    return <main className="members sign-in-settings" lang={locale} aria-busy="true" />;
   }
 
   const change = (patch: Partial<Draft>) => setDraft({ ...draft, ...patch });

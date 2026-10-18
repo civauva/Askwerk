@@ -48,7 +48,7 @@ export function MessagesPage({ client, surveys, locale, saveDelayMs = 600 }: Mes
   const message = messages?.find((each) => each.kind === kind);
 
   return (
-    <main className="look" lang={locale}>
+    <main className="look look--settings" lang={locale}>
       <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="look-lead">{t("lead")}</p>
