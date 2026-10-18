@@ -211,7 +211,17 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
   ];
   // Simple (W45) shows the essentials; a place opened by search or address still shows while it is open.
   const shown = view === "simple" ? administration.filter((each) => !advancedPlaces.has(each.place) || each.place === active) : administration;
-  const hidden = administration.length - shown.length;
+  // This Askwerk is for installation administrators and always Advanced; a place of it opened by address still shows.
+  const installation: Item[] =
+    me.installationAdmin === true
+      ? [
+          { place: "organisations", label: "organisations", icon: icons.organisations },
+          { place: "administrators", label: "administrators", icon: icons.administrators },
+          { place: "installation", label: "installation", icon: icons.installation },
+        ]
+      : [];
+  const installationShown = view === "simple" ? installation.filter((each) => each.place === active) : installation;
+  const hidden = administration.length - shown.length + installation.length - installationShown.length;
 
   return (
     <div className={drawer ? "shell shell--open" : "shell"} lang={locale}>
@@ -312,12 +322,10 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
                   <span>{hidden === 1 ? t("morePlace") : t("morePlaces", { count: hidden })}</span> · <b>{t("switchToAdvanced")}</b>
                 </button>
               )}
-              {me.installationAdmin === true && (
+              {installationShown.length > 0 && (
                 <>
                   <h3 className="shell-group shell-group--sub">{t("thisAskwerk")}</h3>
-                  {item({ place: "organisations", label: "organisations", icon: icons.organisations })}
-                  {item({ place: "administrators", label: "administrators", icon: icons.administrators })}
-                  {item({ place: "installation", label: "installation", icon: icons.installation })}
+                  {installationShown.map(item)}
                 </>
               )}
             </>

@@ -154,6 +154,14 @@ describe("AppShell: Simple and Advanced (W45, AWK-71)", () => {
     expect(side.getByRole("button", { name: /5 more places/ })).toBeTruthy();
   });
 
+  it("keeps This Askwerk in Advanced, counted with the other hidden places", () => {
+    const { side } = shown({ me: { ...anna, view: "simple", installationAdmin: true } });
+
+    expect(side.queryByRole("heading", { name: "This Askwerk" })).toBeNull();
+    expect(side.queryByRole("link", { name: "Organisations" })).toBeNull();
+    expect(side.getByRole("button", { name: /9 more places/ })).toBeTruthy();
+  });
+
   it("shows every place in Advanced, as before", () => {
     const { side } = shown();
 
