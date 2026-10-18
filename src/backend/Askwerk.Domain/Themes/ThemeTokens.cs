@@ -107,9 +107,12 @@ public enum BackgroundFit
     Tile,
 }
 
-/// <summary>Type scale.</summary>
+/// <summary>Type scale: five steps since W47 (AWK-73), stored as xs, s, m, l, xl.</summary>
 public enum ThemeScale
 {
+    /// <summary>Extra small (W47).</summary>
+    Xs,
+
     /// <summary>Small.</summary>
     S,
 
@@ -118,6 +121,9 @@ public enum ThemeScale
 
     /// <summary>Large.</summary>
     L,
+
+    /// <summary>Extra large (W47).</summary>
+    Xl,
 }
 
 /// <summary>Spacing.</summary>

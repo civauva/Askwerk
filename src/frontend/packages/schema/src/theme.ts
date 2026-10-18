@@ -40,7 +40,8 @@ export interface ThemeColours {
   readonly line: ThemeColour;
 }
 
-export type ThemeSize = "s" | "m" | "l";
+/** Five steps since W47 (AWK-73): extra small to extra large. */
+export type ThemeSize = "xs" | "s" | "m" | "l" | "xl";
 export type SelectedStyle = "accent" | "text" | "fill";
 export type PageLayout = "left" | "centre" | "band";
 export type ThemePattern = "none" | "confetti" | "dots" | "grid" | "waves" | "hills" | "stripes" | "mountains";

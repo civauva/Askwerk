@@ -243,6 +243,17 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
     expect(within(areas().getByRole("region", { name: "Picture" })).getByRole("group", { name: "Holidays" })).toBeTruthy();
   });
 
+  it("offers five text sizes, extra small to extra large (W47, AWK-73)", async () => {
+    const { api } = await openLook();
+    open("Parts", "Type");
+
+    fireEvent.click(areas().getByRole("button", { name: /^Text size( |$)/ }));
+    expect(screen.getAllByRole("option").map((option) => option.textContent)).toEqual(["Extra small", "Small", "Medium", "Large", "Extra large"]);
+    fireEvent.click(screen.getByRole("option", { name: "Extra large" }));
+
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.scale).toBe("xl"), saved);
+  });
+
   it("zooms the page out and back, also with Ctrl + scroll, and shows a tablet width", async () => {
     await openLook();
     const preview = within(screen.getByRole("complementary", { name: "Preview" }));

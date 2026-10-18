@@ -44,10 +44,13 @@ const families: readonly Option[] = [
   ["IBM Plex Serif", "fontSerif"],
   ["IBM Plex Mono", "fontMono"],
 ];
+// Five steps since W47 (AWK-73); five options, so each size is a menu.
 const sizes: readonly Option[] = [
+  ["xs", "sizeXs"],
   ["s", "sizeS"],
   ["m", "sizeM"],
   ["l", "sizeL"],
+  ["xl", "sizeXl"],
 ];
 const choice = (label: LookMessageKey, path: LookPath, options: readonly Option[], fallback: string): Field => ({ kind: "choice", label, path, options, fallback });
 const toggle = (label: LookMessageKey, path: LookPath, fallback: boolean): Field => ({ kind: "switch", label, path, fallback });

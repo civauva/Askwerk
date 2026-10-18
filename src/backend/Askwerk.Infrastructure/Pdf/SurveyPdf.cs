@@ -40,7 +40,7 @@ public static class SurveyPdf
         var document = new Document();
         document.Info.Title = content.Title;
         document.Info.Author = content.Organisation;
-        var size = theme.Scale switch { ThemeScale.S => 9.5, ThemeScale.L => 12, _ => 10.5 };
+        var size = theme.Scale switch { ThemeScale.Xs => 9, ThemeScale.S => 9.5, ThemeScale.L => 12, ThemeScale.Xl => 13.5, _ => 10.5 };
         var accent = Colour(theme.Colours.Accent, Colors.Black);
         var ink = Colour(theme.Colours.Text, Colors.Black);
         var muted = Colour(theme.Colours.Muted, Colors.Gray);

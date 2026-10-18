@@ -884,12 +884,21 @@ body {
   border-radius: 0;
 }
 
+/* Five text sizes since W47 (AWK-73): 15, 16, 18 (medium), 21, 24 px. */
+.run[data-scale="xs"] {
+  font-size: 15px;
+}
+
 .run[data-scale="s"] {
   font-size: 16px;
 }
 
 .run[data-scale="l"] {
   font-size: 21px;
+}
+
+.run[data-scale="xl"] {
+  font-size: 24px;
 }
 
 .run[data-spacing="compact"] .run-page {
@@ -1085,6 +1094,10 @@ body {
   display: none;
 }
 
+.run[data-logo-size="xs"] .run-logo {
+  max-height: 20px;
+}
+
 .run[data-logo-size="s"] .run-logo {
   max-height: 26px;
 }
@@ -1092,6 +1105,11 @@ body {
 .run[data-logo-size="l"] .run-logo {
   max-height: 52px;
   max-width: 240px;
+}
+
+.run[data-logo-size="xl"] .run-logo {
+  max-height: 72px;
+  max-width: 320px;
 }
 
 /* Welcome and end pages: centred, or on an accent band */
@@ -1140,6 +1158,10 @@ body {
 }
 
 /* Question texts: size, font, numbers */
+.run[data-q-size="xs"] .run-q__title {
+  font-size: 16px;
+}
+
 .run[data-q-size="s"] .run-q__title {
   font-size: 18px;
 }
@@ -1147,6 +1169,11 @@ body {
 .run[data-q-size="l"] .run-q__title {
   font-size: clamp(20px, 1.6vw + 15px, 26px);
   line-height: 1.2;
+}
+
+.run[data-q-size="xl"] .run-q__title {
+  font-size: clamp(24px, 2vw + 17px, 32px);
+  line-height: 1.15;
 }
 
 .run[data-q-font="heading"] .run-q__title {
@@ -1283,6 +1310,11 @@ body {
 }
 
 /* Rating and scale: size and how the chosen step shows */
+.run[data-rating-size="xs"] .run-scale__step {
+  height: 36px;
+  font-size: 13px;
+}
+
 .run[data-rating-size="s"] .run-scale__step {
   height: 44px;
   font-size: 15px;
@@ -1291,6 +1323,11 @@ body {
 .run[data-rating-size="l"] .run-scale__step {
   height: 72px;
   font-size: 24px;
+}
+
+.run[data-rating-size="xl"] .run-scale__step {
+  height: 88px;
+  font-size: 28px;
 }
 
 .run[data-rating-selected="accent"] .run-scale--numbers .run-scale__step--on {
