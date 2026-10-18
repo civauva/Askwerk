@@ -53,6 +53,21 @@ test("a click on a part of the preview opens its settings, and the language menu
   await expect(page.locator("[data-field='surface']")).toBeVisible();
   await page.screenshot({ path: info.outputPath("looks-pick.png") });
 
+  // Simple and Advanced (W45, AWK-71), switched from the person's menu. The choice is not stored here, so the other
+  // flows signed in as the same owner keep their view.
+  await page.route("**/api/app/account/view", (route) => route.fulfill({ status: 204 }));
+  await page.goto("/");
+  const side = page.getByRole("complementary", { name: "Navigation" });
+  await side.getByRole("button", { name: /^Account: / }).click();
+  await page.getByRole("menuitemradio", { name: "Simple" }).click();
+  await expect(side.getByRole("link", { name: "Contacts" })).toHaveCount(0);
+  await expect(side.getByRole("button", { name: /more places · Switch to Advanced/ })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Simple view" })).toBeVisible();
+  await page.screenshot({ path: info.outputPath("view-simple.png") });
+  await side.getByRole("button", { name: /Switch to Advanced/ }).click();
+  await expect(side.getByRole("link", { name: "Contacts" })).toBeVisible();
+  await page.screenshot({ path: info.outputPath("view-advanced.png") });
+
   // The survey itself: the language menu lists each language by its own name.
   await page.goto(`/s/${id}?preview`);
   await page.getByRole("button", { name: /: English$/ }).click();

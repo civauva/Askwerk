@@ -19,6 +19,14 @@ public sealed class MembershipTests
     }
 
     [Fact]
+    public void UserCreate_NewPerson_StartsInTheSimpleView()
+    {
+        var user = User.Create(Guid.CreateVersion7(), "lena@acme.at", "Lena Gruber", new DateTimeOffset(2026, 10, 18, 9, 0, 0, TimeSpan.Zero));
+
+        Assert.Equal("simple", user.View);
+    }
+
+    [Fact]
     public void UserCreate_Email_IsStoredTrimmedAndNormalisedForLookup()
     {
         var now = new DateTimeOffset(2026, 10, 13, 20, 0, 0, TimeSpan.Zero);

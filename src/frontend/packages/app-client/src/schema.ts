@@ -3229,6 +3229,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/account/view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Simple or Advanced (W45, AWK-71): what the app shows this person, switched from their menu. */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description Cancels the request. */
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ViewRequest"];
+                    "text/json": components["schemas"]["ViewRequest"];
+                    "application/*+json": components["schemas"]["ViewRequest"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ValidationProblemDetails"];
+                        "application/json": components["schemas"]["ValidationProblemDetails"];
+                        "text/json": components["schemas"]["ValidationProblemDetails"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/account/sign-out-everywhere": {
         parameters: {
             query?: never;
@@ -12259,6 +12311,11 @@ export interface components {
              * @default false
              */
             installationAdmin: boolean;
+            /**
+             * @description simple or advanced (W45, AWK-71): what the app shows this person.
+             * @default advanced
+             */
+            view: string;
         };
         /** @description The organisation's message texts. */
         MessageListResponse: {
@@ -13953,6 +14010,11 @@ export interface components {
              * @description Times given.
              */
             count: number | string;
+        };
+        /** @description What the app shows (W45, AWK-71). */
+        ViewRequest: {
+            /** @description simple or advanced. */
+            view: string;
         };
         /** @description A change to a webhook; what is left out stays. */
         WebhookChange: {

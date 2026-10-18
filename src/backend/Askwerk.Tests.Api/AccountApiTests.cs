@@ -140,6 +140,23 @@ public sealed class AccountApiTests(PostgresServer server)
     }
 
     [Fact]
+    public async Task View_TheInstallerStartsAdvanced_AndSwitchesToSimpleAndBack()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var client = await factory.CreateReadyClientAsync();
+        await OwnerWithTwoFactorAsync(client);
+
+        var first = await client.GetFromJsonAsync<JsonElement>(Url("/api/app/me"), Cancel);
+        var simple = await client.PutAsJsonAsync(Url("/api/app/account/view"), new { view = "simple" }, Cancel);
+        var then = await client.GetFromJsonAsync<JsonElement>(Url("/api/app/me"), Cancel);
+        var unknown = await client.PutAsJsonAsync(Url("/api/app/account/view"), new { view = "expert" }, Cancel);
+
+        Assert.Equal("advanced", first.GetProperty("view").GetString());
+        Assert.Equal((HttpStatusCode.NoContent, "simple"), (simple.StatusCode, then.GetProperty("view").GetString()));
+        Assert.Equal("view-unknown", (await JsonAsync(unknown)).GetProperty("errors").GetProperty("view")[0].GetString());
+    }
+
+    [Fact]
     public async Task Preferences_UnknownValues_AreRefused()
     {
         await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);

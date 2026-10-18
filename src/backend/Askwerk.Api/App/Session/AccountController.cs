@@ -54,7 +54,8 @@ public sealed class AccountController(UserManager<User> users, SignInManager<Use
             organisations.Any(row => row.Role.RequiresTwoFactor()),
             user.Language,
             user.Theme,
-            user.IsInstallationAdmin);
+            user.IsInstallationAdmin,
+            user.View);
     }
 
     /// <summary>The authenticator key to scan, created on first call (M3 "Set up two-factor").</summary>
@@ -240,6 +241,38 @@ public sealed class AccountController(UserManager<User> users, SignInManager<Use
         user.Language = request.Language;
         user.Theme = request.Theme;
         await audit.WriteAsync(user, "user.preferences-changed", cancellationToken);
+
+        return NoContent();
+    }
+
+    /// <summary>Simple or Advanced (W45, AWK-71): what the app shows this person, switched from their menu.</summary>
+    /// <param name="request">The view.</param>
+    /// <param name="cancellationToken">Cancels the request.</param>
+    /// <returns>204; 400 for an unknown view.</returns>
+    [HttpPut("api/app/account/view")]
+    [Authorize(Policy = Sessions.SignedIn)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> SaveView(ViewRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (request.View is not ("simple" or "advanced"))
+        {
+            ModelState.AddModelError("view", "view-unknown");
+
+            return ValidationProblem(ModelState);
+        }
+
+        var user = await users.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        user.View = request.View;
+        await audit.WriteAsync(user, "user.view-changed", cancellationToken);
 
         return NoContent();
     }
@@ -456,6 +489,10 @@ public sealed record ChangePasswordRequest(string CurrentPassword, string NewPas
 /// <param name="RecoveryCodes">The codes.</param>
 public sealed record RecoveryCodesResponse(IReadOnlyList<string> RecoveryCodes);
 
+/// <summary>What the app shows (W45, AWK-71).</summary>
+/// <param name="View">simple or advanced.</param>
+public sealed record ViewRequest(string View);
+
 /// <summary>Language and theme.</summary>
 /// <param name="Language">de, en, or null to follow the browser.</param>
 /// <param name="Theme">system, light or dark.</param>
@@ -494,6 +531,7 @@ public sealed record ConfirmPasswordRequest(string Password);
 /// <param name="Language">Preferred language, or null to follow the browser.</param>
 /// <param name="Theme">system, light or dark.</param>
 /// <param name="InstallationAdmin">Whether the user administers this Askwerk (AWK-38).</param>
+/// <param name="View">simple or advanced (W45, AWK-71): what the app shows this person.</param>
 public sealed record MeResponse(
     Guid Id,
     string Name,
@@ -506,7 +544,8 @@ public sealed record MeResponse(
     bool TwoFactorRequired,
     string? Language,
     string Theme,
-    bool InstallationAdmin = false);
+    bool InstallationAdmin = false,
+    string View = "advanced");
 
 /// <summary>An organisation of the user.</summary>
 /// <param name="Id">Tenant id.</param>

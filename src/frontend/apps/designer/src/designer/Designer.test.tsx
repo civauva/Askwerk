@@ -4,6 +4,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testi
 import { ApiError } from "@askwerk/app-client";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Designer } from "./Designer";
+import { ShellView, type View } from "../shell/AppShell";
 import { FakeDesignerApi, sampleDefinition, sampleDraft, sequentialIds } from "./testing";
 import { dropLine, grab, lift, moveTo, placeAt, release } from "./dragTesting";
 
@@ -891,5 +892,25 @@ describe("Save as template (AWK-17 step 5, W10 C)", () => {
 
     await waitFor(() => expect(api.templates).toEqual(["Acme check-in"]));
     expect(await screen.findByText("Saved as a template. New surveys can start from it.")).toBeTruthy();
+  });
+});
+
+describe("Simple view (W45, AWK-71)", () => {
+  it("shows a question's common settings, the rest one click away in Advanced; the palette switches too", async () => {
+    const setView = vi.fn<(view: View) => void>();
+    render(
+      <ShellView.Provider value={{ view: "simple", setView }}>
+        <Designer api={new FakeDesignerApi()} surveyId="s1" initialLocale="en" newId={sequentialIds()} autosaveDelayMs={0} />
+      </ShellView.Provider>,
+    );
+    await screen.findByRole("navigation", { name: "Outline" });
+
+    fireEvent.click(outline().getByRole("button", { name: "How satisfied are you with our service? SAT_1" }));
+
+    expect(inspector().getByRole("switch", { name: "Required" })).toBeTruthy();
+    expect(inspector().queryByRole("textbox", { name: "Variable name" })).toBeNull();
+    expect(inspector().queryByRole("switch", { name: /Key question/ })).toBeNull();
+    fireEvent.click(inspector().getByRole("button", { name: "Switch to Advanced" }));
+    expect(setView).toHaveBeenCalledWith("advanced");
   });
 });

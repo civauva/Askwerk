@@ -249,6 +249,7 @@ public sealed class AskwerkDbContext(DbContextOptions<AskwerkDbContext> options)
             user.Property(row => row.LockoutEnd).HasColumnName("lockout_end");
             user.Property(row => row.Language).HasColumnName("language").HasMaxLength(8);
             user.Property(row => row.Theme).HasColumnName("theme").HasMaxLength(8).HasDefaultValue("system");
+            user.Property(row => row.View).HasColumnName("view").HasMaxLength(10).HasDefaultValue("simple");
             user.Property(row => row.Source).HasColumnName("source").HasConversion<string>().HasMaxLength(16);
             user.Property(row => row.CreatedAt).HasColumnName("created_at");
             user.Property(row => row.DeactivatedAt).HasColumnName("deactivated_at");

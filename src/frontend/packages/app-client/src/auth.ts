@@ -12,7 +12,7 @@ export type SlugCheck = Schemas["SlugCheckResponse"];
 /** An organisation of the user; suspended ones are closed until an installation administrator resumes them (AWK-38). */
 export type Organisation = Omit<Schemas["OrganisationResponse"], "status"> & { status?: string };
 /** The signed-in user; installationAdmin: administers this Askwerk (AWK-38). */
-export type Me = Omit<Schemas["MeResponse"], "state" | "organisations" | "installationAdmin"> & { state: SessionState; organisations: Organisation[]; installationAdmin?: boolean };
+export type Me = Omit<Schemas["MeResponse"], "state" | "organisations" | "installationAdmin" | "view"> & { state: SessionState; organisations: Organisation[]; installationAdmin?: boolean; view?: string };
 export type TwoFactorSetup = Schemas["TwoFactorSetupResponse"];
 export type TwoFactorEnabled = { state: SessionState; recoveryCodes: string[] };
 export type Passkey = Schemas["PasskeyResponse"];
@@ -49,6 +49,8 @@ export interface AuthClient {
   resetTwoFactor(password: string): Promise<SessionResponse>;
   disableTwoFactor(password: string): Promise<void>;
   savePreferences(language: string | null, theme: string): Promise<void>;
+  /** Simple or Advanced (W45, AWK-71): what the app shows this person. */
+  saveView(view: "simple" | "advanced"): Promise<void>;
   signOutEverywhere(): Promise<void>;
   passkeys(): Promise<Passkey[]>;
   /** Options for navigator.credentials.create(), as JSON (PublicKeyCredential.parseCreationOptionsFromJSON). */
@@ -92,6 +94,7 @@ export function createAuthClient(options: AppClientOptions): AuthClient {
     resetTwoFactor: (password) => request<SessionResponse>("POST", "/api/app/account/two-factor/reset", { password }),
     disableTwoFactor: (password) => request("POST", "/api/app/account/two-factor/disable", { password }),
     savePreferences: (language, theme) => request("PUT", "/api/app/account/preferences", { language, theme }),
+    saveView: (view) => request("PUT", "/api/app/account/view", { view }),
     signOutEverywhere: () => request("POST", "/api/app/account/sign-out-everywhere"),
     passkeys: () => request<Passkey[]>("GET", "/api/app/account/passkeys"),
     passkeyCreationOptions: () => request<object>("POST", "/api/app/account/passkeys/options"),

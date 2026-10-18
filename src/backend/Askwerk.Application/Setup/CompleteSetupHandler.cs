@@ -95,6 +95,8 @@ public sealed class CompleteSetupHandler(
         var user = User.Create(Guid.CreateVersion7(now), command.OwnerEmail, command.OwnerName, now);
         // Whoever sets up the installation administers it (AWK-38).
         user.SetInstallationAdmin(true);
+        // Whoever installs Askwerk sets everything up, so they see every place (W45, AWK-71); people who join start Simple.
+        user.View = "advanced";
         var tenant = Tenant.Create(Guid.CreateVersion7(now), command.OrganisationName, command.OrganisationSlug, now);
 
         if (await tenants.SlugTakenAsync(tenant.Slug, cancellationToken))

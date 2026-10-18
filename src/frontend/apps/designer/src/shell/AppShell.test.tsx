@@ -122,3 +122,42 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
     expect([placeOf("/"), placeOf("/surveys/s1/results"), placeOf("/api-keys"), placeOf("/installation"), placeOf("/account")]).toEqual(["surveys", "surveys", "developers", "installation", null]);
   });
 });
+
+describe("AppShell: Simple and Advanced (W45, AWK-71)", () => {
+  it("shows the essentials in Simple, switches from the person's menu, says what changed and undoes it", async () => {
+    const { client, side } = shown({ me: { ...anna, view: "simple" } });
+
+    expect(side.queryByRole("link", { name: "Contacts" })).toBeNull();
+    expect(side.queryByRole("link", { name: "Developers & API" })).toBeNull();
+    expect(side.getByRole("link", { name: "Looks" })).toBeTruthy();
+    expect(side.getByRole("button", { name: /6 more places · Switch to Advanced/ })).toBeTruthy();
+
+    fireEvent.click(side.getByRole("button", { name: /^Account: / }));
+    expect(screen.getByRole("menuitemradio", { name: "Simple" }).getAttribute("aria-checked")).toBe("true");
+    fireEvent.click(screen.getByRole("menuitemradio", { name: "Advanced" }));
+
+    expect(side.getByRole("link", { name: "Contacts" })).toBeTruthy();
+    expect(side.queryByRole("button", { name: /more places/ })).toBeNull();
+    expect(screen.getByRole("status").textContent).toMatch(/^Advanced view:/);
+    expect(client.calls).toContainEqual(["saveView", "advanced"]);
+
+    fireEvent.click(within(screen.getByRole("status")).getByRole("button", { name: "Undo" }));
+    expect(side.queryByRole("link", { name: "Contacts" })).toBeNull();
+    expect(client.calls).toContainEqual(["saveView", "simple"]);
+    await expectNoAxeViolations(document.body);
+  });
+
+  it("keeps a place opened by search or address in the sidebar while it is open", () => {
+    const { side } = shown({ me: { ...anna, view: "simple" }, active: "contacts" });
+
+    expect(side.getByRole("link", { name: "Contacts" }).getAttribute("aria-current")).toBe("page");
+    expect(side.getByRole("button", { name: /5 more places/ })).toBeTruthy();
+  });
+
+  it("shows every place in Advanced, as before", () => {
+    const { side } = shown();
+
+    expect(side.getByRole("link", { name: "Contacts" })).toBeTruthy();
+    expect(side.queryByRole("button", { name: /more places/ })).toBeNull();
+  });
+});

@@ -87,6 +87,7 @@ export class FakeAuthClient implements AuthClient {
   resetTwoFactor = (password: string) => this.confirmed("resetTwoFactor", this.resetTwoFactorAnswer, password);
   disableTwoFactor = (password: string) => this.confirmed("disableTwoFactor", undefined, password);
   savePreferences = (language: string | null, theme: string) => this.record("savePreferences", undefined, language, theme);
+  saveView = (view: "simple" | "advanced") => this.record("saveView", undefined, view);
   signOutEverywhere = () => this.record("signOutEverywhere", undefined);
   passkeys = () => this.record("passkeys", [...this.passkeyList]);
   passkeyCreationOptions = () => this.record("passkeyCreationOptions", { challenge: "Y3JlYXRl" });

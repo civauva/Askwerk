@@ -2,8 +2,9 @@
 import { ApiError } from "@askwerk/app-client";
 import { expectNoAxeViolations } from "@askwerk/ui/testing";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Designer } from "../Designer";
+import { ShellView, type View } from "../../shell/AppShell";
 import { FakeDesignerApi, sequentialIds } from "../testing";
 import { changesBetween, darkColoursFor, setAt } from "./lookEditing";
 import { checkTheme, themePresets } from "@askwerk/schema";
@@ -284,5 +285,30 @@ describe("lookEditing", () => {
     for (const preset of themePresets) {
       expect(checkTheme({ ...preset.tokens, mode: "dark", darkColours: darkColoursFor(preset.tokens.colours) })).toEqual([]);
     }
+  });
+});
+
+describe("Create → Look in the Simple view (W45, AWK-71)", () => {
+  it("shows only Style, with the way to the rest, and leaves the preview a plain preview", async () => {
+    const setView = vi.fn<(view: View) => void>();
+    render(
+      <ShellView.Provider value={{ view: "simple", setView }}>
+        <Designer api={new FakeDesignerApi()} surveyId="s1" initialLocale="en" newId={sequentialIds()} autosaveDelayMs={0} previewEmail={() => Promise.resolve("<p>Hello</p>")} />
+      </ShellView.Provider>,
+    );
+    await screen.findByRole("navigation", { name: "Outline" });
+    fireEvent.click(tabs().getByRole("link", { name: "Look" }));
+    await screen.findByRole("complementary", { name: "Look settings" });
+
+    expect(areas().getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["Style"]);
+    const frame = within(screen.getByRole("complementary", { name: "Preview" })).getByTitle("Survey preview") as HTMLIFrameElement;
+    const sent: unknown[] = [];
+    frame.contentWindow!.addEventListener("message", (event) => sent.push(event.data));
+    await act(async () => window.dispatchEvent(new MessageEvent("message", { data: { type: "askwerk:preview-ready" }, origin: window.location.origin, source: frame.contentWindow })));
+    await waitFor(() => expect(sent.some((message) => (message as { type?: string }).type === "askwerk:look")).toBe(true));
+    expect(sent.some((message) => (message as { type?: string }).type === "askwerk:pick-mode")).toBe(false);
+
+    fireEvent.click(areas().getByRole("button", { name: "Switch to Advanced" }));
+    expect(setView).toHaveBeenCalledWith("advanced");
   });
 });

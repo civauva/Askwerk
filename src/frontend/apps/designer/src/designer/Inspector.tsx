@@ -9,6 +9,7 @@ import { pageName } from "./Outline";
 import { findQuestion, type ItemList } from "./state";
 import { languageName, type RegionProps } from "./text";
 import { missingTexts, translationProgress } from "./translations";
+import { useShellView } from "../shell/AppShell";
 
 type InspectorProps = RegionProps & { typeNames: Record<QuestionType, string>; locale: string };
 
@@ -91,6 +92,9 @@ export function Inspector({ t, typeNames, state, dispatch, locale }: InspectorPr
 
 function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: InspectorProps & { question: Question }) {
   const variableValid = variableNamePattern.test(question.variable);
+  // Simple (W45, AWK-71): the type, its own settings, a picture and Required; the rest waits in Advanced.
+  const { view, setView } = useShellView();
+  const simple = view === "simple";
 
   return (
     <>
@@ -107,6 +111,7 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
           texts={{ choose: t("type"), search: t("comboSearch"), results: (shown, total) => t("comboResults", { shown, total }), noResults: t("comboNoResults") }}
         />
       </div>
+      {!simple && (
       <div className="designer-field">
         <label className="designer-label" htmlFor="inspector-variable">
           {t("variableName")}
@@ -128,6 +133,7 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
           {variableValid ? t("variableNote") : t("variableInvalid")}
         </p>
       </div>
+      )}
       {question.type === "rating" && <ScaleSettings t={t} state={state} dispatch={dispatch} question={question} />}
       {question.type === "slider" && <SliderSettings t={t} state={state} dispatch={dispatch} question={question} />}
       {question.type === "dropdown" && <OrderSettings t={t} state={state} dispatch={dispatch} question={question} />}
@@ -142,7 +148,15 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
       {question.type !== "text-block" && question.type !== "image" && (
         <Switch label={t("required")} checked={question.required} onChange={(required) => dispatch({ type: "setRequired", questionId: question.id, required })} />
       )}
-      {keyTypes.includes(question.type) && (
+      {simple && (
+        <p className="designer-note designer-simple-more">
+          {t("simpleMore")}{" "}
+          <button type="button" className="designer-link" onClick={() => setView("advanced")}>
+            {t("switchToAdvanced")}
+          </button>
+        </p>
+      )}
+      {!simple && keyTypes.includes(question.type) && (
         <>
           <Switch
             label={
@@ -156,21 +170,21 @@ function QuestionSettings({ t, typeNames, state, dispatch, question, locale }: I
           <p className="designer-note designer-note--switch">{t("keyQuestionHint")}</p>
         </>
       )}
-      {question.options !== undefined && (
+      {!simple && question.options !== undefined && (
         <Switch
           label={t("randomize")}
           checked={question.randomize === true}
           onChange={(value) => dispatch({ type: "setFlag", questionId: question.id, flag: "randomize", value })}
         />
       )}
-      {question.type !== "text-block" && question.type !== "image" && (
+      {!simple && question.type !== "text-block" && question.type !== "image" && (
         <Switch
           label={t("dontKnow")}
           checked={question.dontKnow === true}
           onChange={(value) => dispatch({ type: "setFlag", questionId: question.id, flag: "dontKnow", value })}
         />
       )}
-      <QuestionLogic t={t} state={state} dispatch={dispatch} question={question} />
+      {!simple && <QuestionLogic t={t} state={state} dispatch={dispatch} question={question} />}
     </>
   );
 }

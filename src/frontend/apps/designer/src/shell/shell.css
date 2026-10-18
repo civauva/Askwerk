@@ -470,3 +470,59 @@
   top: auto;
   bottom: calc(100% + 6px);
 }
+
+/* Simple view (W45, AWK-71): how many places wait in Advanced, and the switch to it. */
+.shell-more {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 6px 12px 0;
+  padding: 8px 10px;
+  border: 0;
+  border-top: 1px dashed var(--aw-line);
+  background: none;
+  color: var(--aw-graphite);
+  font: 400 13px/1.4 var(--aw-font);
+  text-align: left;
+  cursor: pointer;
+}
+
+.shell-more b {
+  color: var(--aw-signal);
+  font-weight: 600;
+}
+
+.shell-more:hover b {
+  text-decoration: underline;
+}
+
+.shell-menu__radio {
+  padding-left: 22px;
+}
+
+/* The note after switching the view, with Undo. */
+.shell-note {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 60;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: min(640px, calc(100vw - 32px));
+  padding: 10px 14px;
+  background: var(--aw-ink);
+  color: var(--aw-surface);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--aw-ink) 25%, transparent);
+  font: 400 13.5px/1.4 var(--aw-font);
+}
+
+.shell-note button {
+  border: 0;
+  background: none;
+  color: #ffb38f;
+  font: 600 13.5px/1 var(--aw-font);
+  text-decoration: underline;
+  cursor: pointer;
+}

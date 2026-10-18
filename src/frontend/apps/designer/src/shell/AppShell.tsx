@@ -2,7 +2,7 @@
 import "./shell.css";
 import type { AuthClient, Me } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ConfirmDialog, Dialog, DialogActions, Menu, MenuItem } from "@askwerk/ui";
+import { ConfirmDialog, Dialog, DialogActions, Menu, MenuItem, MenuSeparator } from "@askwerk/ui";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { roleName } from "../account/ChooseOrganisationPage";
 import { accountMessages } from "../account/messages";
@@ -57,6 +57,19 @@ const ShellSlot = createContext<HTMLElement | null>(null);
 /** The element the open survey's places go into, or null outside the shell (the embedded designer, tests). */
 export const useShellSlot = () => useContext(ShellSlot);
 
+/** Simple or Advanced (W45, AWK-71): what the app shows this person, and how to switch. Outside the shell (tests,
+    embedded screens) everything shows. */
+export type View = "simple" | "advanced";
+export const ShellView = createContext<{ view: View; setView: (view: View) => void }>({ view: "advanced", setView: () => undefined });
+
+/** The person's view, and a way to switch it. */
+export function useShellView() {
+  return useContext(ShellView);
+}
+
+/** The places Simple leaves out of the sidebar; they stay reachable by search and by address. */
+const advancedPlaces: ReadonlySet<Place> = new Set<Place>(["contacts", "connections", "sign-in", "messages", "domains", "developers"]);
+
 /** Inside a template (W32) the way back leads to Templates; the screen says when it shows one. */
 const ShellTemplate = createContext<(on: boolean) => void>(() => undefined);
 
@@ -72,6 +85,18 @@ export function useShellTemplate(on: boolean) {
 }
 
 type Item = { place: Place; label: ShellMessageKey; icon: ReactNode };
+
+/** One of a choice in a Menu (W45): Simple or Advanced, the chosen one ticked. */
+function MenuItemRadio({ checked, onSelect, children }: { checked: boolean; onSelect: () => void; children: ReactNode }) {
+  return (
+    <button type="button" role="menuitemradio" aria-checked={checked} tabIndex={-1} className="aw-menu__item shell-menu__radio" onClick={onSelect}>
+      <span>{children}</span>
+      <span className="aw-menu__hint" aria-hidden="true">
+        {checked ? "✓" : ""}
+      </span>
+    </button>
+  );
+}
 
 const icon = (paths: ReactNode) => (
   <svg className="shell-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -98,7 +123,7 @@ const icons = {
 };
 
 export type AppShellProps = {
-  client: Pick<AuthClient, "signOut" | "switchOrganisation">;
+  client: Pick<AuthClient, "signOut" | "switchOrganisation"> & Partial<Pick<AuthClient, "saveView">>;
   locale: Locale;
   me: Me;
   /** The place shown; null for pages outside the places, like Account and security. */
@@ -128,6 +153,28 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
   const [inTemplate, setInTemplate] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [leaving, setLeaving] = useState<"ask" | "refused" | null>(null);
+  const [view, setViewState] = useState<View>(me.view === "simple" ? "simple" : "advanced");
+  const [note, setNote] = useState<{ view: View; before: View } | null>(null);
+  const setView = (next: View, quiet = false) => {
+    if (next === view) {
+      return;
+    }
+
+    setViewState(next);
+    void client.saveView?.(next).catch(() => undefined);
+    setNote(quiet ? null : { view: next, before: view });
+  };
+
+  // The note after a switch says what changed and offers Undo, for a few seconds.
+  useEffect(() => {
+    if (note === null) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => setNote(null), 7000);
+
+    return () => window.clearTimeout(timer);
+  }, [note]);
   const current = me.organisations.find((organisation) => organisation.id === me.currentOrganisationId);
   const manager = current?.role === "owner" || current?.role === "admin";
   const go = (path: string) => {
@@ -162,6 +209,9 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
       : []),
     { place: "developers", label: "developers", icon: icons.developers },
   ];
+  // Simple (W45) shows the essentials; a place opened by search or address still shows while it is open.
+  const shown = view === "simple" ? administration.filter((each) => !advancedPlaces.has(each.place) || each.place === active) : administration;
+  const hidden = administration.length - shown.length;
 
   return (
     <div className={drawer ? "shell shell--open" : "shell"} lang={locale}>
@@ -256,7 +306,12 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
               {item({ place: "surveys", label: "surveys", icon: icons.surveys })}
               {item({ place: "templates", label: "templates", icon: icons.templates })}
               <h2 className="shell-group">{t("administration")}</h2>
-              {administration.map(item)}
+              {shown.map(item)}
+              {hidden > 0 && (
+                <button type="button" className="shell-more" onClick={() => setView("advanced")}>
+                  <span>{hidden === 1 ? t("morePlace") : t("morePlaces", { count: hidden })}</span> · <b>{t("switchToAdvanced")}</b>
+                </button>
+              )}
               {me.installationAdmin === true && (
                 <>
                   <h3 className="shell-group shell-group--sub">{t("thisAskwerk")}</h3>
@@ -284,6 +339,16 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
             </button>
           )}
         >
+          <div className="shell-menu__head" role="presentation">
+            {t("view")}
+          </div>
+          <MenuItemRadio checked={view === "simple"} onSelect={() => setView("simple")}>
+            {t("viewSimple")}
+          </MenuItemRadio>
+          <MenuItemRadio checked={view === "advanced"} onSelect={() => setView("advanced")}>
+            {t("viewAdvanced")}
+          </MenuItemRadio>
+          <MenuSeparator />
           <MenuItem onSelect={() => (setDrawer(false), onOpenAccount())}>{a("accountAndSecurity")}</MenuItem>
           <MenuItem onSelect={() => void client.signOut().then(onSignedOut)}>{a("signOut")}</MenuItem>
         </Menu>
@@ -294,12 +359,22 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
           <BarLocale.Provider value={locale}>
           <BarSlot.Provider value={barSlot}>
             <ShellTemplate.Provider value={setInTemplate}>
-              <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
+              <ShellView.Provider value={{ view, setView }}>
+                <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
+              </ShellView.Provider>
             </ShellTemplate.Provider>
           </BarSlot.Provider>
           </BarLocale.Provider>
         </BarNavigate.Provider>
       </div>
+      {note !== null && (
+        <div className="shell-note" role="status">
+          <span>{t(note.view === "advanced" ? "noteAdvanced" : "noteSimple")}</span>
+          <button type="button" onClick={() => setView(note.before, true)}>
+            {t("undo")}
+          </button>
+        </div>
+      )}
       {leaving === "ask" && onLeave !== undefined && (
         <ConfirmDialog
           title={a("leaveTitle")}

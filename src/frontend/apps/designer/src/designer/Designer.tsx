@@ -23,6 +23,7 @@ import { allQuestions, designerReducer, initialDesignerState } from "./state";
 import { displayText, languageName } from "./text";
 import { approvalLine, ApprovalPill, ApprovalSlot, SurveyBar, SurveyPlaces, SurveyTabs, statusText as summaryText, useApprovals, workspaceText, type SurveyTab, type WorkspaceText } from "../workspace";
 import type { SaveStatus } from "./autosave";
+import { useShellView } from "../shell/AppShell";
 
 type DesignerProps = {
   api: DesignerApi;
@@ -143,6 +144,7 @@ type WorkspaceProps = {
 function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard, saveFile, participants, previewInvitation, previewEmail, onBack, onTab, onOpenSurvey, onTemplates, openWindow, profile, initialLook }: WorkspaceProps) {
   // Stable between renders, so unchanged question cards are not drawn again on every keystroke.
   const t = useMemo(() => createTranslator(designerMessages, locale), [locale]);
+  const viewing = useShellView();
   const typeNames = questionTypeNames[locale];
   const [state, dispatch] = useReducer(designerReducer, draft, (loaded) => ({
     ...initialDesignerState(loaded.definition, loaded.definition.languages.includes(locale) ? locale : loaded.definition.defaultLanguage),
@@ -227,6 +229,10 @@ function Workspace({ api, draft, locale, newId, autosaveDelayMs, writeClipboard,
       { id: "save-template", label: `${t("saveAsTemplate")}…`, run: () => setSavingTemplate(true) },
       { id: "publish", label: t("publish"), run: () => setPublishing(true) },
       { id: "grid", label: t("cmdGrid"), run: () => setGrid((current) => !current) },
+      // Simple or Advanced from the palette too (W45, AWK-71).
+      viewing.view === "simple"
+        ? { id: "view-advanced", label: t("cmdViewAdvanced"), run: () => viewing.setView("advanced") }
+        : { id: "view-simple", label: t("cmdViewSimple"), run: () => viewing.setView("simple") },
     ];
   }
 

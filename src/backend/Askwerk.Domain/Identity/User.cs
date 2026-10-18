@@ -63,6 +63,12 @@ public sealed class User
     /// <summary>Preferred theme: system, light or dark.</summary>
     public string Theme { get; set; } = "system";
 
+    /// <summary>
+    /// What the app shows (W45, AWK-71): simple (the essentials, for new people) or advanced (every place the role
+    /// allows). Only what is shown; rights stay as they are.
+    /// </summary>
+    public string View { get; set; } = "simple";
+
     /// <summary>Where the account comes from.</summary>
     public UserSource Source { get; private set; }
 

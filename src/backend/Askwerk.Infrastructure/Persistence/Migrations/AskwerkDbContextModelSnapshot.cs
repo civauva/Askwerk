@@ -672,6 +672,14 @@ namespace Askwerk.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("two_factor_enabled");
 
+                    b.Property<string>("View")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasDefaultValue("simple")
+                        .HasColumnName("view");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")

@@ -9,6 +9,7 @@ import { changesBetween, darkColoursFor, getAt, presetOf, resetPaths, setAt, typ
 import { LookThumb } from "./LookThumb";
 import { lookMessages, type LookMessageKey } from "./messages";
 import "./look.css";
+import { useShellView } from "../../shell/AppShell";
 
 export type LookText = (key: LookMessageKey, values?: Record<string, string | number>) => string;
 
@@ -254,6 +255,7 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
   // The preview says when it has loaded its survey; it then gets the look being edited (W26), and becomes a map of its
   // parts: a click on one opens its settings here (W44 A, AWK-69).
   const [picked, setPicked] = useState<Picked | null>(null);
+  const viewing = useShellView();
   const pickLabels = useMemo(() => {
     const labels: Record<string, string> = {};
 
@@ -279,7 +281,11 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
 
       if (data?.type === "askwerk:preview-ready" && tokens !== null) {
         post({ type: "askwerk:look", tokens });
-        post({ type: "askwerk:pick-mode", labels: pickLabels });
+
+        // In Simple only Style shows, so parts are not picked from the preview (W45).
+        if (viewing.view === "advanced") {
+          post({ type: "askwerk:pick-mode", labels: pickLabels });
+        }
       } else if (data?.type === "askwerk:pick" && typeof data.area === "string") {
         setPicked({ area: data.area, ...(typeof data.part === "string" ? { part: data.part } : {}), at: Date.now() });
       }
@@ -514,6 +520,9 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
   const [open, setOpen] = useState<string | null>(null);
   const [openPart, setOpenPart] = useState<string | null>(null);
   const areasBox = useRef<HTMLDivElement>(null);
+  // Simple (W45, AWK-71): Style only; colours, parts, pages, email and PDF wait in Advanced.
+  const { view, setView } = useShellView();
+  const simple = view === "simple";
 
   // A part chosen in the preview (W44 A): its tab, its area and part open, and it scrolls into view with a short flash.
   useEffect(() => {
@@ -667,19 +676,31 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
       </div>
       <Tabs
         label={t("areas")}
-        tabs={[
-          ["style", t("tabStyle")],
-          ["parts", t("tabParts")],
-          ["pages", t("tabPages")],
-          ["mail", t("areaMailPdf")],
-        ]}
-        value={tab}
+        tabs={
+          simple
+            ? [["style", t("tabStyle")]]
+            : [
+                ["style", t("tabStyle")],
+                ["parts", t("tabParts")],
+                ["pages", t("tabPages")],
+                ["mail", t("areaMailPdf")],
+              ]
+        }
+        value={simple ? "style" : tab}
         onChange={(next) => setTab(next as LookTab)}
       />
       <div className="sl-areas" ref={areasBox}>
-        {tab === "style" ? (
+        {simple || tab === "style" ? (
           <div className="sl-tab">
             <StyleTab t={t} tokens={tokens} api={api} onChange={onChange} />
+            {simple && (
+              <p className="sl-note sl-simple-more">
+                {t("simpleMore")}{" "}
+                <button type="button" className="sl-link" onClick={() => setView("advanced")}>
+                  {t("switchToAdvanced")}
+                </button>
+              </p>
+            )}
             <Checks t={t} tokens={tokens} status={status} notice={notice} />
           </div>
         ) : tab === "mail" ? (
