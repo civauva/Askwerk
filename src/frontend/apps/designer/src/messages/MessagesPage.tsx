@@ -20,10 +20,10 @@ type MessagesPageProps = {
   saveDelayMs?: number;
 };
 
-const kinds: readonly (readonly [MessageKind, MessagesMessageKey])[] = [
-  ["invitation", "invitation"],
-  ["reminder", "reminder"],
-  ["thanks", "thanks"],
+const kinds: readonly (readonly [MessageKind, MessagesMessageKey, MessagesMessageKey])[] = [
+  ["invitation", "invitation", "invitationWhen"],
+  ["reminder", "reminder", "reminderWhen"],
+  ["thanks", "thanks", "thanksWhen"],
 ];
 
 const placeholders = ["name", "link", "deadline", "duration", "organisation", "survey"] as const;
@@ -48,7 +48,7 @@ export function MessagesPage({ client, surveys, locale, saveDelayMs = 600 }: Mes
   const message = messages?.find((each) => each.kind === kind);
 
   return (
-    <main className="look look--settings" lang={locale}>
+    <main className="look messages-page" lang={locale}>
       <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="look-lead">{t("lead")}</p>
@@ -57,11 +57,12 @@ export function MessagesPage({ client, surveys, locale, saveDelayMs = 600 }: Mes
           {t("loading")}
         </p>
       ) : (
-        <div className="look-work">
+        <div className="look-work messages-work">
           <nav className="look-list" aria-label={t("title")}>
-            {kinds.map(([each, label]) => (
-              <button key={each} type="button" className="look-list__theme" aria-current={each === kind ? "true" : undefined} onClick={() => setKind(each)}>
+            {kinds.map(([each, label, when]) => (
+              <button key={each} type="button" className="look-list__theme messages-kind" aria-label={t(label)} aria-describedby={`messages-${each}-when`} aria-current={each === kind ? "true" : undefined} onClick={() => setKind(each)}>
                 <span>{t(label)}</span>
+                <small id={`messages-${each}-when`}>{t(when)}</small>
               </button>
             ))}
           </nav>

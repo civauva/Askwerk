@@ -8,6 +8,8 @@ export { encodeQr } from "./qr";
 export { QrCode, qrSvg } from "./QrCode";
 export { Skeleton } from "./Skeleton";
 export { StatusPill } from "./StatusPill";
+export { Icon, RowTools, type RowTool } from "./RowTools";
+export { type IconName } from "./icons/lucide";
 export { DataGrid, dataGridTexts, pageItems, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridMore, type DataGridPaging, type DataGridSelection, type DataGridSort, type DataGridTexts } from "./DataGrid";
 export { CodeInput } from "./CodeInput";
 export { Checkbox, ConfirmDialog, Dialog, DialogActions, Field, Menu, MenuItem, MenuLink, MenuSeparator, Notice, RadioGroup, Switch, Tabs } from "./StandardControls";

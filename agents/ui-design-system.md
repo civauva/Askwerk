@@ -36,7 +36,7 @@ Wireframes first (grayscale, real DE/EN copy, all states). Hi-fi only when Draž
 - Empty states are designed, not left blank: one sentence, one primary action.
 - **One standard look for all common controls** (owner requirement, 2026-10-14, AWK-19): text inputs, selects and combo boxes (with search), date, time and date-time pickers, checkboxes, radio groups, switches, dialogs, menus, tabs and data grids exist once in `packages/ui` and look and behave the same in every app and screen. No screen styles its own select, picker or table. Native date/time inputs are not used directly; the shared pickers handle locale, time zone and keyboard entry.
 - **Data grids** (`DataGrid` in `packages/ui`, AWK-19, W13 approved): every list uses it. Sortable headers (sorted on the server), numbers, durations and dates right-aligned in mono, 40 px rows, skeleton rows, empty and error states, a card per row on phones with one Sort menu. Paging by default (25/50/100, page numbers); the response list loads more while scrolling and keeps only the rows near the screen in the page. Row selection only where a screen acts on several rows (Participants). The API offers offset paging and, for responses, a cursor.
-- Icons: Lucide (ISC), the SVGs we use copied into `packages/ui/icons`. One icon set only; our own icons follow its style.
+- Icons: Lucide (ISC), the SVGs we use copied as data into `packages/ui/src/icons/lucide.ts` (licence beside it); row actions use `RowTools` (W42b B). One icon set only; our own icons follow its style.
 
 ## Quality gates
 - Lighthouse ≥ 95 (performance, accessibility, best practices) on the runner; axe: zero violations on every app.

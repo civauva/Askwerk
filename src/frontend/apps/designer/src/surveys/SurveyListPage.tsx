@@ -104,21 +104,69 @@ export function SurveyListPage({
     storage.set(viewKey(me.id, "surveys-show"), next);
   };
 
+  // Lists already fetched, by what was asked (W42, AWK-58): switching List and Cards back and forth shows them at once,
+  // and pointing at Cards fetches the cards before the click.
+  const fetched = useRef(new Map<string, Promise<SurveyList>>());
+  const query = useCallback(
+    (cards: boolean) => ({ ...(filter !== "all" && { status: filter }), search, sort: sortToParam(sort), offset: (page - 1) * size, limit: size, ...(cards && { cards: true }) }),
+    [filter, search, sort, page, size],
+  );
+  const fetchList = useCallback(
+    (cards: boolean) => {
+      const asked = query(cards);
+      const key = JSON.stringify(asked);
+      let pending = fetched.current.get(key);
+
+      if (pending === undefined) {
+        pending = client.list(asked);
+        pending.catch(() => fetched.current.delete(key));
+        fetched.current.set(key, pending);
+      }
+
+      return pending;
+    },
+    [client, query],
+  );
+
+  const viewNow = useRef(view);
+  viewNow.current = view;
   const load = useCallback(async () => {
     setFailed(false);
+    fetched.current.clear();
 
     try {
-      setList(await client.list({ ...(filter !== "all" && { status: filter }), search, sort: sortToParam(sort), offset: (page - 1) * size, limit: size, ...(view === "cards" && { cards: true }) }));
+      setList(await fetchList(viewNow.current === "cards"));
     } catch {
       setFailed(true);
     }
-  }, [client, filter, search, sort, page, size, view]);
+  }, [fetchList]);
 
+  const showView = useCallback(async () => {
+    try {
+      setList(await fetchList(view === "cards"));
+    } catch {
+      setFailed(true);
+    }
+  }, [fetchList, view]);
+
+  // Only typing waits (W42): a changed filter, page or sort loads at once.
+  const typed = useRef(search);
   useEffect(() => {
-    const timer = setTimeout(() => void load(), searchDelayMs);
+    const wait = typed.current !== search ? searchDelayMs : 0;
+    typed.current = search;
+    const timer = setTimeout(() => void load(), wait);
 
     return () => clearTimeout(timer);
-  }, [load, searchDelayMs]);
+  }, [load, search, searchDelayMs]);
+
+  // List or Cards from what was fetched for the same question.
+  const shownView = useRef(view);
+  useEffect(() => {
+    if (shownView.current !== view) {
+      shownView.current = view;
+      void showView();
+    }
+  }, [view, showView]);
 
   const latestOnAddress = useRef(onAddress);
   latestOnAddress.current = onAddress;
@@ -307,7 +355,7 @@ export function SurveyListPage({
                 <button type="button" aria-pressed={view === "list"} onClick={() => changeView("list")}>
                   {t("viewList")}
                 </button>
-                <button type="button" aria-pressed={view === "cards"} onClick={() => changeView("cards")}>
+                <button type="button" aria-pressed={view === "cards"} onPointerEnter={() => void fetchList(true).catch(() => undefined)} onFocus={() => void fetchList(true).catch(() => undefined)} onClick={() => changeView("cards")}>
                   {t("viewCards")}
                 </button>
               </span>

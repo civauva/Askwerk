@@ -40,3 +40,63 @@
   border-color: var(--aw-ink);
   color: var(--aw-paper);
 }
+
+/* W42 B (AWK-61): three columns that reach the bottom of the window; the email scrolls inside its stage, the page does
+   not scroll. A workspace, so as wide as a list (1,600 px). Mockup design/AWK-56-feedback-w42/w42.html?s=messages. */
+.messages-page {
+  max-width: var(--aw-page-list);
+}
+
+.messages-kind {
+  display: grid;
+  gap: 2px;
+}
+
+.messages-kind small {
+  font-size: 12px;
+  color: var(--aw-graphite);
+}
+
+.messages-work {
+  grid-template-columns: 200px minmax(320px, 1fr) minmax(360px, 1.15fr);
+  gap: 18px;
+}
+
+.messages-work > .messages-preview {
+  position: static;
+  height: auto;
+  min-height: 0;
+  padding: 14px;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line);
+  border-radius: var(--aw-radius-card);
+}
+
+@media (min-width: 1001px) and (min-height: 600px) {
+  .messages-page {
+    box-sizing: border-box;
+    height: calc(100vh - var(--aw-bar-height));
+    padding-bottom: 24px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    align-content: stretch;
+  }
+
+  .messages-work {
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .messages-work > .look-list {
+    align-content: start;
+  }
+
+  .messages-work > .look-editor {
+    align-content: start;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .messages-work > .messages-preview {
+    min-height: 0;
+  }
+}

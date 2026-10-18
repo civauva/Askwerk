@@ -2,7 +2,7 @@
 import { apiKeyPresets, type OAuthClientItem, type OAuthClientsClient } from "@askwerk/app-client";
 import { DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useState, type ReactNode } from "react";
-import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
+import { KeyRowTools, type MakeConnection } from "./MakeConnection";
 import type { ApiKeysMessageKey } from "./messages";
 
 type T = (key: ApiKeysMessageKey, values?: Record<string, string | number>) => string;
@@ -41,15 +41,10 @@ export function OAuthClientsPanel({ t, client, locale, writeClipboard, timeZone,
     { key: "expires", header: t("expires"), align: "end", cell: (item) => (item.expiresAt === null ? t("never") : day.format(new Date(item.expiresAt))) },
     {
       key: "revoke",
-      header: t("revoke"),
+      header: t("webhookActions"),
       align: "end",
       cell: (item) => (
-        <span className="api-keys__actions">
-          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="oauth-client" id={item.id} name={item.name} make={makeConnection} />}
-          <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: item.name })} onClick={() => setRevoking(item)}>
-            {t("revoke")}
-          </button>
-        </span>
+        <KeyRowTools t={t} kind="oauth-client" id={item.id} name={item.name} make={makeConnection} label={item.name} tools={[{ icon: "ban", label: t("revoke"), name: t("revokeOf", { name: item.name }), danger: true, onClick: () => setRevoking(item) }]} />
       ),
     },
   ];

@@ -156,6 +156,23 @@ public sealed class TemplatesApiTests(PostgresServer server)
     }
 
     [Fact]
+    public async Task Copy_MakesASampleOurs_WithItsPicturesAsOurFiles_AndAnUnknownIdIsNotFound()
+    {
+        await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);
+        using var owner = await SurveysApiTests.SignedInOwnerAsync(factory);
+
+        var copied = await owner.PostAsJsonAsync(Url("/api/app/templates/cafe/copy"), new { language = "en" }, Cancel);
+        var copy = await JsonAsync(copied);
+        var draft = await owner.GetStringAsync(Url($"/api/app/surveys/{copy.GetProperty("surveyId").GetString()}/draft"), Cancel);
+        var unknown = await owner.PostAsJsonAsync(Url("/api/app/templates/no-such-sample/copy"), new { language = "en" }, Cancel);
+
+        Assert.Equal(HttpStatusCode.Created, copied.StatusCode);
+        Assert.Equal("organisation", (await TemplatesAsync(owner)).Last().GetProperty("scope").GetString());
+        Assert.DoesNotContain("{picture:", draft, StringComparison.Ordinal);
+        Assert.Equal(HttpStatusCode.NotFound, unknown.StatusCode);
+    }
+
+    [Fact]
     public async Task New_MakesAnEmptyTemplateOfOurs_ReadyToEdit_AndNeedsAName()
     {
         await using var factory = await AskwerkApiFactory.WithFreshDatabaseAsync(server);

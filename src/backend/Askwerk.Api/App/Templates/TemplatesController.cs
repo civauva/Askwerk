@@ -4,11 +4,13 @@ using Askwerk.Api.App.Surveys;
 using Askwerk.Api.Identity;
 using Askwerk.Application.Auditing;
 using Askwerk.Application.Persistence;
+using Askwerk.Application.Storage;
 using Askwerk.Application.Telemetry;
 using Askwerk.Domain.Auditing;
 using Askwerk.Domain.Identity;
 using Askwerk.Domain.Surveys;
 using Askwerk.Infrastructure.Persistence;
+using Askwerk.Infrastructure.Samples;
 using Askwerk.Infrastructure.Templates;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +26,7 @@ namespace Askwerk.Api.App.Templates;
 [ApiExplorerSettings(GroupName = "app")]
 [Authorize(Policy = Sessions.SignedIn)]
 [Route("api/app/templates")]
-public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter audit, IUnitOfWork unitOfWork, TimeProvider time, ITraceContext trace) : ControllerBase
+public sealed class TemplatesController(AskwerkDbContext context, IFileStorage storage, IAuditWriter audit, IUnitOfWork unitOfWork, TimeProvider time, ITraceContext trace) : ControllerBase
 {
     private static readonly TenantRole[] Editors = [TenantRole.Owner, TenantRole.Admin, TenantRole.Editor];
 
@@ -97,7 +99,7 @@ public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter a
     }
 
     /// <summary>Copies one of Askwerk's templates to the organisation's (W32), ready to edit; Askwerk's stays as it is.</summary>
-    /// <param name="id">"askwerk:…".</param>
+    /// <param name="id">"askwerk:…", or a sample's id.</param>
     /// <param name="request">The copy's name; the template's own when empty.</param>
     /// <param name="cancellationToken">Cancels the request.</param>
     /// <returns>201 with the copy and its editing survey; 403 for viewers and analysts; 404 for an unknown template.</returns>
@@ -112,15 +114,29 @@ public sealed class TemplatesController(AskwerkDbContext context, IAuditWriter a
             return Forbid();
         }
 
-        if (SystemTemplates.Find(id) is not { } system)
+        var now = time.GetUtcNow();
+        IReadOnlyDictionary<string, string> names;
+        SurveyDefinition definition;
+
+        if (SystemTemplates.Find(id) is { } system)
+        {
+            names = system.Names;
+            definition = system.Definition;
+        }
+        else if (SampleSurveys.Find(id) is { } sample)
+        {
+            // A sample becomes a template of ours too (W42, AWK-60), its pictures our own files.
+            names = sample.Names;
+            definition = await SampleSurveyBuilder.OwnDefinitionAsync(context, storage, sample, tenantId, User.UserId()!.Value, now, cancellationToken);
+        }
+        else
         {
             return NotFound();
         }
 
-        var now = time.GetUtcNow();
-        var name = !string.IsNullOrWhiteSpace(request?.Name) ? request.Name : system.Names.TryGetValue(request?.Language ?? "en", out var named) ? named : system.Names.Values.First();
-        var template = SurveyTemplate.Create(Guid.CreateVersion7(now), tenantId, name, JsonSerializer.Serialize(system.Definition, SurveyDefinitionJson.Options), User.UserId()!.Value, now);
-        var surveyId = EditingSurvey(tenantId, template.Name, system.Definition);
+        var name = !string.IsNullOrWhiteSpace(request?.Name) ? request.Name : names.TryGetValue(request?.Language ?? "en", out var named) ? named : names.Values.First();
+        var template = SurveyTemplate.Create(Guid.CreateVersion7(now), tenantId, name, JsonSerializer.Serialize(definition, SurveyDefinitionJson.Options), User.UserId()!.Value, now);
+        var surveyId = EditingSurvey(tenantId, template.Name, definition);
         template.EditIn(surveyId);
         context.SurveyTemplates.Add(template);
         await AuditAsync(template, "template.saved", cancellationToken);

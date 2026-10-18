@@ -27,7 +27,7 @@ describe("Messages (AWK-17 step 6, W10 D): stupid simple", () => {
     await shown();
 
     const kinds = within(screen.getByRole("navigation", { name: "Messages" }));
-    expect(kinds.getAllByRole("button").map((button) => button.textContent)).toEqual(["Invitation", "Reminder", "Thank you"]);
+    expect(kinds.getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Invitation", "Reminder", "Thank you"]);
     expect((editor().getByRole("textbox", { name: "Subject" }) as HTMLInputElement).value).toBe("{organisation}: your opinion counts");
     expect(editor().getByText("Askwerk's text. Change it to use your own.")).toBeTruthy();
     fireEvent.click(editor().getByRole("button", { name: "DE" }));

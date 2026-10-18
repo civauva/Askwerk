@@ -1257,3 +1257,88 @@
   color: var(--aw-graphite);
   cursor: pointer;
 }
+
+/* A row's actions as one small toolbar (W42b B, AWK-62): Lucide icons in a framed pill with thin dividers. */
+.aw-icon {
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.aw-row-tools {
+  display: inline-flex;
+  align-items: stretch;
+  height: 32px;
+  box-sizing: border-box;
+  vertical-align: middle;
+  background: var(--aw-surface);
+  border: 1px solid var(--aw-line-strong);
+  border-radius: 8px;
+}
+
+.aw-row-tools__tool {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--aw-graphite);
+  cursor: pointer;
+}
+
+.aw-row-tools__tool + .aw-row-tools__tool {
+  border-left: 1px solid var(--aw-line);
+}
+
+.aw-row-tools__tool:first-child {
+  border-radius: 7px 0 0 7px;
+}
+
+.aw-row-tools__tool:last-child {
+  border-radius: 0 7px 7px 0;
+}
+
+.aw-row-tools__tool:hover,
+.aw-row-tools__tool:focus-visible {
+  background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface));
+  color: var(--aw-ink);
+}
+
+.aw-row-tools__tool:focus-visible {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: -2px;
+}
+
+.aw-row-tools__tool--danger:hover,
+.aw-row-tools__tool--danger:focus-visible {
+  background: color-mix(in srgb, var(--aw-error) 9%, var(--aw-surface));
+  color: var(--aw-error);
+}
+
+/* The tooltip: above its button, centred, with a small arrow; drawn in the page so no cell clips it. */
+.aw-tip {
+  position: fixed;
+  z-index: 1000;
+  transform: translate(-50%, calc(-100% - 8px));
+  padding: 5px 9px;
+  background: var(--aw-ink);
+  color: var(--aw-surface);
+  font: 500 12px/1.2 var(--aw-font);
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.aw-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: var(--aw-ink);
+}

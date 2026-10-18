@@ -155,15 +155,18 @@
 }
 
 .look-input {
+  font-size: 14px;
   border: 1px solid var(--aw-line-strong);
   border-radius: var(--aw-radius-control);
   background: var(--aw-surface);
   padding: 8px 10px;
 }
 
+/* As in the survey's Look (W42, AWK-59): 12 px mono. */
 .look-input--hex {
-  width: 9ch;
-  font-family: var(--aw-font-mono);
+  width: 96px;
+  box-sizing: border-box;
+  font: 500 12px/1.2 var(--aw-font-mono);
 }
 
 .look-row {
@@ -567,9 +570,4 @@
     height: 70vh;
     min-height: 480px;
   }
-}
-
-/* Administration → Messages is a settings page (W32 round 2, E): 1,200 px. */
-.look--settings {
-  max-width: var(--aw-page-settings);
 }

@@ -63,7 +63,7 @@ Askwerk is open source: AGPL-3.0 for the product, Apache-2.0 for the integration
 - Drag and drop: dnd-kit (MIT), wrapped once in `packages/ui`.
 - Motion: CSS transitions and the View Transitions API, respecting `prefers-reduced-motion`. No animation library.
 - Charts: our own SVG chart components in `packages/ui` (bar, stacked bar, distribution, line, gauge, heatmap), each with an accessible table view. No chart library.
-- Icons: Lucide (ISC) SVGs we actually use, copied into `packages/ui/icons` with the licence notice. No icon package.
+- Icons: Lucide (ISC) SVGs we actually use, copied as data into `packages/ui/src/icons/lucide.ts` with the licence notice next to it. No icon package.
 - i18n: our own layer in `packages/schema`: typed German and English catalogues (`de.ts`, `en.ts`) and the native `Intl` APIs (`PluralRules`, `NumberFormat`, `DateTimeFormat`, `RelativeTimeFormat`). The type-check fails when a key is missing in either language. Every string goes through it; no hard-coded text. No i18n framework.
 - Frontend telemetry: only through `packages/telemetry` (`observability.md`); no `console.*` in production code, no third-party analytics or error-tracking scripts.
 - Runner constraints: no admin imports, bundle budget 120 kB gzipped for the first page, no third-party fonts loaded from the network by default, CSP-compatible (no inline scripts).

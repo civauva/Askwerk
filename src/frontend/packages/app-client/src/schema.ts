@@ -723,7 +723,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description "askwerk:…". */
+                    /** @description "askwerk:…", or a sample's id. */
                     id: string;
                 };
                 cookie?: never;

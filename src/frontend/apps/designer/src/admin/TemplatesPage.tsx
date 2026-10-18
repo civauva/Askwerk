@@ -2,7 +2,7 @@
 import "./admin.css";
 import type { SampleSurvey, SurveyFront, SurveysClient, SurveyTemplate } from "@askwerk/app-client";
 import { createTranslator, type Locale, type ThemeTokens } from "@askwerk/schema";
-import { ConfirmDialog, DataGrid, dataGridTexts, Dialog, type DataGridColumn } from "@askwerk/ui";
+import { ConfirmDialog, DataGrid, dataGridTexts, Dialog, RowTools, type DataGridColumn, type RowTool } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useMemo, useState, type FormEvent } from "react";
 import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
 import { ContentCard } from "../surveys/ContentCard";
@@ -82,7 +82,8 @@ export function TemplatesPage({
 
   const use = (row: Row) =>
     void (row.from === "sample" ? client.createSample(row.id, row.name) : client.create({ title: row.name, languages: [], defaultLanguage: "", templateId: row.id })).then(onOpen);
-  const edit = (row: Row) => void (row.from === "askwerk" ? client.copyTemplate(row.id, locale) : client.editTemplate(row.id)).then((opened) => onOpen(opened.surveyId));
+  // Askwerk's and the samples are edited as a copy in Ours (W42, AWK-60); ours in place.
+  const edit = (row: Row) => void (row.from === "organisation" ? client.editTemplate(row.id) : client.copyTemplate(row.id, locale)).then((opened) => onOpen(opened.surveyId));
   const changeView = (next: ListView) => {
     setView(next);
     storage.set(viewKey(userId, "templates"), next);
@@ -94,24 +95,21 @@ export function TemplatesPage({
   const main = (row: Row) => (row.from === "organisation" ? () => edit(row) : () => use(row));
   const mainLabel = (row: Row) => (row.from === "organisation" ? t("editTemplateNamed", { name: row.name }) : t("useTemplate", { name: row.name }));
 
-  const actions = (row: Row) =>
-    canEdit && (
-      <span className="admin__row" style={{ justifyContent: "flex-end" }}>
-        {row.from === "organisation" && (
-          <button type="button" className="admin__linkbutton" onClick={() => setRemoving(row)}>
-            {t("deleteTemplate")}
-          </button>
-        )}
-        {row.from !== "sample" && (
-          <button type="button" className="admin__button" aria-label={t(row.from === "askwerk" ? "copyTemplateNamed" : "editTemplateNamed", { name: row.name })} onClick={() => edit(row)}>
-            {t(row.from === "askwerk" ? "copyTemplate" : "editTemplate")}
-          </button>
-        )}
-        <button type="button" className="admin__button" aria-label={t("useTemplate", { name: row.name })} onClick={() => use(row)}>
-          {t("use")}
-        </button>
-      </span>
-    );
+  // One small toolbar per row (W42b B): edit (a copy), start a survey, and delete ours.
+  const actions = (row: Row) => {
+    const ours = row.from === "organisation";
+    const tools: RowTool[] = canEdit
+      ? [
+          ours
+            ? { icon: "square-pen", label: t("editTemplate"), name: t("editTemplateNamed", { name: row.name }), onClick: () => edit(row) }
+            : { icon: "copy-plus", label: t("editCopy"), name: t("copyTemplateNamed", { name: row.name }), onClick: () => edit(row) },
+          { icon: "circle-play", label: t("startSurvey"), name: t("useTemplate", { name: row.name }), onClick: () => use(row) },
+          ...(ours ? [{ icon: "trash-2" as const, label: t("deleteTemplate"), name: `${t("deleteTemplate")}: ${row.name}`, danger: true, onClick: () => setRemoving(row) }] : []),
+        ]
+      : [];
+
+    return <RowTools label={row.name} tools={tools} />;
+  };
 
   const columns: DataGridColumn<Row>[] = [
     { key: "name", header: t("colTemplate"), phone: "title", cell: (row) => <b>{row.name}</b> },

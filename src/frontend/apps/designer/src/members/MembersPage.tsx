@@ -3,7 +3,7 @@ import "../designer/designer.css";
 import "./members.css";
 import { ApiError, type Invited, type Member, type MemberInvitation, type MemberRole, type MembersClient, type MembersPage as Page } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox, DataGrid, dataGridTexts, Dialog as SharedDialog, type DataGridColumn } from "@askwerk/ui";
+import { ComboBox, DataGrid, dataGridTexts, Dialog as SharedDialog, RowTools, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { membersMessages, type MembersMessageKey } from "./messages";
 import { PageBar } from "../shell/PageBar";
@@ -97,9 +97,7 @@ export function MembersPage({ client, locale, organisation, writeClipboard = (te
       align: "end",
       cell: (member) =>
         member.you || member.managedBy != null || !mayManage(member.role) ? null : (
-          <button type="button" className="members__link" aria-label={t("removeOf", { name: member.name })} onClick={() => setRemoving(member)}>
-            {t("remove")}
-          </button>
+          <RowTools label={member.name} tools={[{ icon: "user-x", label: t("remove"), name: t("removeOf", { name: member.name }), danger: true, onClick: () => setRemoving(member) }]} />
         ),
     },
   ];

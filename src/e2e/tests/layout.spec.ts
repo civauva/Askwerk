@@ -10,7 +10,7 @@ const widths: Record<string, string> = {
   "/templates": "1600px",
   "/members": "1600px",
   "/domains": "1600px",
-  "/messages": "1200px",
+  "/messages": "1600px",
   "/organisation": "1200px",
   "/sign-in-settings": "760px",
 };

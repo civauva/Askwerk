@@ -134,7 +134,8 @@ describe("This Askwerk (AWK-38, W29)", () => {
     fireEvent.change(screen.getByRole("textbox", { name: "Email of an existing account" }), { target: { value: "nobody@acme.at" } });
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     expect(await screen.findByText("No account with this email. They need to join an organisation first.")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Remove" }));
+    fireEvent.click(screen.getAllByRole("button", { name: /^Remove: / })[0]!);
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Remove" }));
 
     expect(await screen.findByText("The last administrator stays.")).toBeTruthy();
     expect(calls).toContainEqual(["add", "nobody@acme.at"]);
@@ -208,7 +209,7 @@ describe("Templates (AWK-38, W29)", () => {
     await waitFor(() => expect(onOpen).toHaveBeenCalledWith("s8"));
     fireEvent.click(grid.getByRole("button", { name: "Start a survey from NPS, short" }));
     await waitFor(() => expect(onOpen).toHaveBeenCalledWith("s9"));
-    fireEvent.click(grid.getByRole("button", { name: "Delete" }));
+    fireEvent.click(grid.getByRole("button", { name: /^Delete: / }));
     fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete" }));
 
     await waitFor(() => expect(calls).toContainEqual(["delete", "7f1c"]));

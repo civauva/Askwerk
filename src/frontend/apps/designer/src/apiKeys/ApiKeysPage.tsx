@@ -2,7 +2,7 @@
 import "../designer/designer.css";
 import "./apiKeys.css";
 import { ApiError, apiKeyPresets, apiKeyScopes, type ApiKeyItem, type ApiKeysClient, type NewApiKey, type OAuthClientsClient, type WebhooksClient } from "@askwerk/app-client";
-import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
+import { KeyRowTools, type MakeConnection } from "./MakeConnection";
 import { OAuthClientsPanel } from "./OAuthClientsPanel";
 import { WebhooksPanel } from "./WebhooksPanel";
 import { createTranslator, type Locale } from "@askwerk/schema";
@@ -73,15 +73,10 @@ export function ApiKeysPage({ client, webhooks, oauthClients, locale, makeConnec
     },
     {
       key: "revoke",
-      header: t("revoke"),
+      header: t("webhookActions"),
       align: "end",
       cell: (key) => (
-        <span className="api-keys__actions">
-          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="api-key" id={key.id} name={key.name} make={makeConnection} />}
-          <button type="button" className="api-keys__revoke" aria-label={t("revokeOf", { name: key.name })} onClick={() => setRevoking(key)}>
-            {t("revoke")}
-          </button>
-        </span>
+        <KeyRowTools t={t} kind="api-key" id={key.id} name={key.name} make={makeConnection} label={key.name} tools={[{ icon: "ban", label: t("revoke"), name: t("revokeOf", { name: key.name }), danger: true, onClick: () => setRevoking(key) }]} />
       ),
     },
   ];

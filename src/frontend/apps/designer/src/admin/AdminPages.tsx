@@ -2,7 +2,7 @@
 import "./admin.css";
 import { ApiError, type CreatedOrganisation, type InstallationAdministrator, type InstallationClient, type InstallationInfo, type InstallationOrganisations, type MembersClient, type OrganisationClient, type OrganisationDetails, type RemovalCounts } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox, ConfirmDialog, DataGrid, dataGridTexts, Dialog, DialogActions, Field, type DataGridColumn } from "@askwerk/ui";
+import { ComboBox, ConfirmDialog, DataGrid, dataGridTexts, Dialog, DialogActions, Field, RowTools, type DataGridColumn, type RowTool } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { adminMessages, type AdminMessageKey } from "./messages";
 import { PageBar } from "../shell/PageBar";
@@ -222,23 +222,22 @@ export function OrganisationsPage({ client, locale, startNew = false }: { client
       key: "actions",
       header: t("colActions"),
       align: "end",
-      // Buttons, not a menu: grid cells clip what overflows them.
+      // One small toolbar (W42b B): icons with tooltips; destructive ones ask before they act.
       cell: (row) => {
-        const action = (label: string, run: () => void, red = false) => (
-          <button type="button" className={red ? "admin__linkbutton admin__linkbutton--red" : "admin__linkbutton"} aria-label={`${label.replace("…", "")}: ${row.name}`} onClick={run}>
-            {label}
-          </button>
-        );
+        const tool = (icon: RowTool["icon"], label: string, run: () => void, danger = false): RowTool => ({ icon, label: label.replace("…", ""), name: `${label.replace("…", "")}: ${row.name}`, danger, onClick: run });
 
         return (
-          <span className="admin__row admin__actions">
-            {row.status === "deleted"
-              ? [action(t("restore"), () => void client.restore(row.id).then(load)), action(t("removeNow"), () => setPurging({ id: row.id, name: row.name, slug: row.slug }), true)]
-              : [
-                  row.status === "active" ? action(t("suspend"), () => void client.suspend(row.id).then(load)) : action(t("resume"), () => void client.resume(row.id).then(load)),
-                  action(t("remove"), () => setRemoving({ id: row.id, name: row.name }), true),
-                ]}
-          </span>
+          <RowTools
+            label={row.name}
+            tools={
+              row.status === "deleted"
+                ? [tool("rotate-ccw", t("restore"), () => void client.restore(row.id).then(load)), tool("trash-2", t("removeNow"), () => setPurging({ id: row.id, name: row.name, slug: row.slug }), true)]
+                : [
+                    row.status === "active" ? tool("circle-pause", t("suspend"), () => void client.suspend(row.id).then(load)) : tool("circle-play", t("resume"), () => void client.resume(row.id).then(load)),
+                    tool("trash-2", t("remove"), () => setRemoving({ id: row.id, name: row.name }), true),
+                  ]
+            }
+          />
         );
       },
     },
@@ -450,6 +449,7 @@ export function AdministratorsPage({ client, locale }: { client: Pick<Installati
   const [failed, setFailed] = useState(false);
   const [email, setEmail] = useState("");
   const [problem, setProblem] = useState<string | null>(null);
+  const [leaving, setLeaving] = useState<InstallationAdministrator | null>(null);
   const load = useCallback(() => {
     client.administrators().then(setItems, () => setFailed(true));
   }, [client]);
@@ -463,18 +463,7 @@ export function AdministratorsPage({ client, locale }: { client: Pick<Installati
       key: "remove",
       header: t("colActions"),
       align: "end",
-      cell: (row) => (
-        <button
-          type="button"
-          className="admin__linkbutton"
-          onClick={() => {
-            setProblem(null);
-            client.removeAdministrator(row.id).then(load, (error: unknown) => setProblem(error instanceof ApiError && error.status === 409 ? t("lastAdmin") : t("saveFailed")));
-          }}
-        >
-          {t("removeAdministrator")}
-        </button>
-      ),
+      cell: (row) => <RowTools label={row.name} tools={[{ icon: "user-x", label: t("removeAdministrator"), name: `${t("removeAdministrator")}: ${row.name}`, danger: true, onClick: () => setLeaving(row) }]} />,
     },
   ];
 
@@ -507,6 +496,21 @@ export function AdministratorsPage({ client, locale }: { client: Pick<Installati
         </p>
       )}
       <DataGrid label={t("administrators")} columns={columns} rows={items} rowKey={(row) => row.id} empty={null} error={failed} onRetry={load} texts={dataGridTexts(locale === "de" ? "de" : "en")} />
+      {leaving !== null && (
+        <ConfirmDialog
+          title={t("removeAdministratorAsk", { name: leaving.name })}
+          text={t("removeAdministratorText")}
+          confirm={t("removeAdministrator")}
+          cancel={t("cancel")}
+          onCancel={() => setLeaving(null)}
+          onConfirm={() => {
+            const row = leaving;
+            setLeaving(null);
+            setProblem(null);
+            client.removeAdministrator(row.id).then(load, (error: unknown) => setProblem(error instanceof ApiError && error.status === 409 ? t("lastAdmin") : t("saveFailed")));
+          }}
+        />
+      )}
     </main>
   );
 }

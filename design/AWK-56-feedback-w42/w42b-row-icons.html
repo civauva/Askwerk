@@ -1,0 +1,91 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W42b (AWK-60, AWK-62): row actions as icons, three treatments. Icons: Lucide (ISC), drawn exactly as in Lucide 0.x/1.x,
+     the set agents/ui-design-system.md names; they would be copied into packages/ui/icons with the licence notice. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W42b Row icons</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8; --red: #b3261e;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; width: 1440px; background: #dedad2; color: var(--ink); font: 400 14px/1.45 var(--font); }
+  h1 { margin: 0 0 4px; font: 700 24px/1.2 var(--display); } .intro { margin: 0 0 18px; font-size: 13px; color: var(--graphite); max-width: 1150px; }
+  .opt { margin-bottom: 24px; } .opt h2 { margin: 0 0 2px; font: 700 17px/1.2 var(--display); } .opt p { margin: 0 0 8px; font-size: 13px; color: var(--graphite); max-width: 1150px; }
+  .frame { background: var(--paper); border: 1px solid var(--line-strong); padding: 18px 24px 22px; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .card { border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  th, td { height: 48px; padding: 0 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13.5px; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+  th { height: 40px; font: 500 11px var(--mono); letter-spacing: .06em; color: var(--muted); background: var(--paper); border-bottom-color: var(--line-strong); }
+  th:first-child { border-top-left-radius: 10px; } th:last-child { border-top-right-radius: 10px; }
+  td.num, th.num { text-align: right; } td.end, th.end { text-align: right; width: 1%; padding-right: 10px; }
+  td b { font-weight: 600; } .mono { font-family: var(--mono); font-size: 12.5px; } .from { color: var(--graphite); }
+  .status { padding: 2px 9px; border-radius: 999px; background: #e3f0e6; color: #23602f; font: 500 11.5px var(--mono); } .status.off { background: #f4e8d8; color: #8a5300; }
+  tr.hover td { background: #faf9f6; }
+  svg.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .acts { display: inline-flex; align-items: center; gap: 2px; vertical-align: middle; }
+  /* A: quiet icon buttons */
+  .qa { position: relative; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; color: var(--muted); }
+  tr.hover .qa { color: var(--graphite); }
+  .qa.on { background: var(--soft); color: var(--ink); }
+  .qa.on.red { background: #fbeceb; color: var(--red); }
+  .tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); padding: 5px 9px; background: var(--ink); color: #fff; font: 500 12px/1.2 var(--font); border-radius: 6px; white-space: nowrap; z-index: 4; }
+  .acts > :last-child > .tip, .pillbar > :last-child > .tip { left: auto; right: -4px; transform: none; } .acts > :last-child > .tip::after, .pillbar > :last-child > .tip::after { left: auto; right: 14px; margin-left: 0; }
+  .tip::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--ink); }
+  /* B: toolbar pill */
+  .pillbar { display: inline-flex; align-items: center; height: 32px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; overflow: visible; }
+  .pillbar .qa { width: 34px; height: 30px; border-radius: 0; color: var(--graphite); }
+  .pillbar .qa + .qa { border-left: 1px solid var(--line); }
+  .pillbar .qa:first-child { border-radius: 7px 0 0 7px; } .pillbar .qa:last-child { border-radius: 0 7px 7px 0; }
+  .sep { width: 10px; }
+  /* C: revealed on the row */
+  .hidden { visibility: hidden; }
+  .chev { color: var(--line-strong); }
+  .lab { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px 0 8px; border-radius: 8px; font: 600 12.5px var(--font); color: var(--ink); }
+  .lab.on { background: var(--soft); } .lab.red { color: var(--red); }
+  .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+<script>
+// Lucide (ISC) icon drawings, exactly as published.
+const L = {
+  "square-pen": '<path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>',
+  "copy-plus": '<line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  "circle-play": '<path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/><circle cx="12" cy="12" r="10"/>',
+  "circle-pause": '<circle cx="12" cy="12" r="10"/><line x1="10" x2="10" y1="15" y2="9"/><line x1="14" x2="14" y1="15" y2="9"/>',
+  "rotate-ccw": '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  "trash-2": '<path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+};
+const ic = (n) => `<svg class="i" viewBox="0 0 24 24">${L[n]}</svg>`;
+const orgs = [["Direct Mind GmbH", "dimi", "Drazan Kosic", 1, 10, "1,032", "Active"], ["Acme GmbH", "acme", "Anna Berger", 4, 7, "318", "Active"], ["Old Ltd", "old", "Paul Lang", 2, 3, "41", "Suspended"]];
+const tpls = [["Customer satisfaction", "Askwerk", 20], ["Café visit", "Sample", 6], ["Supplier check", "Ours", 13]];
+const orgActs = (o) => [[o[6] === "Active" ? "circle-pause" : "rotate-ccw", o[6] === "Active" ? "Suspend" : "Resume", false], ["trash-2", "Delete…", true]];
+const tplActs = (t) => [[t[1] === "Ours" ? "square-pen" : "copy-plus", t[1] === "Ours" ? "Edit" : "Edit a copy in Ours", false], ["circle-play", "Start a survey from it", false]];
+const orgTable = (cell) => `<div class="card"><table><tr><th>ORGANISATION</th><th>SHORT NAME</th><th>OWNER</th><th class="num">SURVEYS</th><th class="num">RESPONSES</th><th>STATUS</th><th class="end"></th></tr>${orgs.map((o, i) => `<tr class="${i === 0 ? "hover" : ""}"><td><b>${o[0]}</b></td><td class="mono">${o[1]}</td><td>${o[2]}</td><td class="num mono">${o[4]}</td><td class="num mono">${o[5]}</td><td><span class="status ${o[6] === "Active" ? "" : "off"}">${o[6]}</span></td><td class="end">${cell(orgActs(o), i === 0)}</td></tr>`).join("")}</table></div>`;
+const tplTable = (cell) => `<div class="card"><table><tr><th>TEMPLATE</th><th>FROM</th><th class="num">QUESTIONS</th><th class="end"></th></tr>${tpls.map((t, i) => `<tr class="${i === 1 ? "hover" : ""}"><td><b>${t[0]}</b></td><td class="from">${t[1]}</td><td class="num mono">${t[2]}</td><td class="end">${cell(tplActs(t), i === 1)}</td></tr>`).join("")}</table></div>`;
+
+// A: quiet icons; the pointed one gets a soft tile and a tooltip; a destructive one turns red.
+const a = (acts, hover) => `<span class="acts">${acts.map(([n, label, red], k) => `<span class="qa ${hover && k === acts.length - 1 ? "on" : ""} ${red ? "red" : ""}">${ic(n)}${hover && k === acts.length - 1 ? `<span class="tip">${label}</span>` : ""}</span>`).join("")}</span>`;
+// B: one toolbar pill per row.
+const b = (acts, hover) => `<span class="pillbar">${acts.map(([n, label, red], k) => `<span class="qa ${hover && k === 0 ? "on" : ""}">${ic(n)}${hover && k === 0 ? `<span class="tip">${label}</span>` : ""}</span>`).join("")}</span>`;
+// C: nothing until the row is pointed at or focused; then icon + word.
+const c = (acts, hover) => hover
+  ? `<span class="acts">${acts.map(([n, label, red], k) => `<span class="lab ${k === 0 ? "on" : ""} ${red ? "red" : ""}">${ic(n)}${label.replace(" a survey from it", "").replace(" a copy in Ours", " a copy")}</span>`).join("")}</span>`
+  : `<span class="acts chev">${ic("arrow-right")}</span>`;
+
+const opt = (t, p, f, one = false) => `<div class="opt"><h2>${t}</h2><p>${p}</p><div class="frame" style="${one ? "grid-template-columns:minmax(0,1fr);max-width:1100px" : ""}">${orgTable(f)}${tplTable(f)}</div></div>`;
+document.body.innerHTML = `<h1>W42b · Row actions as icons (AWK-62, AWK-60)</h1><p class="intro">Lucide icons, the one set the design system names (copied SVGs, no package): 18 px, 1.75 px strokes with round ends, the same weight as the sidebar's icons. Each icon has a tooltip with its name and an accessible label; a destructive one asks before it acts. Shown pointed at: the first organisation, the second template.</p>`
+  + opt("A · Quiet icons", "Icons in grey without a frame, 32 px targets. The pointed icon gets a soft tile and a tooltip; Delete turns red only when pointed at. The calmest grid.", a)
+  + opt("B · A small toolbar per row", "The row's icons sit in one framed pill with thin dividers, like a toolbar; easy to find, always visible, still compact.", b)
+  + opt("C · Revealed on the row", "Rows end in a faint arrow; pointing at a row (or moving to it with the keyboard) shows its actions as icon and word. Clean at rest, clear when used; touch screens always show them.", c, true);
+</script>
+</body>
+</html>

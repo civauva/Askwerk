@@ -427,7 +427,8 @@
   color: var(--aw-muted);
 }
 
-/* The breadcrumb (W31): the survey's name in the page title's font and size, not bold, then the place. */
+/* The breadcrumb (W31): every crumb in one font and size, only the place bold; 17 px since W42 B (AWK-56), one step
+   below the 19 px wordmark so the logo leads. */
 .survey-bar__crumbs {
   display: flex;
   align-items: baseline;
@@ -439,7 +440,7 @@
   min-width: 0;
   max-width: 42vw;
   overflow: hidden;
-  font: 400 20px/1.2 var(--aw-font-display);
+  font: 400 17px/1.2 var(--aw-font-display);
   color: var(--aw-graphite);
   text-decoration: none;
   text-overflow: ellipsis;
@@ -453,13 +454,13 @@
 }
 
 .survey-bar__crumb-sep {
-  font: 400 20px/1.2 var(--aw-font-display);
+  font: 400 17px/1.2 var(--aw-font-display);
   color: var(--aw-muted);
 }
 
 .survey-bar__place {
   margin: 0;
-  font: 700 20px/1.2 var(--aw-font-display);
+  font: 700 17px/1.2 var(--aw-font-display);
   color: var(--aw-ink);
   white-space: nowrap;
 }

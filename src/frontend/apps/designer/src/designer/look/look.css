@@ -601,7 +601,13 @@
   overflow: hidden;
 }
 
+/* Beside the settings, filling the rest (W42, AWK-57): this selector outranks the floating .designer-preview, which
+   otherwise won when designer.css loaded later and pinned the preview 620 px wide to the window's right edge. */
 .sl--editor > .designer-preview--docked {
+  position: static;
+  width: auto;
+  box-shadow: none;
+  border-left: 1px solid var(--aw-line);
   min-height: 0;
   height: 100%;
 }
@@ -1122,12 +1128,36 @@
 
 /* A card that says what a survey is (W32 card A). */
 .content-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--aw-surface);
   border: 1px solid var(--aw-line);
   border-radius: var(--aw-radius-card);
   overflow: hidden;
+}
+
+/* The whole card opens it (W42, AWK-58): the strip's button reaches over the card. */
+.content-card__strip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.content-card:has(.content-card__strip:hover) {
+  border-color: var(--aw-line-strong);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--aw-ink) 8%, transparent);
+}
+
+.content-card__strip:focus-visible {
+  outline: none;
+}
+
+.content-card__strip:focus-visible::after {
+  outline: 2px solid var(--aw-signal);
+  outline-offset: -2px;
 }
 
 .content-card__strip {

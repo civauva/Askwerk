@@ -2,7 +2,7 @@
 import { ApiError, webhookEvents, type WebhookDeliveryItem, type WebhookItem, type WebhooksClient } from "@askwerk/app-client";
 import { DataGrid, dataGridTexts, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useState, type ReactNode } from "react";
-import { MakeConnectionButton, type MakeConnection } from "./MakeConnection";
+import { KeyRowTools, type MakeConnection } from "./MakeConnection";
 import type { ApiKeysMessageKey } from "./messages";
 
 type T = (key: ApiKeysMessageKey, values?: Record<string, string | number>) => string;
@@ -72,29 +72,21 @@ export function WebhooksPanel({
       header: t("webhookActions"),
       align: "end",
       cell: (webhook) => (
-        <span className="api-keys__actions">
-          {webhook.paused || !webhook.active ? (
-            <button type="button" className="api-keys__revoke" aria-label={t("resumeOf", { url: webhook.url })} onClick={() => void client.change(webhook.id, { active: true }).then(reload)}>
-              {t("resume")}
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="api-keys__revoke"
-              aria-label={t("testOf", { url: webhook.url })}
-              onClick={() => void client.ping(webhook.id).then(() => setNotice(t("testSent")), () => setFailed(true))}
-            >
-              {t("testShort")}
-            </button>
-          )}
-          {makeConnection !== undefined && <MakeConnectionButton t={t} kind="webhook" id={webhook.id} name={webhook.description ?? webhook.url} make={makeConnection} />}
-          <button type="button" className="api-keys__revoke" aria-label={t("deliveriesOf", { url: webhook.url })} onClick={() => void openLog(webhook)}>
-            {t("deliveriesShort")}
-          </button>
-          <button type="button" className="api-keys__revoke" aria-label={t("deleteOf", { url: webhook.url })} onClick={() => setDeleting(webhook)}>
-            {t("deleteShort")}
-          </button>
-        </span>
+        <KeyRowTools
+          t={t}
+          kind="webhook"
+          id={webhook.id}
+          name={webhook.description ?? webhook.url}
+          make={makeConnection}
+          label={webhook.url}
+          tools={[
+            webhook.paused || !webhook.active
+              ? { icon: "circle-play", label: t("resume"), name: t("resumeOf", { url: webhook.url }), onClick: () => void client.change(webhook.id, { active: true }).then(reload) }
+              : { icon: "send", label: t("testShort"), name: t("testOf", { url: webhook.url }), onClick: () => void client.ping(webhook.id).then(() => setNotice(t("testSent")), () => setFailed(true)) },
+            { icon: "history", label: t("deliveriesShort"), name: t("deliveriesOf", { url: webhook.url }), onClick: () => void openLog(webhook) },
+            { icon: "trash-2", label: t("deleteShort"), name: t("deleteOf", { url: webhook.url }), danger: true, onClick: () => setDeleting(webhook) },
+          ]}
+        />
       ),
     },
   ];

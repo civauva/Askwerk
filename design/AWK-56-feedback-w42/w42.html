@@ -1,0 +1,152 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W42 (AWK-56..62): feedback round 2026-10-18. ?s=header|templates|grid|messages; each sheet shows its options stacked. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W42 Feedback round</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8; --red: #b3261e;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; width: 1440px; background: #dedad2; color: var(--ink); font: 400 14px/1.45 var(--font); }
+  h1.sheet { margin: 0 0 16px; font: 700 24px/1.2 var(--display); }
+  .opt { margin-bottom: 22px; }
+  .opt h2 { margin: 0 0 2px; font: 700 17px/1.2 var(--display); }
+  .opt p.note { margin: 0 0 8px; font-size: 13px; color: var(--graphite); max-width: 1100px; }
+  .frame { position: relative; background: var(--paper); border: 1px solid var(--line-strong); overflow: hidden; }
+  /* header */
+  .hd { display: flex; height: 56px; background: #fff; border-bottom: 1px solid var(--line); }
+  .hd .logo { width: 232px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 20px; border-right: 1px solid var(--line); }
+  .word { font: 700 19px/1 var(--display); letter-spacing: -0.01em; } .word b { color: var(--signal); }
+  .hd .bar { flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 32px; }
+  .crumbs { font-family: var(--display); color: var(--graphite); white-space: nowrap; } .crumbs b { color: var(--ink); } .crumbs .sep { color: var(--muted); margin: 0 6px; }
+  .chip { padding: 2px 9px; border: 1px solid var(--line-strong); border-radius: 999px; font: 500 11.5px var(--mono); color: var(--graphite); }
+  .grow { flex: 1; }
+  .btn { padding: 7px 13px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-weight: 600; font-size: 13px; white-space: nowrap; } .btn.primary { background: var(--signal); border-color: var(--signal); color: #fff; }
+  .measure { position: absolute; right: 12px; top: 64px; font: 500 11px var(--mono); color: var(--muted); }
+  /* tables */
+  table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; }
+  th, td { height: 44px; padding: 0 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13.5px; white-space: nowrap; }
+  th { height: 40px; font: 500 11px var(--mono); letter-spacing: .06em; color: var(--muted); background: var(--paper); border-bottom-color: var(--line-strong); }
+  td.num, th.num { text-align: right; } td.end, th.end { text-align: right; width: 1%; }
+  td b { font-weight: 600; } .from { color: var(--graphite); } .mono { font-family: var(--mono); font-size: 12.5px; }
+  .card { border: 1px solid var(--line); border-radius: 10px; background: #fff; } .card table { border-radius: 10px; } .card th:first-child { border-top-left-radius: 10px; } .card th:last-child { border-top-right-radius: 10px; }
+  .acts { display: inline-flex; gap: 6px; align-items: center; justify-content: flex-end; }
+  .sb { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font: 600 12.5px var(--font); color: var(--ink); }
+  .sb.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .sb.ghost { border-color: transparent; color: var(--graphite); }
+  .sb.ghost.red { color: var(--red); }
+  .ib { position: relative; display: inline-grid; place-items: center; width: 30px; height: 30px; border: 1px solid transparent; border-radius: 6px; color: var(--graphite); }
+  .ib:hover, .ib.hover { background: var(--soft); border-color: var(--line); color: var(--ink); }
+  .ib svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .tip { position: absolute; bottom: calc(100% + 6px); right: 0; padding: 4px 8px; background: var(--ink); color: #fff; font: 500 12px var(--font); border-radius: 5px; white-space: nowrap; z-index: 3; }
+  .menu { position: absolute; right: 0; top: calc(100% + 4px); width: 190px; padding: 5px; background: #fff; border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: 0 8px 22px rgba(0,0,0,.12); z-index: 3; text-align: left; }
+  .menu div { padding: 7px 10px; border-radius: 5px; font-size: 13px; } .menu div:first-child { background: var(--soft); } .menu .red { color: var(--red); } .menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 0; }
+  .status { padding: 2px 9px; border-radius: 999px; background: #e3f0e6; color: #23602f; font: 500 11.5px var(--mono); }
+  tr.hover td { background: #faf9f6; }
+  .roweditable td:first-child b { text-decoration: none; }
+  .pad { padding: 16px 24px 20px; }
+  /* messages */
+  .ms { display: grid; gap: 18px; height: 760px; padding: 24px 32px; }
+  .ms h3 { margin: 0; font: 700 28px/1.1 var(--display); } .ms .lead { margin: 4px 0 0; color: var(--graphite); font-size: 13.5px; }
+  .pill { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font-weight: 600; font-size: 13px; background: #fff; } .pill.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pane { background: #fff; border: 1px solid var(--line); border-radius: 10px; min-height: 0; }
+  .field { display: grid; gap: 4px; } .lab { font: 500 10.5px var(--mono); letter-spacing: .08em; color: var(--muted); }
+  .in { padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-size: 13.5px; }
+  .ta { min-height: 190px; white-space: pre-line; line-height: 1.6; }
+  .ph { display: flex; flex-wrap: wrap; gap: 6px; } .ph span { padding: 3px 9px; border: 1px solid var(--line-strong); border-radius: 999px; font: 500 12px var(--mono); }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 4px 10px; font: 600 12px var(--mono); } .seg .on { background: var(--ink); color: #fff; }
+  .mail { margin: 0 auto; width: 100%; max-width: 520px; border: 1px solid #ecdcc8; border-radius: 8px; overflow: hidden; background: #fffaf3; font-size: 13.5px; }
+  .mail .top { background: #b4532a; color: #fff; padding: 12px 22px; font-weight: 600; font-size: 15px; }
+  .mail .body { padding: 16px 22px; line-height: 1.55; } .mail .q { font-weight: 600; margin: 10px 0 8px; }
+  .mail .opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; } .mail .opts span { padding: 8px 6px; border: 1px solid #e3d3c0; border-radius: 6px; text-align: center; font-weight: 600; font-size: 12.5px; background: #fff; }
+  .mail .go { display: inline-block; margin: 12px 0 8px; padding: 9px 16px; background: #b4532a; color: #fff; border-radius: 6px; font-weight: 600; }
+  .stage { background: repeating-conic-gradient(#f1eee8 0 25%, #f7f5f1 0 50%) 0 0 / 16px 16px; padding: 16px; overflow: hidden; min-height: 0; }
+  .ptabs { display: flex; gap: 8px; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  .kinds { display: grid; gap: 6px; align-content: start; } .kind { padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; font-weight: 600; } .kind.on { border-color: var(--signal); box-shadow: inset 3px 0 0 var(--signal); } .kind small { display: block; font-weight: 400; color: var(--graphite); font-size: 12px; }
+</style>
+</head>
+<body>
+<script>
+const s = new URLSearchParams(location.search).get("s") || "header";
+const icon = {
+  edit: '<svg viewBox="0 0 20 20"><path d="M13.5 3.5l3 3L7 16H4v-3z"/><path d="M11.5 5.5l3 3"/></svg>',
+  copy: '<svg viewBox="0 0 20 20"><rect x="7" y="7" width="9.5" height="9.5" rx="1.5"/><path d="M13 7V4.5A1.5 1.5 0 0 0 11.5 3h-7A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13H7"/></svg>',
+  use: '<svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>',
+  more: '<svg viewBox="0 0 20 20"><circle cx="4.5" cy="10" r="1.1"/><circle cx="10" cy="10" r="1.1"/><circle cx="15.5" cy="10" r="1.1"/></svg>',
+  pause: '<svg viewBox="0 0 20 20"><path d="M7.5 5v10M12.5 5v10"/></svg>',
+  trash: '<svg viewBox="0 0 20 20"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg>',
+  open: '<svg viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></svg>',
+};
+const tile = (n = 20) => `<svg width="${n}" height="${n}" viewBox="0 0 32 32"><rect width="32" height="32" rx="3" fill="#d1440f"/><path d="M10 11V8h12v8h-6v4" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="square"/><rect x="14.2" y="22.6" width="3.6" height="3.6" fill="#fff"/></svg>`;
+const opt = (title, note, inner) => `<div class="opt"><h2>${title}</h2><p class="note">${note}</p><div class="frame">${inner}</div></div>`;
+let html = "";
+
+if (s === "header") {
+  const head = (logo, crumb, word, label) => `<div class="hd"><div class="logo">${tile(logo)}<span class="word" style="font-size:${word}px">ask<b>werk</b></span></div><div class="bar"><span class="crumbs" style="font-size:${crumb}px">Surveys<span class="sep">›</span>Mountain lodge<span class="sep">›</span><b>Look</b></span><span class="chip">Closed</span><span class="grow"></span><span class="btn">Preview ▾</span><span class="btn primary">Share</span></div></div>`;
+  const two = (logo, crumb, word, label) => head(logo, crumb, word, label) + `<div class="hd" style="border-top:1px solid var(--line)"><div class="logo">${tile(logo)}<span class="word" style="font-size:${word}px">ask<b>werk</b></span></div><div class="bar"><span class="crumbs" style="font-size:${crumb}px">Administration<span class="sep">›</span><b>Contacts</b></span><span class="grow"></span><span class="btn">Export</span><span class="btn primary">+ Add contact</span></div></div>`;
+  html = `<h1 class="sheet">W42 · AWK-56 · Header in one scale</h1>`
+    + opt("A · Today", "Crumbs 20 px, the wordmark 19 px: the crumbs read larger than the logo and the page's own title (28 px) is close.", two(20, 20, 19, "logo 20 · word 19 · crumbs 20"))
+    + opt("B · Crumbs one step down", "Crumbs 17 px, the wordmark stays 19 px with its 20 px tile: the logo leads, the path is a quiet line, as tall as the buttons' text block.", two(20, 17, 19, "logo 20 · word 19 · crumbs 17"))
+    + opt("C · Crumbs as the body", "Crumbs 15 px (the size of the sidebar's places), the wordmark 19 px: the bar becomes a slim strip; the page title below carries the weight.", two(20, 15, 19, "logo 20 · word 19 · crumbs 15"));
+}
+
+if (s === "templates") {
+  const rows = [["Customer satisfaction", "Askwerk", 20], ["Employee pulse", "Askwerk", 5], ["Café visit", "Sample", 6], ["Mountain lodge", "Sample", 10], ["Supplier check", "Ours", 13]];
+  const table = (cell, hoverRow = 1) => `<div class="pad"><div class="card"><table><tr><th>TEMPLATE</th><th>FROM</th><th class="num">QUESTIONS</th><th>LANGUAGES</th><th class="end">ACTIONS</th></tr>${rows.map((r, i) => `<tr class="${i === hoverRow ? "hover" : ""}"><td><b>${r[0]}</b></td><td class="from">${r[1]}</td><td class="num mono">${r[2]}</td><td class="mono">DE EN</td><td class="end">${cell(r, i === hoverRow)}</td></tr>`).join("")}</table></div></div>`;
+  html = `<h1 class="sheet">W42 · AWK-60 · Templates: edit every one, buttons that breathe</h1>`
+    + opt("A · Two small buttons", "Every row: Edit and Use, 28 px high with room above and below. Edit on Askwerk's and the samples makes a copy in Ours and opens it in one step (the button says \"Edit a copy\"). Clicking the row also edits.",
+      table((r) => `<span class="acts"><span class="sb">${r[1] === "Ours" ? "Edit" : "Edit a copy"}</span><span class="sb primary">Use</span></span>`))
+    + opt("B · Icons with tooltips", "Two icon buttons (pencil: edit or edit a copy; plus: start a survey from it); the tooltip names the action. Quietest, the row stays one line.",
+      table((r, hover) => `<span class="acts"><span class="ib ${hover ? "hover" : ""}">${icon.edit}${hover ? `<span class="tip">${r[1] === "Ours" ? "Edit" : "Edit a copy in Ours"}</span>` : ""}</span><span class="ib">${icon.use}</span></span>`))
+    + opt("C · Use, and the rest under …", "One visible button, Use; Edit / Edit a copy, Duplicate and Delete (ours) under a ⋯ menu. Clicking the row also edits.",
+      table((r, hover) => `<span class="acts" style="position:relative"><span class="sb">Use</span><span class="ib ${hover ? "hover" : ""}">${icon.more}${hover ? `<span class="menu"><div>Edit a copy in Ours</div><div>Duplicate</div></span>` : ""}</span></span>`));
+}
+
+if (s === "grid") {
+  const orgs = [["DI", "Direct Mind GmbH", "dimi", "Drazan Kosic", 1, 10, "1,032", "14 Oct"], ["AC", "Acme GmbH", "acme", "Anna Berger", 4, 7, "318", "16 Oct"]];
+  const table = (cell) => `<div class="pad" style="padding-bottom:90px"><div class="card"><table><tr><th>ORGANISATION</th><th>SHORT NAME</th><th>OWNER</th><th class="num">MEMBERS</th><th class="num">SURVEYS</th><th class="num">RESPONSES</th><th>CREATED</th><th>STATUS</th><th class="end">ACTIONS</th></tr>${orgs.map((o, i) => `<tr class="${i === 0 ? "hover" : ""}"><td><b>${o[1]}</b></td><td class="mono">${o[2]}</td><td>${o[3]}</td><td class="num mono">${o[4]}</td><td class="num mono">${o[5]}</td><td class="num mono">${o[6]}</td><td>${o[7]}</td><td><span class="status">Active</span></td><td class="end">${cell(i === 0)}</td></tr>`).join("")}</table></div></div>`;
+  html = `<h1 class="sheet">W42 · AWK-62 · Row actions in every grid</h1><p class="note" style="margin:-8px 0 16px">One rule for all grids (Organisations, Administrators, Members, API keys, Domains, Templates): actions sit at the row's right end, never touch its borders, and a destructive action is never one click away.</p>`
+    + opt("A · Small buttons, the dangerous one quiet", "Suspend as a small outlined button; Delete as a quiet red text button that asks before it acts. Both 28 px high, centred in the 44 px row.",
+      table(() => `<span class="acts"><span class="sb">Suspend</span><span class="sb ghost red">Delete…</span></span>`))
+    + opt("B · Icons with tooltips", "Pause and bin icons, 30 px, grey until hovered; the tooltip names the action. Delete still asks.",
+      table((hover) => `<span class="acts"><span class="ib ${hover ? "hover" : ""}">${icon.pause}${hover ? '<span class="tip">Suspend</span>' : ""}</span><span class="ib">${icon.trash}</span></span>`))
+    + opt("C · One ⋯ menu per row", "Every row ends in one ⋯ button; its menu lists the actions, destructive ones last and red, after a line. Same in every grid, scales to many actions.",
+      table((hover) => `<span class="acts" style="position:relative"><span class="ib ${hover ? "hover" : ""}">${icon.more}${hover ? '<span class="menu"><div>Open</div><div>Suspend</div><hr><div class="red">Delete…</div></span>' : ""}</span></span>`));
+}
+
+if (s === "messages") {
+  const editor = `<div style="display:grid;gap:12px;padding:16px;align-content:start"><div style="display:flex;gap:10px;align-items:center"><span class="seg"><span>DE</span><span class="on">EN</span></span><span style="font-size:12px;color:var(--muted)">Askwerk's text. Change it to use your own.</span></div>
+    <div class="field"><span class="lab">SUBJECT</span><span class="in">{organisation}: your opinion counts</span></div>
+    <div class="field"><span class="lab">TEXT</span><span class="in ta">Hello {name},
+
+we would like to know how satisfied you are with us. The survey "{survey}" takes about {duration}.
+
+{link}
+
+Please answer by {deadline}. Thank you.
+{organisation}</span></div>
+    <div class="field"><span class="lab">PLACEHOLDERS (CLICK TO ADD)</span><span class="ph"><span>{name}</span><span>{link}</span><span>{deadline}</span><span>{duration}</span><span>{organisation}</span><span>{survey}</span></span></div>
+    <label style="font-size:13px"><input type="checkbox" checked> Answer the first question in the email</label></div>`;
+  const mail = `<div class="mail"><div class="top">Direct Mind GmbH</div><div class="body">Hello Lena Gruber,<br><br>we would like to know how satisfied you are with us. The survey "Where is your next journey?" takes about 3 minutes.<div class="q">Where do you feel most at home?</div><div class="opts"><span>On the beach</span><span>In the city</span><span>In the mountains</span><span>In the forest</span></div><span class="go">Start the survey</span><br>Please answer by 1 November 2026. Thank you.<br>Direct Mind GmbH</div></div>`;
+  const preview = (extra = "") => `<div class="pane" style="display:flex;flex-direction:column;overflow:hidden${extra}"><div class="ptabs"><span class="lab">PREVIEW WITH</span><span class="in" style="padding:4px 10px;font-size:12.5px">Demo: Dream holiday ▾</span><span class="grow"></span><span class="seg"><span>Phone</span><span>Tablet</span><span class="on">Desktop</span></span></div><div style="padding:8px 14px;font-weight:600;font-size:13px;border-bottom:1px solid var(--line)">Subject: Direct Mind GmbH: your opinion counts</div><div class="stage" style="flex:1">${mail}</div></div>`;
+  const kinds = (row) => row
+    ? `<div style="display:flex;gap:8px"><span class="pill on">Invitation</span><span class="pill">Reminder</span><span class="pill">Thank you</span></div>`
+    : `<div class="kinds"><div class="kind on">Invitation<small>Sent when you invite</small></div><div class="kind">Reminder<small>Before the deadline</small></div><div class="kind">Thank you<small>After an answer</small></div></div>`;
+  const head = `<div><h3>Messages</h3><p class="lead">The emails respondents get, in each survey language. They take the look of the survey's theme.</p></div>`;
+  html = `<h1 class="sheet">W42 · AWK-61 · Messages: the preview fits the window</h1>`
+    + opt("A · Tabs above, editor and preview side by side", "The three messages become tabs above; the text and the preview share the width 1 : 1.2 and both end at the bottom of the window. The email scrolls inside its stage if it is longer; the page never scrolls.",
+      `<div class="ms" style="grid-template-rows:auto auto minmax(0,1fr)">${head}${kinds(true)}<div style="display:grid;grid-template-columns:1fr 1.2fr;gap:18px;min-height:0"><div class="pane">${editor}</div>${preview()}</div></div>`)
+    + opt("B · Three columns, all to the bottom", "Today's three columns kept, but the message list is narrower with one line on what each is for, and all three columns reach the bottom of the window (like Contacts, W40 C).",
+      `<div class="ms" style="grid-template-rows:auto minmax(0,1fr)">${head}<div style="display:grid;grid-template-columns:200px 1fr 1.15fr;gap:18px;min-height:0">${kinds(false)}<div class="pane">${editor}</div>${preview()}</div></div>`);
+}
+document.body.innerHTML = html;
+</script>
+</body>
+</html>

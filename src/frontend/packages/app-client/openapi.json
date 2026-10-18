@@ -941,7 +941,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "\u0022askwerk:\u2026\u0022.",
+            "description": "\u0022askwerk:\u2026\u0022, or a sample\u0027s id.",
             "required": true,
             "schema": {
               "type": "string"

@@ -47,20 +47,7 @@ public static class SampleSurveyBuilder
         ArgumentNullException.ThrowIfNull(sample);
         ArgumentNullException.ThrowIfNull(audit);
         ArgumentNullException.ThrowIfNull(save);
-        var assets = new Dictionary<string, Guid>(StringComparer.Ordinal);
-
-        // The pictures become the organisation's own files, as uploads would.
-        foreach (var name in SampleSurveys.PictureNames(sample))
-        {
-            var picture = SampleSurveys.Picture(name);
-            var assetId = Guid.CreateVersion7(now);
-            var key = $"{tenantId:N}/{assetId:N}";
-            await storage.SaveAsync(key, new MemoryStream(picture.Png), cancellationToken);
-            context.Assets.Add(Asset.Create(assetId, tenantId, AssetKind.Image, "image/png", picture.Png.LongLength, Convert.ToHexStringLower(SHA256.HashData(picture.Png)), $"{name}.png", key, userId, now, picture.Width, picture.Height));
-            assets[name] = assetId;
-        }
-
-        var definition = SampleSurveys.DefinitionWith(sample, assets);
+        var definition = await OwnDefinitionAsync(context, storage, sample, tenantId, userId, now, cancellationToken);
         var (survey, draft) = Survey.Create(surveyId, tenantId, title, definition.Languages, definition.DefaultLanguage, userId, now);
         draft.ReplaceDefinition(definition, now);
         survey.DraftSaved(definition, now);
@@ -90,6 +77,38 @@ public static class SampleSurveyBuilder
         await save();
 
         return survey;
+    }
+
+    /// <summary>
+    /// The sample's survey with its pictures made the organisation's own files, as uploads would be; used for a survey
+    /// from the sample and for a template copied from it (W42, AWK-60).
+    /// </summary>
+    /// <param name="context">The database.</param>
+    /// <param name="storage">Where the pictures are stored.</param>
+    /// <param name="sample">The sample.</param>
+    /// <param name="tenantId">The organisation.</param>
+    /// <param name="userId">Who copies it.</param>
+    /// <param name="now">The time.</param>
+    /// <param name="cancellationToken">Cancels the work.</param>
+    /// <returns>The definition, its pictures pointing at the new files.</returns>
+    public static async Task<SurveyDefinition> OwnDefinitionAsync(AskwerkDbContext context, IFileStorage storage, SampleSurvey sample, Guid tenantId, Guid userId, DateTimeOffset now, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(storage);
+        ArgumentNullException.ThrowIfNull(sample);
+        var assets = new Dictionary<string, Guid>(StringComparer.Ordinal);
+
+        foreach (var name in SampleSurveys.PictureNames(sample))
+        {
+            var picture = SampleSurveys.Picture(name);
+            var assetId = Guid.CreateVersion7(now);
+            var key = $"{tenantId:N}/{assetId:N}";
+            await storage.SaveAsync(key, new MemoryStream(picture.Png), cancellationToken);
+            context.Assets.Add(Asset.Create(assetId, tenantId, AssetKind.Image, "image/png", picture.Png.LongLength, Convert.ToHexStringLower(SHA256.HashData(picture.Png)), $"{name}.png", key, userId, now, picture.Width, picture.Height));
+            assets[name] = assetId;
+        }
+
+        return SampleSurveys.DefinitionWith(sample, assets);
     }
 
     /// <summary>The sample answers, completed over the last four weeks; the same for the same survey id.</summary>
