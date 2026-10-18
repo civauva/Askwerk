@@ -60,6 +60,17 @@ test("a click on a part of the preview opens its settings, and the language menu
   // Askwerk's photos (AWK-74): every thumbnail of the first topic has loaded.
   await expect.poll(() => pictures.getByRole("group", { name: "Charity" }).locator("img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   await page.screenshot({ path: info.outputPath("look-picture.png") });
+  // With a photo behind the survey, a click on it in the preview opens the picture panel at once (AWK-74).
+  await pictures.getByRole("group", { name: "Charity" }).getByRole("button").first().click();
+  await expect(settings.getByRole("button", { name: "Picture", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await settings.getByRole("button", { name: "Done" }).click();
+  await settings.getByRole("tab", { name: "Parts" }).click();
+  await expect(pictures).toHaveCount(0);
+  await frame.locator(".run").click({ position: { x: 12, y: 420 } });
+  await expect(settings.getByRole("tab", { name: "Style" })).toHaveAttribute("aria-selected", "true");
+  await expect(pictures.getByRole("group", { name: "Charity" })).toBeVisible();
+  await expect.poll(() => pictures.getByRole("group", { name: "Charity" }).locator("img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await page.screenshot({ path: info.outputPath("look-picture-pick.png") });
   await settings.getByRole("button", { name: "Done" }).click();
 
   // Administration → Looks: the card opens its colour under More.

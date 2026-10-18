@@ -243,6 +243,23 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
     expect(within(areas().getByRole("region", { name: "Picture" })).getByRole("group", { name: "Holidays" })).toBeTruthy();
   });
 
+  it("opens the picture panel at once when the page behind the survey is clicked in the preview (AWK-74)", async () => {
+    await openLook();
+    const frame = within(screen.getByRole("complementary", { name: "Preview" })).getByTitle("Survey preview") as HTMLIFrameElement;
+    const from = (data: object) => window.dispatchEvent(new MessageEvent("message", { data, origin: window.location.origin, source: frame.contentWindow }));
+    fireEvent.click(areas().getByRole("button", { name: /^Picture$/ }));
+    const animals = within(await within(areas().getByRole("region", { name: "Picture" })).findByRole("group", { name: "Animals" }));
+    fireEvent.click(animals.getByRole("button", { name: "Pug Dog" }));
+    await waitFor(() => expect(areas().getByRole("button", { name: /^Picture$/ }).getAttribute("aria-pressed")).toBe("true"));
+    fireEvent.click(within(areas().getByRole("region", { name: "Picture" })).getByRole("button", { name: "Done" }));
+    fireEvent.click(areas().getByRole("tab", { name: "Parts" }));
+
+    await act(async () => from({ type: "askwerk:pick", area: "background" }));
+
+    await waitFor(() => expect(areas().getByRole("tab", { name: "Style" }).getAttribute("aria-selected")).toBe("true"));
+    expect(areas().getByRole("region", { name: "Picture" })).toBeTruthy();
+  });
+
   it("offers five text sizes, extra small to extra large (W47, AWK-73)", async () => {
     const { api } = await openLook();
     open("Parts", "Type");

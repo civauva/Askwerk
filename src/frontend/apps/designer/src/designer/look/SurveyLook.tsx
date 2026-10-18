@@ -3,7 +3,7 @@ import type { SurveyLook as StoredLook } from "@askwerk/app-client";
 import { ApiError } from "@askwerk/app-client";
 import { checkTheme, contrastRatio, createTranslator, themePresets, type Locale, type SurveyDefinition, type ThemeIssue, type ThemeTag, type ThemeTokens } from "@askwerk/schema";
 import { Dialog, DialogActions, Menu, MenuItem, Switch, Tabs, ComboBox } from "@askwerk/ui";
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type Ref, type RefObject } from "react";
 import type { ThemeChoice } from "../api";
 import { changesBetween, darkColoursFor, getAt, presetOf, resetPaths, setAt, type LookPath } from "./lookEditing";
 import { LookThumb } from "./LookThumb";
@@ -268,6 +268,8 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
   const picking = viewing.view === "advanced" && mode === "edit";
   const pickLabels = useMemo(() => {
     const labels: Record<string, string> = {};
+
+    labels["background"] = t("clickToEdit", { part: t("backgroundLabel") });
 
     for (const area of areas) {
       labels[area.id] = t("clickToEdit", { part: t(area.label) });
@@ -546,6 +548,13 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
       return;
     }
 
+    // The page behind the survey: Style's Background, with the picture panel open (AWK-74).
+    if (picked.area === "background") {
+      setTab("style");
+
+      return;
+    }
+
     const holder = (Object.entries(tabAreas) as [Exclude<LookTab, "style">, readonly string[]][]).find(([, ids]) => ids.includes(picked.area));
 
     if (holder === undefined) {
@@ -708,7 +717,7 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
       <div className="sl-areas" ref={areasBox}>
         {simple || tab === "style" ? (
           <div className="sl-tab">
-            <StyleTab t={t} tokens={tokens} api={api} onChange={onChange} />
+            <StyleTab t={t} tokens={tokens} api={api} onChange={onChange} picked={picked?.area === "background" ? picked.at : null} />
             {simple && (
               <p className="sl-note sl-simple-more">
                 {t("simpleMore")}{" "}
@@ -755,11 +764,11 @@ function Tile({ on, label, picture, onClick }: { on: boolean; label: string; pic
 }
 
 /** One labelled choice in Style (W32): the label above, the choice below. */
-function StyleField({ label, children }: { label: string; children: ReactNode }) {
+function StyleField({ label, children, box }: { label: string; children: ReactNode; box?: Ref<HTMLDivElement> }) {
   const id = useId();
 
   return (
-    <div className="sl-f" role="group" aria-labelledby={id}>
+    <div className="sl-f" role="group" aria-labelledby={id} ref={box}>
       <span className="sl-lbl" id={id}>
         {label}
       </span>
@@ -786,7 +795,7 @@ function topicName(t: LookText, topic: string): string {
   return names[topic] !== undefined ? t(names[topic]) : topic;
 }
 
-function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeTokens; api: LookApi; onChange: (tokens: ThemeTokens) => void }) {
+function StyleTab({ t, tokens, api, onChange, picked = null }: { t: LookText; tokens: ThemeTokens; api: LookApi; onChange: (tokens: ThemeTokens) => void; picked?: number | null }) {
   const file = useRef<HTMLInputElement>(null);
   const pattern = tokens.decoration?.pattern ?? "none";
   const image = tokens.background?.kind !== "colour" ? tokens.background?.image : undefined;
@@ -795,6 +804,30 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
     onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], { kind: "image-overlay", image: { asset }, fit: "cover", overlay: tokens.colours.background, overlayOpacity: tokens.background?.overlayOpacity ?? 0.8 }));
   // The picture panel (W46 B, AWK-72): Askwerk's pictures, your own with the rules, and how calm it is under the text.
   const [choosing, setChoosing] = useState(false);
+  const backgroundBox = useRef<HTMLDivElement>(null);
+
+  // A click on the page behind the survey in the preview (AWK-74): Background scrolls into view with a short flash,
+  // and with a picture there the picture panel is open at once.
+  useEffect(() => {
+    if (picked === null) {
+      return undefined;
+    }
+
+    if (background === "picture") {
+      setChoosing(true);
+    }
+
+    const timer = window.setTimeout(() => {
+      const box = backgroundBox.current;
+      box?.scrollIntoView?.({ block: "start", behavior: "smooth" });
+      box?.classList.add("sl-picked");
+      window.setTimeout(() => box?.classList.remove("sl-picked"), 1600);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+    // Only a new click opens it; changing the background later does not.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [picked]);
   const [pictures, setPictures] = useState<{ topics: string[]; items: { id: string; topic: string; title: string }[] } | null>(null);
 
   // Askwerk's photos load when the panel first opens.
@@ -853,7 +886,7 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
           ))}
         </div>
       </StyleField>
-      <StyleField label={t("backgroundLabel")}>
+      <StyleField label={t("backgroundLabel")} box={backgroundBox}>
         <div className="sl-opts">
           <Tile
             on={background === "colour"}

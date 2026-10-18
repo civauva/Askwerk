@@ -19,7 +19,7 @@ describe("lookPick (W44 A, AWK-69): the preview as a map of its parts", () => {
     expect(at("#b")).toEqual({ area: "components", part: "buttons" });
     expect(at(".run-org")).toEqual({ area: "header" });
     expect(at("#m")).toEqual({ area: "shape" });
-    expect(at(".run")).toEqual({ area: "colours" });
+    expect(at(".run")).toEqual({ area: "background" });
   });
 
   it("edits the buttons too, from a click on them or on their label (W46 A: Try moves through the survey)", () => {

@@ -17,7 +17,8 @@ export const lookParts: readonly (readonly [selector: string, pick: LookPick])[]
   [".run-head, .run-top, .run-org, .run-logo, .run-hero, .run-overtitle", { area: "header" }],
   [".run-welcome", { area: "pages" }],
   [".run-main", { area: "shape" }],
-  [".run", { area: "colours" }],
+  // The page behind the survey: its background, chosen on Style (AWK-74: a click opens the picture panel).
+  [".run", { area: "background" }],
 ];
 
 
