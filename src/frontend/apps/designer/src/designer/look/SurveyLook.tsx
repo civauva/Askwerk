@@ -261,7 +261,8 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
       labels[area.id] = t("clickToEdit", { part: t(area.label) });
 
       for (const part of area.parts ?? []) {
-        labels[`${area.id}/${part.id}`] = t("clickToEdit", { part: t(part.label) });
+        // The buttons move through the survey in the preview; their label is the way to their settings.
+        labels[`${area.id}/${part.id}`] = t(part.id === "buttons" ? "editHere" : "clickToEdit", { part: t(part.label) });
       }
     }
 

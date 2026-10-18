@@ -26,12 +26,19 @@ test("a click on a part of the preview opens its settings, and the language menu
   await frame.locator(".run-welcome h1, .run-welcome h2").first().hover();
   await expect(frame.locator(".run-look-label")).toBeVisible();
   await page.screenshot({ path: info.outputPath("look-pick-hover.png") });
-  await frame.locator(".run-welcome").click();
+  await frame.locator(".run-welcome").click({ position: { x: 8, y: 8 } });
   await expect(settings.getByRole("tab", { name: "Pages" })).toHaveAttribute("aria-selected", "true");
 
-  await settings.getByRole("tab", { name: "Parts" }).click();
-  await settings.getByRole("button", { name: /^Components/ }).click();
-  await settings.getByRole("button", { name: /^Choices/ }).click();
+  // The buttons still move through the survey; their label opens their settings.
+  await frame.getByRole("button", { name: "Start the survey" }).click();
+  await expect(frame.locator(".run-q").first()).toBeVisible();
+  await frame.locator(".run-nav").hover();
+  await expect(frame.locator(".run-look-label")).toHaveText(/edit here/);
+  await page.screenshot({ path: info.outputPath("look-pick-buttons.png") });
+  await frame.locator(".run-look-label").click();
+  await expect(settings.getByRole("button", { name: /^Buttons/ })).toHaveAttribute("aria-expanded", "true");
+
+  // Components is open now; opening Choices takes the preview to a page with choices.
   await settings.getByRole("button", { name: /^Choices/ }).click();
   await expect(frame.locator(".run-choice").first()).toBeVisible();
   await settings.getByRole("tab", { name: "Style" }).click();
