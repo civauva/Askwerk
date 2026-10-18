@@ -919,6 +919,10 @@
   position: absolute;
   width: 1px;
   height: 1px;
+  /* Pulled back inside its box, so it never makes the page scroll by a pixel. */
+  margin: -1px;
+  padding: 0;
+  border: 0;
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;

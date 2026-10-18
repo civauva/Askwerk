@@ -50,6 +50,9 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
   await expect(page.getByRole("link", { name: "Share" })).toHaveCount(0);
   expect((await new AxeBuilder({ page }).exclude("iframe").analyze()).violations.map((violation) => violation.id)).toEqual([]);
   await page.screenshot({ path: info.outputPath("template-editing.png") });
+  // The editor is exactly the window's height: the page itself never scrolls, not even by the pixel of a hidden
+  // live region, so a full-page capture shows the editor to the bottom.
+  expect(await page.evaluate(() => document.scrollingElement!.scrollHeight - innerHeight)).toBe(0);
 
   await bar.getByRole("button", { name: "Use for a new survey" }).click();
   await expect(page.getByRole("banner", { name: "Survey" }).getByRole("button", { name: "Publish" })).toBeVisible();
