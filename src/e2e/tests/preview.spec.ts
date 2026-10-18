@@ -73,7 +73,8 @@ test("an editor sets up the welcome page and tries the draft in a side panel", a
   await page.getByRole("button", { name: "Use the look Panorama" }).click();
   const panorama = page.frameLocator('iframe[title="Survey preview"]');
   await expect(panorama.locator(".run[data-pattern='mountains'][data-panel='frosted']")).toBeVisible();
-  await panorama.getByRole("button", { name: "Start the survey" }).click();
+  // The preview beside Look edits instead of answering (W44 A): a part's row takes it to a page with that part.
+  await settings.getByRole("button", { name: /^Question text/ }).click();
   await expect(panorama.locator(".run-overtitle__title")).toHaveText("Customer satisfaction 2026");
   await page.screenshot({ path: info.outputPath("look-panorama.png") });
 

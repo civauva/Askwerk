@@ -571,3 +571,54 @@
     min-height: 480px;
   }
 }
+
+/* Click a part of the preview to edit it (W44 A, AWK-69): the pointed part is outlined and named. */
+.look-preview--pick [data-pick] {
+  position: relative;
+  cursor: pointer;
+}
+
+.look-preview--pick [data-pick]:hover:not(:has([data-pick]:hover)) {
+  outline: 2px dashed var(--aw-signal);
+  outline-offset: 4px;
+}
+
+.look-preview--pick [data-pick]:hover:not(:has([data-pick]:hover))::after {
+  content: attr(data-pick-label);
+  position: absolute;
+  top: -12px;
+  right: 6px;
+  z-index: 2;
+  padding: 3px 9px;
+  background: var(--aw-signal);
+  color: #fff;
+  font: 600 12px/1.4 var(--aw-font);
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Its field flashes once beside the preview. */
+.look-picked {
+  animation: look-picked 1.6s ease-out;
+  border-radius: var(--aw-radius-control);
+}
+
+@keyframes look-picked {
+  0%,
+  40% {
+    background: color-mix(in srgb, var(--aw-signal) 12%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--aw-signal) 12%, transparent), inset 3px 0 0 var(--aw-signal);
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .look-picked {
+    animation: none;
+    box-shadow: inset 3px 0 0 var(--aw-signal);
+  }
+}

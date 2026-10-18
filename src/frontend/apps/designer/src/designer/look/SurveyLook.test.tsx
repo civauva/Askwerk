@@ -243,6 +243,33 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
   });
 });
 
+describe("Create → Look: click a part of the preview to edit it (W44 A, AWK-69)", () => {
+  it("turns the preview into a map of its parts and opens the settings of the part clicked there", async () => {
+    await openLook();
+    const preview = within(screen.getByRole("complementary", { name: "Preview" }));
+    const frame = preview.getByTitle("Survey preview") as HTMLIFrameElement;
+    const sent: unknown[] = [];
+    frame.contentWindow!.addEventListener("message", (event) => sent.push(event.data));
+    const from = (data: object) => window.dispatchEvent(new MessageEvent("message", { data, origin: window.location.origin, source: frame.contentWindow }));
+
+    await act(async () => from({ type: "askwerk:preview-ready" }));
+    await waitFor(() => expect(sent.some((message) => (message as { type?: string }).type === "askwerk:pick-mode")).toBe(true));
+    const mode = sent.find((message) => (message as { type?: string }).type === "askwerk:pick-mode") as { labels: Record<string, string> };
+    expect(mode.labels["components/choices"]).toBe("Choices · click to edit");
+
+    await act(async () => from({ type: "askwerk:pick", area: "components", part: "choices" }));
+    await waitFor(() => expect(areas().getByRole("tab", { name: "Parts" }).getAttribute("aria-selected")).toBe("true"));
+    expect(areas().getByRole("button", { name: /^Choices/ }).getAttribute("aria-expanded")).toBe("true");
+
+    await act(async () => from({ type: "askwerk:pick", area: "header" }));
+    await waitFor(() => expect(areas().getByRole("tab", { name: "Pages" }).getAttribute("aria-selected")).toBe("true"));
+
+    // Only the preview beside the settings may pick.
+    await act(async () => window.dispatchEvent(new MessageEvent("message", { data: { type: "askwerk:pick", area: "components", part: "buttons" }, origin: "https://elsewhere.example", source: frame.contentWindow })));
+    expect(areas().getByRole("tab", { name: "Pages" }).getAttribute("aria-selected")).toBe("true");
+  });
+});
+
 describe("lookEditing", () => {
   it("sets and removes a setting by its path, and counts what differs", () => {
     const werkstatt = themePresets[0]!.tokens;

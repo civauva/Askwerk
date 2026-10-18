@@ -7,6 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { runnerMessages } from "./messages";
 import { AssetUrl, QuestionField, textOf } from "./QuestionField";
 import { themeLook, ThemeFonts, usePrefersDark, type Look } from "./theme";
+import { startPicking } from "./lookPick";
 
 type RunnerProps = {
   client: RunClient;
@@ -209,6 +210,30 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
 
     return () => window.removeEventListener("message", received);
   }, [preview, definition]);
+
+  // Beside Look the preview is a map of its parts (W44 A, AWK-69): the editor turns it on with the parts' names, and a
+  // click on a part opens its settings there instead of answering.
+  useEffect(() => {
+    if (!preview || window.parent === window) {
+      return undefined;
+    }
+
+    let stop: (() => void) | null = null;
+    const received = (event: MessageEvent) => {
+      const data = event.data as { type?: string; labels?: Record<string, string> } | null;
+
+      if (event.origin === window.location.origin && data?.type === "askwerk:pick-mode" && data.labels !== undefined) {
+        stop?.();
+        stop = startPicking(data.labels, (pick) => window.parent.postMessage({ type: "askwerk:pick", ...pick }, window.location.origin));
+      }
+    };
+    window.addEventListener("message", received);
+
+    return () => {
+      window.removeEventListener("message", received);
+      stop?.();
+    };
+  }, [preview]);
 
   // The Preview beside Look says where the survey is (W32): "Page 2 of 4", the welcome or the end.
   const at = screen.kind === "answering" ? screen.page + 1 : screen.kind === "welcome" ? "welcome" : screen.kind === "done" ? "end" : null;

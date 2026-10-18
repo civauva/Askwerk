@@ -234,16 +234,34 @@ function Editor({ t, locale, client, theme, head, saveDelayMs, onSaved, onMadeDe
 
   const logoUrl = tokens.logo?.asset !== undefined ? client.assetUrl(tokens.logo.asset) : undefined;
 
+  // A part clicked in the preview (W44 A, AWK-69): its field scrolls into view, flashes once and takes the focus.
+  const [picked, setPicked] = useState<{ field: string; at: number } | null>(null);
+  const side = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (picked === null) {
+      return undefined;
+    }
+
+    const field = side.current?.querySelector<HTMLElement>(`[data-field="${picked.field}"]`);
+    field?.scrollIntoView?.({ block: "center", behavior: "smooth" });
+    field?.classList.add("look-picked");
+    field?.querySelector<HTMLElement>("input, button, select")?.focus({ preventScroll: true });
+    const timer = window.setTimeout(() => field?.classList.remove("look-picked"), 1600);
+
+    return () => window.clearTimeout(timer);
+  }, [picked]);
+
   return (
     <>
-      <div className="look-side">
+      <div className="look-side" ref={side}>
         {head}
         <section className="look-editor" aria-label={t("theme")}>
           <div className="look-field">
             <label htmlFor="look-name">{t("name")}</label>
             <input id="look-name" className="look-input" value={name} onChange={(event) => setName(event.target.value)} />
           </div>
-          <div className="look-field">
+          <div className="look-field" data-field="logo">
             <span className="look-label">{t("logo")}</span>
             <div className="look-row">
               {logoUrl !== undefined && <img className="look-logo" src={logoUrl} alt="" />}
@@ -256,6 +274,7 @@ function Editor({ t, locale, client, theme, head, saveDelayMs, onSaved, onMadeDe
             </div>
           </div>
           <ColourField
+            field="accent"
             label={t("accent")}
             hexLabel={t("accentHex")}
             value={tokens.colours.accent}
@@ -318,7 +337,20 @@ function Editor({ t, locale, client, theme, head, saveDelayMs, onSaved, onMadeDe
           bar={<DeviceSwitch label={t("width")} texts={{ phone: t("phone"), tablet: t("tablet"), desktop: t("desktop") }} value={device} onChange={setDevice} />}
           width={deviceWidth(device)}
         >
-          <Preview t={t} tokens={tokens} logoUrl={logoUrl} headerUrl={tokens.headerImage?.asset !== undefined ? client.assetUrl(tokens.headerImage.asset) : undefined} />
+          <Preview
+            t={t}
+            tokens={tokens}
+            logoUrl={logoUrl}
+            headerUrl={tokens.headerImage?.asset !== undefined ? client.assetUrl(tokens.headerImage.asset) : undefined}
+            onPick={(field) => {
+              // Logo and accent are always shown; the rest live under More.
+              if (field !== "logo" && field !== "accent") {
+                setMore(true);
+              }
+
+              setPicked({ field, at: Date.now() });
+            }}
+          />
         </ZoomBox>
       </section>
     </>
@@ -353,10 +385,10 @@ function More({ t, tokens, setColours, set, upload }: MoreProps) {
       <fieldset className="look-group">
         <legend>{t("colours")}</legend>
         {colours.map(([key, label]) => (
-          <ColourField key={key} label={t(label)} hexLabel={t("hex", { name: t(label) })} value={tokens.colours[key]} onChange={(value) => setColours({ [key]: value })} />
+          <ColourField key={key} field={key} label={t(label)} hexLabel={t("hex", { name: t(label) })} value={tokens.colours[key]} onChange={(value) => setColours({ [key]: value })} />
         ))}
       </fieldset>
-      <fieldset className="look-group">
+      <fieldset className="look-group" data-field="fonts">
         <legend>{t("fonts")}</legend>
         {(["heading", "body"] as const).map((which) => (
           <FontField
@@ -383,7 +415,7 @@ function More({ t, tokens, setColours, set, upload }: MoreProps) {
       </fieldset>
       <Choice t={t} legend="layout" value={tokens.layout} options={[["card", "layoutCard"], ["header-image", "layoutHeader"], ["split-image", "layoutSplit"], ["minimal", "layoutMinimal"]]} onChange={(value) => set("layout", value)} />
       {(tokens.layout === "header-image" || tokens.layout === "split-image") && (
-        <div className="look-field">
+        <div className="look-field" data-field="headerImage">
           <span className="look-label">{t("headerImage")}</span>
           <FileButton label={t("uploadImage")} fileLabel={t("headerFile")} accept="image/png,image/jpeg,image/webp" onFile={(file) => void upload(file, "image", (asset) => set("headerImage", { asset }))} />
         </div>
@@ -426,7 +458,7 @@ function Choice<V extends string>({ t, legend, value, options, onChange }: { t: 
   const name = useId();
 
   return (
-    <fieldset className="look-group look-choice">
+    <fieldset className="look-group look-choice" data-field={legend}>
       <legend>{t(legend)}</legend>
       <div className="look-choice__options">
         {options.map(([option, label]) => (
@@ -440,7 +472,7 @@ function Choice<V extends string>({ t, legend, value, options, onChange }: { t: 
   );
 }
 
-function ColourField({ label, hexLabel, value, onChange }: { label: string; hexLabel: string; value: string; onChange: (value: string) => void }) {
+function ColourField({ field, label, hexLabel, value, onChange }: { field?: string; label: string; hexLabel: string; value: string; onChange: (value: string) => void }) {
   const id = useId();
   const [text, setText] = useState(value);
 
@@ -457,7 +489,7 @@ function ColourField({ label, hexLabel, value, onChange }: { label: string; hexL
   };
 
   return (
-    <div className="look-field look-colour">
+    <div className="look-field look-colour" data-field={field}>
       <label htmlFor={id}>{label}</label>
       <div className="look-row">
         <input id={id} type="color" aria-label={label} value={/^#[0-9a-fA-F]{6}$/.test(text) ? text : "#000000"} onChange={(event) => change(event.target.value)} />
@@ -511,7 +543,23 @@ function FileButton({ label, fileLabel, accept, onFile }: { label: string; fileL
 }
 
 /** A small survey in the theme: logo, title, a rating question and the start button, drawn from the tokens. */
-function Preview({ t, tokens, logoUrl, headerUrl, small = false }: { t: T; tokens: ThemeTokens; logoUrl: string | undefined; headerUrl?: string | undefined; small?: boolean }) {
+/** The preview's parts and the field each opens (W44 A, AWK-69), with the name a pointer shows. */
+const previewParts = {
+  background: "colourBackground",
+  headerImage: "headerImage",
+  surface: "colourSurface",
+  logo: "logo",
+  fonts: "fonts",
+  text: "colourText",
+  accent: "accent",
+  buttons: "buttons",
+} as const satisfies Record<string, LookMessageKey>;
+
+type PreviewPart = keyof typeof previewParts;
+
+function Preview({ t, tokens, logoUrl, headerUrl, small = false, onPick }: { t: T; tokens: ThemeTokens; logoUrl: string | undefined; headerUrl?: string | undefined; small?: boolean; onPick?: (part: PreviewPart) => void }) {
+  // Without onPick (the small cards of the gallery) nothing is marked.
+  const part = (name: PreviewPart) => (onPick === undefined ? {} : { "data-pick": name, "data-pick-label": t("clickToEdit", { part: t(previewParts[name]) }) });
   const style = {
     "--look-accent": tokens.colours.accent,
     "--look-on-accent": tokens.colours.onAccent,
@@ -527,8 +575,20 @@ function Preview({ t, tokens, logoUrl, headerUrl, small = false }: { t: T; token
 
   return (
     <div
-      className={`look-preview${small ? " look-preview--small" : ""}`}
+      className={`look-preview${small ? " look-preview--small" : ""}${onPick !== undefined ? " look-preview--pick" : ""}`}
       style={style}
+      {...part("background")}
+      onClick={
+        onPick === undefined
+          ? undefined
+          : (event) => {
+              const picked = (event.target as Element).closest<HTMLElement>("[data-pick]")?.dataset.pick;
+
+              if (picked !== undefined) {
+                onPick(picked as PreviewPart);
+              }
+            }
+      }
       data-corners={tokens.corners}
       data-buttons={tokens.buttons}
       data-controls={tokens.controls}
@@ -537,27 +597,41 @@ function Preview({ t, tokens, logoUrl, headerUrl, small = false }: { t: T; token
       data-spacing={tokens.spacing}
       aria-hidden={small ? true : undefined}
     >
-      {showsHeader && <div className="look-preview__header" style={headerUrl !== undefined ? { backgroundImage: `url("${headerUrl}")` } : undefined} />}
-      <div className="look-preview__card">
-        <div className="look-preview__org">{logoUrl !== undefined ? <img src={logoUrl} alt={t("logo")} /> : <i>{t("previewOrganisation")}</i>}</div>
-        <Heading small={small}>{t("previewTitle")}</Heading>
-        {!small && <p>{t("previewText")}</p>}
-        <p className="look-preview__question">{t("previewQuestion")}</p>
-        <div className="look-preview__scale">
+      {showsHeader && <div className="look-preview__header" {...part("headerImage")} style={headerUrl !== undefined ? { backgroundImage: `url("${headerUrl}")` } : undefined} />}
+      <div className="look-preview__card" {...part("surface")}>
+        <div className="look-preview__org" {...part("logo")}>{logoUrl !== undefined ? <img src={logoUrl} alt={t("logo")} /> : <i>{t("previewOrganisation")}</i>}</div>
+        <Heading small={small} pick={part("fonts")}>
+          {t("previewTitle")}
+        </Heading>
+        {!small && <p {...part("text")}>{t("previewText")}</p>}
+        <p className="look-preview__question" {...part("text")}>
+          {t("previewQuestion")}
+        </p>
+        <div className="look-preview__scale" {...part("accent")}>
           {[1, 2, 3, 4, 5].map((step) => (
             <span key={step} className={step === 4 ? "look-preview__step look-preview__step--on" : "look-preview__step"}>
               {step}
             </span>
           ))}
         </div>
-        <span className="look-preview__button">{t("previewStart")}</span>
+        <span className="look-preview__button" {...part("buttons")}>
+          {t("previewStart")}
+        </span>
       </div>
     </div>
   );
 }
 
-function Heading({ small, children }: { small: boolean; children: ReactNode }) {
-  return small ? <b className="look-preview__title">{children}</b> : <h2 className="look-preview__title">{children}</h2>;
+function Heading({ small, pick = {}, children }: { small: boolean; pick?: object; children: ReactNode }) {
+  return small ? (
+    <b className="look-preview__title" {...pick}>
+      {children}
+    </b>
+  ) : (
+    <h2 className="look-preview__title" {...pick}>
+      {children}
+    </h2>
+  );
 }
 
 /** White or dark text, whichever reads better on the colour. */

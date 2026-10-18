@@ -251,11 +251,36 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
     }
   }, [tokens]);
 
-  // The preview says when it has loaded its survey; it then gets the look being edited (W26).
+  // The preview says when it has loaded its survey; it then gets the look being edited (W26), and becomes a map of its
+  // parts: a click on one opens its settings here (W44 A, AWK-69).
+  const [picked, setPicked] = useState<Picked | null>(null);
+  const pickLabels = useMemo(() => {
+    const labels: Record<string, string> = {};
+
+    for (const area of areas) {
+      labels[area.id] = t("clickToEdit", { part: t(area.label) });
+
+      for (const part of area.parts ?? []) {
+        labels[`${area.id}/${part.id}`] = t("clickToEdit", { part: t(part.label) });
+      }
+    }
+
+    return labels;
+  }, [t]);
+
   useEffect(() => {
     const received = (event: MessageEvent) => {
-      if (event.origin === window.location.origin && event.source === frame.current?.contentWindow && (event.data as { type?: string } | null)?.type === "askwerk:preview-ready" && tokens !== null) {
+      if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow) {
+        return;
+      }
+
+      const data = event.data as { type?: string; area?: string; part?: string } | null;
+
+      if (data?.type === "askwerk:preview-ready" && tokens !== null) {
         post({ type: "askwerk:look", tokens });
+        post({ type: "askwerk:pick-mode", labels: pickLabels });
+      } else if (data?.type === "askwerk:pick" && typeof data.area === "string") {
+        setPicked({ area: data.area, ...(typeof data.part === "string" ? { part: data.part } : {}), at: Date.now() });
       }
     };
     window.addEventListener("message", received);
@@ -337,6 +362,7 @@ export function SurveyLook({ api, surveyId, locale, definition, language, onLayo
         onHeaderImage={onHeaderImage}
         onHeaderAlt={onHeaderAlt}
         onGoto={(target) => post({ type: "askwerk:goto", target })}
+        picked={picked}
         status={status}
         notice={notice}
         onGallery={() => setGalleryOpen(true)}
@@ -451,7 +477,11 @@ function Gallery({
   );
 }
 
+/** A part chosen in the preview (W44 A): its area, its part inside Components, and when, so the same part opens again. */
+type Picked = { area: string; part?: string; at: number };
+
 type SideProps = {
+  picked?: Picked | null;
   t: LookText;
   tokens: ThemeTokens;
   base: { tokens: ThemeTokens; name: string; lookBase: string | null };
@@ -478,10 +508,36 @@ const tabAreas: Record<Exclude<LookTab, "style">, readonly string[]> = { parts: 
  * The look's settings beside the preview (W33): what the look is and where it came from, the gallery and the rare
  * actions, then four tabs. Style holds the choices most people make, as tiles; the other tabs hold every detail.
  */
-function LookSide({ t, tokens, base, definition, language, api, status, notice, onChange, onLayout, onHeaderImage, onHeaderAlt, onGoto, onGallery, onSaveForOrg }: SideProps) {
+function LookSide({ t, tokens, base, definition, language, api, status, notice, onChange, onLayout, onHeaderImage, onHeaderAlt, onGoto, onGallery, onSaveForOrg, picked = null }: SideProps) {
   const [tab, setTab] = useState<LookTab>("style");
   const [open, setOpen] = useState<string | null>(null);
   const [openPart, setOpenPart] = useState<string | null>(null);
+  const areasBox = useRef<HTMLDivElement>(null);
+
+  // A part chosen in the preview (W44 A): its tab, its area and part open, and it scrolls into view with a short flash.
+  useEffect(() => {
+    if (picked === null) {
+      return;
+    }
+
+    const holder = (Object.entries(tabAreas) as [Exclude<LookTab, "style">, readonly string[]][]).find(([, ids]) => ids.includes(picked.area));
+
+    if (holder === undefined) {
+      return;
+    }
+
+    setTab(holder[0]);
+    setOpen(picked.area === "mail-pdf" ? null : picked.area);
+    setOpenPart(picked.part ?? null);
+    const timer = window.setTimeout(() => {
+      const row = areasBox.current?.querySelector<HTMLElement>(picked.part === undefined ? `[data-area="${picked.area}"]` : `[data-part="${picked.part}"]`);
+      row?.scrollIntoView?.({ block: "start", behavior: "smooth" });
+      row?.classList.add("sl-picked");
+      window.setTimeout(() => row?.classList.remove("sl-picked"), 1600);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [picked]);
   const [naming, setNaming] = useState(false);
   const changes = changesBetween(base.tokens, tokens);
   const id = useId();
@@ -512,7 +568,7 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
     const isOpen = open === area.id;
 
     return (
-      <div key={area.id} className={isOpen ? "sl-area sl-area--open" : "sl-area"}>
+      <div key={area.id} className={isOpen ? "sl-area sl-area--open" : "sl-area"} data-area={area.id}>
         <button
           type="button"
           className="sl-area__row"
@@ -539,7 +595,7 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
               const partOpen = openPart === part.id;
 
               return (
-                <div key={part.id} className="sl-part">
+                <div key={part.id} className="sl-part" data-part={part.id}>
                   <button
                     type="button"
                     className="sl-area__row sl-part__row"
@@ -619,7 +675,7 @@ function LookSide({ t, tokens, base, definition, language, api, status, notice, 
         value={tab}
         onChange={(next) => setTab(next as LookTab)}
       />
-      <div className="sl-areas">
+      <div className="sl-areas" ref={areasBox}>
         {tab === "style" ? (
           <div className="sl-tab">
             <StyleTab t={t} tokens={tokens} api={api} onChange={onChange} />

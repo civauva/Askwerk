@@ -92,6 +92,21 @@ describe("Administration → Looks (AWK-17, W10 A, W32): stupid simple", () => {
     expect(preview.getByRole("img", { name: "Logo" }).getAttribute("src")).toMatch(/^\/api\/app\/assets\/a\d+$/);
   });
 
+  it("opens the field of a part clicked in the preview, under More when it lives there (W44 A, AWK-69)", async () => {
+    await shown();
+    const preview = screen.getByRole("region", { name: "Preview" });
+    const card = preview.querySelector<HTMLElement>("[data-pick='surface']")!;
+
+    expect(card.getAttribute("data-pick-label")).toBe("Cards · click to edit");
+    expect(editor().queryByRole("group", { name: "Colours" })).toBeNull();
+    fireEvent.click(card);
+
+    expect(editor().getByRole("button", { name: "Less" }).getAttribute("aria-expanded")).toBe("true");
+    await waitFor(() => expect(document.querySelector("[data-field='surface']")?.classList.contains("look-picked")).toBe(true));
+    fireEvent.click(preview.querySelector<HTMLElement>("[data-pick='logo']")!);
+    await waitFor(() => expect(document.querySelector("[data-field='logo']")?.classList.contains("look-picked")).toBe(true));
+  });
+
   it("changes a detail under More, and the preview follows", async () => {
     const { client } = await shown();
     fireEvent.click(editor().getByRole("button", { name: "More" }));

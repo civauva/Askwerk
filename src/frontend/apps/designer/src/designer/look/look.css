@@ -1425,3 +1425,27 @@
   font-size: 12px;
   color: var(--aw-graphite);
 }
+
+/* A part chosen in the preview (W44 A, AWK-69) flashes once where its settings are. */
+.sl-picked > .sl-area__row {
+  animation: sl-picked 1.6s ease-out;
+}
+
+@keyframes sl-picked {
+  0%,
+  40% {
+    background: color-mix(in srgb, var(--aw-signal) 14%, var(--aw-surface));
+    box-shadow: inset 3px 0 0 var(--aw-signal);
+  }
+  100% {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sl-picked > .sl-area__row {
+    animation: none;
+    box-shadow: inset 3px 0 0 var(--aw-signal);
+  }
+}
