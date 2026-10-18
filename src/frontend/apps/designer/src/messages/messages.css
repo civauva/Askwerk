@@ -63,6 +63,9 @@
 }
 
 .messages-work > .messages-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   position: static;
   height: auto;
   min-height: 0;
@@ -99,4 +102,8 @@
   .messages-work > .messages-preview {
     min-height: 0;
   }
+}
+
+.messages-work > .messages-preview > .look-button {
+  align-self: flex-start;
 }

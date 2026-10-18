@@ -38,7 +38,9 @@ test("every page starts at the same place, survey pages show a breadcrumb, and t
 
   for (const [path, maxWidth] of Object.entries(widths)) {
     await page.goto(path);
-    await expect(page.locator("main").first()).toBeVisible();
+    // The shell and the page's own heading, so nothing is measured while the app still loads.
+    await expect(page.locator("aside.shell-side")).toBeVisible();
+    await expect(page.locator("main h1").first()).toBeVisible();
     expect({ path, ...(await measure(page)) }).toEqual({ path, left: 0, padding: "32px", top: "28px", maxWidth, margin: "0px" });
   }
 

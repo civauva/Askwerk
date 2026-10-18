@@ -124,16 +124,27 @@
   white-space: normal;
 }
 
+/* At 1280 px (W43, AWK-66): e-mails stay on one line and end in "…" (their full text on hover); a header may wrap
+   between its words; groups may stack, as in the approved mockup. */
 .contacts .aw-grid__table th {
   line-height: 1.3;
 }
 
-.contacts .aw-grid__table td .participants__who {
-  min-width: 96px;
+.contacts .aw-grid__table td .contacts__surveys {
+  min-width: 0;
+  white-space: nowrap;
 }
 
+.contacts .aw-grid__table td .participants__who {
+  min-width: 96px;
+  max-width: 200px;
+}
+
+.contacts .aw-grid__table td .participants__who b,
 .contacts .aw-grid__table td .participants__who span {
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .contacts .contacts__tag {

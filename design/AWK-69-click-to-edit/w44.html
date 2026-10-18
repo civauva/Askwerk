@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W44 (AWK-69, AWK-70): ?s=edit (click a part of the preview to open its editor) | ?s=lang (the DE/EN switch). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W44 Click to edit, language switch</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Serif"; font-weight: 600; src: local("Georgia"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8; --accent: #2f6f4a;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; width: 1440px; background: #dedad2; color: var(--ink); font: 400 14px/1.45 var(--font); }
+  h1.sheet { margin: 0 0 6px; font: 700 24px/1.2 var(--display); } p.intro { margin: 0 0 16px; color: var(--graphite); font-size: 13px; max-width: 1150px; }
+  .opt { margin-bottom: 24px; } .opt h2 { margin: 0 0 2px; font: 700 17px/1.2 var(--display); } .opt p { margin: 0 0 8px; font-size: 13px; color: var(--graphite); max-width: 1150px; }
+  .frame { background: var(--paper); border: 1px solid var(--line-strong); overflow: hidden; }
+  /* edit */
+  .ed { display: grid; grid-template-columns: 340px 1fr; height: 640px; }
+  .side { background: #fff; border-right: 1px solid var(--line); overflow: hidden; }
+  .tabs { display: flex; gap: 18px; padding: 12px 16px 0; border-bottom: 1px solid var(--line); } .tabs span { padding-bottom: 8px; font-size: 13px; color: var(--graphite); } .tabs .on { color: var(--ink); font-weight: 600; box-shadow: inset 0 -2px 0 var(--ink); }
+  .sec { padding: 11px 16px; border-bottom: 1px solid var(--line); font-weight: 600; display: flex; justify-content: space-between; } .sec small { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .sub { padding: 9px 16px 9px 34px; border-bottom: 1px dashed var(--line); display: flex; justify-content: space-between; font-size: 13.5px; } .sub small { color: var(--muted); }
+  .sub.hit { background: #fff4ec; box-shadow: inset 3px 0 0 var(--signal); font-weight: 600; }
+  .fields { padding: 10px 16px 12px 34px; display: grid; gap: 10px; background: #fffaf6; border-bottom: 1px solid var(--line); }
+  .row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--graphite); }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 5px 10px; font: 600 11.5px var(--mono); } .seg .on { background: var(--ink); color: #fff; }
+  .stage { position: relative; background: repeating-conic-gradient(#eeece8 0 25%, #f5f3ef 0 50%) 0 0 / 22px 22px; padding: 14px 28px; }
+  .pbar { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; font-size: 12.5px; }
+  .pick { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-weight: 600; font-size: 12.5px; } .pick.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .survey { background: #fff; border-radius: 12px; padding: 28px 40px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .q { font: 600 21px/1.3 Georgia, serif; margin: 0 0 14px; }
+  .choice { display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 9px; border: 1px solid #d9d4ca; border-radius: 8px; font-size: 15px; } .choice i { width: 18px; height: 18px; border: 2px solid #9a948a; border-radius: 50%; }
+  .btn { display: inline-block; margin-top: 10px; padding: 12px 22px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 600; }
+  .target { position: relative; outline: 2px dashed var(--signal); outline-offset: 6px; border-radius: 8px; cursor: pointer; }
+  .label { position: absolute; top: -18px; right: 10px; padding: 3px 9px; background: var(--signal); color: #fff; font: 600 12px var(--font); border-radius: 5px; white-space: nowrap; }
+  .soft { position: relative; outline: 1px solid color-mix(in srgb, var(--signal) 45%, transparent); outline-offset: 4px; border-radius: 6px; }
+  .cursor { position: absolute; width: 0; height: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 18px solid var(--ink); transform: rotate(-28deg); }
+  /* lang */
+  .lgrid { display: grid; grid-template-columns: 180px repeat(3, 1fr); gap: 0; }
+  .lgrid > div { padding: 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; min-height: 76px; }
+  .lgrid .h { font: 500 11px var(--mono); letter-spacing: .06em; color: var(--muted); min-height: 40px; }
+  .light { background: #fff; } .warm { background: #fbf4ea; } .dark { background: linear-gradient(180deg, #2c3e57, #4d5f7a); color: #fff; }
+  .dark .who { color: #fff; } .who { font-weight: 600; font-size: 14px; flex: 1; }
+  /* A: soft thumb */
+  .sa { display: inline-flex; padding: 2px; gap: 2px; border-radius: 999px; background: color-mix(in srgb, currentColor 9%, transparent); }
+  .sa span { padding: 5px 11px; border-radius: 999px; font: 600 12px/1 var(--font); letter-spacing: .02em; opacity: .65; }
+  .sa .on { opacity: 1; background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+  /* B: words */
+  .sb { display: inline-flex; gap: 14px; font: 600 12.5px/1 var(--font); letter-spacing: .04em; }
+  .sb span { padding: 6px 0; opacity: .55; } .sb .on { opacity: 1; box-shadow: inset 0 -2px 0 currentColor; }
+  /* C: menu */
+  .sc { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); border-radius: 8px; font: 600 12.5px/1 var(--font); }
+  .sc svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .menu { position: absolute; top: calc(100% + 6px); right: 0; width: 150px; padding: 5px; background: #fff; color: var(--ink); border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.15); z-index: 2; font-weight: 400; }
+  .menu div { padding: 7px 9px; border-radius: 5px; display: flex; justify-content: space-between; } .menu .on { background: var(--soft); font-weight: 600; }
+</style>
+</head>
+<body>
+<script>
+const s = new URLSearchParams(location.search).get("s") || "edit";
+const opt = (t, p, inner) => `<div class="opt"><h2>${t}</h2><p>${p}</p><div class="frame">${inner}</div></div>`;
+let html = "";
+if (s === "edit") {
+  const side = `<div class="side"><div class="tabs"><span>Style</span><span class="on">Parts</span><span>Pages</span><span>Email &amp; PDF</span></div>
+    <div class="sec">▸ Colours<small>Accent · Background</small></div><div class="sec">▸ Type<small>Serif · Sans</small></div><div class="sec">▸ Shape &amp; spacing<small>Rounded · Normal</small></div><div class="sec">▾ Components<small>9 parts</small></div>
+    <div class="sub">▸ Question text<small>L</small></div><div class="sub hit">▾ Choices<small>Boxes</small></div>
+    <div class="fields"><div class="row">Style <span class="seg"><span class="on">Boxes</span><span>Pills</span><span>Tiles</span></span></div><div class="row">Columns <span class="seg"><span class="on">1</span><span>2</span><span>Auto</span></span></div><div class="row">Selected <span class="seg"><span>Accent</span><span class="on">Fill</span></span></div></div>
+    <div class="sub">▸ Buttons<small>Filled</small></div><div class="sub">▸ Progress<small>Bar</small></div></div>`;
+  const survey = (target, soft) => `<div class="survey"><p class="q ${soft ? "soft" : ""}">How did you travel here?</p>
+    <div class="${target}"><span class="label">Choices · click to edit</span>${["Car", "Train and bus", "On foot", "Bicycle"].map((c) => `<div class="choice"><i></i>${c}</div>`).join("")}</div>
+    <span class="btn ${soft ? "soft" : ""}">Next</span></div>`;
+  html = `<h1 class="sheet">W44 · AWK-69 · Click a part of the preview to open its editor</h1><p class="intro">The same in the survey's Look and in Administration → Looks. Pointing at a part outlines it and names it; a click opens its tab and section on the left (here Parts → Components → Choices) and scrolls it into view. Parts: header, logo, title, intro, question text, choices, text fields, buttons, progress, page background, thank-you.</p>`
+    + opt("A · Always on", "Every part of the preview answers to a click. To try the survey itself (choose answers, go to the next page) use Preview in a new tab or the side panel, as today.",
+      `<div class="ed">${side}<div class="stage"><div class="pbar"><span class="seg"><span class="on">Web</span><span>Email</span><span>PDF</span></span><span style="flex:1"></span><span style="color:var(--graphite)">Click a part to edit it</span></div>${survey("target", false)}</div></div>`)
+    + opt("B · A pointer mode", "A small \"Point to edit\" switch in the preview's bar (on by default). On: parts outline faintly and a click opens their editor. Off: the preview works like the survey, answers can be chosen.",
+      `<div class="ed">${side}<div class="stage"><div class="pbar"><span class="seg"><span class="on">Web</span><span>Email</span><span>PDF</span></span><span style="flex:1"></span><span class="pick on">⌖ Point to edit</span></div>${survey("target", true)}</div></div>`);
+}
+if (s === "lang") {
+  const globe = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
+  const a = '<span class="sa"><span>DE</span><span class="on">EN</span></span>';
+  const b = '<span class="sb"><span>DE</span><span class="on">EN</span></span>';
+  const c = (open) => `<span class="sc">${globe}EN ▾${open ? '<span class="menu"><div>Deutsch<small>DE</small></div><div class="on">English<small>EN</small></div></div>' : ""}</span>`;
+  const row = (label, sw, open = false) => `<div class="h" style="min-height:76px;font:600 13px var(--font);color:var(--ink);letter-spacing:0">${label}</div><div class="light"><span class="who">Survey settings</span>${sw(false)}</div><div class="warm"><span class="who">Direct Mind GmbH</span>${sw(false)}</div><div class="dark"><span class="who">Direct Mind GmbH</span>${sw(open)}</div>`;
+  html = `<h1 class="sheet">W44 · AWK-70 · The language switch</h1><p class="intro">Today: a framed bar whose black half ignores the rounded frame. Shown in the app bar (white), on a light survey header and on a dark one (Panorama). The chosen one replaces every DE/EN switch: the app bar, the survey header, Messages and the editors; the same pattern can serve the other two-to-three-way switches (Web/Email/PDF, Phone/Tablet/Desktop).</p>
+    <div class="frame" style="overflow:visible;padding-bottom:90px"><div class="lgrid"><div class="h"></div><div class="h light">APP BAR</div><div class="h warm">SURVEY · LIGHT</div><div class="h dark" style="color:#fff">SURVEY · DARK</div>
+    ${row("Today", () => '<span class="seg" style="border-color:currentColor"><span>DE</span><span class="on">EN</span></span>')}
+    ${row("A · Soft thumb", () => a)}
+    ${row("B · Words, the chosen one underlined", () => b)}
+    ${row("C · A menu with the language's name", (open) => c(open), true)}
+    </div></div><p class="intro" style="margin-top:12px">A: a quiet track, the chosen language on a white raised thumb, follows light and dark. B: lightest, two words, the chosen one bold and underlined. C: one control for any number of languages, the full names in the menu; one more click to switch.</p>`;
+}
+document.body.innerHTML = html;
+</script>
+</body>
+</html>

@@ -87,7 +87,7 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
       cell: (contact) => (
         <span className="participants__who">
           <b>{contact.name ?? "—"}</b>
-          <span>{contact.email}</span>
+          <span title={contact.email}>{contact.email}</span>
         </span>
       ),
     },
@@ -107,7 +107,17 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
       ),
     },
     ...(fieldColumn === undefined ? [] : [{ key: `field-${fieldColumn}`, header: fieldLabel(fieldColumn), cell: (contact: ContactItem) => contact.fields[fieldColumn] ?? "—" }]),
-    { key: "surveys", header: t("surveys"), cell: (contact) => <span className="participants__small">{t("surveysCount", { count: contact.surveys, answered: contact.answered })}</span> },
+    // Two short lines, like the person (W43, AWK-66): how many surveys, then how many answered.
+    {
+      key: "surveys",
+      header: t("surveys"),
+      cell: (contact) => (
+        <span className="participants__who contacts__surveys">
+          <b>{contact.surveys}</b>
+          <span>{t("answeredOf", { answered: contact.answered })}</span>
+        </span>
+      ),
+    },
     { key: "last", header: t("lastInvited"), cell: (contact) => <span className="participants__small">{contact.lastInvitedAt === null ? "—" : day(contact.lastInvitedAt)}</span> },
     {
       key: "invitable",

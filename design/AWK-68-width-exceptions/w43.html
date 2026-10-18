@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W43 (AWK-68): exceptions to E (lists up to 1,600 px) at 2560 x 1300. ?v=a|b|c -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W43 Width exceptions</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 2560px; height: 1300px; overflow: hidden; background: var(--paper); color: var(--ink); font: 400 14px/1.45 var(--font); }
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: 232px; background: #fff; border-right: 1px solid var(--line); }
+  .side-head { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 20px; border-bottom: 1px solid var(--line); font: 700 19px/1 var(--display); } .side-head b { color: var(--signal); }
+  .nav { padding: 8px 22px; color: var(--graphite); } .nav.on { margin: 0 12px; padding: 8px 10px; background: var(--soft); border-radius: 6px; color: var(--ink); font-weight: 600; }
+  .bar { position: fixed; left: 232px; right: 0; top: 0; height: 56px; display: flex; align-items: center; padding: 0 32px; background: #fff; border-bottom: 1px solid var(--line); }
+  .crumbs { font: 700 17px/1.2 var(--display); } .grow { flex: 1; } .btn { padding: 8px 14px; border-radius: 6px; background: var(--signal); color: #fff; font-weight: 600; font-size: 13px; }
+  .main { position: absolute; left: 232px; top: 56px; right: 0; padding: 28px 32px; }
+  .page { max-width: var(--w); }
+  h1 { margin: 0 0 4px; font: 700 28px/1.1 var(--display); } .of { margin: 0 0 18px; color: var(--graphite); }
+  .tools { display: flex; gap: 8px; margin-bottom: 18px; } .in { width: 300px; padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; color: var(--muted); } .pill { padding: 7px 13px; border: 1px solid var(--line-strong); border-radius: 999px; font-weight: 600; font-size: 13px; background: #fff; } .pill.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .strip { height: 64px; background: linear-gradient(180deg, #c97b5a, #6f6386); }
+  .strip.p { background: #fff; border-bottom: 1px solid var(--line); } .strip.g { background: #e6e4e0; }
+  .what { padding: 14px 16px; } .what h3 { margin: 0 0 6px; font: 700 20px/1.15 var(--display); } .what p { margin: 0 0 8px; color: var(--graphite); font-size: 13px; } .size { font-size: 12.5px; color: var(--graphite); }
+  .ans { margin: 0 16px 14px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; } .big { font: 700 26px/1 var(--display); } .scale { height: 8px; margin-top: 10px; border-radius: 4px; background: linear-gradient(90deg, #c94a3a 0 15%, #e2a04c 15% 25%, #d8d1c3 25% 40%, #7fb38f 40% 55%, #2f6f4a 55%); }
+  .foot { display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--graphite); } .chip { padding: 2px 8px; border: 1px solid var(--line-strong); border-radius: 999px; }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  th, td { height: 44px; padding: 0 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13.5px; } th { font: 500 11px var(--mono); letter-spacing: .06em; color: var(--muted); background: var(--paper); }
+  .edge { position: absolute; top: 56px; bottom: 0; border-left: 2px dashed #d1440f88; } .edge span { position: absolute; top: 8px; left: 6px; font: 600 12px var(--mono); color: var(--signal); white-space: nowrap; }
+  .note { position: fixed; right: 28px; bottom: 24px; max-width: 520px; padding: 12px 15px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 7px; font-size: 14px; line-height: 1.5; color: #4a3d00; } .tag { position: fixed; right: 28px; top: 70px; padding: 4px 10px; background: var(--ink); color: #fff; font: 600 13px var(--mono); border-radius: 4px; }
+</style>
+</head>
+<body>
+<script>
+const v = new URLSearchParams(location.search).get("v") || "a";
+const titles = ["Your stay in the mountains", "Where is your next journey?", "Supplier assessment 2026", "How well does your online banking work?", "Employee pulse Q4", "Trade fair stand 2026", "Café visit", "Board review", "Site inspection", "Night event"];
+const strips = ["", "", "p", "g", "p", "", "g", "p", "", "g"];
+const card = (t, i) => `<div class="card"><div class="strip ${strips[i]}"></div><div class="what"><h3>${t}</h3><p>Four short pages. Thank you for helping us.</p><span class="size">10 questions · 4 pages · about 3 min</span></div><div class="ans"><div class="big">3.8 <small style="font:400 13px var(--font)">of 5</small></div><div class="scale"></div></div><div class="foot"><span class="chip">Published · v1</span>Published 15 Oct</div></div>`;
+const cards = `<div class="cards">${titles.map(card).join("")}</div>`;
+const rows = `<table><tr><th>TITLE</th><th>STATUS</th><th>RESPONSES</th><th>CHANGED</th><th>CREATED BY</th></tr>${titles.map((t) => `<tr><td><b>${t}</b></td><td>Published · v1</td><td>120</td><td>16 Oct</td><td>Anna Berger</td></tr>`).join("")}</table>`;
+const views = {
+  a: ["1600px", cards, "A · No exceptions", "Surveys' cards stop at 1,600 px like every list: five cards per row, the rest of the screen stays paper."],
+  b: ["none", cards, "B · Card grids use the full width", "Surveys and Templates in Cards view fill the screen (seven cards per row at 2560 px); their List view, and every other list, stays at 1,600 px. Cards are a gallery, so more of them at once helps; a table does not get easier to read wider."],
+  c: ["none", rows, "C · Surveys and Templates full width in both views", "The Surveys and Templates pages use the whole width, List view included; all other lists stop at 1,600 px. The table's columns spread far apart at 2560 px."],
+};
+const [w, body, title, note] = views[v];
+document.body.innerHTML = `<div class="side"><div class="side-head">ask<b>werk</b></div><div style="height:12px"></div><div class="nav on">Surveys</div><div class="nav">Templates</div><div class="nav">Organisation</div><div class="nav">Contacts</div></div>
+<div class="bar"><span class="crumbs">Surveys</span><span class="grow"></span><span class="btn">+ New survey</span></div>
+<div class="main" style="--w:${w}"><div class="page"><h1>Surveys</h1><p class="of">of Direct Mind GmbH</p><div class="tools"><span class="in">Search surveys</span><span class="pill on">All 10</span><span class="pill">Drafts 1</span><span class="pill">Published 8</span><span class="pill">Closed 1</span></div>${body}</div></div>
+<div class="edge" style="left:${232 + 32 + 1600}px"><span>1,600 px</span></div><div class="tag">${v.toUpperCase()}</div><div class="note"><b>${title}</b><br>${note}</div>`;
+</script>
+</body>
+</html>

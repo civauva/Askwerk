@@ -46,19 +46,26 @@ internal static class SurveyKeyResults
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(surveys);
-        var published = surveys.Where(survey => survey.Published).Select(survey => survey.SurveyId).ToArray();
+        // Only the key questions of the collecting surveys (W43, AWK-64): a card shows nothing else, and counting every
+        // question of every survey made the cards wait.
+        var asked = surveys.Where(survey => survey.Published).SelectMany(survey => KeysOf(survey.Definition).Questions.Select(question => (survey.SurveyId, question.Id))).ToArray();
         var values = new List<ValueRow>();
         var options = new List<OptionRow>();
         var answered = new List<AnsweredRow>();
 
-        if (published.Length > 0)
+        if (asked.Length > 0)
         {
             const string From = """
 
                 FROM answer a JOIN survey_question q ON q.id = a.question_id JOIN response r ON r.id = a.response_id
+                JOIN unnest(@surveys, @keys) AS k(survey, key) ON k.survey = r.survey_id AND k.key = q.question_key
                 """;
             const string Where = " WHERE r.survey_id = ANY(@surveys)";
-            NpgsqlParameter Surveys() => new("surveys", NpgsqlDbType.Array | NpgsqlDbType.Uuid) { Value = published };
+            object[] Surveys() =>
+            [
+                new NpgsqlParameter("surveys", NpgsqlDbType.Array | NpgsqlDbType.Uuid) { Value = asked.Select(pair => pair.SurveyId).ToArray() },
+                new NpgsqlParameter("keys", NpgsqlDbType.Array | NpgsqlDbType.Text) { Value = asked.Select(pair => pair.Id).ToArray() },
+            ];
 
             values = await context.Database.SqlQueryRaw<ValueRow>(
                 """SELECT r.survey_id AS "Survey", q.question_key AS "Key", a.number_value::float8 AS "Value", count(*)::int AS "Count" """ + From + Where +
