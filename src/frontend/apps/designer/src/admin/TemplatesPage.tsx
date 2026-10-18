@@ -126,7 +126,7 @@ export function TemplatesPage({
   ];
 
   return (
-    <main className="admin admin--wide" lang={locale}>
+    <main className={view === "cards" ? "admin admin--wide admin--cards" : "admin admin--wide"} lang={locale}>
       <PageBar
         title={t("templates")}
         actions={

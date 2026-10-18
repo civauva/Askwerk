@@ -401,3 +401,9 @@
   color: var(--aw-graphite);
   font-size: 11.5px;
 }
+
+/* Cards are a gallery (W43 B, AWK-68): in Cards view Surveys and Templates use the whole width; List view stays at
+   1,600 px like every list. */
+.surveys.surveys--cards {
+  max-width: none;
+}

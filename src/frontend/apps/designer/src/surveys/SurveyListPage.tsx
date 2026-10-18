@@ -273,7 +273,7 @@ export function SurveyListPage({
   }
 
   return (
-    <main className="surveys" lang={locale}>
+    <main className={view === "cards" ? "surveys surveys--cards" : "surveys"} lang={locale}>
       <PageBar
         title={t("surveys")}
         actions={
