@@ -36,8 +36,9 @@
   text-decoration: none;
 }
 
-.shell-logo span {
-  color: var(--aw-signal);
+/* The logo (W41 B): the tile and "askwerk", as on the sign-in pages. */
+.shell-logo .designer-logo {
+  vertical-align: middle;
 }
 
 .shell-side .aw-menu-anchor {

@@ -7,6 +7,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { roleName } from "../account/ChooseOrganisationPage";
 import { accountMessages } from "../account/messages";
 import { initialsOf } from "../account/ProfileMenu";
+import { Logo } from "../designer/Logo";
 import { shellMessages, type ShellMessageKey } from "./messages";
 import { BarLocale, BarNavigate, BarSlot } from "./PageBar";
 
@@ -171,7 +172,7 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
           </svg>
         </button>
         <span className="shell-logo">
-          Ask<span>werk</span>
+          <Logo />
         </span>
         <span className="shell-top__org">{current?.name}</span>
       </section>
@@ -187,7 +188,7 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
               go("/");
             }}
           >
-            Ask<span>werk</span>
+            <Logo />
           </a>
         </div>
         <Menu

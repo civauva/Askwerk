@@ -31,7 +31,7 @@ describe("AppShell: the sidebar (AWK-38, W29)", () => {
 
     expect(side.getByRole("link", { name: "Surveys" }).getAttribute("aria-current")).toBe("page");
     expect(side.getAllByRole("link").map((link) => link.textContent)).toEqual([
-      "Askwerk",
+      "askwerk",
       "Surveys",
       "Templates",
       "Organisation",
