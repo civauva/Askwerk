@@ -1,6 +1,8 @@
 /* SPDX-License-Identifier: AGPL-3.0-only */
 /* Contacts (W35): the organisation's address book; groups at the side, the list beside them. Values as in the
-   approved mockup design/AWK-48-participants/w35-participants.html (?v=d). */
+   approved mockup design/AWK-48-participants/w35-participants.html (?v=d). Since W40 C (AWK-54,
+   design/AWK-54-side-panels/w40-side-panels.html?v=c) the search runs above both, and both cards reach the bottom of
+   the window: the rows scroll inside the table's card, the pager stays at its foot. */
 .contacts {
   display: grid;
   gap: 18px;
@@ -82,6 +84,7 @@
 .contacts__list {
   display: grid;
   gap: 12px;
+  align-content: start;
   min-width: 0;
 }
 
@@ -135,6 +138,67 @@
 
 .contacts .contacts__tag {
   white-space: normal;
+}
+
+/* W40 C: on a desktop window the page does not scroll; the groups and the table fill the height below the search. */
+@media (min-width: 901px) and (min-height: 600px) {
+  .contacts {
+    box-sizing: border-box;
+    height: calc(100vh - var(--aw-bar-height));
+    padding-bottom: 24px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .contacts .participants__head {
+    margin-bottom: 6px;
+  }
+
+  .contacts__work {
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .contacts__groups-nav {
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  .contacts__list {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .contacts__list > .aw-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .contacts__list > .aw-grid > .aw-grid__card,
+  .contacts__list > .aw-grid > .aw-grid__scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .contacts__list .aw-grid__scroll {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    overflow: auto;
+  }
+
+  .contacts__list .aw-grid__scroll > .aw-grid__table {
+    flex: none;
+  }
+
+  .contacts__list .aw-grid__footer--inside {
+    border-top: 1px solid var(--aw-line);
+  }
 }
 
 @media (max-width: 900px) {

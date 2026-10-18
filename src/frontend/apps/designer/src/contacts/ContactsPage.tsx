@@ -150,6 +150,17 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
         </div>
       </div>
 
+        <div className="participants__tools">
+          <input type="search" className="participants__search" aria-label={t("searchContacts")} placeholder={t("searchContacts")} value={search} onChange={(event) => (setSearch(event.target.value), setPage(1))} />
+          <span className="participants__chips" role="group" aria-label={t("invitable")}>
+            {states.map(([key, label, counted]) => (
+              <button key={label} type="button" aria-pressed={state === key} onClick={() => (setState(key), setPage(1))}>
+                {t(label, { count: list?.counts[counted] ?? 0 })}
+              </button>
+            ))}
+          </span>
+        </div>
+
       <div className="contacts__work">
         <nav className="contacts__groups-nav" aria-label={t("groups")}>
           <p className="import-map__title">{t("groups")}</p>
@@ -197,16 +208,6 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
         </nav>
 
         <div className="contacts__list">
-          <div className="participants__tools">
-            <input type="search" className="participants__search" aria-label={t("searchContacts")} placeholder={t("searchContacts")} value={search} onChange={(event) => (setSearch(event.target.value), setPage(1))} />
-            <span className="participants__chips" role="group" aria-label={t("invitable")}>
-              {states.map(([key, label, counted]) => (
-                <button key={label} type="button" aria-pressed={state === key} onClick={() => (setState(key), setPage(1))}>
-                  {t(label, { count: list?.counts[counted] ?? 0 })}
-                </button>
-              ))}
-            </span>
-          </div>
           {notice !== null && (
             <p role="status" className="participants__notice">
               {notice}

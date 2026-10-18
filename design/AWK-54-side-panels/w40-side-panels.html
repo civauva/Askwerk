@@ -1,0 +1,93 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W40 (AWK-54): a side list next to a table that does not look orphaned. ?v=a|b|c|d|e, Contacts at 1440 x 900. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W40 Side panels</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --surface: #fff; --signal: #d1440f; --soft: #efede8;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 900px; overflow: hidden; background: var(--paper); color: var(--ink); font: 400 14px/1.45 var(--font); }
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: 232px; background: #fff; border-right: 1px solid var(--line); }
+  .side-head { height: 56px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--line); font: 700 21px/1 var(--display); } .side-head span { color: var(--signal); }
+  .org { margin: 12px; display: flex; gap: 9px; align-items: center; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 8px; font-weight: 600; font-size: 13.5px; }
+  .org i { width: 24px; height: 24px; border-radius: 6px; background: var(--ink); color: #fff; display: grid; place-items: center; font: 600 9.5px var(--mono); font-style: normal; }
+  .nav { padding: 7px 22px; color: var(--graphite); } .nav.on { margin: 0 12px; padding: 7px 10px; background: var(--soft); border-radius: 6px; color: var(--ink); font-weight: 600; display: flex; justify-content: space-between; } .nav small { font: 500 11px var(--mono); color: var(--muted); }
+  .grp { margin: 14px 20px 4px; font: 500 10.5px var(--mono); letter-spacing: .08em; color: var(--muted); }
+  .bar { position: fixed; left: 232px; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 32px; background: #fff; border-bottom: 1px solid var(--line); }
+  .crumbs { font: 400 20px/1.2 var(--display); color: var(--graphite); } .crumbs b { font-weight: 700; color: var(--ink); } .crumbs .sep { color: var(--muted); margin: 0 6px; }
+  .grow { flex: 1; } .btn { padding: 8px 14px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-weight: 600; font-size: 13px; white-space: nowrap; } .btn.primary { background: var(--signal); border-color: var(--signal); color: #fff; }
+  .main { position: absolute; left: 232px; right: 0; top: 56px; bottom: 0; padding: 28px 32px 24px; display: flex; flex-direction: column; }
+  h1 { margin: 0; font: 700 28px/1.1 var(--display); } .lead { margin: 6px 0 18px; color: var(--graphite); font-size: 13.5px; }
+  .work { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: start; min-height: 0; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+  .panel { padding: 10px; }
+  .panel .h { margin: 6px 6px 4px; font: 500 10.5px var(--mono); letter-spacing: .08em; color: var(--muted); }
+  .panel .it { padding: 7px 10px; border-radius: 6px; display: flex; justify-content: space-between; } .panel .it.on { background: var(--soft); font-weight: 600; } .panel small { font: 500 11px var(--mono); color: var(--muted); }
+  .panel .add { padding: 7px 10px; color: var(--signal); }
+  .tools { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .input { width: 240px; padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; color: var(--muted); }
+  .pill { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font-weight: 600; font-size: 13px; background: #fff; white-space: nowrap; } .pill.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .pick { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; font-weight: 600; font-size: 13px; } .pick span { color: var(--muted); font-weight: 400; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 14px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; white-space: nowrap; } th { font: 500 10.5px var(--mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase; background: #fff; position: sticky; top: 0; }
+  td b { font-weight: 600; } td small { display: block; color: var(--graphite); font-size: 11.5px; }
+  .chip { padding: 2px 8px; border-radius: 999px; background: var(--soft); font-size: 11.5px; }
+  .foot { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-size: 12.5px; color: var(--graphite); border-top: 1px solid var(--line); }
+  .pager span { display: inline-block; width: 26px; height: 26px; margin-left: 4px; border: 1px solid var(--line-strong); border-radius: 5px; text-align: center; line-height: 24px; }
+  .scroll { overflow: hidden; min-height: 0; flex: 1; }
+  .note { position: fixed; right: 28px; bottom: 22px; max-width: 360px; padding: 10px 13px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 7px; font-size: 12.5px; line-height: 1.45; color: #4a3d00; box-shadow: 0 4px 12px rgba(0,0,0,.08); z-index: 5; }
+  .tag { position: fixed; right: 28px; top: 66px; padding: 3px 9px; background: var(--ink); color: #fff; font: 600 12px var(--mono); border-radius: 4px; z-index: 5; }
+  .rail { border-right: 1px solid var(--line); padding: 10px; background: #fbfaf8; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const v = new URLSearchParams(location.search).get("v") || "a";
+const groups = [["All contacts", "1,284"], ["Customers Q4", "201"], ["Key accounts", "48"], ["Staff", "312"], ["Event Vienna 2026", "530"]];
+const fields = ["External ID", "Department", "Region"];
+const people = [["Lena Gruber","lena.gruber@example.at","CRM-10442","Key accounts","Sales"],["Thomas Huber","t.huber@example.com","CRM-10871","Key accounts","Sales"],["Sarah Novak","sarah.novak@example.org","CRM-11003","Event Vienna 2026","Service"],["Anja Weber","anja.weber@example.de","CRM-11210","Customers Q4","Sales"],["Jakob Steiner","jakob@steiner.example","HR-0077","Staff","IT"],["Maria Pichler","m.pichler@example.at","CRM-11502","Customers Q4","Service"],["Lukas Bauer","l.bauer@example.com","CRM-11688","Key accounts","Sales"],["Eva Hofer","eva.hofer@example.at","HR-0102","Staff","HR"],["David Gruber","d.gruber@example.at","CRM-11730","Customers Q4","Sales"],["Nina Wolf","nina.wolf@example.com","CRM-11801","Event Vienna 2026","Service"],["Paul Lang","p.lang@example.de","HR-0131","Staff","IT"],["Julia Berger","j.berger@example.at","CRM-11902","Key accounts","Sales"],["Simon Moser","s.moser@example.com","CRM-12011","Customers Q4","Service"]];
+const rowsFit = { a: 8, b: 8, c: 13, d: 13, e: 13 }[v];
+const table = `<table><tr><th>Person</th><th>External ID</th><th>Groups</th><th>Department</th><th>Surveys</th><th>Last invited</th><th>Can be invited</th></tr>${people.slice(0, rowsFit).map((p) => `<tr><td><b>${p[0]}</b><small>${p[1]}</small></td><td>${p[2]}</td><td><span class="chip">${p[3]}</span></td><td>${p[4]}</td><td>2 · answered 1</td><td>2 Oct</td><td>Yes</td></tr>`).join("")}</table>`;
+const foot = `<div class="foot"><span>1–50 of 1,284</span><span class="pager"><span>‹</span><span>›</span></span></div>`;
+const panelBody = `<p class="h">GROUPS</p>${groups.map(([g, n], i) => `<div class="it ${i === 0 ? "on" : ""}">${g}<small>${n}</small></div>`).join("")}<div class="add">+ New group</div><p class="h" style="margin-top:14px">FIELDS</p>${fields.map((f) => `<div class="it">${f}</div>`).join("")}`;
+const tools = (extra = "") => `<div class="tools"><span class="input">Search contacts…</span>${extra}<span class="pill on">All</span><span class="pill">Can be invited 1,251</span><span class="pill">Unsubscribed 21</span><span class="pill">Bounced 12</span></div>`;
+let work;
+if (v === "a") {
+  work = `<div class="work"><div class="card panel">${panelBody}</div><div>${tools()}<div class="card">${table}${foot}</div></div></div>`;
+} else if (v === "b") {
+  // B: the panel is as tall as the table; tools above both, so their tops and bottoms meet.
+  work = `${tools(`<span class="grow"></span>`)}<div class="work" style="align-items:stretch"><div class="card panel">${panelBody}</div><div class="card">${table}${foot}</div></div>`;
+} else if (v === "c") {
+  // C: both reach the bottom of the window; the table scrolls inside its card, the pager stays at its foot.
+  work = `${tools()}<div class="work" style="align-items:stretch;flex:1"><div class="card panel">${panelBody}</div><div class="card" style="display:flex;flex-direction:column;min-height:0"><div class="scroll">${table}</div>${foot}</div></div>`;
+} else if (v === "d") {
+  // D: one card, the groups a rail inside it (like a mail app); the card reaches the bottom.
+  work = `${tools()}<div class="card" style="flex:1;display:grid;grid-template-columns:220px minmax(0,1fr);min-height:0;overflow:hidden"><div class="rail panel">${panelBody}</div><div style="display:flex;flex-direction:column;min-height:0"><div class="scroll">${table}</div>${foot}</div></div>`;
+} else {
+  // E: no side list. The group is a picker beside the search; fields are managed under a menu.
+  work = `<div class="tools"><span class="input">Search contacts…</span><span class="pick"><span>Group</span> All contacts · 1,284 ▾</span><span class="pill on">All</span><span class="pill">Can be invited 1,251</span><span class="pill">Unsubscribed 21</span><span class="pill">Bounced 12</span><span class="grow"></span><span class="btn">Groups and fields…</span></div>
+    <div class="card" style="flex:1;display:flex;flex-direction:column;min-height:0"><div class="scroll">${table}</div>${foot}</div>`;
+}
+const notes = {
+  a: "A · Today. The groups panel ends after a few lines while the table goes on below it: the panel looks left behind.",
+  b: "B · Same height. The search and filters run above both, so the panel and the table start on one line and end on one line; the panel's white card is as tall as the table.",
+  c: "C · Fill the window. Both cards reach the bottom of the window; the table scrolls inside its card with the column heads fixed and the pager always visible. The page itself does not scroll.",
+  d: "D · One card with a rail. Groups and fields are a rail inside the table's card, divided by a line, like a mail app. The card reaches the bottom; nothing stands apart.",
+  e: "E · No side list. The group is a picker beside the search (Group: All contacts ▾); groups and fields are managed under one button. The table gets the full width.",
+};
+document.getElementById("app").innerHTML = `<div class="side"><div class="side-head">Ask<span>werk</span></div><div class="org"><i>AG</i>Acme GmbH ▾</div><div class="nav">Surveys</div><div class="nav">Templates</div><div class="grp">ADMINISTRATION</div><div class="nav">Organisation</div><div class="nav">Members</div><div class="nav on">Contacts <small>1,284</small></div><div class="nav">Connections</div><div class="nav">Sign-in</div><div class="nav">Looks</div><div class="nav">Messages</div><div class="nav">Domains</div><div class="nav">Developers &amp; API</div></div>
+  <div class="bar"><span class="crumbs">Administration<span class="sep">›</span><b>Contacts</b></span><span class="grow"></span><span class="btn">Export</span><span class="btn">Import</span><span class="btn primary">+ Add contact</span></div>
+  <div class="main"><h1>Contacts</h1><p class="lead">The organisation's address book: invite the same people to many surveys, keep their fields, respect who unsubscribed.</p>${work}</div>
+  <div class="tag">${v.toUpperCase()}</div><div class="note">${notes[v]}</div>`;
+</script>
+</body>
+</html>
