@@ -108,7 +108,7 @@ describe("SurveyBar (W17, W23)", () => {
     expect(bar.getByRole("button", { name: "Customer satisfaction 2026, click to rename" })).toBeTruthy();
     expect(bar.getByText("Published · v3")).toBeTruthy();
     expect(bar.getByRole("button", { name: "Search" }).getAttribute("aria-keyshortcuts")).toBe("Control+K");
-    expect(bar.getByRole("button", { name: "EN" }).getAttribute("aria-pressed")).toBe("true");
+    expect(bar.getByRole("button", { name: /: English$/ })).toBeTruthy();
     expect(bar.getByRole("button", { name: /^Preview/ })).toBeTruthy();
     expect(bar.getByRole("button", { name: "AB" })).toBeTruthy();
     expect(bar.queryByRole("button", { name: "Survey settings" })).toBeNull();

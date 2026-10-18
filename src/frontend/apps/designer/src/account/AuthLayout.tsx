@@ -4,6 +4,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import type { ReactNode } from "react";
 import { Logo } from "../designer/Logo";
 import { accountMessages } from "./messages";
+import { LanguageMenu } from "@askwerk/ui";
 
 type AuthLayoutProps = {
   locale: Locale;
@@ -21,13 +22,7 @@ export function AuthLayout({ locale, onLocaleChange, children }: AuthLayoutProps
         <header className="auth__top">
           <Logo />
           {onLocaleChange !== undefined && (
-            <span className="auth__segment" role="group" aria-label={t("language")}>
-              {(["de", "en"] as const).map((language) => (
-                <button key={language} type="button" aria-pressed={locale === language} onClick={() => onLocaleChange(language)}>
-                  {language.toUpperCase()}
-                </button>
-              ))}
-            </span>
+            <LanguageMenu label={t("language")} languages={["de", "en"]} value={locale} onChange={(language) => onLocaleChange(language as Locale)} />
           )}
         </header>
         <div className="auth__ruler" aria-hidden="true">

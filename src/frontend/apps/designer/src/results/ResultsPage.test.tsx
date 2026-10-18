@@ -108,7 +108,8 @@ describe("Results (AWK-24, W11): overview per question", () => {
     await choose("Status", "Partial");
     await choose("Time", "Last 7 days");
     await choose("Version", "Version 1");
-    fireEvent.click(screen.getByRole("button", { name: "DE" }));
+    fireEvent.click(screen.getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
 
     await waitFor(() => expect(client.calls.at(-1)?.[0]).toBe("overview"));
     const [, surveyId, filter, language] = client.calls.at(-1)!;

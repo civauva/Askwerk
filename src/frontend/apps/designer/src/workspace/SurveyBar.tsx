@@ -2,7 +2,7 @@
 import "./workspace.css";
 import type { SurveysClient, SurveySummary } from "@askwerk/app-client";
 import { createTranslator, type Translate } from "@askwerk/schema";
-import { Dialog, DialogActions } from "@askwerk/ui";
+import { Dialog, DialogActions, LanguageMenu } from "@askwerk/ui";
 import { useId, useState, type ReactNode } from "react";
 import { Logo } from "../designer/Logo";
 import { PreviewMenu } from "../designer/Preview";
@@ -264,13 +264,7 @@ export function SurveyBar({
         </button>
       )}
       {languages !== undefined && languages.length > 1 && onLanguage !== undefined && (
-        <span className="designer-segment" role="group" aria-label={t("language")}>
-          {languages.map((each) => (
-            <button key={each} type="button" aria-pressed={language === each} onClick={() => onLanguage(each)}>
-              {each.toUpperCase()}
-            </button>
-          ))}
-        </span>
+        <LanguageMenu label={t("language")} languages={languages} value={language ?? languages[0]!} onChange={onLanguage} />
       )}
       {languageNote}
       <PreviewMenu t={t} onSidePanel={() => onPreview("panel")} onNewTab={() => onPreview("tab")} onPdf={() => onPreview("pdf")} />

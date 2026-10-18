@@ -38,7 +38,8 @@ describe("Welcome page (W8 H)", () => {
   it("switches the survey language", async () => {
     renderRunner();
 
-    fireEvent.click(await screen.findByRole("button", { name: "DE" }));
+    fireEvent.click(await screen.findByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
 
     expect(await screen.findByRole("heading", { level: 1, name: "Kundenzufriedenheit 2026" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Umfrage starten" })).toBeTruthy();

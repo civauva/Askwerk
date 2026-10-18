@@ -9,6 +9,7 @@ export { QrCode, qrSvg } from "./QrCode";
 export { Skeleton } from "./Skeleton";
 export { StatusPill } from "./StatusPill";
 export { Icon, RowTools, type RowTool } from "./RowTools";
+export { LanguageMenu, languageName } from "./LanguageMenu";
 export { type IconName } from "./icons/lucide";
 export { DataGrid, dataGridTexts, pageItems, pageSizes, sortFromParam, sortToParam, type DataGridColumn, type DataGridMore, type DataGridPaging, type DataGridSelection, type DataGridSort, type DataGridTexts } from "./DataGrid";
 export { CodeInput } from "./CodeInput";

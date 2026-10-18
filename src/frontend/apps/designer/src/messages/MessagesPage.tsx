@@ -4,7 +4,7 @@ import "./messages.css";
 import { DeviceSwitch, deviceWidth, ZoomBox, type Device } from "../designer/ZoomBox";
 import { ApiError, type EmailPreview, type MessageKind, type MessageText, type MessagesClient, type Texts } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox } from "@askwerk/ui";
+import { ComboBox, LanguageMenu } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { messagesMessages, type MessagesMessageKey } from "./messages";
 import { PageBar } from "../shell/PageBar";
@@ -136,12 +136,8 @@ function Editor({ t, locale, client, message, surveys, saveDelayMs, onSaved }: E
   return (
     <>
       <section className="look-editor" aria-label={t("message")}>
-        <span className="designer-segment look-row" role="group" aria-label={t("language")}>
-          {languages.map((each) => (
-            <button key={each} type="button" className={each === language ? "look-button look-button--on" : "look-button"} aria-pressed={each === language} onClick={() => setLanguage(each)}>
-              {each.toUpperCase()}
-            </button>
-          ))}
+        <span className="look-row">
+          <LanguageMenu label={t("language")} languages={languages} value={language} onChange={(each) => setLanguage(each as (typeof languages)[number])} />
         </span>
         {message.isDefault && status === "saved" && <p className="look-note">{t("askwerkText")}</p>}
         <div className="look-field">

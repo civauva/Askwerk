@@ -37,24 +37,6 @@
   font-size: 21px;
 }
 
-.auth__segment {
-  display: inline-flex;
-  border: 1px solid var(--aw-line-strong);
-  border-radius: var(--aw-radius-control);
-}
-
-.auth__segment button {
-  border: 0;
-  background: transparent;
-  padding: 7px 12px;
-  font: 600 12px/1 var(--aw-font-mono);
-  cursor: pointer;
-}
-
-.auth__segment button[aria-pressed="true"] {
-  background: var(--aw-ink);
-  color: var(--aw-paper);
-}
 
 /* The measuring rule appears under the logo only on phones; the panel carries it on wide screens. */
 .auth__ruler {

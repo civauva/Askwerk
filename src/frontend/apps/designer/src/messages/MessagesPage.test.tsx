@@ -30,7 +30,8 @@ describe("Messages (AWK-17 step 6, W10 D): stupid simple", () => {
     expect(kinds.getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Invitation", "Reminder", "Thank you"]);
     expect((editor().getByRole("textbox", { name: "Subject" }) as HTMLInputElement).value).toBe("{organisation}: your opinion counts");
     expect(editor().getByText("Askwerk's text. Change it to use your own.")).toBeTruthy();
-    fireEvent.click(editor().getByRole("button", { name: "DE" }));
+    fireEvent.click(editor().getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
     expect((editor().getByRole("textbox", { name: "Subject" }) as HTMLInputElement).value).toBe("{organisation}: Ihre Meinung zählt");
   });
 

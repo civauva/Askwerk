@@ -2,7 +2,7 @@
 import "./account.css";
 import { ApiError, type AuthClient, type SessionState, type SetupEmail } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
-import { ComboBox } from "@askwerk/ui";
+import { ComboBox, LanguageMenu } from "@askwerk/ui";
 import { useId, useState, type ReactNode } from "react";
 import { Logo } from "../designer/Logo";
 import { accountMessages, type AccountMessageKey } from "./messages";
@@ -165,13 +165,7 @@ export function SetupWizard({ client, locale, baseAddress, timeZone, onDone, onL
         <span className="auth__kicker">{t("setup")}</span>
         <span className="wizard__grow" />
         {onLocaleChange !== undefined && (
-          <span className="auth__segment" role="group" aria-label={t("language")}>
-            {(["de", "en"] as const).map((language) => (
-              <button key={language} type="button" aria-pressed={locale === language} onClick={() => onLocaleChange(language)}>
-                {language.toUpperCase()}
-              </button>
-            ))}
-          </span>
+          <LanguageMenu label={t("language")} languages={["de", "en"]} value={locale} onChange={(language) => onLocaleChange(language as Locale)} />
         )}
       </header>
       <div className="wizard__body">

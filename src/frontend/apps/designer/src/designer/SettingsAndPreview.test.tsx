@@ -58,9 +58,11 @@ describe("Welcome and thank-you pages in the page list (W23; were in the setting
 
     fireEvent.click(outline().getByRole("button", { name: /^Welcome page/ }));
     fireEvent.change(canvas().getByRole("textbox", { name: "Welcome title" }), { target: { value: "Customer satisfaction 2026" } });
-    fireEvent.click(bar().getByRole("button", { name: "DE" }));
+    fireEvent.click(bar().getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
     fireEvent.change(canvas().getByRole("textbox", { name: "Welcome title" }), { target: { value: "Kundenzufriedenheit 2026" } });
-    fireEvent.click(bar().getByRole("button", { name: "EN" }));
+    fireEvent.click(bar().getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /English/ }));
     fireEvent.click(outline().getByRole("button", { name: "Thank-you page" }));
     expect((canvas().getByRole("textbox", { name: "Thank-you text" }) as HTMLInputElement).value).toBe("Thank you.");
     fireEvent.change(canvas().getByRole("textbox", { name: "Thank-you text" }), { target: { value: "" } });
@@ -111,7 +113,8 @@ describe("Preview (AWK-22, W9 B and C, M5 B)", () => {
   it("opens the survey as a PDF to print, in the language being edited (AWK-17 step 7)", async () => {
     const openWindow = vi.fn();
     await loaded(new FakeDesignerApi(), openWindow);
-    fireEvent.click(bar().getByRole("button", { name: "DE" }));
+    fireEvent.click(bar().getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
 
     choosePreview("As PDF");
 

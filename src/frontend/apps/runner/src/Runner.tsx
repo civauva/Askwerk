@@ -2,7 +2,7 @@
 import "./runner.css";
 import { ApiError, type AnswerValue, type Answers, type RunClient, type RunResponse } from "@askwerk/app-client";
 import { createTranslator, route, type Question, type SurveyDefinition, type ThemeTokens, type TranslatedText } from "@askwerk/schema";
-import { hostLookVariables, type HostLook } from "@askwerk/ui";
+import { hostLookVariables, type HostLook, LanguageMenu } from "@askwerk/ui";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { runnerMessages } from "./messages";
 import { AssetUrl, QuestionField, textOf } from "./QuestionField";
@@ -256,13 +256,7 @@ function SurveyScreens({ client, surveyId, initialLocale, reducedMotion = false,
   const steps = way.flatMap((routed, pageIndex) => routed.questions.map((question, index) => ({ pageIndex, index, question })));
   const answerable = steps.filter((step) => step.question.type !== "text-block" && step.question.type !== "image");
   const languageSwitch = survey.languages.length > 1 && (
-    <span className="run-seg" role="group" aria-label={t("language")}>
-      {survey.languages.map((code) => (
-        <button key={code} type="button" aria-pressed={language === code} onClick={() => setLanguage(code)}>
-          {code.toUpperCase()}
-        </button>
-      ))}
-    </span>
+    <LanguageMenu label={t("language")} languages={survey.languages} value={language} onChange={setLanguage} className="run-language" />
   );
 
   /** Only answered questions go to the server; empty values are left out. */

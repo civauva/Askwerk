@@ -50,8 +50,8 @@ describe("Designer main screen (M1)", () => {
 
     expect(bar.getByText("Customer satisfaction 2026")).toBeTruthy();
     expect(bar.getByText("Draft · saved")).toBeTruthy();
-    expect(bar.getByRole("button", { name: "EN" }).getAttribute("aria-pressed")).toBe("true");
-    expect(bar.getByRole("button", { name: "DE" }).getAttribute("aria-pressed")).toBe("false");
+    expect(bar.getByRole("button", { name: /: English$/ })).toBeTruthy();
+    expect(bar.queryByRole("button", { name: /: Deutsch$/ })).toBeNull();
     expect(bar.getByText("3 missing")).toBeTruthy();
     expect(bar.getByRole("button", { name: "Preview" })).toBeTruthy();
     expect(bar.getByRole("button", { name: "Publish" })).toBeTruthy();
@@ -62,7 +62,7 @@ describe("Designer main screen (M1)", () => {
     const bar = within(screen.getByRole("banner"));
 
     expect(bar.getByText("Entwurf · gespeichert")).toBeTruthy();
-    expect(bar.getByRole("button", { name: "DE" }).getAttribute("aria-pressed")).toBe("true");
+    expect(bar.getByRole("button", { name: /: Deutsch$/ })).toBeTruthy();
     expect(bar.getByText("3 fehlen")).toBeTruthy();
     expect(bar.getByRole("button", { name: "Veröffentlichen" })).toBeTruthy();
   });
@@ -106,7 +106,8 @@ describe("Designer main screen (M1)", () => {
   it("switches the survey language and marks texts that are not translated yet", async () => {
     await loaded();
 
-    fireEvent.click(within(screen.getByRole("banner")).getByRole("button", { name: "DE" }));
+    fireEvent.click(within(screen.getByRole("banner")).getByRole("button", { name: /: (English|Deutsch)$/ }));
+    fireEvent.click(screen.getByRole("menuitemradio", { name: /Deutsch/ }));
 
     expect(screen.getByRole("heading", { name: "Wie zufrieden sind Sie mit unserem Service?" })).toBeTruthy();
     const improve = screen.getByRole("article", { name: "Q3 · IMPROVE" });
@@ -407,7 +408,7 @@ describe("Publishing (M3)", () => {
     fireEvent.click(dialog().getByRole("button", { name: "Fix translations" }));
 
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(within(screen.getByRole("banner")).getByRole("button", { name: "DE" }).getAttribute("aria-pressed")).toBe("true");
+    expect(within(screen.getByRole("banner")).getByRole("button", { name: /: Deutsch$/ })).toBeTruthy();
   });
 
   it("blocks publishing while there are errors and says which", async () => {
@@ -814,7 +815,7 @@ describe("Command palette (Ctrl K) and translating flow (M1, M2)", () => {
 
     run("german");
 
-    expect(within(screen.getByRole("banner")).getByRole("button", { name: "DE" }).getAttribute("aria-pressed")).toBe("true");
+    expect(within(screen.getByRole("banner")).getByRole("button", { name: /: Deutsch$/ })).toBeTruthy();
   });
 
   it("opens the publish check", async () => {

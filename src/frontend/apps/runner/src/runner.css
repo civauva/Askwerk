@@ -72,25 +72,6 @@ body {
   font-style: normal;
 }
 
-.run-seg {
-  display: inline-flex;
-  border: 1px solid var(--aw-line-strong);
-  border-radius: var(--run-radius, 2px);
-}
-
-.run-seg button {
-  border: 0;
-  background: transparent;
-  padding: 8px 12px;
-  min-width: 44px;
-  font: 600 12px/1 var(--aw-font-mono);
-  cursor: pointer;
-}
-
-.run-seg button[aria-pressed="true"] {
-  background: var(--aw-ink);
-  color: var(--aw-paper);
-}
 
 .run-main {
   flex: 1;
@@ -1390,7 +1371,7 @@ body {
   text-shadow: 0 1px 6px rgb(0 0 0 / 35%);
 }
 
-.run[data-pattern="mountains"] .run-seg {
+.run[data-pattern="mountains"] .run-language {
   border-color: rgb(255 255 255 / 70%);
 }
 
