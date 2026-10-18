@@ -127,6 +127,34 @@ public static class SampleSurveys
     }
 
     /// <summary>
+    /// A sample's drawing covering a picture of any shape (AWK-74): scaled until it fills the picture, centred, the
+    /// edges cut. Askwerk's illustrations are these drawings at 16:10.
+    /// </summary>
+    /// <param name="name">The drawing's name.</param>
+    /// <param name="width">Width in pixels.</param>
+    /// <param name="height">Height in pixels.</param>
+    /// <returns>The drawn image.</returns>
+    public static SKImage Covering(string name, int width, int height)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        if (name == "peaks")
+        {
+            return SKImage.FromEncodedData(Pdf.PdfScenes.Mountains(width, height));
+        }
+
+        using var surface = SKSurface.Create(new SKImageInfo(width, height));
+        var canvas = surface.Canvas;
+
+        var (sceneWidth, sceneHeight) = name is "cafe" or "garden" or "museum" or "hall" ? (1600f, 600f) : (800f, 600f);
+        var scale = Math.Max(width / sceneWidth, height / sceneHeight);
+        canvas.Translate((width - (sceneWidth * scale)) / 2, (height - (sceneHeight * scale)) / 2);
+        canvas.Scale(scale);
+        Draw(canvas, name, (int)sceneWidth, (int)sceneHeight);
+
+        return surface.Snapshot();
+    }
+
+    /// <summary>
     /// Made-up answers for a sample (W26): plausible, the same for the same seed, and only for the questions a
     /// respondent with these answers would see.
     /// </summary>

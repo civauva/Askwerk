@@ -229,6 +229,27 @@ export class FakeDesignerApi implements DesignerApi {
     return Promise.resolve(`a${this.uploads.length}`);
   }
 
+  readonly usedPictures: string[] = [];
+
+  pictures(): Promise<{ topics: string[]; items: { id: string; topic: string; title: string }[] }> {
+    return Promise.resolve({
+      topics: ["charity", "technology", "finance", "holidays", "animals"],
+      items: [
+        { id: "holidays-lake", topic: "holidays", title: "Mountains Lake" },
+        { id: "animals-pug", topic: "animals", title: "Pug Dog" },
+      ],
+    });
+  }
+
+  usePicture(pictureId: string): Promise<string> {
+    this.usedPictures.push(pictureId);
+    return Promise.resolve(`p${this.usedPictures.length}`);
+  }
+
+  pictureThumbnailUrl(pictureId: string): string {
+    return `/pictures/${pictureId}.webp`;
+  }
+
   saveAsTemplate(_surveyId: string, name: string): Promise<void> {
     this.templates.push(name);
     return Promise.resolve();

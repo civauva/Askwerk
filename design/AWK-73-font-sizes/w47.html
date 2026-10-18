@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W47 (AWK-73): more font sizes in Look: five steps instead of three, for text, question text, rating scale and logo. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W47 Font sizes</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --signal: #d1440f; --soft: #efede8; --accent: #b4532a;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; width: 1440px; background: #dedad2; color: var(--ink); font: 400 14px/1.45 var(--font); }
+  h1 { margin: 0 0 6px; font: 700 24px/1.2 var(--display); } .intro { margin: 0 0 16px; color: var(--graphite); font-size: 13px; max-width: 1180px; }
+  .row { display: flex; gap: 20px; align-items: flex-start; }
+  .panel { width: 340px; background: #fff; border: 1px solid var(--line-strong); padding: 12px 16px; }
+  .f { display: grid; grid-template-columns: 90px 1fr; gap: 10px; align-items: start; } .f > span:first-child { line-height: 34px; font-size: 13px; color: var(--graphite); margin-bottom: 10px; }
+  .menu { position: relative; } .sel { display: flex; justify-content: space-between; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--ink); background: #fff; }
+  .list { margin-top: 4px; padding: 4px; border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,.12); background: #fff; }
+  .list div { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 8px; border-radius: 5px; color: var(--ink); } .list .on { background: var(--soft); font-weight: 600; } .list small { font: 500 11px var(--mono); color: var(--muted); }
+  .scale { flex: 1; background: #fff; border: 1px solid var(--line-strong); padding: 16px 20px; }
+  .scale h2 { margin: 0 0 10px; font: 700 17px var(--display); }
+  .step { display: grid; grid-template-columns: 140px 130px 1fr; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px dashed var(--line); }
+  .step b { font: 600 13px var(--font); } .step small { font: 500 11.5px var(--mono); color: var(--muted); }
+  .q { font-family: Georgia, serif; font-weight: 600; color: var(--ink); }
+  .new { color: var(--signal); font: 600 11px var(--mono); margin-left: 6px; }
+</style>
+</head>
+<body>
+<h1>W47 · AWK-73 · More font sizes</h1>
+<p class="intro">Five steps instead of three, the same everywhere a size is chosen (text size, question text, rating scale, logo): Extra small, Small, Medium, Large, Extra large. Five options, so each is a menu with the size in pixels beside its name. Email and PDF follow the same steps (PDF in points).</p>
+<div class="row">
+  <div class="panel">
+    <div class="f"><span>Text size</span><div class="menu"><div class="sel">Large<span>▾</span></div><div class="list"><div>Extra small <small>15 px</small></div><div>Small <small>16 px</small></div><div>Medium <small>18 px</small></div><div class="on">✓ Large <small>21 px</small></div><div>Extra large <small>24 px</small></div></div></div></div>
+    <div class="f"><span>Question text</span><div class="sel">Medium<span>▾</span></div></div>
+    <div class="f"><span>Rating scale</span><div class="sel">Medium<span>▾</span></div></div>
+    <div class="f"><span>Logo</span><div class="sel">Small<span>▾</span></div></div>
+  </div>
+  <div class="scale">
+    <h2>The five steps, as respondents see them (text size)</h2>
+    <div class="step"><b>Extra small<span class="new">NEW</span></b><small>15 px · PDF 10 pt</small><span class="q" style="font-size:15px">How did you travel here?</span></div>
+    <div class="step"><b>Small</b><small>16 px · PDF 11 pt</small><span class="q" style="font-size:16px">How did you travel here?</span></div>
+    <div class="step"><b>Medium</b><small>18 px · PDF 12 pt</small><span class="q" style="font-size:18px">How did you travel here?</span></div>
+    <div class="step"><b>Large</b><small>21 px · PDF 14 pt</small><span class="q" style="font-size:21px">How did you travel here?</span></div>
+    <div class="step"><b>Extra large<span class="new">NEW</span></b><small>24 px · PDF 16 pt</small><span class="q" style="font-size:24px">How did you travel here?</span></div>
+    <p class="intro" style="margin:12px 0 0">Question text, rating scale and logo scale by the same steps relative to their Medium. Existing looks keep their size; nothing changes until someone picks a new step.</p>
+  </div>
+</div>
+</body>
+</html>

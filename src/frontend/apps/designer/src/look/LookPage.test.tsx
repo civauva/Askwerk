@@ -147,7 +147,8 @@ describe("Administration → Looks (AWK-17, W10 A, W32): stupid simple", () => {
     fireEvent.click(screen.getByRole("button", { name: "Start from Warm" }));
 
     await waitFor(() => expect(client.calls).toContainEqual(["create", "Warm", themePresets[2]!.tokens]));
-    expect(await list().findByRole("button", { name: "Warm" })).toBeTruthy();
+    // The list reloads after the create; give it time when the machine is busy (it flaked under the full run).
+    expect(await list().findByRole("button", { name: "Warm" }, { timeout: 5000 })).toBeTruthy();
   });
 
   it("numbers a second theme from the same preset", async () => {

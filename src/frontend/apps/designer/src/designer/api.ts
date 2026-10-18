@@ -57,6 +57,10 @@ export interface DesignerApi extends Pick<SurveysClient, "rename" | "duplicate" 
   uploadImage(file: File): Promise<string>;
   /** Where the designer shows a stored image; a width asks for a smaller copy. */
   assetUrl(assetId: string, width?: number): string;
+  /** Askwerk's background pictures by topic (AWK-74). */
+  pictures(): Promise<{ topics: string[]; items: { id: string; topic: string; title: string }[] }>;
+  usePicture(pictureId: string): Promise<string>;
+  pictureThumbnailUrl(pictureId: string): string;
   /** Saves the survey's draft as the organisation's template (AWK-17, W10 C). */
   saveAsTemplate(surveyId: string, name: string): Promise<void>;
   /** A new survey, here from the template being edited (W32). */
@@ -87,5 +91,8 @@ export function designerApi(surveys: SurveysClient, themes: ThemesClient): Desig
     uploadImage: (file) => themes.upload(file, "image").then((stored) => stored.id),
     saveAsTemplate: (surveyId, name) => surveys.saveAsTemplate(surveyId, name),
     assetUrl: (assetId, width) => `${themes.assetUrl(assetId)}${width === undefined ? "" : `?w=${width}`}`,
+    pictures: () => themes.pictures(),
+    usePicture: (pictureId) => themes.usePicture(pictureId),
+    pictureThumbnailUrl: (pictureId) => themes.pictureThumbnailUrl(pictureId),
   };
 }

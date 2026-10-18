@@ -8,6 +8,7 @@
     <EmbeddedResource Include="Pdf/Fonts/*.woff" LogicalName="Askwerk.Infrastructure.Pdf.Fonts.%(Filename).woff" />
     <EmbeddedResource Include="Templates/*.json" LogicalName="Askwerk.Infrastructure.Templates.%(Filename).json" />
     <EmbeddedResource Include="Samples/*.json" LogicalName="Askwerk.Infrastructure.Samples.%(Filename).json" />
+    <EmbeddedResource Include="Pictures/*.json;Pictures/*.webp" LogicalName="Askwerk.Infrastructure.Pictures.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Seeding/Demos/*.json" LogicalName="Askwerk.Infrastructure.Demos.%(Filename).json" />
     <EmbeddedResource Include="../../frontend/packages/schema/presets/*.json" LinkBase="Looks" LogicalName="Askwerk.Infrastructure.Looks.%(Filename).json" />
   </ItemGroup>

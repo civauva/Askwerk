@@ -50,6 +50,9 @@ export class FakeThemesClient implements ThemesClient {
   };
 
   assetUrl = (assetId: string) => `/api/app/assets/${assetId}`;
+  pictures = () => Promise.resolve({ topics: [] as string[], items: [] });
+  usePicture = (pictureId: string) => Promise.resolve(`p-${pictureId}`);
+  pictureThumbnailUrl = (pictureId: string) => `/api/app/pictures/${pictureId}/thumbnail`;
 
   /** The last update sent for a theme. */
   lastUpdate(themeId: string): { name: string; tokens: ThemeTokens } | undefined {

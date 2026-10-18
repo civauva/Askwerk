@@ -23,6 +23,10 @@ export interface LookApi {
   saveTheme(name: string, tokens: ThemeTokens): Promise<string>;
   uploadImage(file: File): Promise<string>;
   assetUrl(assetId: string, width?: number): string;
+  /** Askwerk's background pictures by topic (AWK-74); optional so older callers keep working. */
+  pictures?(): Promise<{ topics: string[]; items: { id: string; topic: string; title: string }[] }>;
+  usePicture?(pictureId: string): Promise<string>;
+  pictureThumbnailUrl?(pictureId: string): string;
 }
 
 type Option = readonly [string, LookMessageKey];
@@ -772,6 +776,13 @@ const faces: readonly (readonly [string, LookMessageKey, number])[] = [
  * Style (W32): accent colour, type, shape, background and density, the choices most people make, as tiles. Every
  * colour, the mode and each pattern sit under Parts and Pages.
  */
+/** A picture topic's name (AWK-74). */
+function topicName(t: LookText, topic: string): string {
+  const names: Record<string, LookMessageKey> = { charity: "topicCharity", technology: "topicTechnology", finance: "topicFinance", holidays: "topicHolidays", animals: "topicAnimals", illustrations: "topicIllustrations" };
+
+  return names[topic] !== undefined ? t(names[topic]) : topic;
+}
+
 function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeTokens; api: LookApi; onChange: (tokens: ThemeTokens) => void }) {
   const file = useRef<HTMLInputElement>(null);
   const pattern = tokens.decoration?.pattern ?? "none";
@@ -781,6 +792,14 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
     onChange(setAt(setAt(tokens, ["decoration"], undefined), ["background"], { kind: "image-overlay", image: { asset }, fit: "cover", overlay: tokens.colours.background, overlayOpacity: tokens.background?.overlayOpacity ?? 0.8 }));
   // The picture panel (W46 B, AWK-72): Askwerk's pictures, your own with the rules, and how calm it is under the text.
   const [choosing, setChoosing] = useState(false);
+  const [pictures, setPictures] = useState<{ topics: string[]; items: { id: string; topic: string; title: string }[] } | null>(null);
+
+  // Askwerk's photos load when the panel first opens.
+  useEffect(() => {
+    if (choosing && pictures === null && api.pictures !== undefined) {
+      api.pictures().then(setPictures, () => setPictures({ topics: [], items: [] }));
+    }
+  }, [choosing, pictures, api]);
   const [pictureError, setPictureError] = useState(false);
   const upload = (chosen: File) => {
     setPictureError(false);
@@ -867,6 +886,33 @@ function StyleTab({ t, tokens, api, onChange }: { t: LookText; tokens: ThemeToke
                 <button type="button" className="sl-picture__item" aria-pressed={true} aria-label={t("pictureOwn")} style={{ backgroundImage: `url("${api.assetUrl(image.asset, 240)}")` }} onClick={() => withPicture(image.asset)} />
               )}
             </div>
+            {/* Askwerk's photos by topic (AWK-74): choosing one copies it into the organisation's files. */}
+            {pictures?.topics.map((topic) => {
+              const items = pictures.items.filter((picture) => picture.topic === topic);
+
+              return items.length === 0 ? null : (
+                <div key={topic} className="sl-picture__topic" role="group" aria-label={topicName(t, topic)}>
+                  <span className="sl-picture__subhead">{topicName(t, topic)}</span>
+                  <div className="sl-picture__gallery">
+                    {items.map((picture) => (
+                      <button
+                        key={picture.id}
+                        type="button"
+                        className="sl-picture__item"
+                        aria-label={picture.title}
+                        title={picture.title}
+                        onClick={() => {
+                          setPictureError(false);
+                          void api.usePicture?.(picture.id).then(withPicture, () => setPictureError(true));
+                        }}
+                      >
+                        <img src={api.pictureThumbnailUrl?.(picture.id) ?? ""} alt="" loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
             <span className="sl-picture__head">{t("pictureOwn")}</span>
             <div
               className="sl-picture__drop"

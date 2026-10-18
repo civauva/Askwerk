@@ -6176,6 +6176,161 @@
         }
       }
     },
+    "/api/app/pictures": {
+      "get": {
+        "tags": [
+          "Pictures"
+        ],
+        "summary": "The pictures, by topic.",
+        "responses": {
+          "200": {
+            "description": "The topics in their order and every picture with its source and licence.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PictureListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PictureListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PictureListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/pictures/{id}/thumbnail": {
+      "get": {
+        "tags": [
+          "Pictures"
+        ],
+        "summary": "A picture\u0027s 480 \u00D7 300 thumbnail.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The picture.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/app/pictures/{id}/use": {
+      "post": {
+        "tags": [
+          "Pictures"
+        ],
+        "summary": "Copies a picture into the organisation\u0027s files, for a background.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The picture.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedPictureResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedPictureResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsedPictureResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/app/contacts": {
       "get": {
         "tags": [
@@ -19122,6 +19277,96 @@
         },
         "description": "A list read as a table (W35)."
       },
+      "PictureListResponse": {
+        "required": [
+          "topics",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "topics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The topics in their order."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PictureResponse"
+            },
+            "description": "Every picture."
+          }
+        },
+        "description": "Askwerk\u0027s pictures."
+      },
+      "PictureResponse": {
+        "required": [
+          "id",
+          "topic",
+          "title",
+          "creator",
+          "license",
+          "source",
+          "page",
+          "width",
+          "height"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Its key."
+          },
+          "topic": {
+            "type": "string",
+            "description": "Its topic."
+          },
+          "title": {
+            "type": "string",
+            "description": "Its title at its source."
+          },
+          "creator": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Who took it, when known."
+          },
+          "license": {
+            "type": "string",
+            "description": "cc0 or pdm."
+          },
+          "source": {
+            "type": "string",
+            "description": "Where it was found."
+          },
+          "page": {
+            "type": "string",
+            "description": "Its page at the source."
+          },
+          "width": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Width in pixels.",
+            "format": "int32"
+          },
+          "height": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "description": "Height in pixels.",
+            "format": "int32"
+          }
+        },
+        "description": "One picture."
+      },
       "PreferencesRequest": {
         "required": [
           "language",
@@ -22414,6 +22659,19 @@
         },
         "description": "An unsubscribe link\u0027s page."
       },
+      "UsedPictureResponse": {
+        "required": [
+          "assetId"
+        ],
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "description": "The new file\u0027s id."
+          }
+        },
+        "description": "The organisation\u0027s copy of a picture."
+      },
       "ValidationProblemDetails": {
         "type": "object",
         "properties": {
@@ -22711,6 +22969,9 @@
     },
     {
       "name": "Results"
+    },
+    {
+      "name": "Pictures"
     },
     {
       "name": "Contacts"

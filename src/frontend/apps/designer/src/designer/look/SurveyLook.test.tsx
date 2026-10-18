@@ -231,6 +231,18 @@ describe("Create → Look: Style as tiles, the Preview on its stage (W32, W33)",
     expect(areas().queryByRole("region", { name: "Picture" })).toBeNull();
   });
 
+  it("offers Askwerk's photos by topic; choosing one copies it into the organisation's files (AWK-74)", async () => {
+    const { api } = await openLook();
+
+    fireEvent.click(areas().getByRole("button", { name: /^Picture$/ }));
+    const animals = within(await within(areas().getByRole("region", { name: "Picture" })).findByRole("group", { name: "Animals" }));
+    fireEvent.click(animals.getByRole("button", { name: "Pug Dog" }));
+
+    await waitFor(() => expect(api.lookCalls.at(-1)?.tokens.background?.image?.asset).toBe("p1"), saved);
+    expect(api.usedPictures).toEqual(["animals-pug"]);
+    expect(within(areas().getByRole("region", { name: "Picture" })).getByRole("group", { name: "Holidays" })).toBeTruthy();
+  });
+
   it("zooms the page out and back, also with Ctrl + scroll, and shows a tablet width", async () => {
     await openLook();
     const preview = within(screen.getByRole("complementary", { name: "Preview" }));

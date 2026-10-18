@@ -31,3 +31,6 @@ src/sdks/python/build/
 src/sdks/python/*.egg-info/
 __pycache__/
 artifacts/
+
+# Full-size photo originals (AWK-74): processed copies go into the product, the originals stay local.
+design/AWK-74-photos/originals/

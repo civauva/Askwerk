@@ -55,7 +55,10 @@ test("a click on a part of the preview opens its settings, and the language menu
   await page.screenshot({ path: info.outputPath("look-options.png") });
   await settings.getByRole("tab", { name: "Style" }).click();
   await settings.getByRole("button", { name: "Picture", exact: true }).click();
-  await expect(settings.getByRole("region", { name: "Picture" })).toBeVisible();
+  const pictures = settings.getByRole("region", { name: "Picture" });
+  await expect(pictures.getByRole("group", { name: "Charity" })).toBeVisible();
+  // Askwerk's photos (AWK-74): every thumbnail of the first topic has loaded.
+  await expect.poll(() => pictures.getByRole("group", { name: "Charity" }).locator("img").evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
   await page.screenshot({ path: info.outputPath("look-picture.png") });
   await settings.getByRole("button", { name: "Done" }).click();
 

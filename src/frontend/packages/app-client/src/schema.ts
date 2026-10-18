@@ -4772,6 +4772,155 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/app/pictures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The pictures, by topic. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The topics in their order and every picture with its source and licence. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PictureListResponse"];
+                        "application/json": components["schemas"]["PictureListResponse"];
+                        "text/json": components["schemas"]["PictureListResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/pictures/{id}/thumbnail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** A picture's 480 × 300 thumbnail. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The picture. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/app/pictures/{id}/use": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Copies a picture into the organisation's files, for a background. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description The picture. */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Created */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["UsedPictureResponse"];
+                        "application/json": components["schemas"]["UsedPictureResponse"];
+                        "text/json": components["schemas"]["UsedPictureResponse"];
+                    };
+                };
+                /** @description Forbidden */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Not Found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/app/contacts": {
         parameters: {
             query?: never;
@@ -12777,6 +12926,40 @@ export interface components {
             /** @description Every row after the header, as wide as the table. */
             rows: string[][];
         };
+        /** @description Askwerk's pictures. */
+        PictureListResponse: {
+            /** @description The topics in their order. */
+            topics: string[];
+            /** @description Every picture. */
+            items: components["schemas"]["PictureResponse"][];
+        };
+        /** @description One picture. */
+        PictureResponse: {
+            /** @description Its key. */
+            id: string;
+            /** @description Its topic. */
+            topic: string;
+            /** @description Its title at its source. */
+            title: string;
+            /** @description Who took it, when known. */
+            creator: null | string;
+            /** @description cc0 or pdm. */
+            license: string;
+            /** @description Where it was found. */
+            source: string;
+            /** @description Its page at the source. */
+            page: string;
+            /**
+             * Format: int32
+             * @description Width in pixels.
+             */
+            width: number | string;
+            /**
+             * Format: int32
+             * @description Height in pixels.
+             */
+            height: number | string;
+        };
         /** @description Language and theme. */
         PreferencesRequest: {
             /** @description de, en, or null to follow the browser. */
@@ -13986,6 +14169,11 @@ export interface components {
             language: null | string;
             /** @description Already unsubscribed. */
             done: boolean;
+        };
+        /** @description The organisation's copy of a picture. */
+        UsedPictureResponse: {
+            /** @description The new file's id. */
+            assetId: string;
         };
         ValidationProblemDetails: {
             type?: null | string;
