@@ -8,6 +8,7 @@ import { ComboBox, DataGrid, dataGridTexts, pageSizes, sortFromParam, sortToPara
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
 import { surveysMessages, type SurveysMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type SurveyListPageProps = {
   client: SurveysClient;
@@ -225,16 +226,21 @@ export function SurveyListPage({
 
   return (
     <main className="surveys" lang={locale}>
+      <PageBar
+        title={t("surveys")}
+        actions={
+          canCreate && !empty ? (
+            <button type="button" className="surveys__button surveys__button--primary" onClick={() => setCreating(true)}>
+              {t("newSurvey")}
+            </button>
+          ) : undefined
+        }
+      />
       <div className="surveys__head">
         <div>
           <h1>{t("surveys")}</h1>
           <p className="surveys__of">{t("ofOrganisation", { organisation: organisation?.name ?? "" })}</p>
         </div>
-        {canCreate && !empty && (
-          <button type="button" className="surveys__button surveys__button--primary" onClick={() => setCreating(true)}>
-            {t("newSurvey")}
-          </button>
-        )}
       </div>
 
       {list === null && grid}

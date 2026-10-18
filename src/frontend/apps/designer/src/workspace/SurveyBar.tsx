@@ -181,6 +181,24 @@ export function SurveyBar({
       {place !== undefined ? (
         <nav className="survey-bar__crumbs" aria-label={t("whereYouAre")}>
           {templatesCrumb}
+          {/* W39: every path starts at its section, Surveys for a survey. */}
+          {templateId === null && (
+            <>
+              <a
+                href="/"
+                className="survey-bar__crumb"
+                onClick={(event) => {
+                  event.preventDefault();
+                  onBack();
+                }}
+              >
+                {t("surveys")}
+              </a>
+              <span className="survey-bar__crumb-sep" aria-hidden="true">
+                ›
+              </span>
+            </>
+          )}
           {/* A template (W32): Templates › its name; the place is in the sidebar. */}
           {templateId !== null ? (
             <h1 className="survey-bar__place" aria-current="page" title={summary?.title ?? ""}>
@@ -233,7 +251,7 @@ export function SurveyBar({
       )}
       {/* A template (W32): one chip, with the editor's save state when it gives one. */}
       {templateId !== null ? (
-        <span className="survey-bar__template">{status ?? t("templateChip")}</span>
+        <span className="survey-bar__template" title={t("templateHint")}>{status ?? t("templateChip")}</span>
       ) : (
         (status !== undefined || summary !== null) && <span className="survey-bar__status">{status ?? (summary === null ? null : statusText(t, summary))}</span>
       )}

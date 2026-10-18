@@ -8,6 +8,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { ImportDialog } from "../participants/ImportDialog";
 import { dayText, fieldLabel } from "../participants/peopleFormat";
 import { peopleMessages, type PeopleMessageKey } from "../participants/peopleMessages";
+import { PageBar } from "../shell/PageBar";
 
 type ContactsPageProps = {
   client: ContactsClient;
@@ -121,12 +122,11 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
 
   return (
     <main className="admin admin--wide contacts" lang={locale}>
-      <div className="participants__head">
-        <div>
-          <h1 className="contacts__title">{t("contacts")}</h1>
-          <p className="participants__lead">{t("contactsLead")}</p>
-        </div>
-        <span className="participants__grow" />
+      <PageBar
+        path={[{ place: "administration" }]}
+        title={t("contacts")}
+        actions={
+          <>
         <a className="participants__button" href={client.exportUrl(group ?? undefined)} download>
           {t("export")}
         </a>
@@ -140,6 +140,14 @@ export function ContactsPage({ client, participants, surveys, locale, canEdit, o
             </button>
           </>
         )}
+          </>
+        }
+      />
+      <div className="participants__head">
+        <div>
+          <h1 className="contacts__title">{t("contacts")}</h1>
+          <p className="participants__lead">{t("contactsLead")}</p>
+        </div>
       </div>
 
       <div className="contacts__work">

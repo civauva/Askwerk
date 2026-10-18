@@ -7,6 +7,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { messagesMessages, type MessagesMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: MessagesMessageKey, values?: Record<string, string | number>) => string;
 
@@ -48,6 +49,7 @@ export function MessagesPage({ client, surveys, locale, saveDelayMs = 600 }: Mes
 
   return (
     <main className="look" lang={locale}>
+      <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="look-lead">{t("lead")}</p>
       {messages === null ? (

@@ -9,6 +9,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, DataGrid, dataGridTexts, Dialog as SharedDialog, type DataGridColumn, Tabs } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { apiKeysMessages, type ApiKeysMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: ApiKeysMessageKey, values?: Record<string, string | number>) => string;
 
@@ -87,6 +88,17 @@ export function ApiKeysPage({ client, webhooks, oauthClients, locale, makeConnec
 
   return (
     <main className="api-keys" lang={locale}>
+      <PageBar
+        path={[{ place: "administration" }, { place: "developers", to: "/developers" }]}
+        title={t("title")}
+        actions={
+          state !== "refused" && tab === "keys" ? (
+            <button type="button" className="designer-button api-keys__primary api-keys__create" onClick={() => setCreating(true)}>
+              {t("createKey")}
+            </button>
+          ) : undefined
+        }
+      />
       <div className="api-keys__head">
         <div>
           <h1>{t("title")}</h1>
@@ -95,11 +107,6 @@ export function ApiKeysPage({ client, webhooks, oauthClients, locale, makeConnec
             {t("documentation")}
           </a>
         </div>
-        {state !== "refused" && tab === "keys" && (
-          <button type="button" className="designer-button api-keys__primary api-keys__create" onClick={() => setCreating(true)}>
-            {t("createKey")}
-          </button>
-        )}
       </div>
       {(webhooks !== undefined || oauthClients !== undefined) && state !== "refused" && (
         <div className="api-keys__tabs">

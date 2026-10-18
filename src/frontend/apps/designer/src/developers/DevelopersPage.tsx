@@ -7,6 +7,7 @@ import { useEffect, useId, useMemo, useState } from "react";
 import { guides, withBaseUrl } from "./guides";
 import { Markdown } from "./markdown";
 import { developersMessages, type DevelopersMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: DevelopersMessageKey, values?: Record<string, string | number>) => string;
 
@@ -140,6 +141,7 @@ export function DevelopersPage({ client, locale, canManageKeys, onOpenApiKeys, o
 
   return (
     <div className="dev">
+      <PageBar path={[{ place: "administration" }]} title={t("hub")} />
       <nav className="dev-side" aria-label={t("hub")}>
         {link({ kind: "start" }, t("start"), view.kind === "start")}
         <h2 className="dev-side__head">{t("guidesNav")}</h2>

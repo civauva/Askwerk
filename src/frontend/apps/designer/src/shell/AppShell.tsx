@@ -8,6 +8,7 @@ import { roleName } from "../account/ChooseOrganisationPage";
 import { accountMessages } from "../account/messages";
 import { initialsOf } from "../account/ProfileMenu";
 import { shellMessages, type ShellMessageKey } from "./messages";
+import { BarLocale, BarNavigate, BarSlot } from "./PageBar";
 
 /** A place in the sidebar (AWK-38, W29). */
 export type Place = "surveys" | "templates" | "organisation" | "members" | "contacts" | "connections" | "sign-in" | "look" | "messages" | "domains" | "developers" | "organisations" | "administrators" | "installation";
@@ -122,6 +123,7 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
   const t = createTranslator(shellMessages, locale);
   const a = createTranslator(accountMessages, locale);
   const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const [barSlot, setBarSlot] = useState<HTMLElement | null>(null);
   const [inTemplate, setInTemplate] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [leaving, setLeaving] = useState<"ask" | "refused" | null>(null);
@@ -175,16 +177,19 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
       </section>
       {drawer && <button type="button" className="shell-scrim" aria-label={t("closeMenu")} onClick={() => setDrawer(false)} />}
       <aside className="shell-side" aria-label={t("navigation")}>
-        <a
-          href="/"
-          className="shell-logo"
-          onClick={(event) => {
-            event.preventDefault();
-            go("/");
-          }}
-        >
-          Ask<span>werk</span>
-        </a>
+        {/* As tall as the page bar, so their bottom lines meet (W39). */}
+        <div className="shell-side__head">
+          <a
+            href="/"
+            className="shell-logo"
+            onClick={(event) => {
+              event.preventDefault();
+              go("/");
+            }}
+          >
+            Ask<span>werk</span>
+          </a>
+        </div>
         <Menu
           label={a("organisation")}
           trigger={(props) => (
@@ -283,9 +288,16 @@ export function AppShell({ client, locale, me, active, onNavigate, onSignedOut, 
         </Menu>
       </aside>
       <div className="shell-main">
-        <ShellTemplate.Provider value={setInTemplate}>
-          <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
-        </ShellTemplate.Provider>
+        <header ref={setBarSlot} className="shell-bar" />
+        <BarNavigate.Provider value={go}>
+          <BarLocale.Provider value={locale}>
+          <BarSlot.Provider value={barSlot}>
+            <ShellTemplate.Provider value={setInTemplate}>
+              <ShellSlot.Provider value={survey !== undefined ? slot : null}>{children}</ShellSlot.Provider>
+            </ShellTemplate.Provider>
+          </BarSlot.Provider>
+          </BarLocale.Provider>
+        </BarNavigate.Provider>
       </div>
       {leaving === "ask" && onLeave !== undefined && (
         <ConfirmDialog

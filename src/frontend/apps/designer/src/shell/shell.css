@@ -18,9 +18,19 @@
   font-family: var(--aw-font);
 }
 
+/* The logo row is as tall as the page bar; their bottom lines meet (W39). */
+.shell-side__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: var(--aw-bar-height);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--aw-line);
+}
+
 .shell-logo {
   display: inline-block;
-  padding: 18px 20px 12px;
+  padding: 0 20px;
   color: var(--aw-ink);
   font: 700 19px/1 var(--aw-font-display);
   text-decoration: none;
@@ -32,7 +42,7 @@
 
 .shell-side .aw-menu-anchor {
   display: block;
-  margin: 0 14px 8px;
+  margin: 12px 14px 8px;
 }
 
 .shell-org {
@@ -227,6 +237,55 @@
 
 .shell-main {
   min-width: 0;
+}
+
+/* The page's bar (W39): filled by the page, empty (and gone) inside a survey, whose own bar is the same. */
+.shell-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.shell-bar:empty {
+  display: none;
+}
+
+.page-bar,
+.shell-main .survey-bar {
+  height: var(--aw-bar-height);
+  padding: 0 var(--aw-bar-pad);
+}
+
+.page-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  background: var(--aw-surface);
+  border-bottom: 1px solid var(--aw-line);
+  font-family: var(--aw-font);
+  color: var(--aw-ink);
+}
+
+.page-bar__grow {
+  flex: 1;
+}
+
+.page-bar__actions {
+  display: flex;
+  flex: none;
+  gap: 8px;
+  align-items: center;
+}
+
+.page-bar .survey-bar__crumbs {
+  flex: 0 1 auto;
+}
+
+.survey-bar__crumb--text,
+.survey-bar__crumb--text:hover {
+  color: var(--aw-graphite);
+  text-decoration: none;
 }
 
 /* Inside the shell a survey's bar is one row and its places are in the sidebar. */

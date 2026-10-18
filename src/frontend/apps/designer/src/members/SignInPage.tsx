@@ -6,6 +6,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, Field, Notice, RadioGroup, Switch } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useState } from "react";
 import { signInMessages, type SignInMessageKey } from "./signInMessages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: SignInMessageKey, values?: Record<string, string | number>) => string;
 type Draft = SignInSettingsChange;
@@ -40,6 +41,7 @@ export function SignInPage({ client, locale, writeClipboard = (text) => navigato
   if (state === "refused" || state === "failed") {
     return (
       <main className="members" lang={locale}>
+        <PageBar path={[{ place: "administration" }]} title={t("title")} />
         <h1>{t("title")}</h1>
         <p role="alert">{t(state === "refused" ? "notAllowed" : "failed")}</p>
       </main>
@@ -79,6 +81,7 @@ export function SignInPage({ client, locale, writeClipboard = (text) => navigato
 
   return (
     <main className="members sign-in-settings" lang={locale}>
+      <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="members__lead">{t("intro")}</p>
 

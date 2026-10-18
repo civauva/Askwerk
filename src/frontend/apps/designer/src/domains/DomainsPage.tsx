@@ -6,6 +6,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { RadioGroup, Skeleton } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useState } from "react";
 import { domainsMessages, type DomainsMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: DomainsMessageKey, values?: Record<string, string | number>) => string;
 
@@ -47,6 +48,7 @@ export function DomainsPage({ client, locale, writeClipboard = (text) => navigat
 
   return (
     <main className="domains" lang={locale}>
+      <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="domains-lead">{t("lead")}</p>
       {list === null && (

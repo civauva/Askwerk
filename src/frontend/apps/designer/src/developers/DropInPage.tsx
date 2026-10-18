@@ -5,6 +5,7 @@ import type { DomainsClient, HostLookSettings } from "@askwerk/app-client";
 import { createTranslator, type Locale } from "@askwerk/schema";
 import { useEffect, useId, useMemo, useState } from "react";
 import { dropInMessages, type DropInMessageKey } from "./dropInMessages";
+import { PageBar } from "../shell/PageBar";
 
 type Component = "survey" | "surveys" | "designer" | "results";
 type LookMode = "host" | "askwerk" | "survey";
@@ -78,6 +79,7 @@ export function DropInPage({ domains, locale, baseUrl = location.origin, onNavig
 
   return (
     <main className="admin admin--wide dropin" lang={locale}>
+      <PageBar path={[{ place: "administration" }, { place: "developers", to: "/developers" }]} title={t("title")} />
       <h1 className="dropin__title">{t("title")}</h1>
       <p className="dropin__lead">{t("lead")}</p>
 

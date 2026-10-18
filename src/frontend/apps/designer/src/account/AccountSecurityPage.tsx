@@ -6,6 +6,7 @@ import { useCallback, useEffect, useId, useState, type FormEvent, type ReactNode
 import { roleName } from "./ChooseOrganisationPage";
 import { accountMessages, type AccountMessageKey } from "./messages";
 import type { PasskeyDevice } from "./passkeys";
+import { PageBar } from "../shell/PageBar";
 
 type AccountSecurityPageProps = {
   client: AuthClient;
@@ -143,6 +144,7 @@ export function AccountSecurityPage({ client, device, me, locale, onLocaleChange
 
   return (
     <main className="account" lang={locale}>
+      <PageBar title={t("accountAndSecurity")} />
       <h1>{t("accountAndSecurity")}</h1>
       <p className="account__who">
         {t("accountWho", { name: me.name, email: me.email, role: current === undefined ? "" : roleName(t, current.role), organisation: current?.name ?? "" })}

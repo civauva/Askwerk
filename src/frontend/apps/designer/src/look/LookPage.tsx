@@ -6,6 +6,7 @@ import { ComboBox } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type ReactNode } from "react";
 import { DeviceSwitch, deviceWidth, ZoomBox, type Device } from "../designer/ZoomBox";
 import { lookMessages, type LookMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: LookMessageKey, values?: Record<string, string | number>) => string;
 type Theme = StoredTheme<ThemeTokens>;
@@ -63,6 +64,7 @@ export function LookPage({ client, locale, saveDelayMs = 600 }: LookPageProps) {
   const selected = themes?.find((theme) => theme.id === selectedId);
   const head = (
     <>
+      <PageBar path={[{ place: "administration" }]} title={t("title")} />
       <h1>{t("title")}</h1>
       <p className="look-lead">{t("lead")}</p>
       {themes === null ? (

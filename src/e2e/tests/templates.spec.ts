@@ -42,7 +42,9 @@ test("an owner sees surveys and templates as cards, edits a copy of Askwerk's te
 
   const bar = page.getByRole("banner", { name: "Survey" });
   await expect(bar.getByText(/^Template ·/)).toBeVisible();
-  await expect(bar.getByText("Edits save by themselves · no publishing, no results")).toBeVisible();
+  // Below 1,360 px the hint gives way (W39) and stays as the chip's tooltip, so the bar's actions always fit.
+  await expect(bar.locator(".survey-bar__template")).toHaveAttribute("title", "Edits save by themselves · no publishing, no results");
+  await expect(bar.getByRole("button", { name: "Use for a new survey" })).toBeInViewport();
   await expect(page.getByRole("link", { name: "All templates" })).toBeVisible();
   await expect(bar.getByRole("button", { name: "Publish" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Share" })).toHaveCount(0);

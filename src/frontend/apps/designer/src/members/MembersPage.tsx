@@ -6,6 +6,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, DataGrid, dataGridTexts, Dialog as SharedDialog, type DataGridColumn } from "@askwerk/ui";
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { membersMessages, type MembersMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: MembersMessageKey, values?: Record<string, string | number>) => string;
 
@@ -106,6 +107,7 @@ export function MembersPage({ client, locale, organisation, writeClipboard = (te
   if (state === "refused") {
     return (
       <main className="members" lang={locale}>
+        <PageBar path={[{ place: "administration" }]} title={t("title")} />
         <h1>{t("title")}</h1>
         <p role="alert">{t("notAllowed")}</p>
       </main>
@@ -117,6 +119,15 @@ export function MembersPage({ client, locale, organisation, writeClipboard = (te
 
   return (
     <main className="members" lang={locale}>
+      <PageBar
+        path={[{ place: "administration" }]}
+        title={t("title")}
+        actions={
+          <button type="button" className="designer-button designer-button--primary members__invite" onClick={() => setInviting(true)}>
+            {t("invite")}
+          </button>
+        }
+      />
       <div className="members__head">
         <div>
           <h1>{t("title")}</h1>
@@ -126,9 +137,6 @@ export function MembersPage({ client, locale, organisation, writeClipboard = (te
             </p>
           )}
         </div>
-        <button type="button" className="designer-button designer-button--primary members__invite" onClick={() => setInviting(true)}>
-          {t("invite")}
-        </button>
       </div>
       {notice !== null && (
         <p className="members__notice" role="status">

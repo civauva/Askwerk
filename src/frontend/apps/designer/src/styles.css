@@ -73,11 +73,14 @@ body {
   --aw-page-list: 1200px;
   --aw-page-form: 720px;
   --aw-page-pad: 28px 32px 64px;
+  --aw-bar-height: 56px;
+  --aw-bar-pad: 32px;
 }
 
 @media (max-width: 760px) {
   :root {
     --aw-page-pad: 20px 16px 48px;
+    --aw-bar-pad: 16px;
   }
 }
 

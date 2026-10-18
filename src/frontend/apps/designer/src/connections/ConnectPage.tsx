@@ -6,6 +6,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { connectionsMessages, type ConnectionsMessageKey } from "./messages";
 import { ago, CodeTabs, Credentials, eventOptions, goalKeys, guideOf, permissionKeys, setupOf, shortUrl, type T } from "./parts";
+import { PageBar } from "../shell/PageBar";
 
 type ConnectPageProps = {
   client: ConnectionsClient;
@@ -94,6 +95,7 @@ export function ConnectPage({ client, surveys, locale, baseUrl = location.origin
 
   return (
     <main className="admin admin--wide connect" lang={locale}>
+      <PageBar path={[{ place: "administration" }, { place: "connections", to: "/connections" }]} title={t("wizardTitle")} />
       <h1 className="connections__title">{t("wizardTitle")}</h1>
       <ol className="connect-steps" aria-label={t("steps")}>
         {steps.map((key, index) => (

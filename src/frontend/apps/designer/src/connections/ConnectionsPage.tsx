@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ConnectionPanel } from "./ConnectionPanel";
 import { connectionsMessages } from "./messages";
 import { Flow, goalKeys, Health, tileOf } from "./parts";
+import { PageBar } from "../shell/PageBar";
 
 type ConnectionsPageProps = {
   client: ConnectionsClient;
@@ -41,14 +42,20 @@ export function ConnectionsPage({ client, locale, onNavigate, writeClipboard, ba
 
   return (
     <main className="admin admin--wide connections" lang={locale}>
+      <PageBar
+        path={[{ place: "administration" }]}
+        title={t("title")}
+        actions={
+          <button type="button" className="designer-button designer-button--primary" onClick={() => onNavigate("/connections/new")}>
+            {t("connect")}
+          </button>
+        }
+      />
       <header className="connections__head">
         <div>
           <h1 className="connections__title">{t("title")}</h1>
           <p className="connections__lead">{t("intro")}</p>
         </div>
-        <button type="button" className="designer-button designer-button--primary" onClick={() => onNavigate("/connections/new")}>
-          {t("connect")}
-        </button>
       </header>
 
       {failed && (

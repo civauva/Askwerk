@@ -1,0 +1,148 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W39 (AWK-53): one top bar on every page, and where the organisation switcher goes. ?v=a|b|c &s=list|admin|survey|template -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>W39 Top bar</title>
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  :root { --ink: #1a1917; --graphite: #4d4a45; --muted: #8a877f; --line: #e5e2db; --line-strong: #cfcac0; --paper: #f5f3ef; --surface: #fff; --signal: #d1440f;
+          --font: "IBM Plex Sans", system-ui, sans-serif; --display: "IBM Plex Sans Condensed", var(--font); --mono: "IBM Plex Mono", monospace;
+          --side: 232px; --bar: 56px; --pad: 32px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; height: 760px; overflow: hidden; background: var(--paper); color: var(--ink); font: 400 14px/1.45 var(--font); }
+  /* sidebar */
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: var(--side); background: var(--surface); border-right: 1px solid var(--line); }
+  .logo { font: 700 21px/1 var(--display); } .logo span { color: var(--signal); }
+  .side-head { height: var(--bar); display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--line); }
+  .side-org { margin: 12px; }
+  .org { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 8px; font-weight: 600; font-size: 13.5px; background: var(--surface); }
+  .org i { width: 24px; height: 24px; border-radius: 6px; background: var(--ink); color: #fff; display: grid; place-items: center; font: 600 9.5px/1 var(--mono); font-style: normal; flex: none; }
+  .org b { flex: 1; min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .org .caret { color: var(--muted); font-size: 11px; }
+  .nav-list { padding: 8px 12px; }
+  .grp { margin: 14px 8px 4px; font: 500 10.5px/1 var(--mono); letter-spacing: .08em; color: var(--muted); }
+  .nav { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 6px; color: var(--graphite); }
+  .nav.on { background: #efede8; color: var(--ink); font-weight: 600; }
+  .nav small { font: 500 11px var(--mono); color: var(--muted); }
+  .back { padding: 7px 10px; color: var(--graphite); }
+  /* the bar */
+  .bar { position: fixed; top: 0; right: 0; left: var(--side); height: var(--bar); display: flex; align-items: center; gap: 10px; padding: 0 var(--pad); background: var(--surface); border-bottom: 1px solid var(--line); z-index: 2; }
+  .crumbs { display: flex; align-items: center; gap: 8px; min-width: 0; white-space: nowrap; }
+  .crumbs a { color: var(--graphite); text-decoration: none; font: 400 20px/1.2 var(--display); }
+  .crumbs .sep { color: var(--muted); }
+  .crumbs b { font: 700 20px/1.2 var(--display); color: var(--ink); }
+  .crumbs .sep { font: 400 20px/1.2 var(--display); }
+  .chip { padding: 2px 8px; border: 1px solid var(--line-strong); border-radius: 999px; font: 500 11px/1.5 var(--mono); color: var(--graphite); white-space: nowrap; }
+  .chip.soft { border-color: transparent; background: #efede8; }
+  .note-inline { color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .grow { flex: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .btn.primary { background: var(--signal); border-color: var(--signal); color: #fff; }
+  .btn.quiet { border-color: transparent; color: var(--graphite); font-weight: 500; }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 7px 10px; font: 600 12px var(--mono); } .seg .on { background: var(--ink); color: #fff; }
+  .search { padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 6px; color: var(--muted); font-size: 13px; width: 150px; display: flex; justify-content: space-between; } .search small { font: 500 10.5px var(--mono); }
+  .org.in-bar { padding: 5px 8px; border-color: var(--line); }
+  /* page */
+  .main { position: absolute; left: var(--side); right: 0; top: var(--bar); padding: 28px var(--pad); }
+  h1 { margin: 0; font: 700 32px/1.1 var(--display); }
+  .lead { margin: 6px 0 22px; color: var(--graphite); font-size: 13.5px; }
+  .tools { display: flex; gap: 8px; margin-bottom: 14px; }
+  .input { padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 6px; background: #fff; color: var(--muted); width: 280px; }
+  .pill { padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font-weight: 600; font-size: 13px; background: #fff; } .pill.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .table { background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+  .row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; padding: 13px 18px; border-top: 1px solid var(--line); font-size: 13.5px; } .row:first-child { border-top: 0; font: 500 11px var(--mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+  .row b { font-weight: 600; }
+  /* alignment guides */
+  .guide { position: fixed; top: 0; bottom: 0; width: 0; border-left: 1px dashed #3b82f6; z-index: 9; opacity: .55; }
+  .guide-h { position: fixed; left: 0; right: 0; height: 0; border-top: 1px dashed #3b82f6; z-index: 9; opacity: .55; }
+  .label { position: fixed; z-index: 10; padding: 2px 6px; background: #3b82f6; color: #fff; font: 500 10.5px var(--mono); border-radius: 3px; }
+  .note { position: fixed; z-index: 11; max-width: 330px; padding: 9px 12px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  /* variant C: the bar runs the whole width, logo and organisation above the sidebar */
+  body.c .bar { left: 0; padding-left: 0; }
+  body.c .bar .brand { width: var(--side); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 20px; height: 100%; border-right: 1px solid var(--line); margin-right: calc(var(--pad) - 10px); }
+  body.c .side { top: var(--bar); }
+  body.c .brand .org { flex: 1; min-width: 0; }
+  body.c .brand .grow { display: none; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const q = new URLSearchParams(location.search);
+const v = q.get("v") || "a", s = q.get("s") || "list";
+document.body.className = v;
+const org = (cls = "") => `<div class="org ${cls}"><i>AG</i><b>Acme GmbH</b><span class="caret">▾</span></div>`;
+const navMain = (on) => `<div class="nav-list">
+  <div class="nav ${on === "surveys" ? "on" : ""}">Surveys</div><div class="nav">Templates</div>
+  <div class="grp">ADMINISTRATION</div>
+  <div class="nav">Organisation</div><div class="nav">Members</div><div class="nav ${on === "contacts" ? "on" : ""}">Contacts <small>1,284</small></div><div class="nav">Connections</div><div class="nav">Sign-in</div><div class="nav">Looks</div><div class="nav">Messages</div><div class="nav">Domains</div><div class="nav">Developers &amp; API</div></div>`;
+const navSurvey = (template) => `<div class="nav-list"><div class="back">‹ All ${template ? "templates" : "surveys"}</div>
+  <div class="grp">CREATE</div><div class="nav ${template ? "on" : ""}">Questions</div><div class="nav">Look</div>
+  ${template ? "" : `<div class="grp">COLLECT</div><div class="nav">Share</div><div class="nav on">Participants <small>640</small></div><div class="grp">ANALYSE</div><div class="nav">Results <small>248</small></div>`}
+  <div class="nav" style="margin-top:8px">Settings</div></div>`;
+const side = (nav) => {
+  if (v === "a") return `<div class="side"><div class="side-head"><span class="logo">Ask<span>werk</span></span></div><div class="side-org">${org()}</div>${nav}</div>`;
+  if (v === "b") return `<div class="side"><div class="side-head"><span class="logo">Ask<span>werk</span></span></div>${nav}</div>`;
+  return `<div class="side">${nav}</div>`;
+};
+const crumbs = (parts, last, extra = "") => {
+  const lead = v === "b" ? org("in-bar") + `<span class="sep">›</span>` : "";
+  return `<div class="crumbs">${lead}${parts.map((p) => `<a>${p}</a><span class="sep">›</span>`).join("")}<b>${last}</b>${extra}</div>`;
+};
+const brand = v === "c" ? `<div class="brand"><span class="logo">Ask<span>werk</span></span><span class="grow"></span>${org("in-bar")}</div>` : "";
+const screens = {
+  list: {
+    nav: navMain("surveys"),
+    bar: crumbs([], "Surveys") + `<span class="grow"></span><span class="btn primary">New survey</span>`,
+    main: `<h1>Surveys</h1><p class="lead">Every survey of Acme GmbH: drafts, published and closed.</p>
+      <div class="tools"><span class="input">Search surveys</span><span class="pill on">All 17</span><span class="pill">Drafts 4</span><span class="pill">Published 13</span><span class="pill">Closed 0</span></div>
+      <div class="table"><div class="row"><span>Survey</span><span>Status</span><span>Answers</span><span>Changed</span></div>
+      <div class="row"><b>Customer satisfaction 2026</b><span>Published · v3</span><span>412</span><span>2 Oct</span></div>
+      <div class="row"><b>Employee pulse Q4</b><span>Draft</span><span>—</span><span>yesterday</span></div>
+      <div class="row"><b>Your visit to the City Museum</b><span>Published · v1</span><span>180</span><span>3 Oct</span></div></div>`,
+  },
+  admin: {
+    nav: navMain("contacts"),
+    bar: crumbs(["Administration"], "Contacts") + `<span class="grow"></span><span class="btn">Export</span><span class="btn">Import</span><span class="btn primary">+ Add contact</span>`,
+    main: `<h1>Contacts</h1><p class="lead">The organisation's address book: invite the same people to many surveys, keep their fields, respect who unsubscribed.</p>
+      <div class="tools"><span class="input">Search contacts…</span><span class="pill on">All</span><span class="pill">Can be invited 1,251</span><span class="pill">Unsubscribed 21</span><span class="pill">Bounced 12</span></div>
+      <div class="table"><div class="row"><span>Person</span><span>External ID</span><span>Groups</span><span>Last invited</span></div>
+      <div class="row"><b>Lena Gruber</b><span>CRM-10442</span><span>Key accounts</span><span>2 Oct</span></div>
+      <div class="row"><b>Thomas Huber</b><span>CRM-10871</span><span>Key accounts</span><span>2 Oct</span></div></div>`,
+  },
+  survey: {
+    nav: navSurvey(false),
+    bar: crumbs(["Surveys", "Customer satisfaction 2026"], "Participants", `<span class="chip">Published · v3</span>`) + `<span class="grow"></span><span class="btn">Preview ▾</span><span class="chip soft">Approved</span><span class="btn primary">Share</span>`,
+    main: `<h1>Participants</h1><p class="lead">Everyone invited by email, with their own link. Answers by link only count in Results, not here.</p>
+      <div class="tools"><span class="input">Search name, email, field…</span><span class="pill on">All 640</span><span class="pill">Not answered 392</span><span class="pill">Answered 248</span><span class="grow"></span><span class="btn">Export ▾</span><span class="btn primary">+ Add people ▾</span></div>
+      <div class="table"><div class="row"><span>Person</span><span>Status</span><span>Invited</span><span>Reminders</span></div>
+      <div class="row"><b>Lena Gruber</b><span>Answered</span><span>2 Oct</span><span>0</span></div>
+      <div class="row"><b>Thomas Huber</b><span>Opened, not started</span><span>2 Oct</span><span>1 · 9 Oct</span></div></div>`,
+  },
+  template: {
+    nav: navSurvey(true),
+    bar: crumbs(["Templates"], "NPS, short", `<span class="chip">Template · saved</span><span class="note-inline">Edits save by themselves · no publishing, no results</span>`) + `<span class="grow"></span><span class="search">Search… <small>Ctrl K</small></span><span class="seg"><span>DE</span><span class="on">EN</span></span><span class="btn">Preview ▾</span><span class="btn primary">Use for a new survey</span>`,
+    main: `<h1>Questions</h1><p class="lead">The template's questions; edits save by themselves.</p>
+      <div class="table"><div class="row"><span>Question</span><span>Type</span><span></span><span></span></div>
+      <div class="row"><b>How likely are you to recommend us?</b><span>NPS</span><span></span><span></span></div>
+      <div class="row"><b>What is the main reason for your score?</b><span>Text</span><span></span><span></span></div></div>`,
+  },
+};
+const sc = screens[s];
+const notes = {
+  a: "A · Organisation stays at the top of the sidebar (as today). The bar runs beside it: where you are on the left, the page's actions on the right. The logo row is as tall as the bar, so their bottom lines meet.",
+  b: "B · Organisation moves into the bar as the first step of the path: Acme GmbH ▾ › Administration › Contacts. The sidebar keeps the logo and the places only.",
+  c: "C · One bar across the whole window: logo and organisation above the sidebar, the path from the content's left edge, actions to its right edge. The sidebar starts below the bar.",
+};
+document.getElementById("app").innerHTML = side(sc.nav) + `<div class="bar">${brand}${sc.bar}</div><div class="main">${sc.main}</div>
+  <div class="guide" style="left:${232 + 32}px"></div><div class="guide" style="left:${1440 - 32}px"></div><div class="guide-h" style="top:56px"></div>
+  <div class="label" style="left:${232 + 36}px;top:${56 + 4}px">content and path start here · 32 px</div>
+  <div class="label" style="left:${1440 - 210}px;top:${56 + 4}px">actions end here · 32 px</div>
+  <div class="note" style="right:40px;bottom:30px">${notes[v]}</div>`;
+</script>
+</body>
+</html>

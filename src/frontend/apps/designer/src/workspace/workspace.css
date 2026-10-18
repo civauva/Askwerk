@@ -119,6 +119,17 @@
   flex-shrink: 1;
 }
 
+/* The template hint gives way first, so the bar's actions always fit (W39). */
+.survey-bar > .survey-bar__hint {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 1360px) {
+  .survey-bar > .survey-bar__hint {
+    display: none;
+  }
+}
+
 /* Narrow windows: search keeps its shortcut only, the status gives way. */
 @media (max-width: 1100px) {
   .survey-bar__search > span,

@@ -8,6 +8,7 @@ import { browserStorage, type PreferenceStorage } from "../account/AccountApp";
 import { ContentCard } from "../surveys/ContentCard";
 import { viewKey, type ListView } from "../surveys/SurveyListPage";
 import { adminMessages } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type From = "askwerk" | "organisation" | "sample";
 type Row = { id: string; name: string; from: From; questions: number; languages: string[]; front: SurveyFront | null };
@@ -128,13 +129,18 @@ export function TemplatesPage({
 
   return (
     <main className="admin admin--wide" lang={locale}>
+      <PageBar
+        title={t("templates")}
+        actions={
+          canEdit ? (
+            <button type="button" className="admin__button" onClick={() => setCreating(true)}>
+              {t("newTemplate")}
+            </button>
+          ) : undefined
+        }
+      />
       <div className="admin__head">
         <h1>{t("templates")}</h1>
-        {canEdit && (
-          <button type="button" className="admin__button" onClick={() => setCreating(true)}>
-            {t("newTemplate")}
-          </button>
-        )}
       </div>
       <div className="admin__tools">
         <input type="search" className="admin__search" aria-label={t("searchTemplates")} placeholder={t("searchTemplates")} value={search} onChange={(event) => setSearch(event.target.value)} />

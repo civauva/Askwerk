@@ -5,6 +5,7 @@ import { createTranslator, type Locale } from "@askwerk/schema";
 import { ComboBox, ConfirmDialog, DataGrid, dataGridTexts, Dialog, DialogActions, Field, type DataGridColumn } from "@askwerk/ui";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { adminMessages, type AdminMessageKey } from "./messages";
+import { PageBar } from "../shell/PageBar";
 
 type T = (key: AdminMessageKey, values?: Record<string, string | number>) => string;
 const useT = (locale: Locale): T => useMemo(() => createTranslator(adminMessages, locale), [locale]);
@@ -65,7 +66,7 @@ export function OrganisationPage({ client, members, locale, onDeleted }: { clien
 
   return (
     <main className="admin" lang={locale}>
-      <p className="admin__kicker">{t("administration")}</p>
+      <PageBar path={[{ place: "administration" }]} title={t("organisation")} />
       <h1>{t("organisation")}</h1>
       <p className="admin__lead">{t("organisationLead", { name: details.name, date: day(locale, details.createdAt), members: details.members, surveys: details.surveys })}</p>
 
@@ -245,15 +246,20 @@ export function OrganisationsPage({ client, locale, startNew = false }: { client
 
   return (
     <main className="admin admin--wide" lang={locale}>
-      <p className="admin__kicker">{t("thisAskwerk")}</p>
+      <PageBar
+        path={[{ place: "thisAskwerk" }]}
+        title={t("organisations")}
+        actions={
+          <button type="button" className="admin__button admin__button--primary" onClick={() => setCreating(true)}>
+            {t("newOrganisation")}
+          </button>
+        }
+      />
       <div className="admin__head">
         <div>
           <h1>{t("organisations")}</h1>
           <p className="admin__lead">{t("organisationsLead")}</p>
         </div>
-        <button type="button" className="admin__button admin__button--primary" onClick={() => setCreating(true)}>
-          {t("newOrganisation")}
-        </button>
       </div>
       {created !== null && (
         <p className="admin__done" role="status">
@@ -474,7 +480,7 @@ export function AdministratorsPage({ client, locale }: { client: Pick<Installati
 
   return (
     <main className="admin" lang={locale}>
-      <p className="admin__kicker">{t("thisAskwerk")}</p>
+      <PageBar path={[{ place: "thisAskwerk" }]} title={t("administrators")} />
       <h1>{t("administrators")}</h1>
       <p className="admin__lead">{t("administratorsLead")}</p>
       <form
@@ -582,7 +588,7 @@ export function InstallationPage({ client, locale }: { client: Pick<Installation
 
   return (
     <main className="admin" lang={locale}>
-      <p className="admin__kicker">{t("thisAskwerk")}</p>
+      <PageBar path={[{ place: "thisAskwerk" }]} title={t("installation")} />
       <h1>{t("installation")}</h1>
       <p className="admin__lead">{t("installationVersionLead", { version: info.version })}</p>
 

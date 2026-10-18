@@ -27,6 +27,7 @@ const en = {
   suspended: "suspended",
   organisationSettings: "Organisation settings",
   newOrganisation: "New organisation",
+  whereYouAre: "Where you are",
 } as const;
 
 export type ShellMessageKey = keyof typeof en;
@@ -59,5 +60,6 @@ export const shellMessages: Catalogs<ShellMessageKey> = {
     suspended: "gesperrt",
     organisationSettings: "Einstellungen der Organisation",
     newOrganisation: "Neue Organisation",
+    whereYouAre: "Wo Sie sind",
   },
 };
