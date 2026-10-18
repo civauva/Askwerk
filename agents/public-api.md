@@ -12,7 +12,7 @@ This file holds the rules; how the API is built (pipeline, authentication paths,
 - Initial scope: surveys (list, read, create from Askwerk JSON, publish, close), participants (list, create, import), responses (list, read, submit), results export (asynchronous job), webhooks (manage), and the jobs needed to poll those exports and imports.
 - Not public unless a work item decides otherwise: designer editing operations (pages, questions, logic one by one), themes, analytics views, user and role management, instance and tenant settings, domains, audit screens.
 - Making an endpoint public is a decision in its work item, recorded in the contract sketch. A feature that is not in the Public API is not a gap; it is the default.
-- Public so far: list and read surveys, start an export, poll it and download its file (AWK-25), webhooks and the OAuth token endpoint (AWK-32), with API keys or OAuth access tokens, and the MCP server at /mcp with four tools (AWK-32). SDKs in AWK-26.
+- Public so far: list and read surveys, start an export, poll it and download its file (AWK-25), webhooks and the OAuth token endpoint (AWK-32), with API keys or OAuth access tokens, and the MCP server at /mcp with four tools (AWK-32). SDKs in AWK-26. Contacts (list, read, upsert by External ID else email, remove) with `contacts:read` and `contacts:write` (AWK-67).
 
 ## Contract first
 - The OpenAPI 3.1 document is the contract. It is generated from the controllers and their XML documentation at build time, committed at `docs/api/openapi.json`, and snapshot-tested (`testing.md`). A change to the snapshot is an API change and is reviewed as one.
@@ -34,7 +34,7 @@ This file holds the rules; how the API is built (pipeline, authentication paths,
 - **OAuth 2.0 client credentials** for server-to-server integrations: Askwerk issues short-lived opaque access tokens (15 minutes, stored as their hash, revocable at once with the client) from its own token endpoint (`/api/v1/oauth/token`). No identity broker and no JWT library are involved (AWK-32).
 - Cookie sessions are for the App API only; the Public API does not accept them.
 - Third-party "sign in with Askwerk" apps (OAuth authorization-code flow) are not in v1; adding them is its own work item and decision.
-- Scopes (initial set): `surveys:read`, `surveys:write`, `responses:read`, `responses:write`, `participants:read`, `participants:write`, `webhooks:manage`, `settings:read`, `settings:write`. Every endpoint names its policy and scope; every call is audited with the key or client as actor.
+- Scopes (initial set): `surveys:read`, `surveys:write`, `responses:read`, `responses:write`, `participants:read`, `participants:write`, `contacts:read`, `contacts:write` (AWK-67), `webhooks:manage`, `settings:read`, `settings:write`. Every endpoint names its policy and scope; every call is audited with the key or client as actor.
 - Rate limits per tenant and per key, with `RateLimit-*` headers and `429` + `Retry-After`.
 
 ## Versioning and deprecation

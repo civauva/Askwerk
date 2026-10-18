@@ -46,7 +46,7 @@ public sealed class DevelopersApiTests(PostgresServer server)
         var folders = collection.GetProperty("item").EnumerateArray().Select(folder => folder.GetProperty("name").GetString()).ToList();
         Assert.Contains("Surveys", folders);
         Assert.Contains("Responses", folders);
-        Assert.Equal(19, collection.GetProperty("item").EnumerateArray().Sum(folder => folder.GetProperty("item").GetArrayLength()));
+        Assert.Equal(23, collection.GetProperty("item").EnumerateArray().Sum(folder => folder.GetProperty("item").GetArrayLength()));
         Assert.Contains(zip.Entries, entry => entry.FullName == "askwerk-sql-server-sync/Program.cs");
         Assert.Contains(zip.Entries, entry => entry.FullName == "askwerk-sql-server-sync/README.md");
     }

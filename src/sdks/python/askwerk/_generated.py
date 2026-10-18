@@ -99,6 +99,59 @@ class PublicCodebook(TypedDict):
     """Every variable in order."""
 
 
+class PublicContact(TypedDict):
+    """A contact."""
+
+    id: str
+    """The contact."""
+    email: str
+    """Their address, lower case."""
+    name: str | None
+    """Their name."""
+    externalId: str | None
+    """Their id in the other system."""
+    language: str | None
+    """Their language."""
+    groups: list[str]
+    """Their groups."""
+    fields: str
+    """Further fields."""
+    unsubscribed: bool
+    """They asked for no more invitations; never changed by the API."""
+    bounced: bool
+    """An invitation to their address was refused."""
+    createdAt: str
+    """Added (UTC)."""
+    updatedAt: str
+    """Last changed (UTC)."""
+
+
+class PublicContactPage(TypedDict):
+    """One page of contacts."""
+
+    items: list["PublicContact"]
+    """Oldest first."""
+    nextCursor: str | None
+    """Pass as cursor for the next page; null on the last."""
+
+
+class PublicContactRequest(TypedDict):
+    """A contact to add or update."""
+
+    email: str | None
+    """Their address; finds them when no External ID is sent or none matches."""
+    name: NotRequired[str | None]
+    """Their name, for {name}; kept when empty."""
+    language: NotRequired[str | None]
+    """Their language as two letters, e.g. de; kept when empty."""
+    externalId: NotRequired[str | None]
+    """Their id in the other system; finds them first, also after an address change."""
+    fields: NotRequired[str | None]
+    """Further fields, e.g. segment; replace the stored ones when sent."""
+    groups: NotRequired[list[str] | None]
+    """Their groups; replace the stored ones when sent."""
+
+
 class PublicExport(TypedDict):
     """An export."""
 
@@ -589,3 +642,30 @@ class ParticipantsApi:
     def invite(self, survey_id: str, body: "PublicInviteRequest") -> PublicInvited:
         """Adds or updates people and invites the new ones. Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails."""
         return self._t.request("POST", f"/api/v1/surveys/{survey_id}/participants", body=body)  # type: ignore[no-any-return]
+
+
+class ContactsApi:
+    """Contacts in the Public API."""
+
+    def __init__(self, transport: Transport) -> None:
+        self._t = transport
+
+    def list(self, *, search: str | None = None, group: str | None = None, external_id: str | None = None, limit: int | None = None, cursor: str | None = None) -> PublicContactPage:
+        """Lists the contacts with their groups, fields and whether they unsubscribed or bounced, oldest first. Scope contacts:read. Pages on a cursor: pass nextCursor as cursor until it is null."""
+        return self._t.request("GET", "/api/v1/contacts", query={"search": search, "group": group, "externalId": external_id, "limit": limit, "cursor": cursor})  # type: ignore[no-any-return]
+
+    def list_all(self, *, search: str | None = None, group: str | None = None, external_id: str | None = None, limit: int | None = None) -> Iterator[PublicContact]:
+        """Every item of list, page after page."""
+        return self._t.by_cursor(lambda cursor: self.list(search=search, group=group, external_id=external_id, limit=limit, cursor=cursor))  # type: ignore[no-any-return]
+
+    def put(self, body: "PublicContactRequest") -> PublicContact:
+        """Adds a contact, or updates the one with the same External ID, else the same email. Scope contacts:write. Idempotent: sending the same person again changes nothing. What is not sent is kept: an empty name, language or External ID keeps the stored one; fields and groups, when sent, replace the stored ones. Unsubscribed and bounced are read-only: someone who unsubscribed stays unsubscribed, also under a new address."""
+        return self._t.request("PUT", "/api/v1/contacts", body=body)  # type: ignore[no-any-return]
+
+    def get(self, id: str) -> PublicContact:
+        """Reads one contact. Scope contacts:read."""
+        return self._t.request("GET", f"/api/v1/contacts/{id}")  # type: ignore[no-any-return]
+
+    def delete(self, id: str) -> None:
+        """Removes a contact; their participants in surveys stay, without the link to them. Scope contacts:write. An unsubscribed address stays unsubscribed after the contact is removed."""
+        return self._t.request("DELETE", f"/api/v1/contacts/{id}")  # type: ignore[no-any-return]

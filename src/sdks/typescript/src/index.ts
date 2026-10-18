@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // The Askwerk Public API for TypeScript and JavaScript: no dependencies, fetch only (Node 20+, browsers, Deno, Bun).
-import { ExportsApi, ParticipantsApi, ResponsesApi, SurveysApi, UsersApi, WebhooksApi, type PublicExport } from "./generated.ts";
+import { ContactsApi, ExportsApi, ParticipantsApi, ResponsesApi, SurveysApi, UsersApi, WebhooksApi, type PublicExport } from "./generated.ts";
 import { AskwerkError, sleep, Transport, type Credentials } from "./transport.ts";
 
 export * from "./generated.ts";
@@ -32,6 +32,7 @@ export class Askwerk {
   readonly webhooks: WebhooksApi;
   readonly users: UsersApi;
   readonly participants: ParticipantsApi;
+  readonly contacts: ContactsApi;
 
   constructor(options: AskwerkOptions) {
     const { baseUrl, fetch: fetcher, ...credentials } = options;
@@ -42,6 +43,7 @@ export class Askwerk {
     this.webhooks = new WebhooksApi(transport);
     this.users = new UsersApi(transport);
     this.participants = new ParticipantsApi(transport);
+    this.contacts = new ContactsApi(transport);
   }
 }
 

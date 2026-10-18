@@ -56,7 +56,7 @@ public sealed class ApiKeyTests
     public void Presets_ReadResultsReads_FullAccessHasEveryScopeAKeyMayHave()
     {
         Assert.Equal(["surveys:read", "responses:read"], ApiScopes.ReadResults);
-        Assert.Equal(["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "webhooks:manage"], ApiScopes.FullAccess);
+        Assert.Equal(["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "contacts:read", "contacts:write", "webhooks:manage"], ApiScopes.FullAccess);
     }
 
     [Fact]

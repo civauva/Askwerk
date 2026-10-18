@@ -82,7 +82,7 @@ describe("Settings → API (AWK-25, W14 C and D)", () => {
 
     expect(client.calls.find(([name]) => name === "create")?.[1]).toEqual({
       name: "HR sync 2",
-      scopes: ["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "webhooks:manage"],
+      scopes: ["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "contacts:read", "contacts:write", "webhooks:manage"],
       expiresInDays: null,
     });
   });

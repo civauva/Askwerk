@@ -1083,6 +1083,328 @@
         }
       }
     },
+    "/api/v1/contacts": {
+      "get": {
+        "tags": [
+          "PublicContacts"
+        ],
+        "summary": "Lists the contacts with their groups, fields and whether they unsubscribed or bounced, oldest first.",
+        "description": "Scope contacts:read. Pages on a cursor: pass nextCursor as cursor until it is null.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Part of the name, email or External ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "group",
+            "in": "query",
+            "description": "Only contacts in this group.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalId",
+            "in": "query",
+            "description": "Only the contact with this External ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Contacts per page, at most 100; 50 when empty.",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Where the page starts, from the previous page\u0027s nextCursor.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One page of contacts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicContactPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "contact-invalid: the cursor is not one.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks contacts:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "PublicContacts"
+        ],
+        "summary": "Adds a contact, or updates the one with the same External ID, else the same email.",
+        "description": "Scope contacts:write. Idempotent: sending the same person again changes nothing. What is not sent is kept: an\r\nempty name, language or External ID keeps the stored one; fields and groups, when sent, replace the stored ones.\r\nUnsubscribed and bounced are read-only: someone who unsubscribed stays unsubscribed, also under a new address.",
+        "requestBody": {
+          "description": "Cancels the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicContactRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicContactRequest"
+              }
+            },
+            "application/*\u002Bjson": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicContactRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated: a contact with this External ID or email existed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicContact"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicContact"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "contact-invalid: errors names each field (email-required, email-invalid, language-invalid, too-long, too-many-groups).",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks contacts:write.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "contact-email-taken: the External ID found one contact and the email another.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/contacts/{id}": {
+      "get": {
+        "tags": [
+          "PublicContacts"
+        ],
+        "summary": "Reads one contact.",
+        "description": "Scope contacts:read.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The contact.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The contact.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicContact"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks contacts:read.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "contact-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PublicContacts"
+        ],
+        "summary": "Removes a contact; their participants in surveys stay, without the link to them.",
+        "description": "Scope contacts:write. An unsubscribed address stays unsubscribed after the contact is removed.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The contact.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Removed.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "401": {
+            "description": "unauthorized: no valid API key or token.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "403": {
+            "description": "scope-missing: it lacks contacts:write.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "contact-not-found.",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
     "/api/v1/surveys/{surveyId}/participants": {
       "get": {
         "tags": [
@@ -1827,6 +2149,168 @@
           }
         },
         "description": "A codebook."
+      },
+      "PublicContact": {
+        "required": [
+          "id",
+          "email",
+          "name",
+          "externalId",
+          "language",
+          "groups",
+          "fields",
+          "unsubscribed",
+          "bounced",
+          "createdAt",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The contact.",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "Their address, lower case."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their name."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in the other system."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their language."
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Their groups."
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields."
+          },
+          "unsubscribed": {
+            "type": "boolean",
+            "description": "They asked for no more invitations; never changed by the API."
+          },
+          "bounced": {
+            "type": "boolean",
+            "description": "An invitation to their address was refused."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Added (UTC).",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last changed (UTC).",
+            "format": "date-time"
+          }
+        },
+        "description": "A contact."
+      },
+      "PublicContactPage": {
+        "required": [
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicContact"
+            },
+            "description": "Oldest first."
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Pass as cursor for the next page; null on the last."
+          }
+        },
+        "description": "One page of contacts."
+      },
+      "PublicContactRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their address; finds them when no External ID is sent or none matches."
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their name, for {name}; kept when empty."
+          },
+          "language": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their language as two letters, e.g. de; kept when empty."
+          },
+          "externalId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Their id in the other system; finds them first, also after an address change."
+          },
+          "fields": {
+            "type": [
+              "null",
+              "object"
+            ],
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Further fields, e.g. segment; replace the stored ones when sent."
+          },
+          "groups": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "Their groups; replace the stored ones when sent."
+          }
+        },
+        "description": "A contact to add or update."
       },
       "PublicExport": {
         "required": [
@@ -2972,6 +3456,9 @@
     },
     {
       "name": "PublicResponses"
+    },
+    {
+      "name": "PublicContacts"
     },
     {
       "name": "PublicParticipants"

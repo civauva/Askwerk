@@ -7,7 +7,7 @@ import hmac
 import time
 
 from ._generated import *  # noqa: F403
-from ._generated import ExportsApi, ParticipantsApi, PublicExport, ResponsesApi, SurveysApi, UsersApi, WebhooksApi
+from ._generated import ContactsApi, ExportsApi, ParticipantsApi, PublicExport, ResponsesApi, SurveysApi, UsersApi, WebhooksApi
 from ._transport import AskwerkError, Transport
 
 __version__ = "1.0.0"
@@ -42,6 +42,7 @@ class Askwerk:
         self.webhooks = WebhooksApi(transport)
         self.users = UsersApi(transport)
         self.participants = ParticipantsApi(transport)
+        self.contacts = ContactsApi(transport)
 
 
 def verify_webhook(secret: str, header: str, body: str | bytes, tolerance_seconds: int = 300) -> bool:

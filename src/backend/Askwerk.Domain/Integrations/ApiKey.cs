@@ -14,11 +14,17 @@ public static class ApiScopes
     /// <summary>Read responses and export them.</summary>
     public const string ResponsesRead = "responses:read";
 
+    /// <summary>Read the organisation's contacts (AWK-67).</summary>
+    public const string ContactsRead = "contacts:read";
+
+    /// <summary>Add, change and remove the organisation's contacts (AWK-67).</summary>
+    public const string ContactsWrite = "contacts:write";
+
     /// <summary>Preset "Read results": read surveys and responses, start and download exports.</summary>
     public static readonly string[] ReadResults = [SurveysRead, ResponsesRead];
 
     /// <summary>Preset "Full access": every scope a key may have.</summary>
-    public static readonly string[] FullAccess = [SurveysRead, "surveys:write", ResponsesRead, "responses:write", "participants:read", "participants:write", "webhooks:manage"];
+    public static readonly string[] FullAccess = [SurveysRead, "surveys:write", ResponsesRead, "responses:write", "participants:read", "participants:write", ContactsRead, ContactsWrite, "webhooks:manage"];
 
     /// <summary>Create, change and deactivate users through the provisioning API (AWK-12, W22); never part of a preset.</summary>
     public const string UsersManage = "users:manage";

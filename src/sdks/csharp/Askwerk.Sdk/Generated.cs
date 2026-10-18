@@ -140,6 +140,94 @@ public sealed class PublicCodebook
     public IReadOnlyList<PublicVariable> Variables { get; init; } = [];
 }
 
+/// <summary>A contact.</summary>
+public sealed class PublicContact
+{
+    /// <summary>The contact.</summary>
+    [JsonPropertyName("id")]
+    public Guid Id { get; init; }
+
+    /// <summary>Their address, lower case.</summary>
+    [JsonPropertyName("email")]
+    public string Email { get; init; } = "";
+
+    /// <summary>Their name.</summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    /// <summary>Their id in the other system.</summary>
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; init; }
+
+    /// <summary>Their language.</summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; init; }
+
+    /// <summary>Their groups.</summary>
+    [JsonPropertyName("groups")]
+    public IReadOnlyList<string> Groups { get; init; } = [];
+
+    /// <summary>Further fields.</summary>
+    [JsonPropertyName("fields")]
+    public string Fields { get; init; } = "";
+
+    /// <summary>They asked for no more invitations; never changed by the API.</summary>
+    [JsonPropertyName("unsubscribed")]
+    public bool Unsubscribed { get; init; }
+
+    /// <summary>An invitation to their address was refused.</summary>
+    [JsonPropertyName("bounced")]
+    public bool Bounced { get; init; }
+
+    /// <summary>Added (UTC).</summary>
+    [JsonPropertyName("createdAt")]
+    public DateTimeOffset CreatedAt { get; init; }
+
+    /// <summary>Last changed (UTC).</summary>
+    [JsonPropertyName("updatedAt")]
+    public DateTimeOffset UpdatedAt { get; init; }
+}
+
+/// <summary>One page of contacts.</summary>
+public sealed class PublicContactPage
+{
+    /// <summary>Oldest first.</summary>
+    [JsonPropertyName("items")]
+    public IReadOnlyList<PublicContact> Items { get; init; } = [];
+
+    /// <summary>Pass as cursor for the next page; null on the last.</summary>
+    [JsonPropertyName("nextCursor")]
+    public string? NextCursor { get; init; }
+}
+
+/// <summary>A contact to add or update.</summary>
+public sealed class PublicContactRequest
+{
+    /// <summary>Their address; finds them when no External ID is sent or none matches.</summary>
+    [JsonPropertyName("email")]
+    public string? Email { get; init; }
+
+    /// <summary>Their name, for {name}; kept when empty.</summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    /// <summary>Their language as two letters, e.g. de; kept when empty.</summary>
+    [JsonPropertyName("language")]
+    public string? Language { get; init; }
+
+    /// <summary>Their id in the other system; finds them first, also after an address change.</summary>
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; init; }
+
+    /// <summary>Further fields, e.g. segment; replace the stored ones when sent.</summary>
+    [JsonPropertyName("fields")]
+    public string? Fields { get; init; }
+
+    /// <summary>Their groups; replace the stored ones when sent.</summary>
+    [JsonPropertyName("groups")]
+    public IReadOnlyList<string>? Groups { get; init; }
+}
+
 /// <summary>An export.</summary>
 public sealed class PublicExport
 {
@@ -882,4 +970,39 @@ public sealed partial class ParticipantsApi
     /// <remarks>Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails.</remarks>
     public Task<PublicInvited> InviteAsync(Guid surveyId, PublicInviteRequest body, CancellationToken cancellationToken = default) =>
         _t.SendAsync<PublicInvited>(HttpMethod.Post, $"/api/v1/surveys/{surveyId}/participants", [], body, null, cancellationToken);
+}
+
+/// <summary>Contacts in the Public API.</summary>
+public sealed partial class ContactsApi
+{
+    private readonly Transport _t;
+
+    internal ContactsApi(Transport transport)
+    {
+        _t = transport;
+    }
+
+    /// <summary>Lists the contacts with their groups, fields and whether they unsubscribed or bounced, oldest first.</summary>
+    /// <remarks>Scope contacts:read. Pages on a cursor: pass nextCursor as cursor until it is null.</remarks>
+    public Task<PublicContactPage> ListAsync(string? search = null, string? group = null, string? externalId = null, int? limit = null, string? cursor = null, CancellationToken cancellationToken = default) =>
+        _t.SendAsync<PublicContactPage>(HttpMethod.Get, $"/api/v1/contacts", [("search", search), ("group", group), ("externalId", externalId), ("limit", limit), ("cursor", cursor)], null, null, cancellationToken);
+
+    /// <summary>Every item of ListAsync, page after page.</summary>
+    public IAsyncEnumerable<PublicContact> ListAllAsync(string? search = null, string? group = null, string? externalId = null, int? limit = null, CancellationToken cancellationToken = default) =>
+        Transport.ByCursorAsync(cursor => ListAsync(search, group, externalId, limit, cursor, cancellationToken: cancellationToken), page => page.Items, page => page.NextCursor, cancellationToken);
+
+    /// <summary>Adds a contact, or updates the one with the same External ID, else the same email.</summary>
+    /// <remarks>Scope contacts:write. Idempotent: sending the same person again changes nothing. What is not sent is kept: an empty name, language or External ID keeps the stored one; fields and groups, when sent, replace the stored ones. Unsubscribed and bounced are read-only: someone who unsubscribed stays unsubscribed, also under a new address.</remarks>
+    public Task<PublicContact> PutAsync(PublicContactRequest body, CancellationToken cancellationToken = default) =>
+        _t.SendAsync<PublicContact>(HttpMethod.Put, $"/api/v1/contacts", [], body, null, cancellationToken);
+
+    /// <summary>Reads one contact.</summary>
+    /// <remarks>Scope contacts:read.</remarks>
+    public Task<PublicContact> GetAsync(Guid id, CancellationToken cancellationToken = default) =>
+        _t.SendAsync<PublicContact>(HttpMethod.Get, $"/api/v1/contacts/{id}", [], null, null, cancellationToken);
+
+    /// <summary>Removes a contact; their participants in surveys stay, without the link to them.</summary>
+    /// <remarks>Scope contacts:write. An unsubscribed address stays unsubscribed after the contact is removed.</remarks>
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default) =>
+        _t.SendAsync(HttpMethod.Delete, $"/api/v1/contacts/{id}", [], null, null, cancellationToken);
 }

@@ -30,5 +30,8 @@ The type URIs are names; they need not open in a browser.
 | `export-not-found` | 404 | No such export in the key's organisation. |
 | `export-not-ready` | 409 | The file is not there yet; poll the export. |
 | `export-expired` | 410 | The file was deleted after 7 days; start a new export. |
+| `contact-invalid` | 400 | The contact is not valid; `errors` names each field with its codes (`email-required`, `email-invalid`, `language-invalid`, `too-long`, `too-many-groups`). |
+| `contact-not-found` | 404 | No such contact in the key's organisation. |
+| `contact-email-taken` | 409 | The External ID found one contact and the email another. |
 | `export-failed` | — | In an export's `error`: it could not be prepared. Nothing was lost; start a new one. |
 | `too-many-rows-for-excel` | — | In an export's `error`: more rows than one Excel sheet holds; export as CSV. |

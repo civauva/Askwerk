@@ -24,7 +24,7 @@ export interface NewApiKey {
 /** The presets of the create dialog (W14 D). */
 export const apiKeyPresets = {
   readResults: ["surveys:read", "responses:read"],
-  fullAccess: ["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "webhooks:manage"],
+  fullAccess: ["surveys:read", "surveys:write", "responses:read", "responses:write", "participants:read", "participants:write", "contacts:read", "contacts:write", "webhooks:manage"],
 } as const;
 
 /** Every scope a key may carry: Full access and, never in a preset, users:manage for provisioning (AWK-12). */

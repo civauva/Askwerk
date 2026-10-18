@@ -84,6 +84,56 @@ export interface PublicCodebook {
   variables: PublicVariable[];
 }
 
+/** A contact. */
+export interface PublicContact {
+  /** The contact. */
+  id: string;
+  /** Their address, lower case. */
+  email: string;
+  /** Their name. */
+  name: string | null;
+  /** Their id in the other system. */
+  externalId: string | null;
+  /** Their language. */
+  language: string | null;
+  /** Their groups. */
+  groups: string[];
+  /** Further fields. */
+  fields: string;
+  /** They asked for no more invitations; never changed by the API. */
+  unsubscribed: boolean;
+  /** An invitation to their address was refused. */
+  bounced: boolean;
+  /** Added (UTC). */
+  createdAt: string;
+  /** Last changed (UTC). */
+  updatedAt: string;
+}
+
+/** One page of contacts. */
+export interface PublicContactPage {
+  /** Oldest first. */
+  items: PublicContact[];
+  /** Pass as cursor for the next page; null on the last. */
+  nextCursor: string | null;
+}
+
+/** A contact to add or update. */
+export interface PublicContactRequest {
+  /** Their address; finds them when no External ID is sent or none matches. */
+  email: string | null;
+  /** Their name, for {name}; kept when empty. */
+  name?: string | null;
+  /** Their language as two letters, e.g. de; kept when empty. */
+  language?: string | null;
+  /** Their id in the other system; finds them first, also after an address change. */
+  externalId?: string | null;
+  /** Further fields, e.g. segment; replace the stored ones when sent. */
+  fields?: string | null;
+  /** Their groups; replace the stored ones when sent. */
+  groups?: string[] | null;
+}
+
 /** An export. */
 export interface PublicExport {
   /** The export's id. */
@@ -586,5 +636,39 @@ export class ParticipantsApi {
   /** Adds or updates people and invites the new ones. Scope participants:write. Known people (same External ID, else same email) get the new details and keep their link; unsubscribed addresses are skipped. send false makes personal links only, without emails. */
   invite(surveyId: string, body: PublicInviteRequest): Promise<PublicInvited> {
     return this.#t.request("POST", `/api/v1/surveys/${encodeURIComponent(surveyId)}/participants`, { body }) as Promise<PublicInvited>;
+  }
+}
+
+/** Contacts in the Public API. */
+export class ContactsApi {
+  readonly #t: Transport;
+
+  constructor(transport: Transport) {
+    this.#t = transport;
+  }
+
+  /** Lists the contacts with their groups, fields and whether they unsubscribed or bounced, oldest first. Scope contacts:read. Pages on a cursor: pass nextCursor as cursor until it is null. */
+  list(options: { search?: string; group?: string; externalId?: string; limit?: number; cursor?: string } = {}): Promise<PublicContactPage> {
+    return this.#t.request("GET", `/api/v1/contacts`, { query: { search: options.search, group: options.group, externalId: options.externalId, limit: options.limit, cursor: options.cursor } }) as Promise<PublicContactPage>;
+  }
+
+  /** Every item of list, page after page. */
+  listAll(options: { search?: string; group?: string; externalId?: string; limit?: number } = {}): AsyncIterable<PublicContact> {
+    return this.#t.byCursor((cursor) => this.list({ ...options, cursor }));
+  }
+
+  /** Adds a contact, or updates the one with the same External ID, else the same email. Scope contacts:write. Idempotent: sending the same person again changes nothing. What is not sent is kept: an empty name, language or External ID keeps the stored one; fields and groups, when sent, replace the stored ones. Unsubscribed and bounced are read-only: someone who unsubscribed stays unsubscribed, also under a new address. */
+  put(body: PublicContactRequest): Promise<PublicContact> {
+    return this.#t.request("PUT", `/api/v1/contacts`, { body }) as Promise<PublicContact>;
+  }
+
+  /** Reads one contact. Scope contacts:read. */
+  get(id: string): Promise<PublicContact> {
+    return this.#t.request("GET", `/api/v1/contacts/${encodeURIComponent(id)}`, {  }) as Promise<PublicContact>;
+  }
+
+  /** Removes a contact; their participants in surveys stay, without the link to them. Scope contacts:write. An unsubscribed address stays unsubscribed after the contact is removed. */
+  delete(id: string): Promise<void> {
+    return this.#t.request("DELETE", `/api/v1/contacts/${encodeURIComponent(id)}`, {  }) as Promise<void>;
   }
 }

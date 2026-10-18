@@ -5,6 +5,7 @@ All notable changes to Askwerk are documented here. The format follows [Keep a C
 ## [Unreleased]
 
 ### Added
+- Public API: the organisation's contacts at /api/v1/contacts, with the scopes contacts:read and contacts:write: list (search, group, External ID), read, add or update by External ID else email in one idempotent PUT, and remove; who unsubscribed stays unsubscribed. Full access keys and OAuth clients get both scopes; the SDKs and the Postman collection have the calls (AWK-67).
 - One layout language: every page starts at the same place beside the sidebar, left-aligned; lists up to 1,200 px, forms up to 720 px, only canvases full width (AWK-41).
 - Survey pages show a breadcrumb, the survey's name and then the page; the sidebar shows only the survey's places (AWK-41).
 - The slider shows where to touch before it is answered, ticks per step and numbers at its ends, and can be cleared (AWK-41).

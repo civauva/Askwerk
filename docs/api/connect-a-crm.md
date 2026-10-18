@@ -45,6 +45,16 @@ const event = JSON.parse(body); // { type: "response.completed", data: { surveyI
 Answers by variable are in `GET /api/v1/surveys/{surveyId}/responses` (scope `responses:read`); see
 [Responses](responses.md). Every delivery is listed under Connections, where a failing address shows at once.
 
+## 4. Keep Contacts in step
+
+To have the CRM's people in Askwerk's address book as well, for invitations from the designer, send each change with
+`PUT /api/v1/contacts` (scope `contacts:write`). It finds the person by External ID, else email, and is safe to repeat;
+someone who unsubscribed stays unsubscribed. See [Contacts](contacts.md).
+
+```ts
+await askwerk.contacts.put({ email: "lena@example.org", name: "Lena Gruber", externalId: "CRM-10442", groups: ["Key accounts"] });
+```
+
 ## When something goes wrong
 
 - **Calls refused** in Connections: the client was paused, its secret replaced, or it asked for something it may not do.

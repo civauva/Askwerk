@@ -61,6 +61,12 @@ public static class PublicApi
     /// <summary>The policy for adding and inviting participants (W36).</summary>
     public const string ParticipantsWrite = "scope:participants:write";
 
+    /// <summary>The policy for reading the organisation's contacts (AWK-67).</summary>
+    public const string ContactsRead = "scope:contacts:read";
+
+    /// <summary>The policy for adding, changing and removing contacts (AWK-67).</summary>
+    public const string ContactsWrite = "scope:contacts:write";
+
     /// <summary>Policy: the key may provision users (AWK-12).</summary>
     public const string UsersManage = "scope:users:manage";
 
@@ -104,6 +110,8 @@ public static class PublicApi
             .AddPolicy(Integration, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration))
             .AddPolicy(ParticipantsRead, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "participants:read"))
             .AddPolicy(ParticipantsWrite, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "participants:write"))
+            .AddPolicy(ContactsRead, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "contacts:read"))
+            .AddPolicy(ContactsWrite, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "contacts:write"))
             .AddPolicy(WebhooksManage, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "webhooks:manage"))
             .AddPolicy(UsersManage, policy => policy.AddAuthenticationSchemes(Scheme).RequireAssertion(IsIntegration).RequireClaim(ScopeClaim, "users:manage"));
     }
@@ -154,6 +162,9 @@ public static class PublicProblems
         ["user-invalid"] = ("The user is not valid.", "Send email, name and a role of admin, editor, analyst or viewer.", "Der Benutzer ist ungültig.", "Senden Sie email, name und eine Rolle: admin, editor, analyst oder viewer."),
         ["owner-not-provisioned"] = ("Owners are not provisioned.", "Owners keep their Askwerk account; choose admin or a lower role.", "Inhaber werden nicht bereitgestellt.", "Inhaber behalten ihr Askwerk-Konto; wählen Sie admin oder eine niedrigere Rolle."),
         ["delivery-not-found"] = ("The delivery does not exist.", "Check the id in the webhook's deliveries.", "Die Zustellung gibt es nicht.", "Prüfen Sie die Id in den Zustellungen des Webhooks."),
+        ["contact-not-found"] = ("The contact does not exist.", "Check the id; the key sees only its organisation's contacts.", "Den Kontakt gibt es nicht.", "Prüfen Sie die Id; der Schlüssel sieht nur die Kontakte seiner Organisation."),
+        ["contact-invalid"] = ("The contact is not valid.", "Send a valid email and, if any, a two-letter language; errors names each field.", "Der Kontakt ist ungültig.", "Senden Sie eine gültige E-Mail und, falls gewünscht, eine Sprache aus zwei Buchstaben; errors nennt jedes Feld."),
+        ["contact-email-taken"] = ("Another contact has this email.", "The External ID found one contact and the email another. Change or remove one of them first.", "Ein anderer Kontakt hat diese E-Mail.", "Die External ID fand einen Kontakt und die E-Mail einen anderen. Ändern oder entfernen Sie zuerst einen davon."),
         ["too-many-rows-for-excel"] = ("Too many rows for one Excel sheet.", "Export as csv instead.", "Zu viele Zeilen für ein Excel-Blatt.", "Exportieren Sie stattdessen als csv."),
     };
 
