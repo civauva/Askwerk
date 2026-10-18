@@ -1,0 +1,200 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<!-- W36 Connect a system. ?v=a: Connections (each connected system with its health); ?v=b: step 1, what it should do;
+     ?v=c: step 2, the details, preset by the goal; ?v=d: step 3, test it, the credentials once, code to copy. -->
+<html lang="en"><head><meta charset="utf-8"><title>W36 Connections</title>
+<link rel="stylesheet" href="../../src/frontend/packages/ui/src/tokens.css">
+<style>
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Sans Condensed"; font-weight: 700; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-sans-condensed/files/ibm-plex-sans-condensed-latin-700-normal.woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-weight: 500; src: url("../../src/frontend/packages/ui/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2"); }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1440px; min-height: 900px; background: var(--aw-paper); color: var(--aw-ink); font: 400 14px/1.45 var(--aw-font); }
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: 232px; background: var(--aw-surface); border-right: 1px solid var(--aw-line); padding: 18px 12px; }
+  .logo { font: 700 21px/1 var(--aw-font-display); margin: 2px 8px 16px; } .logo span { color: var(--aw-signal); }
+  .org { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border: 1px solid var(--aw-line-strong); border-radius: 8px; font-weight: 600; font-size: 13.5px; }
+  .org i { width: 24px; height: 24px; border-radius: 6px; background: var(--aw-ink); color: #fff; display: grid; place-items: center; font: 600 9.5px/1 var(--aw-font-mono); font-style: normal; }
+  .grp { margin: 16px 8px 4px; font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .08em; color: var(--aw-muted); }
+  .nav { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 6px; font-size: 14px; color: var(--aw-graphite); } .nav.on { background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); color: var(--aw-ink); font-weight: 600; }
+  .main { margin-left: 232px; padding: 28px 32px 40px; max-width: 1264px; }
+  h1 { margin: 0; font: 700 32px/1.1 var(--aw-font-display); }
+  .lead { margin: 6px 0 0; color: var(--aw-graphite); font-size: 13.5px; max-width: 720px; }
+  .grow { flex: 1; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border: 1px solid var(--aw-line-strong); border-radius: var(--aw-radius-control); background: var(--aw-surface); font-weight: 600; font-size: 13px; white-space: nowrap; }
+  .btn.primary { background: var(--aw-signal); border-color: var(--aw-signal); color: #fff; } .btn.small { padding: 5px 9px; font-size: 12px; }
+  .card { background: var(--aw-surface); border: 1px solid var(--aw-line); border-radius: 10px; }
+  .mono { font: 500 10.5px/1 var(--aw-font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--aw-muted); }
+  .muted { color: var(--aw-graphite); font-size: 12.5px; }
+  .tag { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; background: color-mix(in srgb, var(--aw-ink) 6%, var(--aw-surface)); white-space: nowrap; }
+  .note { position: absolute; z-index: 9; max-width: 310px; padding: 8px 11px; background: #fff7cc; border: 1px solid #e3cf6a; border-radius: 6px; font-size: 12.5px; line-height: 1.4; color: #4a3d00; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+  /* list */
+  .conn { display: grid; grid-template-columns: 52px minmax(0, 1.3fr) minmax(0, 1.4fr) 200px auto; gap: 16px; align-items: center; padding: 16px 18px; }
+  .conn + .conn { border-top: 1px solid var(--aw-line); }
+  .logo2 { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font: 700 15px/1 var(--aw-font-display); color: #fff; }
+  .conn h3 { margin: 0; font: 600 15.5px/1.25 var(--aw-font); } .conn .what { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+  .flow { font-size: 12.5px; color: var(--aw-graphite); display: grid; gap: 3px; } .flow b { color: var(--aw-ink); font-weight: 600; }
+  .health { display: grid; gap: 3px; font-size: 12.5px; } .health .ok { color: #2f6f4f; font-weight: 600; } .health .bad { color: #b3261e; font-weight: 600; } .health .off { color: var(--aw-muted); font-weight: 600; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .bar { height: 26px; display: flex; align-items: flex-end; gap: 2px; } .bar i { width: 5px; background: #7fb08f; border-radius: 1px; } .bar i.f { background: #c94a3a; }
+  /* wizard */
+  .wiz { max-width: 920px; }
+  .steps { display: flex; gap: 6px; margin: 4px 0 20px; font-size: 12.5px; color: var(--aw-graphite); } .steps span { padding: 4px 11px; border-radius: 999px; } .steps .on { background: var(--aw-ink); color: var(--aw-paper); font-weight: 600; } .steps .done { color: #2f6f4f; font-weight: 600; }
+  .goals { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .goal { padding: 18px; display: grid; gap: 8px; align-content: start; position: relative; }
+  .goal.on { border: 2px solid var(--aw-signal); padding: 17px; }
+  .goal .ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--aw-signal) 12%, var(--aw-surface)); color: var(--aw-signal); font: 700 18px/1 var(--aw-font); }
+  .goal h3 { margin: 0; font: 600 16px/1.25 var(--aw-font); } .goal p { margin: 0; color: var(--aw-graphite); font-size: 13px; }
+  .goal .uses { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+  .check { position: absolute; top: 14px; right: 14px; width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--aw-line-strong); } .goal.on .check { background: var(--aw-signal); border-color: var(--aw-signal); }
+  .goal.on .check::after { content: "✓"; color: #fff; font-size: 12px; display: grid; place-items: center; height: 100%; }
+  .form { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px 18px; align-items: start; padding: 20px; }
+  .form .lbl { font-weight: 600; font-size: 13.5px; padding-top: 8px; } .form .lbl small { display: block; font-weight: 400; color: var(--aw-graphite); font-size: 12px; margin-top: 2px; }
+  .inp { padding: 8px 10px; border: 1px solid var(--aw-line-strong); border-radius: 6px; font-size: 13.5px; background: var(--aw-surface); }
+  .inp.mono2 { font: 500 12.5px/1.4 var(--aw-font-mono); }
+  .opts { display: grid; gap: 6px; } .opt { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; } .opt i { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--aw-line-strong); flex: none; margin-top: 2px; } .opt i.on { background: var(--aw-ink); border-color: var(--aw-ink); }
+  .opt i.r { border-radius: 50%; } .opt i.r.on { border: 5px solid var(--aw-ink); background: #fff; }
+  .opt small { display: block; color: var(--aw-graphite); font-size: 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--aw-line-strong); border-radius: 6px; overflow: hidden; } .seg span { padding: 7px 12px; font-size: 12.5px; font-weight: 600; } .seg .on { background: var(--aw-ink); color: var(--aw-paper); }
+  .foot { display: flex; gap: 10px; align-items: center; padding: 14px 20px; border-top: 1px solid var(--aw-line); }
+  /* test */
+  .ok-box { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; padding: 14px 16px; border-radius: 8px; background: color-mix(in srgb, #2f6f4f 10%, var(--aw-surface)); border: 1px solid color-mix(in srgb, #2f6f4f 35%, transparent); font-size: 13px; }
+  .ok-box b.big { grid-row: span 2; font-size: 22px; color: #2f6f4f; }
+  .secret { display: flex; gap: 8px; align-items: center; } .secret code { flex: 1; padding: 9px 11px; border-radius: 6px; background: color-mix(in srgb, var(--aw-ink) 5%, var(--aw-surface)); font: 500 12.5px/1 var(--aw-font-mono); }
+  .warn { font-size: 12.5px; color: #9a5b00; }
+  pre { margin: 0; padding: 14px 16px; border-radius: 8px; background: #1a1917; color: #f4f1ea; font: 500 12px/1.55 var(--aw-font-mono); overflow: hidden; }
+  pre .k { color: #e39b58; } pre .s { color: #9fd3a8; } pre .c { color: #8a877f; }
+  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--aw-line); margin-bottom: 10px; } .tabs span { padding: 7px 12px; font-size: 13px; color: var(--aw-graphite); border-bottom: 2px solid transparent; } .tabs .on { color: var(--aw-ink); font-weight: 600; border-color: var(--aw-ink); }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+  body:not(.a) #a, body:not(.b) #b, body:not(.c) #c, body:not(.d) #d { display: none; }
+
+  .topbar { position: fixed; left: 232px; right: 0; top: 0; height: 56px; display: flex; align-items: center; padding: 0 32px; background: var(--aw-surface); border-bottom: 1px solid var(--aw-line); font: 600 19px/1 var(--aw-font-display); z-index: 5; }
+  .topbar span { color: var(--aw-muted); font: 500 14px var(--aw-font); margin-right: 10px; }
+  body.withbar .main { padding-top: 84px; }
+  body:not(.withbar) .topbar { display: none; }
+</style></head>
+<body class="a">
+<div class="topbar"><span>Administration ›</span>Connections</div>
+<div class="side">
+  <div class="logo">Ask<span>werk</span></div>
+  <div class="org"><i>AG</i>Acme GmbH</div>
+  <div class="nav" style="margin-top:12px">Surveys</div><div class="nav">Templates</div>
+  <div class="grp">ADMINISTRATION</div>
+  <div class="nav">Organisation</div><div class="nav">Members</div><div class="nav">Contacts</div><div class="nav on">Connections</div><div class="nav">Sign-in</div><div class="nav">Look of surveys</div><div class="nav">Messages</div><div class="nav">Domains</div><div class="nav">Developers &amp; API</div>
+</div>
+
+<!-- A: Connections -->
+<main class="main" id="a">
+  <div class="head">
+    <div><h1>Connections</h1><p class="lead">The systems Askwerk works with: what each does, how they talk, and whether it works. Every connection is set up in three steps.</p></div>
+    <span class="grow"></span><span class="btn primary">+ Connect a system</span>
+  </div>
+  <div class="card">
+    <div class="conn">
+      <span class="logo2" style="background:#1f5f8b">CRM</span>
+      <div><h3>Acme CRM</h3><div class="what"><span class="tag">↓ Gets answers</span><span class="tag">↑ Sends people</span></div></div>
+      <div class="flow"><span><b>Askwerk calls it</b> · response.completed → crm.acme.at/hooks/askwerk</span><span><b>It calls Askwerk</b> · OAuth client · participants, responses</span></div>
+      <div class="health"><span class="ok"><span class="dot" style="background:#2f6f4f"></span>Works</span><span class="muted">412 deliveries this week · last 4 min ago</span><span class="bar"><i style="height:12px"></i><i style="height:18px"></i><i style="height:14px"></i><i style="height:22px"></i><i style="height:20px"></i><i style="height:25px"></i><i style="height:16px"></i></span></div>
+      <span class="btn small">Open</span>
+    </div>
+    <div class="conn">
+      <span class="logo2" style="background:#7c5cff">HR</span>
+      <div><h3>Personio (HR)</h3><div class="what"><span class="tag">↑ Sends people</span><span class="tag">⇄ Sign-in</span></div></div>
+      <div class="flow"><span><b>It calls Askwerk</b> · API key · participants, contacts</span><span><b>Sign-in</b> · OpenID Connect · login.acme.at</span></div>
+      <div class="health"><span class="bad"><span class="dot" style="background:#b3261e"></span>3 calls refused</span><span class="muted">key expires in 6 days · last call 2 h ago</span><span class="bar"><i style="height:12px"></i><i style="height:8px"></i><i class="f" style="height:10px"></i><i style="height:14px"></i><i class="f" style="height:6px"></i><i style="height:12px"></i><i style="height:10px"></i></span></div>
+      <span class="btn small">Open</span>
+    </div>
+    <div class="conn">
+      <span class="logo2" style="background:#2f6f4f">BI</span>
+      <div><h3>Power BI nightly</h3><div class="what"><span class="tag">↓ Gets answers</span></div></div>
+      <div class="flow"><span><b>It calls Askwerk</b> · API key · read results · exports every night</span></div>
+      <div class="health"><span class="ok"><span class="dot" style="background:#2f6f4f"></span>Works</span><span class="muted">last export 03:00 · 2.4 MB</span><span class="bar"><i style="height:16px"></i><i style="height:16px"></i><i style="height:16px"></i><i style="height:16px"></i><i style="height:16px"></i><i style="height:16px"></i><i style="height:16px"></i></span></div>
+      <span class="btn small">Open</span>
+    </div>
+    <div class="conn">
+      <span class="logo2" style="background:#b8860b">WEB</span>
+      <div><h3>Customer portal</h3><div class="what"><span class="tag">▣ Shows surveys</span></div></div>
+      <div class="flow"><span><b>Embedded</b> · portal.acme.at · signed hand-over of who is answering</span></div>
+      <div class="health"><span class="off"><span class="dot" style="background:var(--aw-muted)"></span>Paused</span><span class="muted">since 10 Oct by Anna Berger</span></div>
+      <span class="btn small">Open</span>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:14px">API keys, OAuth clients and webhooks made before Connections are listed under <u>Developers &amp; API → Keys</u> as before; “Make a connection of it” groups them.</p>
+</main>
+
+<!-- B: step 1 -->
+<main class="main wiz" id="b">
+  <h1>Connect a system</h1>
+  <div class="steps"><span class="on">1 What it should do</span><span>2 Details</span><span>3 Test</span></div>
+  <p class="lead" style="margin:-8px 0 18px">Choose one or more. Askwerk sets up what is needed: keys, permissions, notifications. Nothing technical to pick.</p>
+  <div class="goals">
+    <div class="card goal on"><span class="check"></span><span class="ic">↓</span><h3>Get answers into my system</h3><p>Each answer arrives in your CRM, ERP or data warehouse as soon as it is complete, or as a nightly file.</p><div class="uses"><span class="tag">webhook response.completed</span><span class="tag">read results</span></div></div>
+    <div class="card goal on"><span class="check"></span><span class="ic">↑</span><h3>Send people from my system</h3><p>Your system adds contacts and invites them, with their External ID, so answers come back to the right person.</p><div class="uses"><span class="tag">participants</span><span class="tag">contacts</span><span class="tag">External ID</span></div></div>
+    <div class="card goal"><span class="check"></span><span class="ic">⇄</span><h3>Sign in with our login</h3><p>Colleagues use your company login (Microsoft, Google, Keycloak, LDAP); roles follow their groups.</p><div class="uses"><span class="tag">OpenID Connect</span><span class="tag">LDAP</span></div></div>
+    <div class="card goal"><span class="check"></span><span class="ic">▣</span><h3>Show surveys inside my app</h3><p>Surveys and results appear in your portal or app; your app tells Askwerk who is answering.</p><div class="uses"><span class="tag">embed</span><span class="tag">signed hand-over</span></div></div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:20px"><span class="btn">Cancel</span><span class="grow"></span><span class="btn primary">Next</span></div>
+</main>
+
+<!-- C: step 2 -->
+<main class="main wiz" id="c">
+  <h1>Connect a system</h1>
+  <div class="steps"><span class="done">✓ What it should do</span><span class="on">2 Details</span><span>3 Test</span></div>
+  <div class="card">
+    <div class="form">
+      <span class="lbl">Name<small>How it shows in Connections</small></span><span class="inp">Acme CRM</span>
+      <span class="lbl">Answers go to<small>Askwerk sends each complete answer here</small></span>
+      <div style="display:grid;gap:8px"><span class="inp mono2">https://crm.acme.at/hooks/askwerk</span>
+        <div class="opts"><span class="opt"><i class="on"></i><span>When an answer is complete <small>response.completed · with the person's External ID and the answers by variable</small></span></span><span class="opt"><i></i><span>When a survey is published or closed <small>survey.published, survey.closed</small></span></span><span class="opt"><i></i><span>When an export is ready <small>export.completed</small></span></span></div>
+      </div>
+      <span class="lbl">Which surveys</span><div class="opts"><span class="opt"><i class="r on"></i><span>All surveys, also new ones</span></span><span class="opt"><i class="r"></i><span>Only these: <span class="tag">Customer satisfaction 2026</span> <span class="tag">Patient experience</span> <u>change</u></span></span></div>
+      <span class="lbl">How it signs in<small>For sending people to Askwerk</small></span>
+      <div style="display:grid;gap:8px"><span class="seg"><span class="on">Client ID and secret (OAuth)</span><span>API key</span></span><span class="muted">OAuth suits server-to-server systems such as a CRM; an API key suits scripts and nightly jobs.</span></div>
+      <span class="lbl">It may</span>
+      <div class="opts"><span class="opt"><i class="on"></i><span>Add and change people and contacts <small>participants:write · contacts</small></span></span><span class="opt"><i class="on"></i><span>Read surveys and answers <small>surveys:read · responses:read</small></span></span><span class="opt"><i></i><span>Create and change surveys <small>surveys:write</small></span></span><span class="muted">Preset from what it should do; never users or settings.</span></div>
+      <span class="lbl">Match people by</span><div class="opts"><span class="opt"><i class="r on"></i><span>External ID, then email <small>Recommended: the CRM's customer number stays the same when an address changes</small></span></span><span class="opt"><i class="r"></i><span>Email only</span></span></div>
+    </div>
+    <div class="foot"><span class="btn">‹ Back</span><span class="grow"></span><span class="btn primary">Create the connection</span></div>
+  </div>
+</main>
+
+<!-- D: step 3 -->
+<main class="main wiz" id="d">
+  <h1>Connect a system</h1>
+  <div class="steps"><span class="done">✓ What it should do</span><span class="done">✓ Details</span><span class="on">3 Test</span></div>
+  <div class="card" style="padding:20px;display:grid;gap:18px">
+    <div class="two">
+      <div style="display:grid;gap:10px;align-content:start">
+        <span class="mono">Askwerk → Acme CRM</span>
+        <div class="ok-box"><b class="big">✓</b><b>Test answer delivered</b><span class="muted">crm.acme.at answered 200 OK in 182 ms · signed with the secret below</span></div>
+        <span class="btn small" style="justify-self:start">Send another test answer</span>
+      </div>
+      <div style="display:grid;gap:10px;align-content:start">
+        <span class="mono">Acme CRM → Askwerk</span>
+        <div class="card" style="padding:12px 14px;display:grid;gap:4px;font-size:13px;border-style:dashed"><b>Waiting for the first call…</b><span class="muted">Run the code below in your system; this turns green when Askwerk sees it.</span></div>
+      </div>
+    </div>
+    <div style="display:grid;gap:8px">
+      <span class="mono">Credentials · shown once</span>
+      <div class="secret"><span class="muted" style="width:110px">Client ID</span><code>ask_cl_7Hq2…x9Fm</code><span class="btn small">Copy</span></div>
+      <div class="secret"><span class="muted" style="width:110px">Client secret</span><code>••••••••••••••••••••••••••••••••</code><span class="btn small">Show</span><span class="btn small">Copy</span></div>
+      <div class="secret"><span class="muted" style="width:110px">Webhook secret</span><code>whsec_••••••••••••••••••••••</code><span class="btn small">Copy</span></div>
+      <span class="warn">Copy them now: Askwerk keeps only a fingerprint. A new secret can be made any time under Connections.</span>
+    </div>
+    <div>
+      <div class="tabs"><span class="on">C#</span><span>TypeScript</span><span>Python</span><span>cURL</span><span>Postman</span></div>
+      <pre><span class="c">// Add a person to a survey with their CRM number (dotnet add package Askwerk.Client)</span>
+<span class="k">var</span> askwerk = <span class="k">new</span> AskwerkClient(<span class="s">"https://surveys.acme.at"</span>, clientId, clientSecret);
+<span class="k">await</span> askwerk.Participants.InviteAsync(<span class="s">"k7m2pqzr"</span>, <span class="k">new</span>() { Email = <span class="s">"lena@acme.at"</span>, ExternalId = <span class="s">"CRM-10442"</span> });
+
+<span class="c">// In your webhook: check the signature, then use the answers</span>
+<span class="k">if</span> (!Webhooks.Verify(webhookSecret, request.Headers[<span class="s">"Askwerk-Signature"</span>], body)) <span class="k">return</span> Unauthorized();</pre>
+    </div>
+    <div style="display:flex;gap:10px"><span class="btn">Guide: connecting a CRM ↗</span><span class="grow"></span><span class="btn primary">Done</span></div>
+  </div>
+</main>
+
+
+
+</body></html>
