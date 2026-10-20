@@ -4,6 +4,17 @@ A self-hostable survey platform for serious research and everyday feedback: deep
 
 > **Status: early development.** Askwerk is not ready for production use yet. Nothing below is guaranteed to work until the first release.
 
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/designer.png" alt="The designer: the outline of pages and questions, the survey on the canvas, and the selected question's settings"><br><sub><b>Designer.</b> Outline, canvas and inspector: write the survey where it shows.</sub></td>
+    <td width="50%"><img src="docs/screenshots/look.png" alt="Look: colour, type, shape and background beside a live preview, with Askwerk's background pictures"><br><sub><b>Look.</b> Colours, type, shape and a background picture, with a live preview.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/respondent.png" alt="A survey page as respondents see it, in its look, over a mountain landscape"><br><sub><b>For respondents.</b> A fast, accessible page in the survey's own look.</sub></td>
+    <td width="50%"><img src="docs/screenshots/results.png" alt="Results: 120 responses, an overview per question with averages and shares"><br><sub><b>Results.</b> An overview per question as the answers come in, and every response.</sub></td>
+  </tr>
+</table>
+
 ## What it does
 - **Designer**: build surveys in a three-pane editor (outline, canvas, inspector) with inline editing and logic (show, hide, skip, jump, piping, quotas).
 - **Respondent app**: a small, fast, accessible app (WCAG 2.2 AA) in two layouts: classic form, or one question at a time.
